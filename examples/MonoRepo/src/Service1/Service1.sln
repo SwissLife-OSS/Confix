@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2DFD14AA-4EA8-4337-993E-E27BB7D1600B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoRepo.Service1.Abstraction", "src\MonoRepo.Service1.Abstraction\MonoRepo.Service1.Abstraction.csproj", "{13331504-6871-4AA5-A041-B38D10092432}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoRepo.Service1.Host", "src\MonoRepo.Service1.Host\MonoRepo.Service1.Host.csproj", "{C46BB893-DEDC-4214-980E-07CD6846E759}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13331504-6871-4AA5-A041-B38D10092432}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13331504-6871-4AA5-A041-B38D10092432}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13331504-6871-4AA5-A041-B38D10092432}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13331504-6871-4AA5-A041-B38D10092432}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C46BB893-DEDC-4214-980E-07CD6846E759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C46BB893-DEDC-4214-980E-07CD6846E759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C46BB893-DEDC-4214-980E-07CD6846E759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C46BB893-DEDC-4214-980E-07CD6846E759}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{13331504-6871-4AA5-A041-B38D10092432} = {2DFD14AA-4EA8-4337-993E-E27BB7D1600B}
+		{C46BB893-DEDC-4214-980E-07CD6846E759} = {2DFD14AA-4EA8-4337-993E-E27BB7D1600B}
+	EndGlobalSection
+EndGlobal

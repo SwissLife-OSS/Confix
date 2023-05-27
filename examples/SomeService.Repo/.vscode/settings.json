@@ -1,0 +1,10 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "src/SomeService.Host/**/*.json"
+      ],
+      "url": ".confix/.schemas/SomeService.Host.schema.json"
+    }
+  ]
+}

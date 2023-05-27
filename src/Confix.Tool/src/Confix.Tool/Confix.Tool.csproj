@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JsonSchema.Net" />
+        <PackageReference Include="System.CommandLine" />
+        <PackageReference Include="Spectre.Console" />
+        <PackageReference Include="Spectre.Console.Json" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+        <PackageReference Include="HotChocolate" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.Http" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Abstractions\" />
+    </ItemGroup>
+
+</Project>

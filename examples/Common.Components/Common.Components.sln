@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A75CC2DB-5C23-44BA-99EC-D38906056012}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Components.DataProtection", "src\Common.Components.DataProtection\Common.Components.DataProtection.csproj", "{40075895-9200-4884-962F-4D77CB244036}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Components.Security", "src\Common.Components.Security\Common.Components.Security.csproj", "{634CEBB0-505A-4C3A-81F7-A4133834291F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40075895-9200-4884-962F-4D77CB244036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40075895-9200-4884-962F-4D77CB244036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40075895-9200-4884-962F-4D77CB244036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40075895-9200-4884-962F-4D77CB244036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{634CEBB0-505A-4C3A-81F7-A4133834291F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{634CEBB0-505A-4C3A-81F7-A4133834291F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{634CEBB0-505A-4C3A-81F7-A4133834291F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{634CEBB0-505A-4C3A-81F7-A4133834291F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{40075895-9200-4884-962F-4D77CB244036} = {A75CC2DB-5C23-44BA-99EC-D38906056012}
+		{634CEBB0-505A-4C3A-81F7-A4133834291F} = {A75CC2DB-5C23-44BA-99EC-D38906056012}
+	EndGlobalSection
+EndGlobal

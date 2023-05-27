@@ -1,0 +1,7 @@
+type Configuration {
+  Other: Other
+}
+
+type Other {
+  Foo: String!
+}

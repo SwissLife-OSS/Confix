@@ -1,0 +1,580 @@
+{
+  "type": "object",
+  "properties": {
+    "Authority": {
+      "$ref": "#/$defs/String",
+      "deprecated": false
+    },
+    "OpenIdConnectClient": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OpenIdConnectClient"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    },
+    "Cors": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Cors"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    },
+    "TokenClients": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/TokenClient"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    },
+    "HttpClients": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/HttpClient"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    }
+  },
+  "required": ["Authority"],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Configuration": {
+      "type": "object",
+      "properties": {
+        "Authority": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "OpenIdConnectClient": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OpenIdConnectClient"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Cors": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Cors"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "TokenClients": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/TokenClient"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "HttpClients": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/HttpClient"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": ["Authority"],
+      "additionalProperties": false
+    },
+    "OpenIdConnectClient": {
+      "type": "object",
+      "properties": {
+        "ClientId": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "Secret": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        }
+      },
+      "required": ["ClientId", "Secret"],
+      "additionalProperties": false
+    },
+    "Authorization": {
+      "type": "object",
+      "properties": {
+        "PathPolicy": {
+          "$ref": "#/$defs/PathPolicy",
+          "deprecated": false
+        }
+      },
+      "required": ["PathPolicy"],
+      "additionalProperties": false
+    },
+    "PathPolicy": {
+      "type": "object",
+      "properties": {
+        "GlobalRequiredScopes": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Policies": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Policy"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "Policy": {
+      "type": "object",
+      "properties": {
+        "Path": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "Requirements": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Requirement"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": ["Path"],
+      "additionalProperties": false
+    },
+    "Requirement": {
+      "type": "object",
+      "properties": {
+        "Type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Name": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "Cors": {
+      "type": "object",
+      "properties": {
+        "OriginMatch": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "PreflightMaxAge": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "TokenClient": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "Authority": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "ClientId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Secret": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Scopes": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/String"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "GrantType": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Username": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "PersonalAccessToken": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": ["Name"],
+      "additionalProperties": false
+    },
+    "HttpClient": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "Url": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "Timeout": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Authentication": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HttpClientAuthentication"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Policies": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/String"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": ["Name", "Url"],
+      "additionalProperties": false
+    },
+    "HttpClientAuthentication": {
+      "type": "object",
+      "properties": {
+        "Mode": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "TokenClientName": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Certificate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Username": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "Password": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "CustomHeaders": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/CustomHeader"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": ["Mode"],
+      "additionalProperties": false
+    },
+    "CustomHeader": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "Value": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        }
+      },
+      "required": ["Name", "Value"],
+      "additionalProperties": false
+    },
+    "String": {
+      "type": "string",
+      "hasVariable": true,
+      "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
+    },
+    "Boolean": {
+      "type": "boolean",
+      "hasVariable": true,
+      "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
+    }
+  }
+}

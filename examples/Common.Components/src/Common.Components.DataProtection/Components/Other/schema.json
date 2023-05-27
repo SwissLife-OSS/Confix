@@ -1,0 +1,62 @@
+{
+  "type": "object",
+  "properties": {
+    "Other": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Other"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    }
+  },
+  "required": [],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Configuration": {
+      "type": "object",
+      "properties": {
+        "Other": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Other"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "Other": {
+      "type": "object",
+      "properties": {
+        "Foo": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "Foo"
+      ],
+      "additionalProperties": false
+    },
+    "String": {
+      "type": "string",
+      "hasVariable": true,
+      "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
+    },
+    "Boolean": {
+      "type": "boolean",
+      "hasVariable": true,
+      "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
+    }
+  }
+}

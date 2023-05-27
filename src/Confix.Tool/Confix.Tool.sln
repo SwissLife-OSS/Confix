@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A55D0D39-89AA-49B0-A3D0-6C94B9D8168C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Confix.Tool", "src\Confix.Tool\Confix.Tool.csproj", "{A26678D4-4943-442C-AE3F-64369F4E5CDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A26678D4-4943-442C-AE3F-64369F4E5CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A26678D4-4943-442C-AE3F-64369F4E5CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A26678D4-4943-442C-AE3F-64369F4E5CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A26678D4-4943-442C-AE3F-64369F4E5CDE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A26678D4-4943-442C-AE3F-64369F4E5CDE} = {A55D0D39-89AA-49B0-A3D0-6C94B9D8168C}
+	EndGlobalSection
+EndGlobal

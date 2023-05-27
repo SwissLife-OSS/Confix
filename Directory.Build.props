@@ -1,0 +1,16 @@
+<Project>
+
+    <PropertyGroup>
+        <PropsAbove>$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))</PropsAbove>
+    </PropertyGroup>
+    <Import Condition="Exists($(PropsAbove))" Project="$(PropsAbove)"/>
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <RootNamespace>ConfiX</RootNamespace>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+</Project>

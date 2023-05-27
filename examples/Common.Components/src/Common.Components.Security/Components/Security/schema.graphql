@@ -1,0 +1,71 @@
+type Configuration {
+  Authority: String!
+  OpenIdConnectClient: OpenIdConnectClient
+  Cors: Cors
+  TokenClients: [TokenClient]
+  HttpClients: [HttpClient]
+}
+
+type OpenIdConnectClient {
+  ClientId: String!
+  Secret: String!
+}
+
+type Authorization {
+  PathPolicy: PathPolicy!
+}
+
+type PathPolicy {
+  GlobalRequiredScopes: String
+  Policies: [Policy]
+}
+
+type Policy {
+  Path: String!
+  Requirements: [Requirement]
+  Mode: String
+}
+
+type Requirement {
+  Type: String
+  Name: String
+  Value: String
+}
+
+type Cors {
+  OriginMatch: String
+  PreflightMaxAge: String
+}
+
+type TokenClient {
+  Name: String!
+  Authority: String
+  ClientId: String
+  Secret: String
+  Scopes: [String]
+  GrantType: String
+  Username: String
+  PersonalAccessToken: String
+}
+
+type HttpClient {
+  Name: String!
+  Url: String!
+  Timeout: String
+  Authentication: HttpClientAuthentication
+  Policies: [String!]
+}
+
+type HttpClientAuthentication {
+  Mode: String!
+  TokenClientName: String
+  Certificate: String
+  Username: String
+  Password: String
+  CustomHeaders: [CustomHeader]
+}
+
+type CustomHeader {
+  Name: String!
+  Value: String!
+}

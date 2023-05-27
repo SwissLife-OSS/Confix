@@ -1,0 +1,99 @@
+{
+  "type": "object",
+  "properties": {
+    "Mode": {
+      "$ref": "#/$defs/String",
+      "deprecated": false
+    },
+    "Storage": {
+      "$ref": "#/$defs/DpStorageConfiguration",
+      "deprecated": false
+    },
+    "KeyVault": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DpKeyVaultConfiguration"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    }
+  },
+  "required": ["Mode", "Storage"],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Configuration": {
+      "type": "object",
+      "properties": {
+        "Mode": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "Storage": {
+          "$ref": "#/$defs/DpStorageConfiguration",
+          "deprecated": false
+        },
+        "KeyVault": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DpKeyVaultConfiguration"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        }
+      },
+      "required": ["Mode", "Storage"],
+      "additionalProperties": false
+    },
+    "DpStorageConfiguration": {
+      "type": "object",
+      "properties": {
+        "ConnectionString": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "Path": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        }
+      },
+      "required": ["ConnectionString", "Path"],
+      "additionalProperties": false
+    },
+    "DpKeyVaultConfiguration": {
+      "type": "object",
+      "properties": {
+        "ClientId": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "Secret": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "KeyUrl": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        }
+      },
+      "required": ["ClientId", "Secret", "KeyUrl"],
+      "additionalProperties": false
+    },
+    "String": {
+      "type": "string",
+      "hasVariable": true,
+      "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
+    },
+    "Boolean": {
+      "type": "boolean",
+      "hasVariable": true,
+      "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
+    }
+  }
+}

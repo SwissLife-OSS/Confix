@@ -1,0 +1,16 @@
+type Configuration {
+  Mode: String!
+  Storage: DpStorageConfiguration!
+  KeyVault: DpKeyVaultConfiguration
+}
+
+type DpStorageConfiguration {
+  ConnectionString: String!
+  Path: String!
+}
+
+type DpKeyVaultConfiguration {
+  ClientId: String!
+  Secret: String!
+  KeyUrl: String!
+}
