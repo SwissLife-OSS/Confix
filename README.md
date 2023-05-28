@@ -1,3 +1,10 @@
+
+<p align="center">
+<h1>
+<bold>🚧 This project is still in the planning phase. 🚧</bold>
+</h1>
+</p>
+
 # Confix - Simple Application Configuration
 
 <p align="center">
