@@ -1,5 +1,7 @@
 # Confix - Simple Application Configuration
 
+![Logo](images/logo.png)
+
 - [Confix - Simple Application Configuration](#confix---simple-application-configuration)
   - [Introduction](#introduction)
   - [Principles](#principles)
