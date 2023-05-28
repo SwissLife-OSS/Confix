@@ -52,10 +52,10 @@
 
 
 
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/2) about this section.
 
 ## Introduction
 
+> **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/2) about this section.**
 
 Managing application configuration has evolved into an intricate process in the modern software development landscape. Enter Confix, a tool specifically designed to untangle this complexity. Confix aids you in managing your application configuration throughout different stages of the software lifecycle, spanning from local development to production deployment. 
 
@@ -92,7 +92,7 @@ By adhering to these principles, Confix aims to streamline the application confi
 
 # Components
 
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/3) about this section.
+> **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/3) about this section.**
 
 In Confix, "components" are a key construct designed to streamline shared code usage. A typical use case involves shared packages that contain reusable code, such as a logging module that's frequently used across multiple applications or (micro)services.
 
@@ -207,7 +207,7 @@ Despite the benefits of a single pipeline structure, one trade-off to consider i
 </details>
 
 # Variables
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/4) about this section.
+> **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/4) about this section.*
 
 Confix has the concept of variables. These variables are typically used to reference secrets, or any configuration data that should not be directly entered into the configuration files. They can be used for values are not known at development time. 
 
@@ -263,7 +263,7 @@ To manage variables in Confix, you can use the following commands:
 - `confix variables get <variable>`: This command retrieves the current value of a specified variable.
 
 # Project
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/5) about this section.
+>  **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/5) about this section.**
 
 ## Overview
 
@@ -352,7 +352,7 @@ Here is an example of a `.confix.project` file:
 ```
 
 # Repositories
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/6) about this section.
+>  **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/6) about this section.**
 
 Confix repositories closely align with the "scope" of a Git repository. Meaning that usually you have one repository per git repository. In a typical repository, you might find various projects, modules, or packages. These can be backend services, workers, shared libraries, frontend applications, etc., each with could have separate configuration.
 
@@ -429,7 +429,7 @@ monorepo_root/
 
 
 # Distributing Components
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/7) about this section.
+>  **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/7) about this section.**
 
 In Confix, we have two primary methods to distribute components: Direct Shipping and Repositories.
 
@@ -493,7 +493,7 @@ Component repositories come into play when you're unable to bundle a schema with
 ```
 
 # Environments
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/8) about this section.
+>  **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/8) about this section.***
 
 It is common practice to deploy applications across various environments such as development, staging, or production. Each environment may require a unique set of configurations and variable providers. To accommodate this, Confix enables you to define the environments where your application will be deployed.
 
@@ -532,7 +532,7 @@ Here's an example of how you could define these settings in a `.confix.project` 
 ```
 
 # Variable Providers
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/9) about this section.
+>  ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/9) about this section.
 
 Variable providers are typically defined in the `.confixrc` or `.confix.repository` files but can also be defined in `.confix.project` if only have a simple setup without a `.confix.repository`
 
@@ -607,7 +607,7 @@ Here is an example JSON demonstrating the structure of the `variableProviders` p
 In this example, the `keyvault`, `vault`, `secret`, and `local` variable providers are defined, each with their type and environment-specific overrides where applicable.
 
 # Subprojects 
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/10) about this section.
+>  ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/10) about this section.
 
 A project can contain different active schemas for various configuration files. For instance, you may have a .NET application using `appsettings.json` and a Helm chart for configuring Kubernetes. For such cases, you can specify additional projects using the `subprojects` property.
 
@@ -654,7 +654,7 @@ For instance, if you have a .docker folder containing the folders dev, staging, 
 All your services now can use the same configuration for the Kubernetes deployment chart, with the `SharedConfig` component being included in the `values.yaml` file and be automatically updated whenever you run `confix project compose`.
 
 # Configuration Files 
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/11) about this section.
+>  ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/11) about this section.
 
 Confix allows you to specify the configuration files used by your project setup using the `configurationFiles` property. Essentially, it lets you identify which JSON files in your project should be validated against the compiled schema.
 
@@ -695,7 +695,7 @@ Alternatively, you can explicitly define the configuration file convention using
 Generally, configuration file globs are defined at the repository level, since they are usually consistent across all projects in the repository. You can override these settings at the project level if necessary. However, if you want to define conventions (like "dotnet-appsettings"), you should ideally specify them in the `.confixrc` file.
 
 # `.confix` Files 
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/12) about this section.
+>  ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/12) about this section.
 
 Confix provides a set of configuration files that allow you to manage settings on global, repository, project, component, and deployment levels. These files include: `.confixrc`, `.confix.repository`, `.confix.project`, `.confix.component`, and `.confix.lock`. 
 
@@ -819,14 +819,14 @@ It contains the complete configuration that was composed out of all .confixrc an
 
 
 # Deploying your App
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/13) about this section.
+> **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/13) about this section.**
 
 Confix is designed to integrate into any stage of your application deployment, providing you with the flexibility to replace variables in your configuration files when and how you see fit. 
 Confix does not impose a specific approach to variable replacement in configuration files. Rather, it supports various methodologies, allowing you to choose one that best suits your deployment process, security and application requirements and taste.
 The following sections of the documentation provide more information about how you can utilize Confix during different stages of the deployment process: build time, deploy time, and runtime.
 
 ## Build Time
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/14) about this section.
+> **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/14) about this section.**
 
 When building your application's configuration, Confix provides the `confix build` command to replace the variables in your configuration files with their actual values. Confix calls the variable providers to resolve these variables. You can specify the desired environment for your build by using the `--environment` flag. 
 
@@ -844,7 +844,7 @@ If you intend to deploy your application within a container, take extra precauti
 2. You need different container images for different environments: If you need to deploy your application to multiple environments, you need to build a separate container image for each environment.
 
 ## Deploy Time
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/15) about this section.
+>  **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/15) about this section.**
 
 In containerized applications, you may prefer not to embed secrets in your container image at build time. Doing so could expose these secrets to anyone who gains access to the container image. Instead, you might choose to construct the container with configuration files that contain variable placeholders, replacing these with actual values when you initiate the container. 
 
@@ -884,7 +884,7 @@ If the container's source code is inaccessible in the release pipeline, you can 
 
 ## Runtime
 
-> This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/16) about this section.
+>  **ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/16) about this section.**
 
 In this strategy for managing configuration, variables are resolved when the container starts up. The `confix build` command is embedded within your Dockerfile, and at startup, this command attempts to resolve the variables.
 
