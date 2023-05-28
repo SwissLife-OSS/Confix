@@ -1,6 +1,8 @@
 # Confix - Simple Application Configuration
 
-![Logo](images/logo.png)
+<p align="center">
+<img src="images/logo.png">
+<p>
 
 - [Confix - Simple Application Configuration](#confix---simple-application-configuration)
   - [Introduction](#introduction)
@@ -62,7 +64,10 @@
 Managing application configuration has evolved into an intricate process in the modern software development landscape. Enter Confix, a tool specifically designed to untangle this complexity. Confix aids you in managing your application configuration throughout different stages of the software lifecycle, spanning from local development to production deployment. 
 
 Everything you need is the `confix cli` and `VSCode`
-![Confix Overview](./images/intro-0.png)
+
+<p align="center">
+<img src="images/intro-0.png">
+<p>
 
 ## Principles
 
