@@ -7,19 +7,18 @@
     - [Composability](#composability)
     - [Flexibility](#flexibility)
     - [Security](#security)
-  - [Components](#components)
-    - [Overview](#overview)
-    - [File Structure](#file-structure)
-    - [Package Distribution](#package-distribution)
-    - [Component Inputs and Outputs](#component-inputs-and-outputs)
-    - [Commands](#commands)
+- [Components](#components)
+  - [File Structure](#file-structure)
+  - [Package Distribution](#package-distribution)
+  - [Component Inputs and Outputs](#component-inputs-and-outputs)
+  - [Commands](#commands)
   - [Pipeline Instead of Separate Inputs and Outputs](#pipeline-instead-of-separate-inputs-and-outputs)
 - [Variables](#variables)
   - [Providers](#providers)
   - [Example JSON with Variables](#example-json-with-variables)
   - [Commands](#commands-1)
 - [Project](#project)
-  - [Overview](#overview-1)
+  - [Overview](#overview)
   - [Components](#components-1)
   - [Override Configuration](#override-configuration)
     - [Environments](#environments)
@@ -92,9 +91,7 @@ With Confix, you can easily integrate your preferred method of storing secrets. 
 
 By adhering to these principles, Confix aims to streamline the application configuration process, making it more efficient and less error-prone. Enjoy the simplicity and flexibility of Confix, and say goodbye to the complications of application configuration.
 
-## Components
-
-### Overview
+# Components
 
 In Confix, "components" are a key construct designed to streamline shared code usage. A typical use case involves shared packages that contain reusable code, such as a logging module that's frequently used across multiple applications or (micro)services.
 
@@ -126,7 +123,7 @@ e.g.
 > The `inputs` and `outputs` properties are optional. If you do not specify any inputs or outputs, Confix will use the default inputs that are defined in the `.confixrc` or the `.confix.project` file.
 
 
-### File Structure 
+## File Structure 
 All components are saved in the `Components` folder, situated at the root of your project. Each `.confix.component` file is a JSON file that encapsulates the details of the component's configuration. This file must contain a 'name' property specifying the component's name.
 
 ```
@@ -143,12 +140,13 @@ myProject
 ├── ...
 ```
 
-### Package Distribution
+## Package Distribution
 Confix has different methods for distributing packages. The most common method is to bundle the schema with the package itself. When you distribute your package, whether through NuGet, NPM, or Azure DevOps, the corresponding schema is included within the package itself. This practice automatically versions your component schema together with your code. For example, when you reference version 1.20.4 of your package, you also obtain the matching version of the schema.
 
 Additional distribution methods will be elaborated upon in the 'Distributing Components' section of this documentation.
+ 
 
-### Component Inputs and Outputs
+## Component Inputs and Outputs
 
 A Confix component can have one or multiple 'inputs'. These inputs function as schema compilers, which create new `schema.json` files or update existing ones based on the input provided. Inputs are executed in the sequence they are defined in the `.confix.component` file.
 
@@ -156,7 +154,7 @@ Examples of inputs are the GraphQL compiler, which generates a JSON schema based
 
 In addition to inputs, a component can also have one or multiple outputs. These outputs are generated from the finalized `schema.json` file. By default, Confix searches for a `.confix.component` file in the shipped bundle to locate the `schema.json` file, which is then used as the JSON schema for configuration.
 
-### Commands
+## Commands
 
 Several commands are available for managing components in Confix:
 
