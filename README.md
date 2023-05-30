@@ -174,7 +174,7 @@ In addition to inputs, a component can also have one or multiple outputs. These 
 Several commands are available for managing components in Confix:
 
 - To create a new component, use: `confix component create <componentName>`
-- To compose a component, use: `confix component compose <componentName>`
+- To build a component, use: `confix component build <componentName>`
 - To list all existing components, use: `confix component list`
 - To delete a component, use: `confix component delete <componentName>`
 
@@ -227,7 +227,7 @@ Confix has the concept of variables. These variables are typically used to refer
 
 In Confix, variables have a distinct structure: `$providerName:path.to.resource`, where `providerName` refers to the source or provider of the variable value, and `path.to.resource` indicates the specific resource or secret in the provider's repository.
 
-Variables are resolved during the `compose` operation of the configuration. This operation can take place at various stages of your development lifecycle. You can also `validate` your configuration against a specific environment to ensure that all variables can be resolved before deployment. For more on this, see the `Deploying your App` section.
+Variables are resolved during the `build` operation of the configuration. This operation can take place at various stages of your development lifecycle. You can also `validate` your configuration against a specific environment to ensure that all variables can be resolved before deployment. For more on this, see the `Deploying your App` section.
 
 The specification for variable providers is contained in the `.confix.project` file, or inherited from `.confixrc`. During project initialization, all potential variables are fetched from the providers (if possible), offering intelligent code completion during your development.
 
@@ -331,7 +331,7 @@ Read more about this in the `Configuration Files` section.
 Confix provides several commands to manage your project:
 
 - `confix project init`: Initializes a new project
-- `confix project compose`: Composes the final configuration files of the project
+- `confix project build`: builds the final configuration files of the project
 - `confix project reload`: Reloads the configuration of the component providers 
 - `confix project validate`: Validates the configuration of the current project
 
@@ -665,7 +665,7 @@ For instance, if you have a .docker folder containing the folders dev, staging, 
 }
 ```
 
-All your services now can use the same configuration for the Kubernetes deployment chart, with the `SharedConfig` component being included in the `values.yaml` file and be automatically updated whenever you run `confix project compose`.
+All your services now can use the same configuration for the Kubernetes deployment chart, with the `SharedConfig` component being included in the `values.yaml` file and be automatically updated whenever you run `confix project build`.
 
 # Configuration Files 
 >  ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix-Reloaded/discussions/11) about this section.
@@ -828,7 +828,7 @@ The `.confix.component` file is used for configuring individual components. More
 ```
 ## 5. `.confix.lock`
 
-The `.confix.lock` file is generated during the `compose` operation and contains all necessary information for deploying the application. The file is used during the `build` operation to replace the variables in the configuration files with their actual values. 
+The `.confix.lock` file is generated during the `build` operation and contains all necessary information for deploying the application. The file is used during the `build` operation to replace the variables in the configuration files with their actual values. 
 It contains the complete configuration that was composed out of all .confixrc and .confix.repository files, except the secrets. The confix lock file is safe to commit to your repository and you have to include it in your container image. 
 
 
