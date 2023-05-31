@@ -1,0 +1,28 @@
+﻿{
+  "Component": {
+    "Name": "TestComponent",
+    "Inputs": null,
+    "Outputs": null
+  },
+  "Project": {
+    "Name": null,
+    "Environments": [
+      {
+        "Name": "development",
+        "ExcludeFiles": [
+          "appsettings.staging.json"
+        ]
+      },
+      {
+        "Name": "staging",
+        "ExcludeFiles": []
+      }
+    ],
+    "Components": null,
+    "Repositories": null,
+    "VariableProviders": null,
+    "ComponentProviders": null,
+    "ConfigurationFiles": null,
+    "Subprojects": null
+  }
+}

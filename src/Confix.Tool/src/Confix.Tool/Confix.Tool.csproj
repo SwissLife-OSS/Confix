@@ -21,6 +21,9 @@
 
     <ItemGroup>
       <Folder Include="Abstractions\" />
+      <Folder Include="Common\Exceptions\" />
+      <Folder Include="Options\" />
+      <Folder Include="Utilities\Parsing\" />
     </ItemGroup>
 
 </Project>

@@ -1,3 +1,57 @@
 {
   "name": "Other"
 }
+{
+    "name": "Some-Project", // (Optional) this is by default inferred from the folder 
+    "environments": [ "dev", "prod" ], // (Optional)
+    "components": {
+        "@charts/MyHelmComponent": "latest",
+        "@charts/someOtherComponent": "latest",
+        "@common-components/CloudComponent": false,
+        "@dotnet-package/BlobStorage": {
+            "mountingPoint": [
+                "documents/blob-storage",
+                "user-data/blob-storage"
+            ]
+        },
+        "@oss-components/CustomComponent": "1.0.0"
+    }, "repositories": [
+        {
+            "name": "common-components",
+            "type": "blob",
+            "url": "https://myblobstorage.blobl.core.windows.net/confix"
+        },
+        {
+            "name": "charts",
+            "type": "helm",
+            "url": "oci://registry/namespace/chart-name"
+        },
+        {
+            "name": "oss-components",
+            "type": "git",
+            "url": "git@github.com:SwissLife-OSS/template.git"
+        },
+        {
+            "name": "travis",
+            "type": "json-schema",
+            "url": "https://json.schemastore.org/travis.json"
+        }
+    ]
+        "componentProviders": [
+        {
+            "name": "dotnet",
+            "type": "dotnet-package"
+        },
+        {
+            "name": "modules",
+            "type": "node-modules"
+        }
+    ],
+    "configurationFiles": [ // Optional when in .confixrc or .confix.repository
+        "./appsettings*.json",
+        "./**/some-config/appsettings*.json",
+        {
+            "type": "dotnet-appsettings"
+        }
+    ],
+}

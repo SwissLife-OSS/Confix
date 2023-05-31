@@ -1,0 +1,24 @@
+﻿{
+  "Name": "appsettings",
+  "Type": "dotnet-appsettings",
+  "EnvironmentOverrides": {
+    "dev": {
+      "file": "appsettings.dev.json"
+    },
+    "prod": {
+      "file": "appsettings.prod.json"
+    }
+  },
+  "Value": {
+    "name": "appsettings",
+    "type": "dotnet-appsettings",
+    "environmentOverride": {
+      "dev": {
+        "file": "appsettings.dev.json"
+      },
+      "prod": {
+        "file": "appsettings.prod.json"
+      }
+    }
+  }
+}

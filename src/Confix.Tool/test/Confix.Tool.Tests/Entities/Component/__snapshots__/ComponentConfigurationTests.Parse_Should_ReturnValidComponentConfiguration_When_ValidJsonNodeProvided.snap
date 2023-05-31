@@ -1,0 +1,28 @@
+﻿{
+  "Name": "TestComponent",
+  "Inputs": [
+    {
+      "Type": "graphql",
+      "Value": {
+        "type": "graphql",
+        "additional": "property"
+      }
+    },
+    {
+      "Type": "dotnet",
+      "Value": {
+        "type": "dotnet",
+        "additional2": "property"
+      }
+    }
+  ],
+  "Outputs": [
+    {
+      "Type": "schema",
+      "Value": {
+        "type": "schema",
+        "additional2": "property"
+      }
+    }
+  ]
+}
