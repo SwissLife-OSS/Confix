@@ -1,18 +1,22 @@
+using System.Text.Json.Nodes;
 namespace ConfiX.Variables;
 
 public interface IVariableProvider
 {
     string Type { get; }
 
+    static abstract IVariableProvider FromJson(JsonNode configuration);
     Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken);
     Task<string> ResolveAsync(string path, CancellationToken cancellationToken);
+    Task<IReadOnlyDictionary<string, string>> ResolveManyAsync(
+        IReadOnlyList<string> paths, 
+        CancellationToken cancellationToken);
+
     Task<string> SetAsync(string path, string value, CancellationToken cancellationToken);
 }
 
-/*
-confix variables reload: This command reloads the variables for a project from the providers. Useful for updating your local environment with newly created variables.
+public interface IVariableProviderFactory
+{
+    IVariableProvider CreateProvider(string providerType, JsonNode configuration);
 
-confix variables set <variable> <value>: This command sets the value for a specified variable.
-
-confix variables get <variable>: This command retrieves the current value of a specified variable.
-*/
+}

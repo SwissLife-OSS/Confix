@@ -1,48 +1,51 @@
+using Confix.Tool;
+
 namespace ConfiX.Variables;
 
 // TODO figure out a name
 public class VariableProviderProviderOderSo
 {
-    private readonly Dictionary<string, IVariableProvider> _providers;
-    private readonly Dictionary<string, string> _providerNameToTypeMapping;
+    private readonly IVariableProviderFactory _variableProviderFactory;
 
-
-    public async Task<IReadOnlyDictionary<string, string>> ResolveVariables(
-        IReadOnlyList<string> keys,
+    public async Task<IReadOnlyDictionary<VariablePath, string>> ResolveVariables(
+        IReadOnlyList<VariablePath> keys,
+        IReadOnlyList<VariableProviderConfiguration> configurations,
         CancellationToken cancellationToken)
     {
-        Dictionary<string, string> resolvedVariables = new();
+        Dictionary<VariablePath, string> resolvedVariables = new();
 
-        // TODO: that probably need to run in paralell. or allow to fetch multiple variables from a provider at once... not quite sure
-        foreach (string key in keys)
+        foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
         {
-            VariablePath variablePath = VariablePath.FromString(key);
-            IVariableProvider provider = GetProvider(variablePath.ProviderName);
-            var resolved = await provider.ResolveAsync(variablePath.Path, cancellationToken);
-            resolvedVariables.Add(key, resolved);
+            VariableProviderConfiguration configuration = GetProviderConfiguration(configurations, group.Key);
+            IVariableProvider provider = _variableProviderFactory.CreateProvider(
+                configuration.Type,
+                configuration.Configuration);
+
+            var resolved = await provider.ResolveManyAsync(group.Select(x => x.Path).ToArray(), cancellationToken);
+
+            resolved.ForEach((r) => 
+                resolvedVariables.Add(
+                    group.First(i => i.Path == r.Key), 
+                    r.Value));
         }
 
         return resolvedVariables;
     }
 
-    private string GetProviderType(string providerName)
+    private VariableProviderConfiguration GetProviderConfiguration(
+        IReadOnlyList<VariableProviderConfiguration> configurations,
+        string providerName)
     {
-        if (_providerNameToTypeMapping.TryGetValue(providerName, out string? providerType))
+        VariableProviderConfiguration? config = configurations.FirstOrDefault(c => c.Name.Equals(providerName));
+        if (config is null)
         {
-            return providerType;
+            // TODO custom exception
+            throw new InvalidOperationException("");
         }
-        // TODO: custom exception
-        throw new InvalidOperationException("unknown providername");
+        return config;
     }
 
-    private IVariableProvider GetProvider(string providerName)
-    {
-        string providerType = GetProviderType(providerName);
 
-        // TODO: somehow pass the configuration from confixrc to provider with the given name 
-        // (provider type might have multiple names with different config)
-        return _providers[providerType];
-    }
 }
 
 public record struct VariablePath(string ProviderName, string Path)
