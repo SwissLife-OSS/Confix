@@ -3,9 +3,6 @@ namespace ConfiX.Variables;
 
 public interface IVariableProvider
 {
-    string Type { get; }
-
-    static abstract IVariableProvider FromJson(JsonNode configuration);
     Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken);
     Task<string> ResolveAsync(string path, CancellationToken cancellationToken);
     Task<IReadOnlyDictionary<string, string>> ResolveManyAsync(
@@ -13,10 +10,4 @@ public interface IVariableProvider
         CancellationToken cancellationToken);
 
     Task<string> SetAsync(string path, string value, CancellationToken cancellationToken);
-}
-
-public interface IVariableProviderFactory
-{
-    IVariableProvider CreateProvider(string providerType, JsonNode configuration);
-
 }
