@@ -7,29 +7,55 @@ public class LocalVariableProvider : IVariableProvider
     public static readonly string PropertyType = "local";
     public LocalVariableProvider(JsonNode configuration)
     {
-        _configuration = LocalVariableProviderConfiguration.Parse(configuration);
+        var providerConfig = LocalVariableProviderConfiguration.Parse(configuration);
+        _configuration = new(() => ParseConfiguration(providerConfig));
     }
 
-    private readonly LocalVariableProviderConfiguration _configuration;
+    private readonly Lazy<Dictionary<string, string?>> _configuration;
 
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+        => Task.FromResult<IReadOnlyList<string>>(_configuration.Value.Keys.ToArray());
 
     public Task<string> ResolveAsync(string path, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+        => Task.FromResult(_configuration.Value.GetValueOrDefault(path)
+            ?? throw new Exception("Value could not be resolved"));
 
-    public Task<IReadOnlyDictionary<string, string>> ResolveManyAsync(IReadOnlyList<string> paths, CancellationToken cancellationToken)
+    public async Task<IReadOnlyDictionary<string, string>> ResolveManyAsync(
+        IReadOnlyList<string> paths, 
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        Dictionary<string, string> values = new();
+        List<Exception> errors = new();
+
+        foreach (string path in paths)
+        {
+            try
+            {
+                values.Add(path, await ResolveAsync(path, cancellationToken));
+            }
+            catch (Exception ex)
+            {
+                errors.Add(ex);
+            }
+        }
+
+        if (errors.Count > 0)
+        {
+            throw new AggregateException(errors);
+        }
+
+        return values;
     }
 
     public Task<string> SetAsync(string path, string value, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
-}
 
+    private static Dictionary<string, string?> ParseConfiguration(LocalVariableProviderConfiguration config)
+    {
+        using FileStream fileStream = File.OpenRead(config.FilePath);
+        JsonNode node = JsonNode.Parse(fileStream) ?? throw new ArgumentException("Invalid Json Node");
+        return JsonParser.ParseNode(node);
+    }
+}

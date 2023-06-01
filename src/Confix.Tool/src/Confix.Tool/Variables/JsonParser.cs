@@ -5,19 +5,16 @@ namespace ConfiX.Variables;
 public static class JsonParser
 {
     public static Dictionary<string, string?> ParseNode(JsonNode node)
-    {
-        return node switch
+        => node switch
         {
             JsonArray array => new(ParseArray(array)),
             JsonObject obj => new(ParseObject(obj)),
             JsonValue => throw new JsonParserException("Node must be an JsonObject or JsonArray"),
             _ => throw new ArgumentException($"Cant parse type {node.GetType().Name}")
         };
-    }
 
-    private static IEnumerable<KeyValuePair<string, string?>> ParseNodeInternal(JsonNode? node)
-    {
-        return node switch
+    private static IEnumerable<KeyValuePair<string, string?>> ParseNodeInternal(JsonNode? node) 
+        => node switch
         {
             JsonArray array => ParseArray(array),
             JsonObject obj => ParseObject(obj),
@@ -25,7 +22,6 @@ public static class JsonParser
             null => new[] { KeyValuePair.Create<string, string?>("", null) },
             _ => throw new ArgumentException($"Cant parse type {node?.GetType().Name}")
         };
-    }
 
     private static IEnumerable<KeyValuePair<string, string?>> ParseObject(JsonObject jsonObject)
     {

@@ -1,4 +1,3 @@
-using System.Text.Json.Nodes;
 namespace ConfiX.Variables;
 
 public interface IVariableProvider

@@ -42,7 +42,7 @@ public class VariableResolver
         IReadOnlyList<VariableProviderConfiguration> configurations,
         string providerName) 
         => configurations.FirstOrDefault(c => c.Name.Equals(providerName)) 
-            ?? throw new InvalidOperationException("");
+            ?? throw new InvalidOperationException("Provider not found");
 
 
 }
