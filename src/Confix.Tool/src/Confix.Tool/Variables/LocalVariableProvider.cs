@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace ConfiX.Variables;
@@ -18,22 +19,23 @@ public class LocalVariableProvider : IVariableProvider
 
     public Task<string> ResolveAsync(string path, CancellationToken cancellationToken)
         => Task.FromResult(_configuration.Value.GetValueOrDefault(path)
-            ?? throw new Exception("Value could not be resolved"));
+            ?? throw new VariableNotFoundException("Value could not be resolved"));
 
     public async Task<IReadOnlyDictionary<string, string>> ResolveManyAsync(
-        IReadOnlyList<string> paths, 
+        IReadOnlyList<string> paths,
         CancellationToken cancellationToken)
     {
         Dictionary<string, string> values = new();
-        List<Exception> errors = new();
+        List<VariableNotFoundException> errors = new();
 
         foreach (string path in paths)
         {
             try
             {
-                values.Add(path, await ResolveAsync(path, cancellationToken));
+                var resolvedValue = await ResolveAsync(path, cancellationToken);
+                values.Add(path, resolvedValue);
             }
-            catch (Exception ex)
+            catch (VariableNotFoundException ex)
             {
                 errors.Add(ex);
             }
@@ -55,7 +57,7 @@ public class LocalVariableProvider : IVariableProvider
     private static Dictionary<string, string?> ParseConfiguration(LocalVariableProviderConfiguration config)
     {
         using FileStream fileStream = File.OpenRead(config.FilePath);
-        JsonNode node = JsonNode.Parse(fileStream) ?? throw new ArgumentException("Invalid Json Node");
+        JsonNode node = JsonNode.Parse(fileStream) ?? throw new JsonException("Invalid Json Node");
         return JsonParser.ParseNode(node);
     }
 }

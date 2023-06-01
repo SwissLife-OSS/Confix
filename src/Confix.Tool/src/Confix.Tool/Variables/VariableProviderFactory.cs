@@ -8,5 +8,7 @@ public sealed class VariableProviderFactory : IVariableProviderFactory
             { LocalVariableProvider.PropertyType,(c) => new LocalVariableProvider(c) },
         };
     public IVariableProvider CreateProvider(string providerType, JsonNode configuration)
-        => providers[providerType](configuration);
+        => (providers.GetValueOrDefault(providerType) 
+            ?? throw new InvalidOperationException("Provider {providerType} not known"))
+            (configuration);
 }

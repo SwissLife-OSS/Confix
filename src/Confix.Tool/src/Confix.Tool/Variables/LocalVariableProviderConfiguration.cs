@@ -12,7 +12,7 @@ public record LocalVariableProviderConfiguration
 
         return new LocalVariableProviderConfiguration
         {
-            FilePath = parsed.GetOrDefault("path") ?? throw new ArgumentException("""Configuration of LocalVariableProvider is missing the required property "path" specifying the path where the variable file is located""")
+            FilePath = parsed.GetValueOrDefault("path") ?? throw new ArgumentException("""Configuration of LocalVariableProvider is missing the required property "path" specifying the path where the variable file is located""")
         };
     }
 }

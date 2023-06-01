@@ -10,7 +10,7 @@ public static class JsonParser
             JsonArray array => new(ParseArray(array)),
             JsonObject obj => new(ParseObject(obj)),
             JsonValue => throw new JsonParserException("Node must be an JsonObject or JsonArray"),
-            _ => throw new ArgumentException($"Cant parse type {node.GetType().Name}")
+            _ => throw new JsonParserException($"Cant parse type {node.GetType().Name}")
         };
 
     private static IEnumerable<KeyValuePair<string, string?>> ParseNodeInternal(JsonNode? node) 
@@ -20,7 +20,7 @@ public static class JsonParser
             JsonObject obj => ParseObject(obj),
             JsonValue value => new[] { KeyValuePair.Create<string, string?>("", value.ToString()) },
             null => new[] { KeyValuePair.Create<string, string?>("", null) },
-            _ => throw new ArgumentException($"Cant parse type {node?.GetType().Name}")
+            _ => throw new JsonParserException($"Cant parse type {node?.GetType().Name}")
         };
 
     private static IEnumerable<KeyValuePair<string, string?>> ParseObject(JsonObject jsonObject)
