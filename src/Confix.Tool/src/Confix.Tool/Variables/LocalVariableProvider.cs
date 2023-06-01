@@ -59,6 +59,7 @@ public class LocalVariableProvider : IVariableProvider
 
     private static Dictionary<string, string?> ParseConfiguration(LocalVariableProviderConfiguration config)
     {
+        // TODO: figure out how this relative file paths can be resolved
         using FileStream fileStream = File.OpenRead(config.FilePath);
         JsonNode node = JsonNode.Parse(fileStream) ?? throw new JsonException("Invalid Json Node");
         return JsonParser.ParseNode(node);

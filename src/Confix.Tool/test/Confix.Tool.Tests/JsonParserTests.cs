@@ -110,7 +110,7 @@ public class JsonParserTests
                         "bar": 42,
                         "foo": [
                             {
-                                "bar": 420
+                                "bar.baz": 420
                             }
                         ]
                     }
@@ -124,6 +124,6 @@ public class JsonParserTests
         // act & assert
         result.Should().HaveCount(2);
         result["foo.[0].bar"].Should().Be("42");
-        result["foo.[0].foo.[0].bar"].Should().Be("420");
+        result["foo.[0].foo.[0].bar.baz"].Should().Be("420");
     }
 }
