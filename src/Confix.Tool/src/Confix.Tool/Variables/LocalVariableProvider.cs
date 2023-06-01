@@ -6,10 +6,13 @@ namespace ConfiX.Variables;
 public class LocalVariableProvider : IVariableProvider
 {
     public static readonly string PropertyType = "local";
-    public LocalVariableProvider(JsonNode configuration)
+    public LocalVariableProvider(JsonNode configuration) 
+        : this(LocalVariableProviderConfiguration.Parse(configuration))
+    { }
+
+    public LocalVariableProvider(LocalVariableProviderConfiguration configuration)
     {
-        var providerConfig = LocalVariableProviderConfiguration.Parse(configuration);
-        _configuration = new(() => ParseConfiguration(providerConfig));
+        _configuration = new(() => ParseConfiguration(configuration));
     }
 
     private readonly Lazy<Dictionary<string, string?>> _configuration;
