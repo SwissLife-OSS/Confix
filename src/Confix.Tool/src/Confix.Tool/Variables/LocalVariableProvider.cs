@@ -32,7 +32,6 @@ public class LocalVariableProvider : IVariableProvider
         throw new NotImplementedException();
     }
 }
-
 /*
 confix variables reload: This command reloads the variables for a project from the providers. Useful for updating your local environment with newly created variables.
 

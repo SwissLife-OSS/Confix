@@ -3,7 +3,7 @@ using System.Text.Json.Nodes;
 
 namespace Confix.Tool.Schema;
 
-public class JsonDocumentRewriter<TContext>
+public abstract class JsonDocumentRewriter<TContext>
 {
     public virtual JsonNode Rewrite(JsonNode document, TContext context)
         => document switch

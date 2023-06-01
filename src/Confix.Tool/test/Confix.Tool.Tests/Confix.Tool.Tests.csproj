@@ -23,5 +23,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Confix.Tool\Confix.Tool.csproj" />
+  </ItemGroup>
 </Project>
