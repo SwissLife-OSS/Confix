@@ -1,5 +1,4 @@
 using System.Text.Json.Nodes;
-using Confix.Tool;
 
 namespace ConfiX.Variables;
 
