@@ -26,12 +26,12 @@ public class VariableResolver
                 configuration.Configuration);
 
             var resolved = await provider.ResolveManyAsync(
-                group.Select(x => x.Path).ToArray(), 
+                group.Select(x => x.Path).ToArray(),
                 cancellationToken);
 
             resolved.ForEach((r) =>
                 resolvedVariables.Add(
-                    group.First(i => i.Path == r.Key), 
+                    group.First(i => i.Path == r.Key),
                     r.Value));
         }
 
@@ -40,9 +40,7 @@ public class VariableResolver
 
     private static VariableProviderConfiguration GetProviderConfiguration(
         IReadOnlyList<VariableProviderConfiguration> configurations,
-        string providerName) 
-        => configurations.FirstOrDefault(c => c.Name.Equals(providerName)) 
+        string providerName)
+        => configurations.FirstOrDefault(c => c.Name.Equals(providerName))
             ?? throw new InvalidOperationException("Provider not found");
-
-
 }
