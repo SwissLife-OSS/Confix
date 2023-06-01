@@ -2,7 +2,6 @@ using System.Text.Json.Nodes;
 using ConfiX.Variables;
 using FluentAssertions;
 using Xunit;
-
 namespace Confix.Tool.Tests;
 
 public class JsonParserTests
