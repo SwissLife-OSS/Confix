@@ -7,8 +7,10 @@ public class LocalVariableProvider : IVariableProvider
     public static readonly string PropertyType = "local";
     public LocalVariableProvider(JsonNode configuration)
     {
-        throw new NotImplementedException();
+        _filePath = ((string?)configuration["path"]) ?? throw new ArgumentException("Missing path parameter");
     }
+
+    private readonly string _filePath;
 
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
     {
