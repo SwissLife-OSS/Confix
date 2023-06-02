@@ -1,9 +1,10 @@
 using System.CommandLine.Builder;
+using Confix.Tool.Common.Pipelines;
 using static System.CommandLine.Invocation.MiddlewareOrder;
 
 namespace Confix.Tool;
 
-internal static class CommandLineBuilderExtensions
+public static partial class CommandLineBuilderExtensions
 {
     public static CommandLineBuilder AddSingleton<T, TImpl>(this CommandLineBuilder builder)
         where TImpl : T, new()

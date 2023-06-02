@@ -15,10 +15,10 @@ public class LoadConfigurationMiddlewareTest
     private readonly string _testProject;
     private readonly string _testComponent;
     private readonly string _confixRoot;
-    private string _testComponentConfig;
-    private string _testProjectConfig;
-    private string _testRepoConfig;
-    private string _testHomeConfig;
+    private readonly string _testComponentConfig;
+    private readonly string _testProjectConfig;
+    private readonly string _testRepoConfig;
+    private readonly string _testHomeConfig;
 
     public LoadConfigurationMiddlewareTest()
     {

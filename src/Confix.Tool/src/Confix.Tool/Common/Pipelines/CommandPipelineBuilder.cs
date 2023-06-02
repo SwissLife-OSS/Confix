@@ -92,7 +92,9 @@ public sealed class CommandPipelineBuilder
 
     private void Chain(Func<PipelineBuilder, PipelineBuilder> middleware)
     {
-        _pipeline = builder => middleware(_pipeline(builder));
+        var pipeline = _pipeline;
+        
+        _pipeline = builder => middleware(pipeline(builder));
     }
 
     private async Task<int> Handler(InvocationContext context)

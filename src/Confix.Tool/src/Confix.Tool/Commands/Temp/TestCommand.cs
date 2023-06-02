@@ -27,7 +27,7 @@ public sealed class TestCommand : Command
         => await PipelineBuilder
             .From(services)
             .Use<LoadConfigurationMiddleware>()
-            .Use<ExecuteComponentInput>()
+            .Use<ExecuteComponentInputMiddleware>()
             .Use<ExecuteComponentOutput>()
             .BuildExecutor()
             .AddParameter(PathArgument.Instance, path)
