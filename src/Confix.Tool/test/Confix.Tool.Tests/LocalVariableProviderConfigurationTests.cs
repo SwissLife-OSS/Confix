@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using ConfiX.Variables;
 using FluentAssertions;
@@ -12,7 +13,7 @@ public class LocalVariableProviderConfigurationTests
         // Arrange
         var jsonNode = JsonNode.Parse("""
             {
-                "FilePath": "/path/to/file.json"
+                "path": "/path/to/file.json"
             }
             """)!;
 
@@ -34,6 +35,7 @@ public class LocalVariableProviderConfigurationTests
             """)!;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => LocalVariableProviderConfiguration.Parse(jsonNode));
+        Assert.Throws<ArgumentException>(() => LocalVariableProviderConfiguration.Parse(jsonNode))
+            .InnerException.Should().BeOfType<JsonException>();
     }
 }
