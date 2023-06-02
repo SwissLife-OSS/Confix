@@ -1,7 +1,7 @@
 using System.Text.Json.Nodes;
 using ConfiX.Variables;
 using FluentAssertions;
-using Xunit;
+
 namespace Confix.Tool.Tests;
 
 public class LocalVariableProviderConfigurationTests
@@ -12,7 +12,7 @@ public class LocalVariableProviderConfigurationTests
         // Arrange
         var jsonNode = JsonNode.Parse("""
             {
-                "path": "/path/to/file.json"
+                "FilePath": "/path/to/file.json"
             }
             """)!;
 
