@@ -8,88 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf44cdf2-0411-4c1a-9355-258d0c233dfd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Component/BuildComponentCommand.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Component/ComponentCommand.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/ExecutionContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IExecutionContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentInputDefinition.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentOutputDefinition.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentProviderDefinition.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentReferenceDefinition.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentRepositoryDefinition.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentReferenceConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Environment/Configuration/EnvironmentDefintion.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Project/Configuration/ConfigurationFileDefinition.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Variables/VariableProviderDefinition.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/ConfigurationFeature.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/ConfigurationScope.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/IConfigurationFileCollection.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfigurationMiddleware.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Json/JsonNodeExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.LoadFromFiles_Should_LoadConfigurationFromFile.snap" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Middlewares/LoadConfigurationMiddleware.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/StubExecutionContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentReferenceConfigurationTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/ComposeCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/ComposeCommand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/TestCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/TestCommand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IMiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IMiddlewareContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/ExecutionContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/ExecutionContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/MiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/MiddlewareContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineBuilder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Configuration/ConfixConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Configuration/ConfixConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Configuration/JsonSerialization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Configuration/JsonSerialization.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/ConfixCommandLine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfixCommandLine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/ConfixRootCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfixRootCommand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Component.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentDefinition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentDefinition.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentSettingsFile.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentInputConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentInputConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentOutputConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentOutputConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentProviderConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentProviderConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentRepositoryConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentRepositoryConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Environment/Configuration/EnvironmentConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Environment/Configuration/EnvironmentConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Project/Configuration/ConfigurationFile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Project/Configuration/ConfigurationFile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Project/Configuration/ProjectConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Project/Configuration/ProjectConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Project/ProjectDefintion.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Project/ProjectDefintion.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Project/ProjectDiscovery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Project/ProjectDiscovery.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Repository/Configuration/RepositoryConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Repository/Configuration/RepositoryConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Repository/RepositoryDefintion.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Repository/RepositoryDefintion.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Variables/Configuration/VariableProviderConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Variables/Configuration/VariableProviderConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Console/Extensions/CommandLineBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Console/Extensions/CommandLineBuilderExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/FileNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/FileNames.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/FileSystemHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/FileSystemHelpers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Linq/LinqExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Linq/LinqExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentConfigurationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentReferenceConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentReferenceConfiguration.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentProviderConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentProviderConfigurationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/__snapshots__/ComponentConfigurationTests.Parse_Should_BeValid_WhenEmpty.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/__snapshots__/ComponentConfigurationTests.Parse_Should_BeValid_WhenEmpty.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/__snapshots__/ComponentConfigurationTests.Parse_Should_ReturnValidComponentConfiguration_When_ValidJsonNodeProvided.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/__snapshots__/ComponentConfigurationTests.Parse_Should_ReturnValidComponentConfiguration_When_ValidJsonNodeProvided.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/__snapshots__/ComponentProviderConfigurationTests.Parse_Should_BeValid.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/__snapshots__/ComponentProviderConfigurationTests.Parse_Should_BeValid.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/__snapshots__/ComponentProviderConfigurationTests.Parse_Should_BeValid_WhenEmpty.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/__snapshots__/ComponentProviderConfigurationTests.Parse_Should_BeValid_WhenEmpty.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Environment/__snapshots__/EnvironmentConfigurationTest.Parse_Should_BeValid_WhenEmpty.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Environment/__snapshots__/EnvironmentConfigurationTest.Parse_Should_BeValid_WhenEmpty.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Environment/__snapshots__/EnvironmentConfigurationTest.Parse_Should_BeValid_When_ExcludeFilesIsMissing.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Environment/__snapshots__/EnvironmentConfigurationTest.Parse_Should_BeValid_When_ExcludeFilesIsMissing.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Environment/__snapshots__/EnvironmentConfigurationTest.Parse_Should_BeValid_When_OnlyName.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Environment/__snapshots__/EnvironmentConfigurationTest.Parse_Should_BeValid_When_OnlyName.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/ProjectConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/ProjectConfigurationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_ComponentDisabled.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_ComponentDisabled.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_ComponentEnabled.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_ComponentEnabled.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_ComponentLatest.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_ComponentLatest.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_ComponentVersion.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_ComponentVersion.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_NonRequiredArMissing.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_BeValid_When_NonRequiredArMissing.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_ParseSubProjects_When_Provided.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Project/__snapshots__/ProjectConfigurationTests.Parse_Should_ParseSubProjects_When_Provided.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/ConfixConfigurationTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/ConfixConfigurationTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/RepositoryConfigurationTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/RepositoryConfigurationTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/__snapshots__/ConfixConfigurationTest.Parse_Should_BeValid.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/__snapshots__/ConfixConfigurationTest.Parse_Should_BeValid.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/__snapshots__/ConfixConfigurationTest.Parse_Should_BeValid_When_NonRequiredArMissing.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/__snapshots__/ConfixConfigurationTest.Parse_Should_BeValid_When_NonRequiredArMissing.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/__snapshots__/RepositoryConfigurationTest.Parse_Should_BeValid.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/__snapshots__/RepositoryConfigurationTest.Parse_Should_BeValid.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/__snapshots__/RepositoryConfigurationTest.Parse_Should_BeValid_When_NonRequiredArMissing.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/__snapshots__/RepositoryConfigurationTest.Parse_Should_BeValid_When_NonRequiredArMissing.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/VariableProviderConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/VariableProviderConfigurationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/__snapshots__/VariableProviderConfigurationTests.Parse_Should_BeValid.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/__snapshots__/VariableProviderConfigurationTests.Parse_Should_BeValid.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/__snapshots__/VariableProviderConfigurationTests.Parse_Should_BeValid_WhenEmpty.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/__snapshots__/VariableProviderConfigurationTests.Parse_Should_BeValid_WhenEmpty.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/__snapshots__/VariableProviderConfigurationTests.Parse_Should_BeValid_When_EnvironmentOverrideIsEmpty.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/__snapshots__/VariableProviderConfigurationTests.Parse_Should_BeValid_When_EnvironmentOverrideIsEmpty.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/__snapshots__/VariableProviderConfigurationTests.Parse_Should_BeValid_When_EnvironmentOverrideIsMissing.snap" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/__snapshots__/VariableProviderConfigurationTests.Parse_Should_BeValid_When_EnvironmentOverrideIsMissing.snap" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -221,7 +147,7 @@
       <option name="presentableId" value="Default" />
       <updated>1685635179002</updated>
       <workItem from="1685635181079" duration="19446000" />
-      <workItem from="1685666004189" duration="8380000" />
+      <workItem from="1685666004189" duration="9982000" />
     </task>
     <servers />
   </component>
@@ -236,13 +162,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs</url>
-          <line>32</line>
+          <line>31</line>
           <properties documentPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" initialLine="31" containingFunctionPresentation="Method 'ExecuteAsync'">
             <startOffsets>
-              <option value="917" />
+              <option value="916" />
             </startOffsets>
             <endOffsets>
-              <option value="955" />
+              <option value="954" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="21" />
@@ -389,6 +315,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentReferenceConfiguration.cs</url>
+          <line>76</line>
+          <properties documentPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentReferenceConfiguration.cs" initialLine="74" containingFunctionPresentation="Method 'Parse'">
+            <startOffsets>
+              <option value="2163" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2673" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="44" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

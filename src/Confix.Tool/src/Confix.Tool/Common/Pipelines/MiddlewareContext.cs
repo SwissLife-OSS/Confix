@@ -2,7 +2,7 @@ using Spectre.Console;
 
 namespace Confix.Tool.Common.Pipelines;
 
-public class MiddlewareContext : IMiddlewareContext
+public sealed class MiddlewareContext : IMiddlewareContext
 {
     public IFeatureCollection Features { get; } = new FeatureCollection();
 

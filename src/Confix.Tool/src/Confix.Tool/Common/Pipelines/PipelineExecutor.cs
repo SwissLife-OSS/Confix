@@ -29,7 +29,6 @@ public sealed class PipelineExecutor
             Execution = ExecutionContext.Create()
         };
          
-
         await _pipeline.ExecuteAsync(context);
 
         return context.ExitCode;

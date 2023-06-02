@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Common.Pipelines;
 
-public class PipelineBuilder
+public sealed class PipelineBuilder
 {
     private readonly IServiceProvider _services;
     private readonly List<Func<IServiceProvider, IMiddleware>> _middlewareFactories = new();

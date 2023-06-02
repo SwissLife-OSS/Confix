@@ -2,6 +2,7 @@ using System.Text.Json.Nodes;
 using Confix.Utilities.Json;
 using Confix.Utilities.Parsing;
 using Json.Schema;
+using static System.StringSplitOptions;
 
 namespace Confix.Tool.Abstractions;
 
@@ -39,7 +40,8 @@ public sealed class ComponentReferenceConfiguration
 
     public static ComponentReferenceConfiguration Parse(string key, JsonNode node)
     {
-        if (key.Split("/") is not [['@', .. var provider], var componentName])
+        if (key.Split("/", TrimEntries | RemoveEmptyEntries) is not
+            [['@', .. var provider], var componentName])
         {
             throw new JsonParseException(
                 node,
@@ -91,8 +93,13 @@ public sealed class ComponentReferenceConfiguration
             mountingPoints);
     }
 
-    public ComponentReferenceConfiguration Merge(ComponentReferenceConfiguration other)
+    public ComponentReferenceConfiguration Merge(ComponentReferenceConfiguration? other)
     {
+        if (other is null)
+        {
+            return this;
+        }
+
         var provider = other.Provider;
         var componentName = other.ComponentName;
         var version = other.Version ?? Version;

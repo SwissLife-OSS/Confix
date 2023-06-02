@@ -1,6 +1,6 @@
 namespace Confix.Tool.Common.Pipelines;
 
-public class ExecutionContext : IExecutionContext
+public sealed class ExecutionContext : IExecutionContext
 {
     public ExecutionContext(string currentDirectory, string homeDirectory)
     {
