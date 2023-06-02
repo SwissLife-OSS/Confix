@@ -4,6 +4,27 @@ using Confix.Tool.Common.Pipelines;
 
 namespace Confix.Tool.Commands.Component;
 
+/// <summary>
+/// Builds a command pipeline that can be attached directly to a <see cref="Command"/>.
+/// </summary>
+/// <example>
+/// Here's an example of how to use the `CommandPipelineBuilder` class:
+/// <code>
+/// public sealed class BuildComponentCommand : Command
+/// {
+///     public BuildComponentCommand() : base("build")
+///         => this
+///             .AddPipeline()
+///             .Use&lt;LoadConfigurationMiddleware>()
+///             .Use&lt;ExecuteComponentInput>()
+///             .AddArgument(PathArgument.Instance)
+///             .AddOption(VerboseOption.Instance)
+///             .Use&lt;ExecuteComponentOutput>();
+/// }
+/// </code>
+/// This example creates a `CommandPipelineBuilder` for a command, adds a middleware component, an
+/// argument, and an option to the pipeline.
+/// </example>
 public sealed class CommandPipelineBuilder
 {
     private readonly Command _command;
@@ -12,6 +33,10 @@ public sealed class CommandPipelineBuilder
 
     private Func<PipelineBuilder, PipelineBuilder> _pipeline = _ => _;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CommandPipelineBuilder"/> class.
+    /// </summary>
+    /// <param name="command">The command to which the pipeline is attached.</param>
     public CommandPipelineBuilder(Command command)
     {
         _command = command;
@@ -19,6 +44,11 @@ public sealed class CommandPipelineBuilder
         command.SetHandler(Handler, Bind.FromServiceProvider<InvocationContext>());
     }
 
+    /// <summary>
+    /// Adds a middleware component to the pipeline.
+    /// </summary>
+    /// <typeparam name="TMiddleware">The type of the middleware component.</typeparam>
+    /// <returns>The current command pipeline builder instance.</returns>
     public CommandPipelineBuilder Use<TMiddleware>() where TMiddleware : IMiddleware
     {
         Chain(builder => builder.Use<TMiddleware>());
@@ -26,6 +56,12 @@ public sealed class CommandPipelineBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds an argument to the command and maps it to the <see cref="IParameterCollection"/>.
+    /// </summary>
+    /// <typeparam name="TArgument">The type of the argument.</typeparam>
+    /// <param name="argument">The argument to add.</param>
+    /// <returns>The current command pipeline builder instance.</returns>
     public CommandPipelineBuilder AddArgument<TArgument>(TArgument argument)
         where TArgument : Argument
     {
@@ -37,6 +73,12 @@ public sealed class CommandPipelineBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds an option to the command and maps it to the <see cref="IParameterCollection"/>.
+    /// </summary>
+    /// <typeparam name="TOption">The type of the option.</typeparam>
+    /// <param name="option">The option to add.</param>
+    /// <returns>The current command pipeline builder instance.</returns>
     public CommandPipelineBuilder AddOption<TOption>(TOption option)
         where TOption : Option
     {
@@ -46,11 +88,6 @@ public sealed class CommandPipelineBuilder
 
         _command.AddOption(option);
         return this;
-    }
-
-    public static CommandPipelineBuilder New(Command command)
-    {
-        return new(command);
     }
 
     private void Chain(Func<PipelineBuilder, PipelineBuilder> middleware)
@@ -97,5 +134,15 @@ public sealed class CommandPipelineBuilder
         }
 
         return executor;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="CommandPipelineBuilder"/> for a specific command.
+    /// </summary>
+    /// <param name="command">The command for which to create the builder.</param>
+    /// <returns>A new instance of <see cref="CommandPipelineBuilder"/>.</returns>
+    public static CommandPipelineBuilder New(Command command)
+    {
+        return new(command);
     }
 }

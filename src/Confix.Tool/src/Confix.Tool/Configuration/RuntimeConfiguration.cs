@@ -5,7 +5,7 @@ using Confix.Utilities.Json;
 
 namespace ConfiX.Extensions;
 
-public sealed class ConfixConfiguration
+public sealed class RuntimeConfiguration
 {
     private static class FieldNames
     {
@@ -14,7 +14,7 @@ public sealed class ConfixConfiguration
         public const string Project = "project";
     }
 
-    public ConfixConfiguration(
+    public RuntimeConfiguration(
         bool isRoot,
         ProjectConfiguration? project,
         ComponentConfiguration? component,
@@ -34,12 +34,12 @@ public sealed class ConfixConfiguration
 
     public IReadOnlyList<FileInfo> SourceFiles { get; }
 
-    public static ConfixConfiguration Parse(JsonNode? node)
+    public static RuntimeConfiguration Parse(JsonNode? node)
     {
         return Parse(node, Array.Empty<FileInfo>());
     }
 
-    public static ConfixConfiguration Parse(JsonNode? node, IReadOnlyList<FileInfo> sourceFiles)
+    public static RuntimeConfiguration Parse(JsonNode? node, IReadOnlyList<FileInfo> sourceFiles)
     {
         var obj = node.ExpectObject();
 
@@ -54,10 +54,10 @@ public sealed class ConfixConfiguration
             ? ProjectConfiguration.Parse(projectNode.ExpectObject())
             : null;
 
-        return new ConfixConfiguration(isRoot, project, component, sourceFiles);
+        return new RuntimeConfiguration(isRoot, project, component, sourceFiles);
     }
 
-    public ConfixConfiguration Merge(ConfixConfiguration? other)
+    public RuntimeConfiguration Merge(RuntimeConfiguration? other)
     {
         if (other is null)
         {
@@ -72,12 +72,12 @@ public sealed class ConfixConfiguration
 
         var sourceFiles = SourceFiles.Concat(other.SourceFiles).ToArray();
 
-        return new ConfixConfiguration(isRoot, project, component, sourceFiles);
+        return new RuntimeConfiguration(isRoot, project, component, sourceFiles);
     }
 
-    public static ConfixConfiguration LoadFromFiles(IEnumerable<FileInfo> files)
+    public static RuntimeConfiguration LoadFromFiles(IEnumerable<FileInfo> files)
     {
-        var config = new ConfixConfiguration(true, null, null, Array.Empty<FileInfo>());
+        var config = new RuntimeConfiguration(true, null, null, Array.Empty<FileInfo>());
 
         foreach (var file in files.Where(x => x.Name == FileNames.ConfixRc))
         {

@@ -20,5 +20,6 @@ public sealed class MiddlewareContext : IMiddlewareContext
     /// <inheritdoc />
     public required IParameterCollection Parameter { get; init; }
 
+    /// <inheritdoc />
     public int ExitCode { get; set; } = ExitCodes.Error;
 }

@@ -67,7 +67,7 @@ public class ConfixConfigurationTest : ParserTestBase
     public void Merge_Should_ReturnOriginalConfiguration_When_OtherConfigurationIsNull()
     {
         // Arrange
-        var original = new ConfixConfiguration(true,
+        var original = new RuntimeConfiguration(true,
             ProjectConfiguration.Empty,
             null,
             Array.Empty<FileInfo>());
@@ -83,7 +83,7 @@ public class ConfixConfigurationTest : ParserTestBase
     public void Merge_Should_ReturnMergedConfiguration_When_OtherConfigurationIsNotNull()
     {
         // Arrange
-        var original = new ConfixConfiguration(
+        var original = new RuntimeConfiguration(
             true,
             ProjectConfiguration.Empty,
             new ComponentConfiguration(
@@ -92,7 +92,7 @@ public class ConfixConfigurationTest : ParserTestBase
                 new List<ComponentOutputConfiguration>(),
                 Array.Empty<FileInfo>()),
             Array.Empty<FileInfo>());
-        var other = new ConfixConfiguration(
+        var other = new RuntimeConfiguration(
             false,
             new ProjectConfiguration("MergedProject",
                 null,
@@ -167,7 +167,7 @@ public class ConfixConfigurationTest : ParserTestBase
             """);
 
         // Act
-        var result = ConfixConfiguration.LoadFromFiles(configuration);
+        var result = RuntimeConfiguration.LoadFromFiles(configuration);
 
         // Assert
         Assert.NotNull(result);
@@ -244,7 +244,7 @@ public class ConfixConfigurationTest : ParserTestBase
             """);
 
         // Act
-        var result = ConfixConfiguration.LoadFromFiles(configuration);
+        var result = RuntimeConfiguration.LoadFromFiles(configuration);
 
         // Assert
         Assert.NotNull(result);
@@ -260,6 +260,6 @@ public class ConfixConfigurationTest : ParserTestBase
 
     public override object Parse(JsonNode json)
     {
-        return ConfixConfiguration.Parse(json);
+        return RuntimeConfiguration.Parse(json);
     }
 }

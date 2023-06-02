@@ -57,7 +57,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
     {
         var files = new List<FileInfo>(configurationFiles);
 
-        var confixConfiguration = ConfixConfiguration.LoadFromFiles(files);
+        var confixConfiguration = RuntimeConfiguration.LoadFromFiles(files);
         var repositoryConfiguration = RepositoryConfiguration.LoadFromFiles(files);
 
         if (repositoryConfiguration is not null &&
@@ -99,20 +99,20 @@ file sealed class ConfigurationFileCollection
     private readonly IReadOnlyList<FileInfo> _collection;
 
     public ConfigurationFileCollection(
-        ConfixConfiguration? configuration,
+        RuntimeConfiguration? configuration,
         RepositoryConfiguration? repositoryConfiguration,
         ProjectConfiguration? projectConfiguration,
         ComponentConfiguration? componentConfiguration,
         IReadOnlyList<FileInfo> collection)
     {
-        Configuration = configuration;
+        RuntimeConfiguration = configuration;
         Repository = repositoryConfiguration;
         Project = projectConfiguration;
         Component = componentConfiguration;
         _collection = collection;
     }
 
-    public ConfixConfiguration? Configuration { get; }
+    public RuntimeConfiguration? RuntimeConfiguration { get; }
 
     public RepositoryConfiguration? Repository { get; }
 
