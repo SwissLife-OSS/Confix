@@ -73,6 +73,9 @@ public sealed class CommandPipelineBuilder
         return this;
     }
 
+    public CommandPipelineBuilder AddArgument<T>(string name, string description) 
+        => AddArgument(new Argument<T>(name, description));
+
     /// <summary>
     /// Adds an option to the command and maps it to the <see cref="IParameterCollection"/>.
     /// </summary>

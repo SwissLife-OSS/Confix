@@ -475,4 +475,7 @@ $RECYCLE.BIN/
 *.swp
 
 # Jetbrains Temporary 
-.idea/*
+.idea/
+
+# VsCode
+.vscode/
