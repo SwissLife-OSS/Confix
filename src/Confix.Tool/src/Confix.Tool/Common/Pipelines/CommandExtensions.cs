@@ -1,6 +1,6 @@
 using System.CommandLine;
 
-namespace Confix.Tool.Commands.Component;
+namespace Confix.Tool.Common.Pipelines;
 
 public static class CommandExtensions
 {

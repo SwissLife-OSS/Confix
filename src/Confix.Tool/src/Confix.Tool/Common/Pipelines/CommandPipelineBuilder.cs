@@ -2,7 +2,7 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using Confix.Tool.Common.Pipelines;
 
-namespace Confix.Tool.Commands.Component;
+namespace Confix.Tool.Common.Pipelines;
 
 /// <summary>
 /// Builds a command pipeline that can be attached directly to a <see cref="Command"/>.

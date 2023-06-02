@@ -1,6 +1,7 @@
 using System.CommandLine;
 using Confix.Tool.Commands.Component;
 using Confix.Tool.Commands.Temp;
+using Confix.Tool.Commands.Variable;
 
 namespace Confix.Tool;
 
@@ -10,5 +11,6 @@ internal sealed class ConfixRootCommand : Command
     {
         AddCommand(new TempCommand());
         AddCommand(new ComponentCommand());
+        AddCommand(new VariableCommand());
     }
 }
