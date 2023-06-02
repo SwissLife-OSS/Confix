@@ -1,0 +1,27 @@
+﻿{
+  "Component": null,
+  "Project": {
+    "Name": "__Default",
+    "Environments": [
+      {
+        "Name": "dev",
+        "ExcludeFiles": [
+          "a"
+        ]
+      },
+      {
+        "Name": "prod",
+        "ExcludeFiles": [
+          "a"
+        ]
+      }
+    ],
+    "Components": [],
+    "Repositories": [],
+    "VariableProviders": [],
+    "ComponentProviders": [],
+    "ConfigurationFiles": [],
+    "Subprojects": []
+  },
+  "Repository": null
+}

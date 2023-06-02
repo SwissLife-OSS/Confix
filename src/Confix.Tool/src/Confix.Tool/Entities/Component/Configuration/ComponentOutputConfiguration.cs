@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Utilities.Json;
 
@@ -27,5 +26,18 @@ public sealed class ComponentOutputConfiguration
         var type = obj.MaybeProperty(FieldNames.Type)?.ExpectValue<string>();
 
         return new ComponentOutputConfiguration(type, element);
+    }
+
+    public ComponentOutputConfiguration Merge(ComponentOutputConfiguration? other)
+    {
+        if (other is null)
+        {
+            return this;
+        }
+
+        var type = other.Type ?? Type;
+        var value = Value.Merge(other.Value) ?? new JsonObject();
+
+        return new ComponentOutputConfiguration(type, value);
     }
 }

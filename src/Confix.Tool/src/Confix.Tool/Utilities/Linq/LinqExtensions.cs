@@ -15,4 +15,22 @@ public static class LinqExtensions
     {
         return source.Where(x => x is not null)!;
     }
+
+    public static IReadOnlyList<T>? MergeWith<T>(
+        this (IEnumerable<T>?, IEnumerable<T>?) tuple,
+        Func<T, T, bool> keySelector,
+        Func<T, T, T> combine)
+    {
+        return tuple switch
+        {
+            (null, null) => null,
+            (null, { } c) => c.ToArray(),
+            ({ } c, null) => c.ToArray(),
+            ({ } c1, { } c2) => c2.Select(x
+                    => c1.FirstOrDefault(y => keySelector(x, y)) is { } current
+                        ? combine(current, x)
+                        : x)
+                .ToArray()
+        };
+    }
 }

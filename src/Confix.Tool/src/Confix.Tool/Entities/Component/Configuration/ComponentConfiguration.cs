@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 
 namespace Confix.Tool.Abstractions;
@@ -15,11 +16,13 @@ public sealed class ComponentConfiguration
     public ComponentConfiguration(
         string? name,
         IReadOnlyList<ComponentInputConfiguration>? inputs,
-        IReadOnlyList<ComponentOutputConfiguration>? outputs)
+        IReadOnlyList<ComponentOutputConfiguration>? outputs,
+        IReadOnlyList<FileInfo> sourceFiles)
     {
         Name = name;
         Inputs = inputs;
         Outputs = outputs;
+        SourceFiles = sourceFiles;
     }
 
     public string? Name { get; }
@@ -28,7 +31,14 @@ public sealed class ComponentConfiguration
 
     public IReadOnlyList<ComponentOutputConfiguration>? Outputs { get; }
 
-    public static ComponentConfiguration Parse(JsonNode node)
+    public IReadOnlyList<FileInfo> SourceFiles { get; }
+
+    public static ComponentConfiguration Parse(JsonNode? node)
+    {
+        return Parse(node, Array.Empty<FileInfo>());
+    }
+
+    public static ComponentConfiguration Parse(JsonNode? node, IReadOnlyList<FileInfo> sourceFiles)
     {
         var obj = node.ExpectObject();
 
@@ -48,6 +58,38 @@ public sealed class ComponentConfiguration
             .Select(ComponentOutputConfiguration.Parse)
             .ToArray();
 
-        return new ComponentConfiguration(name, inputs, outputs);
+        return new ComponentConfiguration(name, inputs, outputs, sourceFiles);
+    }
+
+    public ComponentConfiguration Merge(ComponentConfiguration? other)
+    {
+        if (other is null)
+        {
+            return this;
+        }
+
+        var name = other.Name ?? Name;
+
+        var inputs = (Inputs, other.Inputs)
+            .MergeWith((x, y) => x.Type == y.Type, (x, y) => x.Merge(y));
+
+        var outputs = (Outputs, other.Outputs)
+            .MergeWith((x, y) => x.Type == y.Type, (x, y) => x.Merge(y));
+
+        var sourceFiles = SourceFiles.Concat(other.SourceFiles).Distinct().ToArray();
+
+        return new ComponentConfiguration(name, inputs, outputs, sourceFiles);
+    }
+
+    public static ComponentConfiguration? LoadFromFiles(IEnumerable<FileInfo> files)
+    {
+        var config = files.FirstOrDefault(x => x.Name == FileNames.ConfixComponent);
+        if (config is null)
+        {
+            return null;
+        }
+
+        var json = JsonNode.Parse(File.ReadAllText(config.FullName));
+        return Parse(json, new[] { config });
     }
 }

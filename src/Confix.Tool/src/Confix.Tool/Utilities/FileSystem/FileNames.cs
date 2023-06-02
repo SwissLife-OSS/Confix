@@ -4,9 +4,11 @@ public static class FileNames
 {
     public const string Schema = "schema.json";
 
-    public const string ComponentDefiniton = ".confix.component";
+    public const string ConfixComponent = ".confix.component";
 
-    public const string ProjectDefiniton = ".confix.project";
+    public const string ConfixProject = ".confix.project";
 
-    public const string RepositoryDefiniton = ".confix.repo";
+    public const string ConfixRepository = ".confix.repository";
+
+    public const string ConfixRc = ".confixrc";
 }

@@ -9,7 +9,7 @@
     },
     {
       "Name": "staging",
-      "ExcludeFiles": []
+      "ExcludeFiles": null
     },
     {
       "Name": "production",
@@ -24,7 +24,7 @@
       "ComponentName": "BlobStorage",
       "Version": null,
       "IsEnabled": true,
-      "MountingPoint": [
+      "MountingPoints": [
         "documents/blob-storage",
         "user-data/blob-storage"
       ]
@@ -34,7 +34,7 @@
       "ComponentName": "CustomComponent",
       "Version": "1.0.0",
       "IsEnabled": true,
-      "MountingPoint": null
+      "MountingPoints": null
     }
   ],
   "Repositories": [
@@ -60,7 +60,7 @@
           "file": "appsettings.prod.json"
         }
       },
-      "Value": {
+      "Values": {
         "name": "appsettings",
         "type": "dotnet-appsettings",
         "environmentOverride": {
@@ -78,7 +78,7 @@
     {
       "Name": "dotnet",
       "Type": "dotnet-package",
-      "Value": {
+      "Values": {
         "name": "dotnet",
         "type": "dotnet-package",
         "additional": "property"
@@ -98,5 +98,6 @@
       }
     }
   ],
-  "Subprojects": null
+  "Subprojects": null,
+  "SourceFiles": []
 }

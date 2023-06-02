@@ -34,4 +34,18 @@ public sealed class ComponentRepositoryConfiguration
 
         return new ComponentRepositoryConfiguration(name, type, obj);
     }
+
+    public ComponentRepositoryConfiguration Merge(ComponentRepositoryConfiguration? other)
+    {
+        if (other is null)
+        {
+            return this;
+        }
+
+        var name = other.Name ?? Name;
+        var type = other.Type ?? Type;
+        var values = Values.Merge(other.Values)!.AsObject();
+
+        return new ComponentRepositoryConfiguration(name, type, values);
+    }
 }

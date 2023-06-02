@@ -1,3 +1,6 @@
+using Microsoft.Extensions.DependencyInjection;
+using Spectre.Console;
+
 namespace Confix.Tool.Common.Pipelines;
 
 public sealed class PipelineExecutor
@@ -21,8 +24,11 @@ public sealed class PipelineExecutor
         var context = new MiddlewareContext
         {
             CancellationToken = cancellationToken,
-            Parameter = ParameterCollection.From(_parameter)
+            Parameter = ParameterCollection.From(_parameter),
+            Console = _pipeline.Services.GetRequiredService<IAnsiConsole>(),
+            Execution = ExecutionContext.Create()
         };
+         
 
         await _pipeline.ExecuteAsync(context);
 

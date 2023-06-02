@@ -9,7 +9,7 @@
       "file": "appsettings.prod.json"
     }
   },
-  "Value": {
+  "Values": {
     "name": "appsettings",
     "type": "dotnet-appsettings",
     "environmentOverride": {

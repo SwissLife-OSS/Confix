@@ -1,3 +1,6 @@
+using System.CommandLine.Invocation;
+using Spectre.Console;
+
 namespace Confix.Tool.Common.Pipelines;
 
 public interface IMiddlewareContext
@@ -8,5 +11,9 @@ public interface IMiddlewareContext
 
     IDictionary<string, object> ContextData { get; }
 
+    IAnsiConsole Console { get; }
+
     CancellationToken CancellationToken { get; }
+
+    IExecutionContext Execution { get; }
 }

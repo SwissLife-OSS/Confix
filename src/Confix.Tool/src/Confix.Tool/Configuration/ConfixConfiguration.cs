@@ -1,10 +1,11 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
+using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 
 namespace ConfiX.Extensions;
 
-public class ConfixConfiguration
+public sealed class ConfixConfiguration
 {
     private static class FieldNames
     {
@@ -16,11 +17,13 @@ public class ConfixConfiguration
     public ConfixConfiguration(
         bool isRoot,
         ProjectConfiguration? project,
-        ComponentConfiguration? component)
+        ComponentConfiguration? component,
+        IReadOnlyList<FileInfo> sourceFiles)
     {
         IsRoot = isRoot;
         Project = project;
         Component = component;
+        SourceFiles = sourceFiles;
     }
 
     public bool IsRoot { get; set; }
@@ -29,21 +32,67 @@ public class ConfixConfiguration
 
     public ProjectConfiguration? Project { get; }
 
-    public static ConfixConfiguration Parse(JsonNode node)
+    public IReadOnlyList<FileInfo> SourceFiles { get; }
+
+    public static ConfixConfiguration Parse(JsonNode? node)
+    {
+        return Parse(node, Array.Empty<FileInfo>());
+    }
+
+    public static ConfixConfiguration Parse(JsonNode? node, IReadOnlyList<FileInfo> sourceFiles)
     {
         var obj = node.ExpectObject();
 
-        var isRoot = obj.TryGetPropertyValue(FieldNames.IsRoot, out var isRootNode) &&
+        var isRoot = !obj.TryGetNonNullPropertyValue(FieldNames.IsRoot, out var isRootNode) ||
             isRootNode.ExpectValue<bool>();
 
-        var component = obj.TryGetPropertyValue(FieldNames.Component, out var componentNode)
+        var component = obj.TryGetNonNullPropertyValue(FieldNames.Component, out var componentNode)
             ? ComponentConfiguration.Parse(componentNode.ExpectObject())
             : null;
 
-        var project = obj.TryGetPropertyValue(FieldNames.Project, out var projectNode)
+        var project = obj.TryGetNonNullPropertyValue(FieldNames.Project, out var projectNode)
             ? ProjectConfiguration.Parse(projectNode.ExpectObject())
             : null;
 
-        return new ConfixConfiguration(isRoot, project, component);
+        return new ConfixConfiguration(isRoot, project, component, sourceFiles);
+    }
+
+    public ConfixConfiguration Merge(ConfixConfiguration? other)
+    {
+        if (other is null)
+        {
+            return this;
+        }
+
+        var isRoot = other.IsRoot || IsRoot;
+
+        var project = Project?.Merge(other.Project) ?? other.Project;
+
+        var component = Component?.Merge(other.Component) ?? other.Component;
+
+        var sourceFiles = SourceFiles.Concat(other.SourceFiles).ToArray();
+
+        return new ConfixConfiguration(isRoot, project, component, sourceFiles);
+    }
+
+    public static ConfixConfiguration LoadFromFiles(IEnumerable<FileInfo> files)
+    {
+        var config = new ConfixConfiguration(true, null, null, Array.Empty<FileInfo>());
+
+        foreach (var file in files.Where(x => x.Name == FileNames.ConfixRc))
+        {
+            var json = JsonNode.Parse(File.ReadAllText(file.FullName));
+            var innerConfig = Parse(json, new[] { file });
+            if (innerConfig.IsRoot)
+            {
+                config = innerConfig;
+            }
+            else
+            {
+                config = config.Merge(innerConfig);
+            }
+        }
+
+        return config;
     }
 }

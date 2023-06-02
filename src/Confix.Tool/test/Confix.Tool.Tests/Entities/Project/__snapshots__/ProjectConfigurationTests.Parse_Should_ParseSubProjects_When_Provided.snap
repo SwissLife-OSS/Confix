@@ -6,5 +6,6 @@
   "VariableProviders": null,
   "ComponentProviders": null,
   "ConfigurationFiles": null,
-  "Subprojects": null
+  "Subprojects": null,
+  "SourceFiles": []
 }

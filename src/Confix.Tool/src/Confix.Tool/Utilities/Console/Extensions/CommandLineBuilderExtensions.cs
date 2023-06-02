@@ -1,36 +1,67 @@
 using System.CommandLine.Builder;
-using System.CommandLine.Invocation;
+using static System.CommandLine.Invocation.MiddlewareOrder;
 
 namespace Confix.Tool;
 
 internal static class CommandLineBuilderExtensions
 {
-    public static CommandLineBuilder AddService<T, TImpl>(this CommandLineBuilder builder)
+    public static CommandLineBuilder AddSingleton<T, TImpl>(this CommandLineBuilder builder)
         where TImpl : T, new()
     {
-        T? value = default(T);
+        var value = default(T);
 
-        builder.AddService<T>(_ => value ??= new TImpl());
+        builder.AddSingleton<T>(_ => value ??= new TImpl());
 
         return builder;
     }
 
-    public static CommandLineBuilder AddService<T>(this CommandLineBuilder builder, T instance)
+    public static CommandLineBuilder AddSingleton<T>(this CommandLineBuilder builder)
+        where T : new()
     {
-        builder.AddService(_ => instance);
+        builder.AddSingleton(_ => new T());
         return builder;
     }
 
-    public static CommandLineBuilder AddService<T>(
+    public static CommandLineBuilder AddSingleton<T>(this CommandLineBuilder builder, T instance)
+    {
+        builder.AddSingleton(_ => instance);
+        return builder;
+    }
+
+    public static CommandLineBuilder AddSingleton<T>(
         this CommandLineBuilder builder,
         Func<IServiceProvider, T> factory)
     {
         builder.AddMiddleware(x =>
             {
-                T cache = default(T);
+                var cache = default(T);
                 x.BindingContext.AddService(sp => cache ??= factory(sp));
             },
-            MiddlewareOrder.Configuration);
+            Configuration);
+        return builder;
+    }
+
+    public static CommandLineBuilder AddTransient<T, TImpl>(this CommandLineBuilder builder)
+        where TImpl : T, new()
+    {
+        T? value = default(T);
+
+        builder.AddTransient<T>(_ => value ??= new TImpl());
+
+        return builder;
+    }
+
+    public static CommandLineBuilder AddTransient<T>(this CommandLineBuilder builder, T instance)
+    {
+        builder.AddTransient(_ => instance);
+        return builder;
+    }
+
+    public static CommandLineBuilder AddTransient<T>(
+        this CommandLineBuilder builder,
+        Func<IServiceProvider, T> factory)
+    {
+        builder.AddMiddleware(x => x.BindingContext.AddService(factory), Configuration);
         return builder;
     }
 }

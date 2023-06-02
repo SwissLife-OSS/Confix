@@ -7,12 +7,13 @@
       "ComponentName": "BlobStorage",
       "Version": "1.0.0",
       "IsEnabled": true,
-      "MountingPoint": null
+      "MountingPoints": null
     }
   ],
   "Repositories": null,
   "VariableProviders": null,
   "ComponentProviders": null,
   "ConfigurationFiles": null,
-  "Subprojects": null
+  "Subprojects": null,
+  "SourceFiles": []
 }

@@ -12,7 +12,7 @@ public sealed class EnvironmentConfiguration
         public const string ExcludeFiles = "excludeFiles";
     }
 
-    public EnvironmentConfiguration(string? name, IReadOnlyList<string> excludeFiles)
+    public EnvironmentConfiguration(string? name, IReadOnlyList<string>? excludeFiles)
     {
         Name = name;
         ExcludeFiles = excludeFiles;
@@ -20,13 +20,13 @@ public sealed class EnvironmentConfiguration
 
     public string? Name { get; }
 
-    public IReadOnlyList<string> ExcludeFiles { get; }
+    public IReadOnlyList<string>? ExcludeFiles { get; }
 
     public static EnvironmentConfiguration Parse(JsonNode node)
     {
         if (node.GetSchemaValueType() is SchemaValueType.String)
         {
-            return new EnvironmentConfiguration(node.ExpectValue<string>(), Array.Empty<string>());
+            return new EnvironmentConfiguration(node.ExpectValue<string>(), null);
         }
 
         var obj = node.ExpectObject();
@@ -34,13 +34,21 @@ public sealed class EnvironmentConfiguration
         var name = obj.MaybeProperty(FieldNames.Name)?.ExpectValue<string>();
 
         var excludeFiles =
-            obj.TryGetPropertyValue(FieldNames.ExcludeFiles, out var excludeFilesNode)
+            obj.TryGetNonNullPropertyValue(FieldNames.ExcludeFiles, out var excludeFilesNode)
                 ? excludeFilesNode
                     .ExpectArray()
                     .WhereNotNull()
                     .Select(n => n.ExpectValue<string>())
                     .ToArray()
-                : Array.Empty<string>();
+                : null;
+
+        return new EnvironmentConfiguration(name, excludeFiles);
+    }
+
+    public EnvironmentConfiguration Merge(EnvironmentConfiguration other)
+    {
+        var name = other.Name ?? Name;
+        var excludeFiles = other.ExcludeFiles ?? ExcludeFiles;
 
         return new EnvironmentConfiguration(name, excludeFiles);
     }

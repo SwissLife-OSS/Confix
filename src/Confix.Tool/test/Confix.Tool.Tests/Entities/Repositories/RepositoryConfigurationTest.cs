@@ -1,5 +1,7 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;
+using Confix.Tool.Schema;
 
 namespace ConfiX.Entities.Component.Configuration;
 
@@ -53,6 +55,113 @@ public class RepositoryConfigurationTest : ParserTestBase
             "component": "component"
         }
         """);
+    }
+
+    [Fact]
+    public void Merge_Should_ReturnOriginalConfiguration_When_OtherConfigurationIsNull()
+    {
+        // Arrange
+        var original = new RepositoryConfiguration(
+            ProjectConfiguration.Empty,
+            new ComponentConfiguration("TestComponent",
+                new List<ComponentInputConfiguration>(),
+                new List<ComponentOutputConfiguration>(),
+                Array.Empty<FileInfo>()
+            ),
+            Array.Empty<FileInfo>());
+
+        // Act
+        var merged = original.Merge(null);
+
+        // Assert
+        Assert.Same(original, merged);
+    }
+
+    [Fact]
+    public void Merge_Should_ReturnMergedConfiguration_When_OtherConfigurationIsNotNull()
+    {
+        // Arrange
+        var original = new RepositoryConfiguration(
+            ProjectConfiguration.Empty,
+            new ComponentConfiguration("TestComponent",
+                new List<ComponentInputConfiguration>(),
+                new List<ComponentOutputConfiguration>(),
+                Array.Empty<FileInfo>()
+            ),
+            Array.Empty<FileInfo>());
+        var other = new RepositoryConfiguration(
+            new ProjectConfiguration("MergedProject",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                Array.Empty<FileInfo>()),
+            new ComponentConfiguration("MergedComponent",
+                new List<ComponentInputConfiguration>(),
+                new List<ComponentOutputConfiguration>(),
+                Array.Empty<FileInfo>()
+            ),
+            Array.Empty<FileInfo>());
+
+        // Act
+        var merged = original.Merge(other);
+
+        // Assert
+        Assert.NotSame(original, merged);
+        Assert.Equal("MergedProject", merged.Project?.Name);
+        Assert.Equal("MergedComponent", merged.Component?.Name);
+    }
+
+    [Fact]
+    public void LoadFromFiles_Should_ReturnNull_When_ConfixRcFileNotPresent()
+    {
+        // Arrange
+        var configuration = Array.Empty<FileInfo>();
+
+        // Act
+        var result = RepositoryConfiguration.LoadFromFiles(configuration);
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void LoadFromFiles_Should_LoadRepositoryConfigurationFromFile()
+    {
+        // Arrange
+        var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixRepository);
+        var configuration = new List<FileInfo>
+        {
+            new(confixRcPath)
+        };
+        
+        File.WriteAllText(confixRcPath,
+            """
+                {
+                    "component": {
+                        "name": "TestComponent",
+                        "inputs": [],
+                        "outputs": []
+                    },
+                    "project": {
+                        "name": "TestProject"
+                    }
+                }
+            """);
+
+        // Act
+        var result = RepositoryConfiguration.LoadFromFiles(configuration);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("TestComponent", result.Component?.Name);
+        Assert.Equal("TestProject", result.Project?.Name);
+
+        // Cleanup
+        File.Delete(confixRcPath);
     }
 
     public override object Parse(JsonNode json)

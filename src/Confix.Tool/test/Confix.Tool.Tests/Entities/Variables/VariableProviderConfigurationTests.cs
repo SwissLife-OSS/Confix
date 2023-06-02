@@ -182,6 +182,60 @@ public class VariableProviderConfigurationTests : ParserTestBase
         """);
     }
 
+    [Fact]
+    public void Merge_Should_ReturnOriginalConfiguration_When_OtherConfigurationIsNull()
+    {
+        // Arrange
+        var original = new VariableProviderConfiguration(
+            "TestProvider",
+            "ProviderType",
+            null,
+            new JsonObject());
+
+        // Act
+        var merged = original.Merge(null);
+
+        // Assert
+        Assert.Same(original, merged);
+    }
+
+    [Fact]
+    public void Merge_Should_ReturnMergedConfiguration_When_OtherConfigurationIsNotNull()
+    {
+        // Arrange
+        var original = new VariableProviderConfiguration(
+            "TestProvider",
+            "ProviderType",
+            new Dictionary<string, JsonObject>
+            {
+                { "key1", new JsonObject { { "subkey1", "value1" } } },
+                { "key0", new JsonObject { { "subkey2", "value2" } } }
+            },
+            new JsonObject());
+
+        var other = new VariableProviderConfiguration(
+            "MergedProvider",
+            "MergedType",
+            new Dictionary<string, JsonObject>
+            {
+                { "key1", new JsonObject { { "subkey2", "value2" } } },
+                { "key2", new JsonObject { { "subkey2", "value2" } } }
+            },
+            new JsonObject());
+
+        // Act
+        var merged = original.Merge(other);
+
+        // Assert
+        Assert.NotSame(original, merged);
+        Assert.Equal("MergedProvider", merged.Name);
+        Assert.Equal("MergedType", merged.Type);
+        Assert.Equal("value1", merged.EnvironmentOverrides?["key1"]["subkey1"]!.ToString());
+        Assert.False(merged.EnvironmentOverrides?.ContainsKey("key0"));
+        Assert.True(merged.EnvironmentOverrides?.ContainsKey("key1"));
+        Assert.True(merged.EnvironmentOverrides?.ContainsKey("key2"));
+    }
+
     public override object Parse(JsonNode json)
     {
         return VariableProviderConfiguration.Parse(json);

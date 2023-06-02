@@ -35,4 +35,12 @@ public sealed class ConfigurationFileConfiguration
 
         return new ConfigurationFileConfiguration(type, obj);
     }
+
+    public ConfigurationFileConfiguration Merge(ConfigurationFileConfiguration other)
+    {
+        var type = other.Type ?? Type;
+        var value = Value.Merge(other.Value)!;
+
+        return new ConfigurationFileConfiguration(type, value);
+    }
 }

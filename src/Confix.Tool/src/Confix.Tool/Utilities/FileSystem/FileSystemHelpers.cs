@@ -12,7 +12,7 @@ public static class FileSystemHelpers
 
     public static string? FindInTree(string directoryPath, string fileName)
     {
-        if (Directory.Exists(directoryPath))
+        if (!Directory.Exists(directoryPath))
         {
             throw new DirectoryNotFoundException($"The directory '{directoryPath}' was not found.");
         }
@@ -38,7 +38,7 @@ public static class FileSystemHelpers
 
     public static IEnumerable<string> FindAllInTree(string directoryPath, string fileName)
     {
-        if (Directory.Exists(directoryPath))
+        if (!Directory.Exists(directoryPath))
         {
             throw new DirectoryNotFoundException($"The directory '{directoryPath}' was not found.");
         }

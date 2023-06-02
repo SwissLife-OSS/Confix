@@ -1,0 +1,3800 @@
+﻿{
+  "Components": [
+    {
+      "Provider": "dotnet-package",
+      "ComponentName": "BlobStorage",
+      "Version": null,
+      "IsEnabled": true,
+      "MountingPoints": [
+        "documents/blob-storage",
+        "user-data/blob-storage"
+      ]
+    },
+    {
+      "Provider": "oss-components",
+      "ComponentName": "CustomComponent",
+      "Version": "1.0.0",
+      "IsEnabled": true,
+      "MountingPoints": null
+    }
+  ],
+  "ComponentProviders": [
+    {
+      "Name": "dotnet",
+      "Type": "dotnet-package",
+      "Values": {
+        "name": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [],
+            "componentRepositories": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "variableProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environmentOverride": {
+                  "dev": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  },
+                  "prod": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "type": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [],
+            "componentRepositories": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "variableProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environmentOverride": {
+                  "dev": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  },
+                  "prod": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "additional": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [],
+            "componentRepositories": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "variableProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environmentOverride": {
+                  "dev": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  },
+                  "prod": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "Repositories": [
+    {
+      "Name": "common-components",
+      "Type": "git",
+      "Values": {
+        "name": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "componentRepositories": [],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "variableProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environmentOverride": {
+                  "dev": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  },
+                  "prod": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "type": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "componentRepositories": [],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "variableProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environmentOverride": {
+                  "dev": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  },
+                  "prod": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "additional": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "componentRepositories": [],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "variableProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environmentOverride": {
+                  "dev": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  },
+                  "prod": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "ConfigurationFiles": [
+    {
+      "Type": "inline",
+      "Value": {
+        "_value": {
+          "ValueKind": "String"
+        },
+        "Value": {
+          "ValueKind": "String"
+        },
+        "Options": null,
+        "Parent": [
+          {
+            "type": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null,
+              "Root": {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environments": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "excludeFiles": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "excludeFiles": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  }
+                ],
+                "components": {
+                  "@dotnet-package/BlobStorage": {
+                    "mountingPoint": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      },
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  },
+                  "@oss-components/CustomComponent": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                },
+                "componentProviders": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "componentRepositories": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "variableProviders": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "environmentOverride": {
+                      "dev": {
+                        "file": {
+                          "_value": {
+                            "ValueKind": "String"
+                          },
+                          "Value": {
+                            "ValueKind": "String"
+                          },
+                          "Options": null
+                        }
+                      },
+                      "prod": {
+                        "file": {
+                          "_value": {
+                            "ValueKind": "String"
+                          },
+                          "Value": {
+                            "ValueKind": "String"
+                          },
+                          "Options": null
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "additional": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null,
+              "Root": {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environments": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "excludeFiles": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "excludeFiles": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  }
+                ],
+                "components": {
+                  "@dotnet-package/BlobStorage": {
+                    "mountingPoint": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      },
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  },
+                  "@oss-components/CustomComponent": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                },
+                "componentProviders": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "componentRepositories": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "variableProviders": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "environmentOverride": {
+                      "dev": {
+                        "file": {
+                          "_value": {
+                            "ValueKind": "String"
+                          },
+                          "Value": {
+                            "ValueKind": "String"
+                          },
+                          "Options": null
+                        }
+                      },
+                      "prod": {
+                        "file": {
+                          "_value": {
+                            "ValueKind": "String"
+                          },
+                          "Value": {
+                            "ValueKind": "String"
+                          },
+                          "Options": null
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "Root": {
+          "name": {
+            "_value": {
+              "ValueKind": "String"
+            },
+            "Value": {
+              "ValueKind": "String"
+            },
+            "Options": null
+          },
+          "environments": [
+            {
+              "name": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "excludeFiles": [
+                {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              ]
+            },
+            {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            {
+              "name": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "excludeFiles": [
+                {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              ]
+            }
+          ],
+          "components": {
+            "@dotnet-package/BlobStorage": {
+              "mountingPoint": [
+                {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              ]
+            },
+            "@oss-components/CustomComponent": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            }
+          },
+          "componentProviders": [
+            {
+              "name": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "type": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "additional": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            }
+          ],
+          "componentRepositories": [
+            {
+              "name": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "type": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "additional": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            }
+          ],
+          "configurationFiles": [
+            {
+              "type": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "additional": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            }
+          ],
+          "variableProviders": [
+            {
+              "name": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "type": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "environmentOverride": {
+                "dev": {
+                  "file": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                },
+                "prod": {
+                  "file": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "Type": "dotnet-appsettings",
+      "Value": {
+        "type": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "componentRepositories": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            ],
+            "variableProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environmentOverride": {
+                  "dev": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  },
+                  "prod": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "additional": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "componentRepositories": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            ],
+            "variableProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environmentOverride": {
+                  "dev": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  },
+                  "prod": {
+                    "file": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "Environments": [
+    {
+      "Name": "development",
+      "ExcludeFiles": [
+        "appsettings.staging.json"
+      ]
+    },
+    {
+      "Name": "staging",
+      "ExcludeFiles": null
+    },
+    {
+      "Name": "production",
+      "ExcludeFiles": [
+        "appsettings.staging.json"
+      ]
+    }
+  ],
+  "VariableProviders": [
+    {
+      "Name": "appsettings",
+      "Type": "dotnet-appsettings",
+      "EnvironmentOverrides": {
+        "dev": {
+          "file": {
+            "_value": {
+              "ValueKind": "String"
+            },
+            "Value": {
+              "ValueKind": "String"
+            },
+            "Options": null,
+            "Root": {
+              "name": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "environments": [
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "excludeFiles": [
+                    {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  ]
+                },
+                {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "excludeFiles": [
+                    {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  ]
+                }
+              ],
+              "components": {
+                "@dotnet-package/BlobStorage": {
+                  "mountingPoint": [
+                    {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  ]
+                },
+                "@oss-components/CustomComponent": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              },
+              "componentProviders": [
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "type": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "additional": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                }
+              ],
+              "componentRepositories": [
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "type": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "additional": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                }
+              ],
+              "configurationFiles": [
+                {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                {
+                  "type": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "additional": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                }
+              ],
+              "variableProviders": [
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "type": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "environmentOverride": {
+                    "prod": {
+                      "file": {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "prod": {
+          "file": {
+            "_value": {
+              "ValueKind": "String"
+            },
+            "Value": {
+              "ValueKind": "String"
+            },
+            "Options": null,
+            "Root": {
+              "name": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              "environments": [
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "excludeFiles": [
+                    {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  ]
+                },
+                {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "excludeFiles": [
+                    {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  ]
+                }
+              ],
+              "components": {
+                "@dotnet-package/BlobStorage": {
+                  "mountingPoint": [
+                    {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  ]
+                },
+                "@oss-components/CustomComponent": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              },
+              "componentProviders": [
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "type": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "additional": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                }
+              ],
+              "componentRepositories": [
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "type": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "additional": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                }
+              ],
+              "configurationFiles": [
+                {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                {
+                  "type": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "additional": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                }
+              ],
+              "variableProviders": [
+                {
+                  "name": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "type": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  "environmentOverride": {
+                    "dev": {
+                      "file": {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Values": {
+        "name": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "componentRepositories": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "variableProviders": []
+          }
+        },
+        "type": {
+          "_value": {
+            "ValueKind": "String"
+          },
+          "Value": {
+            "ValueKind": "String"
+          },
+          "Options": null,
+          "Root": {
+            "name": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
+            },
+            "environments": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "excludeFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              }
+            ],
+            "components": {
+              "@dotnet-package/BlobStorage": {
+                "mountingPoint": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                ]
+              },
+              "@oss-components/CustomComponent": {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              }
+            },
+            "componentProviders": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "componentRepositories": [
+              {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "configurationFiles": [
+              {
+                "_value": {
+                  "ValueKind": "String"
+                },
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
+              },
+              {
+                "type": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "additional": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                }
+              }
+            ],
+            "variableProviders": []
+          }
+        },
+        "environmentOverride": {
+          "dev": {
+            "file": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null,
+              "Root": {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environments": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "excludeFiles": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "excludeFiles": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  }
+                ],
+                "components": {
+                  "@dotnet-package/BlobStorage": {
+                    "mountingPoint": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      },
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  },
+                  "@oss-components/CustomComponent": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                },
+                "componentProviders": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "componentRepositories": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "configurationFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "variableProviders": []
+              }
+            }
+          },
+          "prod": {
+            "file": {
+              "_value": {
+                "ValueKind": "String"
+              },
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null,
+              "Root": {
+                "name": {
+                  "_value": {
+                    "ValueKind": "String"
+                  },
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
+                },
+                "environments": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "excludeFiles": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  },
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "excludeFiles": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  }
+                ],
+                "components": {
+                  "@dotnet-package/BlobStorage": {
+                    "mountingPoint": [
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      },
+                      {
+                        "_value": {
+                          "ValueKind": "String"
+                        },
+                        "Value": {
+                          "ValueKind": "String"
+                        },
+                        "Options": null
+                      }
+                    ]
+                  },
+                  "@oss-components/CustomComponent": {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  }
+                },
+                "componentProviders": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "componentRepositories": [
+                  {
+                    "name": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "configurationFiles": [
+                  {
+                    "_value": {
+                      "ValueKind": "String"
+                    },
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
+                  },
+                  {
+                    "type": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    },
+                    "additional": {
+                      "_value": {
+                        "ValueKind": "String"
+                      },
+                      "Value": {
+                        "ValueKind": "String"
+                      },
+                      "Options": null
+                    }
+                  }
+                ],
+                "variableProviders": []
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "Name": "TestProject",
+  "Subprojects": null,
+  "SourceFiles": [
+    "/var/folders/x6/fxrfc2xd6sq2lsh9k8b61d2w0000gn/T/3mekodtt.dml/.confix.project"
+  ]
+}

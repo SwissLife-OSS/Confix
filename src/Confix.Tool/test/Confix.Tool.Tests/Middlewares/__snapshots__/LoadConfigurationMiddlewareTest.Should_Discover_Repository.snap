@@ -1,0 +1,64 @@
+﻿{
+  "Component": null,
+  "Project": {
+    "Name": "__Default",
+    "Environments": [
+      {
+        "Name": "dev",
+        "ExcludeFiles": [
+          "a"
+        ]
+      },
+      {
+        "Name": "prod",
+        "ExcludeFiles": [
+          "a"
+        ]
+      },
+      {
+        "Name": "uat",
+        "ExcludeFiles": [
+          "a"
+        ]
+      }
+    ],
+    "Components": [],
+    "Repositories": [],
+    "VariableProviders": [],
+    "ComponentProviders": [],
+    "ConfigurationFiles": [],
+    "Subprojects": []
+  },
+  "Repository": {
+    "Component": null,
+    "Project": {
+      "Name": "__Default",
+      "Environments": [
+        {
+          "Name": "dev",
+          "ExcludeFiles": [
+            "a"
+          ]
+        },
+        {
+          "Name": "prod",
+          "ExcludeFiles": [
+            "a"
+          ]
+        },
+        {
+          "Name": "uat",
+          "ExcludeFiles": [
+            "a"
+          ]
+        }
+      ],
+      "Components": [],
+      "Repositories": [],
+      "VariableProviders": [],
+      "ComponentProviders": [],
+      "ConfigurationFiles": [],
+      "Subprojects": []
+    }
+  }
+}

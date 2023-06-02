@@ -2,15 +2,39 @@ using Json.Schema;
 
 namespace Confix.Tool.Abstractions;
 
-public class ComponentDefinition
+public sealed class ComponentDefinition
 {
-    public ComponentDefinition(string name, JsonSchema schema)
+    public const string DefaultName = "__Default";
+
+    public ComponentDefinition(
+        string name,
+        IReadOnlyList<ComponentInputDefinition> inputs,
+        IReadOnlyList<ComponentOutputDefinition> outputs)
     {
         Name = name;
-        Schema = schema;
+        Inputs = inputs;
+        Outputs = outputs;
     }
 
     public string Name { get; }
 
-    public JsonSchema Schema { get; }
+    public IReadOnlyList<ComponentInputDefinition> Inputs { get; }
+
+    public IReadOnlyList<ComponentOutputDefinition> Outputs { get; }
+
+    public static ComponentDefinition From(ComponentConfiguration configuration)
+    {
+        var name = string.IsNullOrWhiteSpace(configuration.Name) ? DefaultName : configuration.Name;
+
+        var inputs = configuration.Inputs
+            ?.Select(x => new ComponentInputDefinition(x.Type!, x.Value))
+            .ToArray() ?? Array.Empty<ComponentInputDefinition>();
+
+        var outputs = configuration.Outputs
+                ?.Select(x => new ComponentOutputDefinition(x.Type!, x.Value))
+                .ToArray()
+            ?? Array.Empty<ComponentOutputDefinition>();
+
+        return new ComponentDefinition(name, inputs, outputs);
+    }
 }

@@ -1,5 +1,6 @@
 ﻿{
-  "IsRoot": false,
+  "IsRoot": true,
   "Component": null,
-  "Project": null
+  "Project": null,
+  "SourceFiles": []
 }

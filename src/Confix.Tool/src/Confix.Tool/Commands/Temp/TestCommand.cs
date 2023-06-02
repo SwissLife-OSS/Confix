@@ -26,11 +26,12 @@ public sealed class TestCommand : Command
         CancellationToken cancellationToken)
         => await PipelineBuilder
             .From(services)
-            .Use<LoadConfiguration>()
+            .Use<LoadConfigurationMiddleware>()
             .Use<ExecuteComponentInput>()
             .Use<ExecuteComponentOutput>()
             .BuildExecutor()
             .AddParameter("path", path)
+            .AddParameter("outputFormat", path)
             .ExecuteAsync(cancellationToken);
 }
 
