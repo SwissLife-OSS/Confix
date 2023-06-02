@@ -8,14 +8,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf44cdf2-0411-4c1a-9355-258d0c233dfd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentReferenceConfigurationTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/CommandExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/CommandPipelineBuilder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/ExecutionContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/ExecutionContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/MiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/MiddlewareContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentReferenceConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentReferenceConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentProviderConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentProviderConfigurationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Component/BuildComponentCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Component/BuildComponentCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/ExecutionContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/ExecutionContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/FeatureCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/FeatureCollection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IExecutionContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/IExecutionContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IFeatureCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/IFeatureCollection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IParameterCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/IParameterCollection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/MiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/ParameterCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/ParameterCollection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/ConfigurationFeature.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/ConfigurationFeature.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/ConfigurationScope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/ConfigurationScope.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/IConfigurationFileCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/IConfigurationFileCollection.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfigurationMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +48,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/36b5e62d23f9c23bd1dc783a311df4d3046eb99d6b6dfd66891f84aca6e3d83/JsonNodeExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3b787b28d22f8fb453a1f740c3d6c42b4877ad64d4e67982c2623c532fe65/Path.Unix.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3c1af32124f0c12160568466f63255433879dc49a8fc6768cc297144fa53f4/Handler.Func.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3e8f1cfc7f3332b9a0e31b3f10347da0b2775895319a6b9a2b4f25a4c48654bc/Command.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3fdf4ae643ded9669afeb227421a1d78f3725fd51f1d807ebfaff4c63cc72/ValidateSymbolResult.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/42db4366cc1a4aa8712a544842538ba41b30d232a26980e0c5a8db8cad621a5/Environment.UnixOrBrowser.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/44c96b3a63733a449514ff3bc5ca42872bb2fc1afdc7aee2a49f965a766f/ParseResultExtensions.cs" root0="SKIP_HIGHLIGHTING" />
@@ -87,7 +95,24 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/eb709fade7874f3129786110e78ddb659e370ed6c1dd15da979abcafab1179b/SchemaValueType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/eec55451f43f862d193fe710102135e95d939cf565b1399e7c918a7e8e56f177/INamedType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f8fb753c59f41d47a5014a3d0f311ebf2f33e92dd1f56f4fbb5b0e531fc24/Path.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/ExecutionContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/MiddlewareContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineBuilder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentReferenceDefinition.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentReferenceConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Entities/Environment/Configuration/EnvironmentConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Entities/Project/Configuration/ProjectConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Entities/Repository/Configuration/RepositoryConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Entities/Variables/Configuration/VariableProviderConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfigurationMiddleware.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Utilities/Json/JsonNodeExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Utilities/Json/JsonParseException.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Utilities/Linq/LinqExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentConfigurationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentProviderConfigurationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Component/ComponentReferenceConfigurationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Variables/VariableProviderConfigurationTests.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="2Qbvco3prn92LXPClYrb4wQONTF" />
   <component name="ProjectViewState">
@@ -100,7 +125,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "XThreadsFramesViewSplitterKey": "0.058387395",
-    "git-widget-placeholder": "pse/add-configurations",
+    "git-widget-placeholder": "variables",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -115,7 +140,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected=".NET Project.Unnamed">
+  <component name="RunManager">
     <configuration name="Unnamed" type="DotNetProject" factoryName=".NET Project" nameIsGenerated="true">
       <option name="EXE_PATH" value="$PROJECT_DIR$/src/Confix.Tool/bin/Debug/net8.0/Confix.Tool" />
       <option name="PROGRAM_PARAMETERS" value="component build" />
@@ -134,9 +159,6 @@
         <option name="Build" />
       </method>
     </configuration>
-    <list>
-      <item itemvalue=".NET Project.Unnamed" />
-    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -213,14 +235,14 @@
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfigurationMiddleware.cs</url>
-          <line>15</line>
+          <url>file://$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs</url>
+          <line>18</line>
           <properties documentPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfigurationMiddleware.cs" initialLine="15" containingFunctionPresentation="Method 'InvokeAsync'">
             <startOffsets>
-              <option value="443" />
+              <option value="508" />
             </startOffsets>
             <endOffsets>
-              <option value="501" />
+              <option value="566" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="26" />
@@ -239,14 +261,14 @@
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfigurationMiddleware.cs</url>
-          <line>19</line>
+          <url>file://$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs</url>
+          <line>22</line>
           <properties documentPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfigurationMiddleware.cs" initialLine="19" containingFunctionPresentation="Method 'InvokeAsync'">
             <startOffsets>
-              <option value="583" />
+              <option value="648" />
             </startOffsets>
             <endOffsets>
-              <option value="911" />
+              <option value="976" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="38" />
