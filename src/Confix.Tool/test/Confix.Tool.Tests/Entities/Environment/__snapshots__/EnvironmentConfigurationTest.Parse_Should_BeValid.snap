@@ -1,0 +1,7 @@
+﻿{
+  "Name": "dev",
+  "ExcludeFiles": [
+    "file1",
+    "file2"
+  ]
+}

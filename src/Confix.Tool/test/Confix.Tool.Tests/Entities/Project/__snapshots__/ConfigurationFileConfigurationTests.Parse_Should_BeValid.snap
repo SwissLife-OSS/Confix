@@ -1,0 +1,7 @@
+﻿{
+  "Type": "dotnet-appsettings",
+  "Value": {
+    "type": "dotnet-appsettings",
+    "additional": "property"
+  }
+}

@@ -1,0 +1,9 @@
+﻿{
+  "Name": "common-components",
+  "Type": "git",
+  "Values": {
+    "name": "common-components",
+    "type": "git",
+    "additional": "property"
+  }
+}

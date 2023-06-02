@@ -1,4 +1,3 @@
-using Confix.Tool.Schema;
 
 namespace Confix.Tool.Abstractions;
 
@@ -20,9 +19,10 @@ public class ProjectDiscovery
             throw new DirectoryNotFoundException($"The directory '{root.FullName}' was not found");
         }
 
-        return Directory
-            .EnumerateFiles(root.FullName, FileNames.ProjectDefiniton, SearchOption.AllDirectories)
-            .Select(path => new FileInfo(path))
-            .Select(file => new ProjectDefinition(file));
+        throw new NotImplementedException();
+        // return Directory
+        //     .EnumerateFiles(root.FullName, FileNames.ConfixProject, SearchOption.AllDirectories)
+        //     .Select(path => new FileInfo(path))
+        //     .Select(file => new ProjectDefinition(file));
     }
 }

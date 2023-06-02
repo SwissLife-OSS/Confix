@@ -481,7 +481,7 @@ Component repositories come into play when you're unable to bundle a schema with
 
 ```json
 {
-    "repositories": [
+    "componentRepositories": [
         {
             "name": "common-components",
             "type": "blob",
@@ -723,21 +723,6 @@ You can override project-specific settings by using the `project` field in the `
 ```json
 {
     "isRoot": false,
-    "repositories": [
-        // repositories config check the component repository section
-    ],
-    "componentProviders": [
-        // componentProviders config check the component discovery section
-    ],
-    "variableProviders": [
-        // variableProviders config check the variable providers section
-    ],
-    "environments": [
-        // environments config check the environments section
-    ],
-    "configurationFiles": [
-        // configurationFiles config check the configuration files section
-    ],
     "project": {
         // default project config like in .confix.project,
         "subprojects": [
@@ -757,21 +742,6 @@ This configuration file is defined at the root of the repository. It is used to 
 Project-specific settings can be overridden by using the `project` field in the `.confix.repository` file. For more information, refer to the `Repositories` section.
 ```json
 {
-    "repositories": [
-        // repositories config check the component repository section
-    ],
-    "componentProviders": [
-        // componentProviders config check the component discovery section
-    ],
-    "variableProviders": [
-        // variableProviders config check the variable providers section
-    ],
-    "environments": [
-        // environments config check the environments section
-    ],
-    "configurationFiles": [
-        // configurationFiles config check the configuration files section
-    ],
     "project": {
         // default project config like in .confix.project,
         "subprojects": [

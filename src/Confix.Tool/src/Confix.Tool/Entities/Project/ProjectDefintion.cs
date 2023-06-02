@@ -1,11 +1,96 @@
 namespace Confix.Tool.Abstractions;
 
-public class ProjectDefinition
+public sealed class ProjectDefinition
 {
-    public ProjectDefinition(FileInfo location)
+    public const string DefaultName = "__Default";
+
+    public ProjectDefinition(
+        string name,
+        IReadOnlyList<EnvironmentDefinition> environments,
+        IReadOnlyList<ComponentReferenceDefinition> components,
+        IReadOnlyList<ComponentRepositoryDefinition> repositories,
+        IReadOnlyList<VariableProviderDefinition> variableProviders,
+        IReadOnlyList<ComponentProviderDefinition> componentProviders,
+        IReadOnlyList<ConfigurationFileDefinition> configurationFiles,
+        IReadOnlyList<ProjectDefinition> subprojects)
     {
-        Location = location;
+        Name = name;
+        Environments = environments;
+        Components = components;
+        Repositories = repositories;
+        VariableProviders = variableProviders;
+        ComponentProviders = componentProviders;
+        ConfigurationFiles = configurationFiles;
+        Subprojects = subprojects;
     }
 
-    public FileInfo Location { get; }
+    public string Name { get; }
+
+    public IReadOnlyList<EnvironmentDefinition> Environments { get; }
+
+    public IReadOnlyList<ComponentReferenceDefinition> Components { get; }
+
+    public IReadOnlyList<ComponentRepositoryDefinition> Repositories { get; }
+
+    public IReadOnlyList<VariableProviderDefinition> VariableProviders { get; }
+
+    public IReadOnlyList<ComponentProviderDefinition> ComponentProviders { get; }
+
+    public IReadOnlyList<ConfigurationFileDefinition> ConfigurationFiles { get; }
+
+    public IReadOnlyList<ProjectDefinition> Subprojects { get; }
+
+    public static ProjectDefinition From(ProjectConfiguration configuration)
+    {
+        var name = configuration.Name
+            ?? configuration.SourceFiles.FirstOrDefault()?.Directory?.Name
+            ?? DefaultName;
+
+        var environments =
+            configuration.Environments?.Select(EnvironmentDefinition.From).ToArray() ??
+            Array.Empty<EnvironmentDefinition>();
+
+        var components =
+            configuration.Components?.Select(ComponentReferenceDefinition.From).ToArray() ??
+            Array.Empty<ComponentReferenceDefinition>();
+
+        var repositories =
+            configuration.Repositories?.Select(ComponentRepositoryDefinition.From).ToArray() ??
+            Array.Empty<ComponentRepositoryDefinition>();
+
+        var variableProviders =
+            configuration.VariableProviders?.Select(VariableProviderDefinition.From).ToArray() ??
+            Array.Empty<VariableProviderDefinition>();
+
+        var componentProviders =
+            configuration.ComponentProviders?.Select(ComponentProviderDefinition.From).ToArray() ??
+            Array.Empty<ComponentProviderDefinition>();
+
+        var configurationFiles =
+            configuration.ConfigurationFiles?.Select(ConfigurationFileDefinition.From).ToArray() ??
+            Array.Empty<ConfigurationFileDefinition>();
+
+        var subprojects = configuration.Subprojects?.Select(From).ToArray() ??
+            Array.Empty<ProjectDefinition>();
+
+        return new ProjectDefinition(
+            name,
+            environments,
+            components,
+            repositories,
+            variableProviders,
+            componentProviders,
+            configurationFiles,
+            subprojects);
+    }
+
+    public static ProjectDefinition Instance { get; } = new(
+        "root",
+        Array.Empty<EnvironmentDefinition>(),
+        Array.Empty<ComponentReferenceDefinition>(),
+        Array.Empty<ComponentRepositoryDefinition>(),
+        Array.Empty<VariableProviderDefinition>(),
+        Array.Empty<ComponentProviderDefinition>(),
+        Array.Empty<ConfigurationFileDefinition>(),
+        Array.Empty<ProjectDefinition>());
 }
