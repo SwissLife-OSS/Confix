@@ -1,7 +1,9 @@
 using System.Collections;
+using System.CommandLine;
 using ConfiX.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;
+using Confix.Tool.Commands.Component;
 using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
@@ -10,6 +12,7 @@ namespace Confix.Tool.Middlewares;
 
 public sealed class LoadConfigurationMiddleware : IMiddleware
 {
+
     /// <inheritdoc />
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
