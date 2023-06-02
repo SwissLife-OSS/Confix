@@ -1,7 +1,8 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using ConfiX.Variables;
 using FluentAssertions;
-using Xunit;
+
 namespace Confix.Tool.Tests;
 
 public class LocalVariableProviderConfigurationTests
@@ -34,6 +35,7 @@ public class LocalVariableProviderConfigurationTests
             """)!;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => LocalVariableProviderConfiguration.Parse(jsonNode));
+        Assert.Throws<ArgumentException>(() => LocalVariableProviderConfiguration.Parse(jsonNode))
+            .InnerException.Should().BeOfType<JsonException>();
     }
 }
