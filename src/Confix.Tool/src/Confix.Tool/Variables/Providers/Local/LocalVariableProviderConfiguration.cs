@@ -9,6 +9,7 @@ public sealed record LocalVariableProviderConfiguration
 {
     [JsonPropertyName("path")]
     public required string FilePath { get; init; }
+    
     public static LocalVariableProviderConfiguration Parse(JsonNode node)
     {
         try
