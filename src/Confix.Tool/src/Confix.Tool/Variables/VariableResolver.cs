@@ -2,7 +2,7 @@ using Confix.Tool;
 
 namespace ConfiX.Variables;
 
-public class VariableResolver
+public sealed class VariableResolver
 {
     private readonly IVariableProviderFactory _variableProviderFactory;
 

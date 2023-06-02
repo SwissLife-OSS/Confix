@@ -3,10 +3,11 @@ using System.Text.Json.Nodes;
 
 namespace ConfiX.Variables;
 
-public class LocalVariableProvider : IVariableProvider
+public sealed class LocalVariableProvider : IVariableProvider
 {
-    public static readonly string PropertyType = "local";
-    public LocalVariableProvider(JsonNode configuration) 
+    private readonly Lazy<Dictionary<string, string?>> _configuration;
+
+    public LocalVariableProvider(JsonNode configuration)
         : this(LocalVariableProviderConfiguration.Parse(configuration))
     { }
 
@@ -15,7 +16,7 @@ public class LocalVariableProvider : IVariableProvider
         _configuration = new(() => ParseConfiguration(configuration));
     }
 
-    private readonly Lazy<Dictionary<string, string?>> _configuration;
+    public static readonly string PropertyType = "local";
 
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
         => Task.FromResult<IReadOnlyList<string>>(_configuration.Value.Keys.ToArray());

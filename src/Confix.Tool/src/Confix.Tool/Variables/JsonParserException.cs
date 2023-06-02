@@ -1,6 +1,6 @@
 namespace ConfiX.Variables;
 
-public class JsonParserException : Exception
+public sealed class JsonParserException : Exception
 {
     public JsonParserException(string? message) : base(message)
     {
