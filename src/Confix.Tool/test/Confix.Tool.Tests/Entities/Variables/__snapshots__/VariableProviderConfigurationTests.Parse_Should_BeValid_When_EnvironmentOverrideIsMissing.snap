@@ -1,0 +1,9 @@
+﻿{
+  "Name": "appsettings",
+  "Type": "dotnet-appsettings",
+  "EnvironmentOverrides": null,
+  "Values": {
+    "name": "appsettings",
+    "type": "dotnet-appsettings"
+  }
+}

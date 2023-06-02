@@ -1,0 +1,9 @@
+﻿{
+  "Name": "dotnet",
+  "Type": "dotnet-package",
+  "Values": {
+    "name": "dotnet",
+    "type": "dotnet-package",
+    "additional": "property"
+  }
+}

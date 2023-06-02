@@ -1,0 +1,103 @@
+﻿{
+  "Name": "TestProject",
+  "Environments": [
+    {
+      "Name": "development",
+      "ExcludeFiles": [
+        "appsettings.staging.json"
+      ]
+    },
+    {
+      "Name": "staging",
+      "ExcludeFiles": null
+    },
+    {
+      "Name": "production",
+      "ExcludeFiles": [
+        "appsettings.staging.json"
+      ]
+    }
+  ],
+  "Components": [
+    {
+      "Provider": "dotnet-package",
+      "ComponentName": "BlobStorage",
+      "Version": null,
+      "IsEnabled": true,
+      "MountingPoints": [
+        "documents/blob-storage",
+        "user-data/blob-storage"
+      ]
+    },
+    {
+      "Provider": "oss-components",
+      "ComponentName": "CustomComponent",
+      "Version": "1.0.0",
+      "IsEnabled": true,
+      "MountingPoints": null
+    }
+  ],
+  "Repositories": [
+    {
+      "Name": "common-components",
+      "Type": "git",
+      "Values": {
+        "name": "common-components",
+        "type": "git",
+        "additional": "property"
+      }
+    }
+  ],
+  "VariableProviders": [
+    {
+      "Name": "appsettings",
+      "Type": "dotnet-appsettings",
+      "EnvironmentOverrides": {
+        "dev": {
+          "file": "appsettings.dev.json"
+        },
+        "prod": {
+          "file": "appsettings.prod.json"
+        }
+      },
+      "Values": {
+        "name": "appsettings",
+        "type": "dotnet-appsettings",
+        "environmentOverride": {
+          "dev": {
+            "file": "appsettings.dev.json"
+          },
+          "prod": {
+            "file": "appsettings.prod.json"
+          }
+        }
+      }
+    }
+  ],
+  "ComponentProviders": [
+    {
+      "Name": "dotnet",
+      "Type": "dotnet-package",
+      "Values": {
+        "name": "dotnet",
+        "type": "dotnet-package",
+        "additional": "property"
+      }
+    }
+  ],
+  "ConfigurationFiles": [
+    {
+      "Type": "inline",
+      "Value": "./**/some-config/appsettings*.json"
+    },
+    {
+      "Type": "dotnet-appsettings",
+      "Value": {
+        "type": "dotnet-appsettings",
+        "additional": "property"
+      }
+    }
+  ],
+  "Subprojects": null,
+  "SourceFiles": []
+}

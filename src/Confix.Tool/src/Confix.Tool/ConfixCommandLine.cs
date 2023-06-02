@@ -1,6 +1,7 @@
 using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
 using Confix.Tool.Abstractions;
+using Confix.Tool.Middlewares;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -14,8 +15,13 @@ internal sealed class ConfixCommandLine : CommandLineBuilder
 
         console.Profile.Width = 500;
 
-        this.AddService(console)
-            .AddService<IProjectDiscovery, ProjectDiscovery>()
+        this
+            .AddSingleton<ExecuteComponentOutput>()
+            .AddSingleton<ExecuteComponentInput>()
+            .AddSingleton<LoadConfigurationMiddleware>()
+            .AddSingleton<IServiceProvider>(sp => sp)
+            .AddSingleton(console)
+            .AddSingleton<IProjectDiscovery, ProjectDiscovery>()
             .UseDefaults()
             .AddMiddleware(ExceptionMiddleware, MiddlewareOrder.ExceptionHandler);
     }

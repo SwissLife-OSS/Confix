@@ -1,11 +1,31 @@
+using Confix.Tool.Abstractions.Configuration;
+
 namespace Confix.Tool.Abstractions;
 
-public class RepositoryDefinition
+public sealed class RepositoryDefinition
 {
-    public RepositoryDefinition(FileInfo location)
+    public RepositoryDefinition(
+        ProjectDefinition? project,
+        ComponentDefinition? component)
     {
-        Location = location;
+        Project = project;
+        Component = component;
     }
 
-    public FileInfo Location { get; }
+    public ComponentDefinition? Component { get; }
+
+    public ProjectDefinition? Project { get; }
+
+    public static RepositoryDefinition From(RepositoryConfiguration configuration)
+    {
+        var project = configuration.Project is not null
+            ? ProjectDefinition.From(configuration.Project)
+            : null;
+
+        var component = configuration.Component is not null
+            ? ComponentDefinition.From(configuration.Component)
+            : null;
+
+        return new RepositoryDefinition(project, component);
+    }
 }
