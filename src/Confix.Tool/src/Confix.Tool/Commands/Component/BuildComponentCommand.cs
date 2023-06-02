@@ -8,7 +8,6 @@ public sealed class BuildComponentCommand : Command
     public BuildComponentCommand() : base("build")
         => this
             .AddPipeline()
-            .AddOption()
             .Use<LoadConfigurationMiddleware>()
             .Use<ExecuteComponentInput>()
             .Use<ExecuteComponentOutput>();

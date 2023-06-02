@@ -30,8 +30,7 @@ public sealed class TestCommand : Command
             .Use<ExecuteComponentInput>()
             .Use<ExecuteComponentOutput>()
             .BuildExecutor()
-            .AddParameter("path", path)
-            .AddParameter("outputFormat", path)
+            .AddParameter(PathArgument.Instance, path)
             .ExecuteAsync(cancellationToken);
 }
 
