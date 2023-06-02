@@ -1,5 +1,3 @@
-using Json.Schema;
-
 namespace Confix.Tool.Abstractions;
 
 public sealed class ComponentDefinition

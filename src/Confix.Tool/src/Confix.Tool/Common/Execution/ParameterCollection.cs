@@ -1,19 +1,24 @@
+using System.CommandLine;
+
 namespace Confix.Tool.Common.Pipelines;
 
 public sealed class ParameterCollection : IParameterCollection
 {
-    private readonly IReadOnlyDictionary<string, object> _parameters;
+    private readonly IReadOnlyDictionary<Symbol, object?> _parameters;
 
-    private ParameterCollection(IReadOnlyDictionary<string, object> parameters)
+    private ParameterCollection(IReadOnlyDictionary<Symbol, object?> parameters)
     {
         _parameters = parameters;
     }
 
     public T Get<T>(string key)
     {
-        if (_parameters.TryGetValue(key, out var value) && value is T valueOfT)
+        foreach (var parameter in _parameters)
         {
-            return valueOfT;
+            if (parameter.Key.Name == key && parameter.Value is T valueOfT)
+            {
+                return valueOfT;
+            }
         }
 
         throw new KeyNotFoundException($"Parameter '{key}' was not found.");
@@ -21,17 +26,23 @@ public sealed class ParameterCollection : IParameterCollection
 
     public bool TryGet<T>(string key, out T value)
     {
-        if (_parameters.TryGetValue(key, out var result))
+        foreach (var parameter in _parameters)
         {
-            value = (T) result;
-            return true;
+            if (parameter.Key.Name == key && parameter.Value is T valueOfT)
+            {
+                value = valueOfT;
+                return true;
+            }
         }
 
         value = default!;
         return false;
     }
 
-    public static IParameterCollection From(IReadOnlyDictionary<string, object> parameters)
+    public bool TryGet(Symbol symbol, out object? value)
+        => _parameters.TryGetValue(symbol, out value);
+
+    public static IParameterCollection From(IReadOnlyDictionary<Symbol, object?> parameters)
     {
         return new ParameterCollection(parameters);
     }

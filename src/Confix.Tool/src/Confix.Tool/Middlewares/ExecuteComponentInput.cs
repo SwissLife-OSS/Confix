@@ -8,6 +8,7 @@ public sealed class ExecuteComponentInput : IMiddleware
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         var configuration = context.Features.Get<ConfigurationFeature>();
+        
         throw new NotImplementedException();
     }
 }

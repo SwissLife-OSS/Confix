@@ -83,7 +83,7 @@ public sealed class CommandPipelineBuilder
             foreach (var argument in _arguments)
             {
                 executor
-                    .AddParameter(argument.Name, context.ParseResult.GetValueForArgument(argument));
+                    .AddParameter(argument, context.ParseResult.GetValueForArgument(argument));
             }
         }
 
@@ -92,7 +92,7 @@ public sealed class CommandPipelineBuilder
             foreach (var option in _options)
             {
                 executor
-                    .AddParameter(option.Name, context.ParseResult.GetValueForOption(option));
+                    .AddParameter(option, context.ParseResult.GetValueForOption(option));
             }
         }
 

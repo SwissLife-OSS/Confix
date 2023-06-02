@@ -1,15 +1,4 @@
 using System.CommandLine;
-using System.IO.Pipes;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using ConfiX.Extensions;
-using Confix.Tool.Abstractions;
-using Confix.Tool.Entities.VsCode;
-using Confix.Tool.Schema;
-using Json.Schema;
-using Spectre.Console;
 
 namespace Confix.Tool.Commands.Temp;
 
