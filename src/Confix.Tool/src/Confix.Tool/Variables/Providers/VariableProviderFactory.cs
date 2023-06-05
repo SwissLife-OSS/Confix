@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Text.Json.Nodes;
+
 namespace ConfiX.Variables;
 
 public sealed class VariableProviderFactory : IVariableProviderFactory

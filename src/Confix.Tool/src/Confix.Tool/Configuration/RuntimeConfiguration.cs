@@ -2,6 +2,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
+using Microsoft.Extensions.Logging;
 
 namespace ConfiX.Extensions;
 

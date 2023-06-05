@@ -1,7 +1,7 @@
 using System.Text.Json.Nodes;
 using ConfiX.Variables;
 using FluentAssertions;
-using Xunit;
+
 namespace Confix.Tool.Tests;
 
 public class VariableProviderFactoryTests
@@ -10,10 +10,11 @@ public class VariableProviderFactoryTests
     public void CreateProvider_KnownProviderType_CreatesProvider()
     {
         // Arrange
-        var factory = new VariableProviderFactory(new()
-        {
-            { LocalVariableProvider.PropertyType,(c) => new LocalVariableProvider(c) },
-        });
+        var factory = new VariableProviderFactory(
+            new Dictionary<string, Func<JsonNode, IVariableProvider>>()
+            {
+                { LocalVariableProvider.PropertyType, (c) => new LocalVariableProvider(c) },
+            });
         var providerType = LocalVariableProvider.PropertyType;
         var configuration = JsonNode.Parse("""
             {
@@ -33,10 +34,11 @@ public class VariableProviderFactoryTests
     public void CreateProvider_UnknownProviderType_ThrowsInvalidOperationException()
     {
         // Arrange
-        var factory = new VariableProviderFactory(new()
-        {
-            { LocalVariableProvider.PropertyType,(c) => new LocalVariableProvider(c) },
-        });
+        var factory = new VariableProviderFactory(
+            new Dictionary<string, Func<JsonNode, IVariableProvider>>()
+            {
+                { LocalVariableProvider.PropertyType, (c) => new LocalVariableProvider(c) },
+            });
         var providerType = "UnknownProviderType";
         var configuration = JsonNode.Parse("""
             {
@@ -45,6 +47,7 @@ public class VariableProviderFactoryTests
             """)!;
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => factory.CreateProvider(providerType, configuration));
+        Assert.Throws<InvalidOperationException>(()
+            => factory.CreateProvider(providerType, configuration));
     }
 }

@@ -10,6 +10,6 @@ public sealed class BuildComponentCommand : Command
         => this
             .AddPipeline()
             .Use<LoadConfigurationMiddleware>()
-            .Use<ExecuteComponentInput>()
+            .Use<ExecuteComponentInputMiddleware>()
             .Use<ExecuteComponentOutput>();
 }
