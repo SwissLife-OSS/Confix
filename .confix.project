@@ -1,0 +1,25 @@
+{
+    "variableProviders": [
+        {
+            "name": "local",
+            "type": "local",
+            "path": "./variables.json"
+        },
+        {
+            "name": "secret",
+            "type": "secret",
+            "environmentOverride": {
+                "dev": {
+                    "publicKey": "./certs/dev/public.pem",
+                    "privateKey": "./certs/dev/private.pem"
+                },
+                "qa": {
+                    "publicKey": "./certs/qa/public.pem"
+                },
+                "prod": {
+                    "publicKey": "./certs/prod/public.pem"
+                }
+            }
+        }
+    ]
+}

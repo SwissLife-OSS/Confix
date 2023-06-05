@@ -10,20 +10,25 @@ public class VariableProviderFactoryTests
     public void CreateProvider_KnownProviderType_CreatesProvider()
     {
         // Arrange
+        string providerType = "test";
         var factory = new VariableProviderFactory(
             new Dictionary<string, Func<JsonNode, IVariableProvider>>()
             {
-                { LocalVariableProvider.PropertyType, (c) => new LocalVariableProvider(c) },
+                { providerType, (c) => new LocalVariableProvider(c) },
             });
-        var providerType = LocalVariableProvider.PropertyType;
-        var configuration = JsonNode.Parse("""
+
+        VariableProviderConfiguration configuration = new()
+        {
+            Name = "irrelevant",
+            Type = providerType,
+            Configuration = JsonNode.Parse("""
             {
                 "path": "/path/to/file.json"
             }
-            """)!;
-
+            """)!
+        };
         // Act
-        var provider = factory.CreateProvider(providerType, configuration);
+        var provider = factory.CreateProvider(configuration);
 
         // Assert
         provider.Should().NotBeNull();
@@ -35,19 +40,24 @@ public class VariableProviderFactoryTests
     {
         // Arrange
         var factory = new VariableProviderFactory(
-            new Dictionary<string, Func<JsonNode, IVariableProvider>>()
-            {
-                { LocalVariableProvider.PropertyType, (c) => new LocalVariableProvider(c) },
-            });
-        var providerType = "UnknownProviderType";
-        var configuration = JsonNode.Parse("""
+             new Dictionary<string, Func<JsonNode, IVariableProvider>>()
+             {
+                { "NOT-the-one-we-are-looking-for", (c) => new LocalVariableProvider(c) },
+             });
+
+        VariableProviderConfiguration configuration = new()
+        {
+            Name = "irrelevant",
+            Type = "the-one-we-are-looking-for",
+            Configuration = JsonNode.Parse("""
             {
                 "path": "/path/to/file.json"
             }
-            """)!;
+            """)!
+        };
 
         // Act & Assert
         Assert.Throws<InvalidOperationException>(()
-            => factory.CreateProvider(providerType, configuration));
+            => factory.CreateProvider(configuration));
     }
 }

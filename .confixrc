@@ -1,0 +1,9 @@
+{
+    "variableProviders": [
+         {
+            "name": "local",
+            "type": "local",
+            "path": "./variables.json"
+        }
+    ]
+}

@@ -2,6 +2,7 @@ using System.CommandLine;
 using System.CommandLine.Completions;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
+using ConfiX.Variables;
 using Spectre.Console;
 
 namespace Confix.Tool.Commands.Variable;
@@ -19,16 +20,21 @@ public sealed class VariableGetCommand : Command
         this.SetHandler(
             ExecuteAsync,
             Bind.FromServiceProvider<IAnsiConsole>(),
-            VariableNameArgument.Instance);
+            Bind.FromServiceProvider<IVariableResolver>(),
+            VariableNameArgument.Instance,
+            Bind.FromServiceProvider<CancellationToken>());
     }
 
     public override string? Description => "resolves a variable by name";
 
     private static async Task<int> ExecuteAsync(
        IAnsiConsole console,
-       string variableName
+       IVariableResolver resolver,
+       string variableName,
+       CancellationToken cancellationToken
     )
     {
+        var result = await resolver.ResolveVariable(new VariablePath("local", variableName), cancellationToken);
         return ExitCodes.Success;
     }
 }
