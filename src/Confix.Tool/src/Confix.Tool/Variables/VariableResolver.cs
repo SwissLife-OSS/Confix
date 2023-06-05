@@ -4,6 +4,7 @@ namespace ConfiX.Variables;
 
 public interface IVariableResolver
 {
+    Task<string> ResolveVariable(VariablePath key, CancellationToken cancellationToken);
     Task<IReadOnlyDictionary<VariablePath, string>> ResolveVariables(IReadOnlyList<VariablePath> keys, CancellationToken cancellationToken);
 }
 
@@ -18,6 +19,10 @@ public sealed class VariableResolver : IVariableResolver
         _configurations = configurations;
     }
 
+    public Task<string> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
+        => _variableProviderFactory.CreateProvider(GetProviderConfiguration(key.ProviderName))
+            .ResolveAsync(key.Path, cancellationToken);
+
     public async Task<IReadOnlyDictionary<VariablePath, string>> ResolveVariables(
         IReadOnlyList<VariablePath> keys,
         CancellationToken cancellationToken)
@@ -26,7 +31,6 @@ public sealed class VariableResolver : IVariableResolver
 
         foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
         {
-
             var providerConfiguration = GetProviderConfiguration(group.Key);
             IVariableProvider provider = _variableProviderFactory.CreateProvider(providerConfiguration);
 
