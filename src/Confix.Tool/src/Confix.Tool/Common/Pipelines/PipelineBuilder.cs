@@ -53,6 +53,12 @@ public sealed class PipelineBuilder
         return this;
     }
 
+    public PipelineBuilder Use<TMiddleware>(TMiddleware middleware) where TMiddleware : IMiddleware
+    {
+        _middlewareFactories.Add(_ => middleware);
+
+        return this;
+    }
     /// <summary>
     /// Builds the <see cref="Pipeline"/> with the configured middleware components.
     /// </summary>

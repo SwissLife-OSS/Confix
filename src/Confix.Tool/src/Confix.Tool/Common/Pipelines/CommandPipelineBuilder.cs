@@ -1,6 +1,7 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using Confix.Tool.Common.Pipelines;
+using Confix.Tool.Middlewares;
 
 namespace Confix.Tool.Common.Pipelines;
 
@@ -56,6 +57,13 @@ public sealed class CommandPipelineBuilder
         return this;
     }
 
+    public CommandPipelineBuilder Use<TMiddleware>(TMiddleware middleware) where TMiddleware : IMiddleware
+    {
+        Chain(builder => builder.Use(middleware));
+
+        return this;
+    }
+
     /// <summary>
     /// Adds an argument to the command and maps it to the <see cref="IParameterCollection"/>.
     /// </summary>
@@ -73,7 +81,7 @@ public sealed class CommandPipelineBuilder
         return this;
     }
 
-    public CommandPipelineBuilder AddArgument<T>(string name, string description) 
+    public CommandPipelineBuilder AddArgument<T>(string name, string description)
         => AddArgument(new Argument<T>(name, description));
 
     /// <summary>
@@ -96,7 +104,7 @@ public sealed class CommandPipelineBuilder
     private void Chain(Func<PipelineBuilder, PipelineBuilder> middleware)
     {
         var pipeline = _pipeline;
-        
+
         _pipeline = builder => middleware(pipeline(builder));
     }
 
@@ -149,5 +157,18 @@ public sealed class CommandPipelineBuilder
     public static CommandPipelineBuilder New(Command command)
     {
         return new(command);
+    }
+}
+
+
+public static class CommandPipelineBuilderExtensions
+{
+    public static CommandPipelineBuilder UseHandler(
+        this CommandPipelineBuilder builder,
+        Func<IMiddlewareContext, Task> action)
+    {
+        builder.Use(new DelegateMiddleware((context, _) => action(context)));
+
+        return builder;
     }
 }

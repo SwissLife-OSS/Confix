@@ -15,27 +15,21 @@ public sealed class VariableGetCommand : Command
             .AddPipeline()
             .Use<LoadConfigurationMiddleware>()
             .Use<VariableMiddleware>()
-            .AddArgument(VariableNameArgument.Instance);
+            .AddArgument(VariableNameArgument.Instance)
+            .UseHandler(InvokeAsync);
 
-        this.SetHandler(
-            ExecuteAsync,
-            Bind.FromServiceProvider<IAnsiConsole>(),
-            Bind.FromServiceProvider<IVariableResolver>(),
-            VariableNameArgument.Instance,
-            Bind.FromServiceProvider<CancellationToken>());
+        
     }
 
     public override string? Description => "resolves a variable by name";
 
-    private static async Task<int> ExecuteAsync(
-       IAnsiConsole console,
-       IVariableResolver resolver,
-       string variableName,
-       CancellationToken cancellationToken
-    )
+    private static async Task InvokeAsync(IMiddlewareContext context)
     {
-        var result = await resolver.ResolveVariable(new VariablePath("local", variableName), cancellationToken);
-        return ExitCodes.Success;
+        IVariableResolver resolver = context.Features.Get<VariableResolverFeature>().Resolver;
+        string variableName = context.Parameter.Get(VariableNameArgument.Instance);
+        var result = await resolver.ResolveVariable(VariablePath.Parse(variableName), context.CancellationToken);
+
+        context.Console.WriteLine($"{variableName} -> {result}");
     }
 }
 
@@ -43,6 +37,8 @@ public sealed class VariableGetCommand : Command
 file class VariableNameArgument : Argument<string>
 {
     public static VariableNameArgument Instance { get; } = new();
+
+    public override Type ValueType => base.ValueType;
 
     private VariableNameArgument()
         : base("variable-name")
