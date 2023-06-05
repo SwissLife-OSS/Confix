@@ -475,13 +475,9 @@ $RECYCLE.BIN/
 *.swp
 
 # Jetbrains Temporary 
-<<<<<<< Updated upstream
-.idea/
-
-# VsCode
-.vscode/
-=======
 .idea/*
 .idea
 .idea/
->>>>>>> Stashed changes
+
+# VSCode
+.vscode/
