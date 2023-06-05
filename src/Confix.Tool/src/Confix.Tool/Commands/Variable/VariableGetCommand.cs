@@ -14,6 +14,7 @@ public sealed class VariableGetCommand : Command
             .AddPipeline()
             .Use<LoadConfigurationMiddleware>()
             .Use<VariableMiddleware>()
+            .AddArgument(VariableProviderNameArgument.Instance)
             .AddArgument(VariableNameArgument.Instance)
             .UseHandler(InvokeAsync);
     }
@@ -24,8 +25,16 @@ public sealed class VariableGetCommand : Command
     {
         IVariableResolver resolver = context.Features.Get<VariableResolverFeature>().Resolver;
         string variableName = context.Parameter.Get(VariableNameArgument.Instance);
-        var result = await resolver.ResolveVariable(VariablePath.Parse(variableName), context.CancellationToken);
+        string? variableProviderName = context.Parameter.Get(VariableProviderNameArgument.Instance);
+        VariablePath variablePath =
+            variableProviderName is null ?
+                VariablePath.Parse(variableName)
+                : new VariablePath(variableProviderName, variableName);
 
-        context.Console.WriteLine($"{variableName} -> {result}");
+        var result = await resolver.ResolveVariable(
+            variablePath,
+            context.CancellationToken);
+
+        context.Console.WriteLine($"{variablePath} -> {result}");
     }
 }

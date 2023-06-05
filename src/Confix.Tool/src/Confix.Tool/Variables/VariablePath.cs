@@ -12,4 +12,6 @@ public record struct VariablePath(string ProviderName, string Path)
 
         return new VariablePath(split[0].Remove(0,1), split[1]);
     }
+
+    public override string ToString() => $"${ProviderName}:{Path}";
 }
