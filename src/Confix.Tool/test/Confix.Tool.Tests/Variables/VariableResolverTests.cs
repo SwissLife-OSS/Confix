@@ -1,7 +1,9 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Commands.Variable;
 using ConfiX.Variables;
 using FluentAssertions;
 using Moq;
+using Snapshooter.Xunit;
 using Xunit;
 namespace Confix.Tool.Tests;
 
