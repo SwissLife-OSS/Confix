@@ -17,9 +17,9 @@ public sealed class VariableGetCommand : Command
             .AddArgument(VariableProviderNameArgument.Instance)
             .AddArgument(VariableNameArgument.Instance)
             .UseHandler(InvokeAsync);
-    }
 
-    public override string? Description => "resolves a variable by name";
+        Description = "resolves a variable by name";
+    }
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
