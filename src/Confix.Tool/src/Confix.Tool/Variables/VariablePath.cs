@@ -1,6 +1,6 @@
 namespace ConfiX.Variables;
 
-public record struct VariablePath(string ProviderName, string Path)
+public readonly record struct VariablePath(string ProviderName, string Path)
 {
     public static VariablePath Parse(string variable)
     {

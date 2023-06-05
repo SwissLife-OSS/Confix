@@ -9,7 +9,7 @@ internal sealed class VariableProviderNameArgument : Argument<string?>
     public override Type ValueType => base.ValueType;
 
     private VariableProviderNameArgument()
-        : base("variable-provider-name")
+        : base("provider")
     {
         Arity = ArgumentArity.ZeroOrOne;
         Description = "The name of the provider to resolve the variable from";

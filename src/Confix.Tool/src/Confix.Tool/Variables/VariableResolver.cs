@@ -7,7 +7,9 @@ public sealed class VariableResolver : IVariableResolver
     private readonly IVariableProviderFactory _variableProviderFactory;
     private readonly IReadOnlyList<VariableProviderConfiguration> _configurations;
 
-    public VariableResolver(IVariableProviderFactory variableProviderFactory, IReadOnlyList<VariableProviderConfiguration> configurations)
+    public VariableResolver(
+        IVariableProviderFactory variableProviderFactory,
+        IReadOnlyList<VariableProviderConfiguration> configurations)
     {
         _variableProviderFactory = variableProviderFactory;
         _configurations = configurations;

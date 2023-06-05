@@ -27,9 +27,9 @@ public static class VariableCommandBuilderExtensions
     public static CommandLineBuilder AddVariableProvider(
             this CommandLineBuilder builder,
             string name,
-            Func<JsonNode, IVariableProvider> creator)
+            Func<JsonNode, IVariableProvider> factory)
     {
-        builder.GetVariableProviderLookup().Add(name, creator);
+        builder.GetVariableProviderLookup().Add(name, factory);
 
         return builder;
     }
