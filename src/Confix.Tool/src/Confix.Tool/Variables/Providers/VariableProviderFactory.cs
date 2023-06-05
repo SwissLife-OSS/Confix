@@ -12,8 +12,9 @@ public sealed class VariableProviderFactory : IVariableProviderFactory
         _providers = providers;
     }
 
-    public IVariableProvider CreateProvider(string providerType, JsonNode configuration)
-        => (_providers.GetValueOrDefault(providerType)
-                ?? throw new InvalidOperationException($"Provider {providerType} not known"))
-            (configuration);
+    public IVariableProvider CreateProvider(VariableProviderConfiguration providerConfiguration) 
+        => (_providers.GetValueOrDefault(providerConfiguration.Type)
+                ?? throw new InvalidOperationException($"Provider {providerConfiguration.Type} not known"))
+                (providerConfiguration.Configuration);
+
 }

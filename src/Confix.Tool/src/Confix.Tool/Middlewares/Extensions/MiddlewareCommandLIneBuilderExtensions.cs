@@ -1,5 +1,6 @@
 using System.CommandLine.Builder;
 using Confix.Tool.Entities.Component;
+using ConfiX.Variables;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Middlewares;
@@ -13,7 +14,8 @@ public static class MiddlewareCommandLineBuilderExtensions
             .AddSingleton(sp
                 => new ExecuteComponentInputMiddleware(
                     sp.GetRequiredService<IComponentInputFactory>()))
-            .AddSingleton<LoadConfigurationMiddleware>();
+            .AddSingleton<LoadConfigurationMiddleware>()
+            .RegisterVariableMiddleware();
 
         return builder;
     }

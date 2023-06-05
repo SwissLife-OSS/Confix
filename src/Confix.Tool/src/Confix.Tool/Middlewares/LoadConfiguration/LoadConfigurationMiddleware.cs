@@ -169,7 +169,7 @@ file static class Extensions
     private static IEnumerable<FileInfo> LoadConfixRcs(this IMiddlewareContext context)
     {
         var confixRcInHome =
-            FileSystemHelpers.FindInPath(context.Execution.HomeDirectory, FileNames.ConfixRc);
+            FileSystemHelpers.FindInPath(context.Execution.HomeDirectory, FileNames.ConfixRc, false);
 
         if (File.Exists(confixRcInHome))
         {

@@ -16,8 +16,6 @@ public sealed class LocalVariableProvider : IVariableProvider
         _configuration = new(() => ParseConfiguration(configuration));
     }
 
-    public static readonly string PropertyType = "local";
-
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
         => Task.FromResult<IReadOnlyList<string>>(_configuration.Value.Keys.ToArray());
 

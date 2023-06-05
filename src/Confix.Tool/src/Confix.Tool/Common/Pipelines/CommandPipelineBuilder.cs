@@ -2,7 +2,7 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using Confix.Tool.Common.Pipelines;
 
-namespace Confix.Tool.Commands.Component;
+namespace Confix.Tool.Common.Pipelines;
 
 /// <summary>
 /// Builds a command pipeline that can be attached directly to a <see cref="Command"/>.
@@ -57,6 +57,18 @@ public sealed class CommandPipelineBuilder
     }
 
     /// <summary>
+    /// Adds a middleware component to the pipeline.
+    /// </summary>
+    /// <param name="middleware">The middleware to add</param>
+    /// <returns>The current command pipeline builder instance.</returns>
+    public CommandPipelineBuilder Use<TMiddleware>(TMiddleware middleware) where TMiddleware : IMiddleware
+    {
+        Chain(builder => builder.Use(middleware));
+
+        return this;
+    }
+
+    /// <summary>
     /// Adds an argument to the command and maps it to the <see cref="IParameterCollection"/>.
     /// </summary>
     /// <typeparam name="TArgument">The type of the argument.</typeparam>
@@ -93,7 +105,6 @@ public sealed class CommandPipelineBuilder
     private void Chain(Func<PipelineBuilder, PipelineBuilder> middleware)
     {
         var pipeline = _pipeline;
-        
         _pipeline = builder => middleware(pipeline(builder));
     }
 

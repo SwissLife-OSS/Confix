@@ -54,6 +54,18 @@ public sealed class PipelineBuilder
     }
 
     /// <summary>
+    /// Adds a middleware to the pipeline.
+    /// </summary>
+    /// <typeparam name="TMiddleware">The type of the middleware.</typeparam>
+    /// <returns>The current pipeline builder instance.</returns>
+    public PipelineBuilder Use<TMiddleware>(TMiddleware middleware) where TMiddleware : IMiddleware
+    {
+        _middlewareFactories.Add(_ => middleware);
+
+        return this;
+    }
+
+    /// <summary>
     /// Builds the <see cref="Pipeline"/> with the configured middleware components.
     /// </summary>
     /// <returns>A new instance of <see cref="Pipeline"/>.</returns>

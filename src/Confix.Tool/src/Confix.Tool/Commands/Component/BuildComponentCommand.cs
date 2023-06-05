@@ -1,4 +1,5 @@
 using System.CommandLine;
+using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 
 namespace Confix.Tool.Commands.Component;
