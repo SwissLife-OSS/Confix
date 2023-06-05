@@ -2,7 +2,12 @@ using Confix.Tool;
 
 namespace ConfiX.Variables;
 
-public sealed class VariableResolver
+public interface IVariableResolver
+{
+    Task<IReadOnlyDictionary<VariablePath, string>> ResolveVariables(IReadOnlyList<VariablePath> keys, CancellationToken cancellationToken);
+}
+
+public sealed class VariableResolver : IVariableResolver
 {
     private readonly IVariableProviderFactory _variableProviderFactory;
 
@@ -13,17 +18,13 @@ public sealed class VariableResolver
 
     public async Task<IReadOnlyDictionary<VariablePath, string>> ResolveVariables(
         IReadOnlyList<VariablePath> keys,
-        IReadOnlyList<VariableProviderConfiguration> configurations,
         CancellationToken cancellationToken)
     {
         Dictionary<VariablePath, string> resolvedVariables = new();
 
         foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
         {
-            VariableProviderConfiguration configuration = GetProviderConfiguration(configurations, group.Key);
-            IVariableProvider provider = _variableProviderFactory.CreateProvider(
-                configuration.Type,
-                configuration.Configuration);
+            IVariableProvider provider = _variableProviderFactory.CreateProvider(group.Key);
 
             var resolved = await provider.ResolveManyAsync(
                 group.Select(x => x.Path).ToArray(),
@@ -37,10 +38,4 @@ public sealed class VariableResolver
 
         return resolvedVariables;
     }
-
-    private static VariableProviderConfiguration GetProviderConfiguration(
-        IReadOnlyList<VariableProviderConfiguration> configurations,
-        string providerName)
-        => configurations.FirstOrDefault(c => c.Name.Equals(providerName))
-            ?? throw new InvalidOperationException("Provider not found");
 }

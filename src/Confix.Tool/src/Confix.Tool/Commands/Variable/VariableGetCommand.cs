@@ -11,6 +11,7 @@ public sealed class VariableGetCommand : Command
         => this
             .AddPipeline()
             .Use<LoadConfigurationMiddleware>()
+            .Use<VariableMiddleware>()
             .AddArgument<string>("variable-name", "The name of the variable to resolve");
 
     public override string? Description => "resolves a variable by name";

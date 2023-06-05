@@ -19,6 +19,7 @@ internal sealed class ConfixCommandLine : CommandLineBuilder
             .AddSingleton<ExecuteComponentOutput>()
             .AddSingleton<ExecuteComponentInput>()
             .AddSingleton<LoadConfigurationMiddleware>()
+            .AddSingleton<VariableMiddleware>()
             .AddSingleton<IServiceProvider>(sp => sp)
             .AddSingleton(console)
             .AddSingleton<IProjectDiscovery, ProjectDiscovery>()
