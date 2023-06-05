@@ -1,4 +1,5 @@
 using System.CommandLine.Invocation;
+using Confix.Tool.Commands.Logging;
 using Spectre.Console;
 
 namespace Confix.Tool.Common.Pipelines;
@@ -36,6 +37,11 @@ public interface IMiddlewareContext
     /// Represents the console that the pipeline can write to.
     /// </summary>
     IAnsiConsole Console { get; }
+    
+    /// <summary>
+    /// Represents the console output of the current pipeline execution.
+    /// </summary>
+    IConsoleLogger Logger { get; }
 
     /// <summary>
     /// Represents the cancellation token that the pipeline can use to check if cancellation has
