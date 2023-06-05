@@ -2,6 +2,7 @@ using System.Collections;
 using ConfiX.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;
+using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
@@ -10,7 +11,6 @@ namespace Confix.Tool.Middlewares;
 
 public sealed class LoadConfigurationMiddleware : IMiddleware
 {
-
     /// <inheritdoc />
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
@@ -25,6 +25,8 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
             FileNames.ConfixRepository => ConfigurationScope.Repository,
             _ => ConfigurationScope.None
         };
+
+        context.Logger.RunningInScope(scope);
 
         var projectDefinition = fileCollection.Project is not null
             ? ProjectDefinition.From(fileCollection.Project)
@@ -47,6 +49,8 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
 
         context.Features.Set(feature);
 
+        context.Logger.ConfigurationLoaded();
+
         return next(context);
     }
 
@@ -61,6 +65,8 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         if (repositoryConfiguration is not null &&
             confixConfiguration is { Project: not null } or { Component: not null })
         {
+            App.Log.MergedConfigurationFiles(FileNames.ConfixRepository, FileNames.ConfixRc);
+
             repositoryConfiguration = new RepositoryConfiguration(
                     confixConfiguration.Project,
                     confixConfiguration.Component,
@@ -72,6 +78,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         var project = repositoryConfiguration?.Project ?? confixConfiguration.Project;
         if (project is not null)
         {
+            App.Log.MergedConfigurationFiles(FileNames.ConfixProject, FileNames.ConfixRepository);
             projectConfiguration = project?.Merge(projectConfiguration);
         }
 
@@ -79,6 +86,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         var component = repositoryConfiguration?.Component ?? confixConfiguration.Component;
         if (component is not null)
         {
+            App.Log.MergedConfigurationFiles(FileNames.ConfixComponent, FileNames.ConfixRepository);
             componentConfiguration = component.Merge(componentConfiguration);
         }
 
@@ -146,6 +154,7 @@ file static class Extensions
             .FindInTree(context.Execution.CurrentDirectory, FileNames.ConfixRepository);
         if (repositoryPath is not null)
         {
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixRepository, repositoryPath);
             yield return new FileInfo(repositoryPath);
         }
 
@@ -154,6 +163,7 @@ file static class Extensions
 
         if (confixProject is not null)
         {
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixRepository, confixProject);
             yield return new FileInfo(confixProject);
         }
 
@@ -162,6 +172,7 @@ file static class Extensions
 
         if (confixComponent is not null)
         {
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixComponent, confixComponent);
             yield return new FileInfo(confixComponent);
         }
     }
@@ -169,10 +180,13 @@ file static class Extensions
     private static IEnumerable<FileInfo> LoadConfixRcs(this IMiddlewareContext context)
     {
         var confixRcInHome =
-            FileSystemHelpers.FindInPath(context.Execution.HomeDirectory, FileNames.ConfixRc, false);
+            FileSystemHelpers.FindInPath(context.Execution.HomeDirectory,
+                FileNames.ConfixRc,
+                false);
 
         if (File.Exists(confixRcInHome))
         {
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInHome);
             yield return new FileInfo(confixRcInHome);
         }
 
@@ -187,7 +201,38 @@ file static class Extensions
                 continue;
             }
 
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInTree);
             yield return new FileInfo(confixRcInTree);
         }
     }
+}
+
+file static class Log
+{
+    public static void ConfigurationFilesLocated(
+        this IConsoleLogger logger,
+        string type,
+        string path) => logger.Debug("Configuration files of type {0} located at {1}", type, path);
+
+    public static void MergedConfigurationFiles(
+        this IConsoleLogger logger,
+        string source,
+        string destination)
+        => logger.Information("Merged {0} from {1}", source, destination);
+
+    public static void RunningInScope(this IConsoleLogger logger, ConfigurationScope scope)
+    {
+        if (scope is ConfigurationScope.None)
+        {
+            logger.Warning(
+                "Could not determine configuration scope. This means that no .confix.project, .confix.component or .confix.repository file was found.");
+        }
+        else
+        {
+            logger.Success("Running in scope {0}", scope.ToString().AsHighlighted());
+        }
+    }
+
+    public static void ConfigurationLoaded(this IConsoleLogger logger)
+        => logger.Success("Configuration loaded");
 }

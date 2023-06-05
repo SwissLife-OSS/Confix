@@ -26,7 +26,7 @@ public static class ComponentInputCommandBuilderExtensions
             lookup = new Dictionary<string, Factory>();
             contextData.Add(_componentInputs, lookup);
 
-            builder.AddSingleton(_ => new ComponentInputFactory(lookup));
+            builder.AddSingleton<IComponentInputFactory>(_ => new ComponentInputFactory(lookup));
         }
 
         return lookup;

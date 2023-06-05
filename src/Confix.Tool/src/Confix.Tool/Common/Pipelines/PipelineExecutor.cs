@@ -1,4 +1,5 @@
 using System.CommandLine;
+using Confix.Tool.Commands.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -60,6 +61,7 @@ public sealed class PipelineExecutor
             CancellationToken = cancellationToken,
             Parameter = ParameterCollection.From(_parameter),
             Console = _pipeline.Services.GetRequiredService<IAnsiConsole>(),
+            Logger = _pipeline.Services.GetRequiredService<IConsoleLogger>(),
             Execution = ExecutionContext.Create()
         };
 

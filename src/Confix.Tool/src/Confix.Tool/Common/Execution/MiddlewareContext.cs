@@ -1,3 +1,4 @@
+using Confix.Tool.Commands.Logging;
 using Spectre.Console;
 
 namespace Confix.Tool.Common.Pipelines;
@@ -8,6 +9,9 @@ public sealed class MiddlewareContext : IMiddlewareContext
 
     /// <inheritdoc />
     public IDictionary<string, object> ContextData { get; } = new Dictionary<string, object>();
+
+    /// <inheritdoc />
+    public required IConsoleLogger Logger { get; init; }
 
     public required CancellationToken CancellationToken { get; init; }
 

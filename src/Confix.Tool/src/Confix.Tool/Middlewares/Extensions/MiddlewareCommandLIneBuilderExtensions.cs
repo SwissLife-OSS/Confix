@@ -11,10 +11,8 @@ public static class MiddlewareCommandLineBuilderExtensions
     {
         builder
             .AddSingleton<ExecuteComponentOutput>()
-            .AddSingleton(sp
-                => new ExecuteComponentInputMiddleware(
-                    sp.GetRequiredService<IComponentInputFactory>()))
             .AddSingleton<LoadConfigurationMiddleware>()
+            .RegisterComponentInputs()
             .RegisterVariableMiddleware();
 
         return builder;

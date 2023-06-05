@@ -17,6 +17,6 @@ public sealed class ExecuteComponentInputMiddleware : IMiddleware
     {
         var configuration = context.Features.Get<ConfigurationFeature>();
 
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 }

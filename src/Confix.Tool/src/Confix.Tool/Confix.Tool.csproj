@@ -9,22 +9,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="JsonSchema.Net"/>
-        <PackageReference Include="System.CommandLine"/>
-        <PackageReference Include="Spectre.Console"/>
-        <PackageReference Include="Spectre.Console.Json"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
-        <PackageReference Include="HotChocolate"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
-        <PackageReference Include="Microsoft.Extensions.Http"/>
+        <PackageReference Include="JsonSchema.Net" />
+        <PackageReference Include="System.CommandLine" />
+        <PackageReference Include="Spectre.Console" />
+        <PackageReference Include="Spectre.Console.Json" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+        <PackageReference Include="HotChocolate" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.Http" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Abstractions\"/>
-        <Folder Include="Common\Exceptions\"/>
-        <Folder Include="Options\"/>
-        <Folder Include="Utilities\Parsing\"/>
+        <Folder Include="Abstractions\" />
+        <Folder Include="Utilities\Parsing\" />
     </ItemGroup>
-
 </Project>

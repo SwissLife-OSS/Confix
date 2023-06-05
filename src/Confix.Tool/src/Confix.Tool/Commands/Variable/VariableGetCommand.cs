@@ -1,4 +1,5 @@
 using System.CommandLine;
+using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using ConfiX.Variables;
@@ -23,18 +24,27 @@ public sealed class VariableGetCommand : Command
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
-        IVariableResolver resolver = context.Features.Get<VariableResolverFeature>().Resolver;
-        string variableName = context.Parameter.Get(VariableNameArgument.Instance);
-        string? variableProviderName = context.Parameter.Get(VariableProviderNameArgument.Instance);
-        VariablePath variablePath =
-            variableProviderName is null ?
-                VariablePath.Parse(variableName)
-                : new VariablePath(variableProviderName, variableName);
+        var resolver = context.Features.Get<VariableResolverFeature>().Resolver;
+        var variableName = context.Parameter.Get(VariableNameArgument.Instance);
+        var variableProviderName = context.Parameter.Get(VariableProviderNameArgument.Instance);
+        var variablePath = variableProviderName is null
+            ? VariablePath.Parse(variableName)
+            : new VariablePath(variableProviderName, variableName);
 
-        var result = await resolver.ResolveVariable(
-            variablePath,
-            context.CancellationToken);
+        var result = await resolver
+            .ResolveVariable(variablePath, context.CancellationToken);
 
-        context.Console.WriteLine($"{variablePath} -> {result}");
+        context.Logger.PrintVariableResolved(variablePath, result);
+    }
+}
+
+file static class Log
+{
+    public static void PrintVariableResolved(
+        this IConsoleLogger console,
+        VariablePath variablePath,
+        string value)
+    {
+        console.Information($"[green]{variablePath}[/] -> [yellow]{value}[/]");
     }
 }
