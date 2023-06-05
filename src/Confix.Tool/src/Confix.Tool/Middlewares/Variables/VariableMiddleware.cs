@@ -1,5 +1,4 @@
 using System.Text.Json.Nodes;
-using Confix.Tool.Abstractions;
 using Confix.Tool.Common.Pipelines;
 using Confix.Utilities.Json;
 using ConfiX.Variables;
@@ -9,25 +8,26 @@ namespace Confix.Tool.Middlewares;
 
 public sealed class VariableMiddleware : IMiddleware
 {
+    private readonly IVariableProviderFactory _variableProviderFactory;
+
+    public VariableMiddleware(IVariableProviderFactory variableProviderFactory)
+    {
+        _variableProviderFactory = variableProviderFactory;
+    }
+
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
         string environment = "local"; // TODO: read from Environment Feature
 
-        VariableProviderFactory factory = new(
-            GetVariableProviders(),
-            GetProviderConfiguration(configurationFeature, environment).ToArray());
-
-        VariableResolverFeature feature = new(new VariableResolver(factory));
+        VariableResolverFeature feature = new(
+            new VariableResolver(
+                _variableProviderFactory,
+                GetProviderConfiguration(configurationFeature, environment).ToArray()));
         context.Features.Set(feature);
 
         return next(context);
     }
-
-    private static Dictionary<string, Func<JsonNode, IVariableProvider>> GetVariableProviders()
-        => new(){
-            {"local", (node) => new LocalVariableProvider(node)}
-        };
 
     private static IEnumerable<VariableProviderConfiguration> GetProviderConfiguration(
         ConfigurationFeature configurationFeature,
@@ -52,14 +52,4 @@ public sealed class VariableMiddleware : IMiddleware
             };
         }
     }
-}
-
-public sealed class VariableResolverFeature
-{
-    public VariableResolverFeature(IVariableResolver resolver)
-    {
-        Resolver = resolver;
-    }
-
-    public IVariableResolver Resolver { get; }
 }

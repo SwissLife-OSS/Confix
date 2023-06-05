@@ -5,25 +5,16 @@ namespace ConfiX.Variables;
 public sealed class VariableProviderFactory : IVariableProviderFactory
 {
     private readonly IReadOnlyDictionary<string, Func<JsonNode, IVariableProvider>> _providers;
-    private readonly IReadOnlyList<VariableProviderConfiguration> _configurations;
 
     public VariableProviderFactory(
-        IReadOnlyDictionary<string, Func<JsonNode, IVariableProvider>> providers,
-        IReadOnlyList<VariableProviderConfiguration> configurations)
+        IReadOnlyDictionary<string, Func<JsonNode, IVariableProvider>> providers)
     {
         _providers = providers;
-        _configurations = configurations;
     }
 
-    public IVariableProvider CreateProvider(string providerName)
-    {
-        VariableProviderConfiguration config = GetProviderConfiguration(providerName);
-        return (_providers.GetValueOrDefault(config.Type)
-            ?? throw new InvalidOperationException($"Provider {config.Type} not known"))
-            (config.Configuration);
-    }
+    public IVariableProvider CreateProvider(VariableProviderConfiguration providerConfiguration) 
+        => (_providers.GetValueOrDefault(providerConfiguration.Type)
+                ?? throw new InvalidOperationException($"Provider {providerConfiguration.Type} not known"))
+                (providerConfiguration.Configuration);
 
-    private VariableProviderConfiguration GetProviderConfiguration(string providerName)
-        => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
-            ?? throw new InvalidOperationException($"Provider '{providerName}' not found");
 }

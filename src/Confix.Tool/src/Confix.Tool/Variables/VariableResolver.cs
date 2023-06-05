@@ -10,10 +10,12 @@ public interface IVariableResolver
 public sealed class VariableResolver : IVariableResolver
 {
     private readonly IVariableProviderFactory _variableProviderFactory;
+    private readonly IReadOnlyList<VariableProviderConfiguration> _configurations;
 
-    public VariableResolver(IVariableProviderFactory variableProviderFactory)
+    public VariableResolver(IVariableProviderFactory variableProviderFactory, IReadOnlyList<VariableProviderConfiguration> configurations)
     {
         _variableProviderFactory = variableProviderFactory;
+        _configurations = configurations;
     }
 
     public async Task<IReadOnlyDictionary<VariablePath, string>> ResolveVariables(
@@ -24,7 +26,9 @@ public sealed class VariableResolver : IVariableResolver
 
         foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
         {
-            IVariableProvider provider = _variableProviderFactory.CreateProvider(group.Key);
+
+            var providerConfiguration = GetProviderConfiguration(group.Key);
+            IVariableProvider provider = _variableProviderFactory.CreateProvider(providerConfiguration);
 
             var resolved = await provider.ResolveManyAsync(
                 group.Select(x => x.Path).ToArray(),
@@ -38,4 +42,9 @@ public sealed class VariableResolver : IVariableResolver
 
         return resolvedVariables;
     }
+
+    private VariableProviderConfiguration GetProviderConfiguration(string providerName)
+      => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
+          ?? throw new InvalidOperationException($"Provider '{providerName}' not found");
+
 }
