@@ -2,7 +2,7 @@ using Confix.Tool.Common.Pipelines;
 
 namespace Confix.Tool.Middlewares;
 
-public class DelegateMiddleware : IMiddleware
+public sealed class DelegateMiddleware : IMiddleware
 {
     private readonly Func<IMiddlewareContext, MiddlewareDelegate, Task> _middlewareDelegate;
 
