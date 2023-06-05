@@ -44,7 +44,7 @@ public static class VariableCommandBuilderExtensions
             lookup = new Dictionary<string, Func<JsonNode, IVariableProvider>>();
             contextData.Add(_variableProviders, lookup);
 
-            builder.AddSingleton<IVariableProviderFactory>(_ => new VariableProviderFactory(lookup));
+            builder.AddSingleton(_ => new VariableProviderFactory(lookup));
         }
 
         return lookup;
