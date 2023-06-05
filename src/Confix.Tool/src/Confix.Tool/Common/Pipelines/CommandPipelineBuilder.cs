@@ -56,6 +56,11 @@ public sealed class CommandPipelineBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a middleware component to the pipeline.
+    /// </summary>
+    /// <param name="middleware">The middleware to add</param>
+    /// <returns>The current command pipeline builder instance.</returns>
     public CommandPipelineBuilder Use<TMiddleware>(TMiddleware middleware) where TMiddleware : IMiddleware
     {
         Chain(builder => builder.Use(middleware));
@@ -103,7 +108,6 @@ public sealed class CommandPipelineBuilder
     private void Chain(Func<PipelineBuilder, PipelineBuilder> middleware)
     {
         var pipeline = _pipeline;
-
         _pipeline = builder => middleware(pipeline(builder));
     }
 

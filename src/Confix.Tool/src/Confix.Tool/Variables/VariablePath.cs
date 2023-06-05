@@ -13,8 +13,3 @@ public record struct VariablePath(string ProviderName, string Path)
         return new VariablePath(split[0].Remove(0,1), split[1]);
     }
 }
-
-public sealed class VariablePathParseException: Exception{
-    public VariablePathParseException(string variableName)
-        : base($"Variable could not be parsed. Must be of format $<provider-name>:<variable-name> but was '{variableName}'"){}
-}
