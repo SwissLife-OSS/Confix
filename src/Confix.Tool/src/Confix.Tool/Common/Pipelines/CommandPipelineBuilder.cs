@@ -1,7 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using Confix.Tool.Common.Pipelines;
-using Confix.Tool.Middlewares;
 
 namespace Confix.Tool.Common.Pipelines;
 
@@ -157,18 +156,5 @@ public sealed class CommandPipelineBuilder
     public static CommandPipelineBuilder New(Command command)
     {
         return new(command);
-    }
-}
-
-
-public static class CommandPipelineBuilderExtensions
-{
-    public static CommandPipelineBuilder UseHandler(
-        this CommandPipelineBuilder builder,
-        Func<IMiddlewareContext, Task> action)
-    {
-        builder.Use(new DelegateMiddleware((context, _) => action(context)));
-
-        return builder;
     }
 }

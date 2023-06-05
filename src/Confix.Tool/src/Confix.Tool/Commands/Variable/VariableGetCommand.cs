@@ -1,5 +1,4 @@
 using System.CommandLine;
-using System.CommandLine.Completions;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using ConfiX.Variables;
@@ -17,8 +16,6 @@ public sealed class VariableGetCommand : Command
             .Use<VariableMiddleware>()
             .AddArgument(VariableNameArgument.Instance)
             .UseHandler(InvokeAsync);
-
-        
     }
 
     public override string? Description => "resolves a variable by name";
@@ -30,20 +27,5 @@ public sealed class VariableGetCommand : Command
         var result = await resolver.ResolveVariable(VariablePath.Parse(variableName), context.CancellationToken);
 
         context.Console.WriteLine($"{variableName} -> {result}");
-    }
-}
-
-
-file class VariableNameArgument : Argument<string>
-{
-    public static VariableNameArgument Instance { get; } = new();
-
-    public override Type ValueType => base.ValueType;
-
-    private VariableNameArgument()
-        : base("variable-name")
-    {
-        Arity = ArgumentArity.ExactlyOne;
-        Description = "The name of the variable to resolve";
     }
 }
