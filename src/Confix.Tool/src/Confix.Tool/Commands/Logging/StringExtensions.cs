@@ -6,4 +6,9 @@ public static class StringExtensions
     {
         return $"[bold blue]{value}[/]";
     }
+
+    public static string AsCommand(this string value)
+    {
+        return $"[bold blue]{value}[/]";
+    }
 }

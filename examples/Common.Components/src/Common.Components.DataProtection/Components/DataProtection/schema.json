@@ -21,7 +21,10 @@
       "deprecated": false
     }
   },
-  "required": ["Mode", "Storage"],
+  "required": [
+    "Mode",
+    "Storage"
+  ],
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
@@ -48,7 +51,10 @@
           "deprecated": false
         }
       },
-      "required": ["Mode", "Storage"],
+      "required": [
+        "Mode",
+        "Storage"
+      ],
       "additionalProperties": false
     },
     "DpStorageConfiguration": {
@@ -63,7 +69,10 @@
           "deprecated": false
         }
       },
-      "required": ["ConnectionString", "Path"],
+      "required": [
+        "ConnectionString",
+        "Path"
+      ],
       "additionalProperties": false
     },
     "DpKeyVaultConfiguration": {
@@ -82,7 +91,11 @@
           "deprecated": false
         }
       },
-      "required": ["ClientId", "Secret", "KeyUrl"],
+      "required": [
+        "ClientId",
+        "Secret",
+        "KeyUrl"
+      ],
       "additionalProperties": false
     },
     "String": {

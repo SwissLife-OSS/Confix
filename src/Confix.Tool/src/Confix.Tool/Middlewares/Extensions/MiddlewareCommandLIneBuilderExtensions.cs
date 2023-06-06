@@ -10,7 +10,6 @@ public static class MiddlewareCommandLineBuilderExtensions
     public static CommandLineBuilder RegisterMiddlewares(this CommandLineBuilder builder)
     {
         builder
-            .AddSingleton<ExecuteComponentOutput>()
             .AddSingleton<LoadConfigurationMiddleware>()
             .RegisterComponentInputs()
             .RegisterVariableMiddleware();
