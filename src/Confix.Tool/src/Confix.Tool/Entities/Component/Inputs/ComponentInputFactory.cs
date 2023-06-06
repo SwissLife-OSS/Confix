@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+using Confix.Tool.Abstractions;
 using Factory =
     System.Func<System.Text.Json.Nodes.JsonNode, Confix.Tool.Entities.Component.IComponentInput>;
 
@@ -13,14 +13,14 @@ public sealed class ComponentInputFactory : IComponentInputFactory
         _lookup = lookup;
     }
 
-    public IComponentInput CreateInput(string type, JsonNode configuration)
+    public IComponentInput CreateInput(ComponentInputDefinition definition)
     {
-        if (!_lookup.TryGetValue(type, out var factory))
+        if (!_lookup.TryGetValue(definition.Type, out var factory))
         {
             throw new InvalidOperationException(
-                $"Component input type '{type}' is not registered.");
+                $"Component input type '{definition.Type}' is not registered.");
         }
 
-        return factory(configuration);
+        return factory(definition.Value);
     }
 }

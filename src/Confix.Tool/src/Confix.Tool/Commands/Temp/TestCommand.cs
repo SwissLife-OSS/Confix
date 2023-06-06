@@ -27,8 +27,7 @@ public sealed class TestCommand : Command
         => await PipelineBuilder
             .From(services)
             .Use<LoadConfigurationMiddleware>()
-            .Use<ExecuteComponentInputMiddleware>()
-            .Use<ExecuteComponentOutput>()
+            .Use<BuildComponentInputMiddleware>()
             .BuildExecutor()
             .AddParameter(PathArgument.Instance, path)
             .ExecuteAsync(cancellationToken);

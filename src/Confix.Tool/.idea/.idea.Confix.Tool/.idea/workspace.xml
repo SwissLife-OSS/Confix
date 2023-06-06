@@ -8,36 +8,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a82c6bb5-bd97-4f78-b489-432ca2d68fbe" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/App.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/ConsoleLogger.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/ConsoleLoggerExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/DefaultLoggerMessage.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/Glyph.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/GlyphsExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/IConsoleLogger.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/ILoggerMessage.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/StringExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/Styles.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/Verbosity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/VerbosityCommandLineBuilderExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/ComponentInputCommandLineBuilderExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/GraphQLComponentInput.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Options/VerbosityOption.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IMiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IMiddlewareContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Confix.Tool.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Confix.Tool.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/ConfixCommandLine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfixCommandLine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/ConfixRootCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfixRootCommand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/ComponentInputFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/ComponentInputFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Extensions/ComponentInputCommandBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Extensions/ComponentInputCommandBuilderExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/IComponentInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/IComponentInput.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/IComponentInputFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/IComponentInputFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Components/BuildComponentInputMiddleware.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Components/ComponentInputExecutor.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Components/ComponentInputExecutorFeature.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Components/IComponentInputExecutor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Component/BuildComponentCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Component/BuildComponentCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/StringExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/StringExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/TestCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/TestCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Definition/ComponentInputDefinition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Definition/ComponentInputDefinition.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Definition/ComponentOutputDefinition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Definition/ComponentOutputDefinition.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/ComponentInputCommandLineBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/ComponentInputCommandLineBuilderExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/ComponentInputFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/ComponentInputFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/GraphQLComponentInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/GraphQLComponentInput.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/IComponentInputFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Inputs/IComponentInputFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/ExecuteComponentInputMiddleware.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/ExecuteComponentOutput.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Extensions/MiddlewareCommandLIneBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Extensions/MiddlewareCommandLIneBuilderExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Console/Extensions/CommandLineBuilderExtensions.ContextData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Console/Extensions/CommandLineBuilderExtensions.ContextData.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,6 +175,7 @@
       <option name="presentableId" value="Default" />
       <updated>1685975642481</updated>
       <workItem from="1685975643519" duration="5849000" />
+      <workItem from="1686036263179" duration="7749000" />
     </task>
     <servers />
   </component>

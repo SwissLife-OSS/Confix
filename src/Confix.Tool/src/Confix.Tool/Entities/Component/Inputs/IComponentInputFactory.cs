@@ -1,8 +1,8 @@
-using System.Text.Json.Nodes;
+using Confix.Tool.Abstractions;
 
 namespace Confix.Tool.Entities.Component;
 
 public interface IComponentInputFactory
 {
-    IComponentInput CreateInput(string type, JsonNode configuration);
+    IComponentInput CreateInput(ComponentInputDefinition configuration);
 }

@@ -9,7 +9,7 @@ public static class ComponentInputCommandLineBuilderExtensions
     public static CommandLineBuilder RegisterComponentInputs(this CommandLineBuilder builder)
     {
         builder.AddSingleton(sp
-            => new ExecuteComponentInputMiddleware(
+            => new BuildComponentInputMiddleware(
                 sp.GetRequiredService<IComponentInputFactory>()));
 
         builder.AddComponentInput<GraphQLComponentInput>();

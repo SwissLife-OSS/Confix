@@ -4,7 +4,7 @@ namespace Confix.Tool.Abstractions;
 
 public sealed class ComponentOutputDefinition
 {
-    public ComponentOutputDefinition(string type, JsonNode? value)
+    public ComponentOutputDefinition(string type, JsonNode value)
     {
         Type = type;
         Value = value;
@@ -12,5 +12,5 @@ public sealed class ComponentOutputDefinition
 
     public string Type { get; }
 
-    public JsonNode? Value { get; }
+    public JsonNode Value { get; }
 }
