@@ -2479,17 +2479,23 @@
       "Name": "development",
       "ExcludeFiles": [
         "appsettings.staging.json"
-      ]
+      ],
+      "IncludeFiles": null,
+      "Enabled": null
     },
     {
       "Name": "staging",
-      "ExcludeFiles": null
+      "ExcludeFiles": null,
+      "IncludeFiles": null,
+      "Enabled": null
     },
     {
       "Name": "production",
       "ExcludeFiles": [
         "appsettings.staging.json"
-      ]
+      ],
+      "IncludeFiles": null,
+      "Enabled": null
     }
   ],
   "VariableProviders": [
@@ -3795,6 +3801,6 @@
   "Name": "TestProject",
   "Subprojects": null,
   "SourceFiles": [
-    "/var/folders/x6/fxrfc2xd6sq2lsh9k8b61d2w0000gn/T/3mekodtt.dml/.confix.project"
+    "/var/folders/rq/d9dy7_vd2998bvbx7rljjvt40000gn/T/u3zrqib1.d3y/.confix.project"
   ]
 }

@@ -18,12 +18,12 @@ public sealed class VariableMiddleware : IMiddleware
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
-        string environment = "local"; // TODO: read from Environment Feature
+        EnvironmentFeature environmentFeature = context.Features.Get<EnvironmentFeature>();
 
         VariableResolverFeature feature = new(
             new VariableResolver(
                 _variableProviderFactory,
-                GetProviderConfiguration(configurationFeature, environment).ToArray()));
+                GetProviderConfiguration(configurationFeature, environmentFeature.ActiveEnvironment.Name).ToArray()));
         context.Features.Set(feature);
 
         return next(context);
