@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: confix-test
+  labels:
+    app: confix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: confix
+  template:
+    metadata:
+      labels:
+        app: confix    
+    spec:
+      containers:
+      - name: confix
+        image: timholzherratswisslife/deployment-test:1.0.0 
+        volumeMounts:
+        - mountPath: "/app/appsettings.json"
+          subPath: "appsettings.json"
+          name: appsetting
+          readOnly: true
+      volumes:
+        - name: appsetting
+          secret:
+            secretName: appsetting
+            items:
+              - key: appsettings.json
+                path: appsettings.json       
