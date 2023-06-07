@@ -2,12 +2,11 @@ using System.Text.Json.Nodes;
 
 namespace ConfiX.Variables;
 
-// TODO: what the fuck is this?
-public sealed class WhateverTheFuckThatIs
+public sealed class VariableReplacerService : IVariableReplacerService
 {
     private readonly IVariableResolver _variableResolver;
 
-    public WhateverTheFuckThatIs(IVariableResolver variableResolver)
+    public VariableReplacerService(IVariableResolver variableResolver)
     {
         _variableResolver = variableResolver;
     }

@@ -20,10 +20,13 @@ public sealed class VariableMiddleware : IMiddleware
         ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
         string environment = "local"; // TODO: read from Environment Feature
 
+        var variableResolver = new VariableResolver(
+                        _variableProviderFactory,
+                        GetProviderConfiguration(configurationFeature, environment).ToArray());
         VariableResolverFeature feature = new(
-            new VariableResolver(
-                _variableProviderFactory,
-                GetProviderConfiguration(configurationFeature, environment).ToArray()));
+            variableResolver,
+            new VariableReplacerService(variableResolver));
+
         context.Features.Set(feature);
 
         return next(context);
