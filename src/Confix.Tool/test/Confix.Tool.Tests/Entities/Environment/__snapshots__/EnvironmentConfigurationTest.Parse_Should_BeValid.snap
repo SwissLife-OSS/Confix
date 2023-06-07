@@ -3,5 +3,10 @@
   "ExcludeFiles": [
     "file1",
     "file2"
-  ]
+  ],
+  "IncludeFiles": [
+    "file3",
+    "file4"
+  ],
+  "Enabled": true
 }
