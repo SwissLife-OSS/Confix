@@ -10,23 +10,33 @@ public sealed class EnvironmentConfiguration
     {
         public const string Name = "name";
         public const string ExcludeFiles = "excludeFiles";
+        public const string IncludeFiles = "includeFiles";
+        public const string Enabled = "enabled";
     }
 
-    public EnvironmentConfiguration(string? name, IReadOnlyList<string>? excludeFiles)
+    public EnvironmentConfiguration(
+        string? name,
+        IReadOnlyList<string>? excludeFiles,
+        IReadOnlyList<string>? includeFiles,
+        bool? enabled)
     {
         Name = name;
         ExcludeFiles = excludeFiles;
+        IncludeFiles = includeFiles;
+        Enabled = enabled;
     }
 
     public string? Name { get; }
 
     public IReadOnlyList<string>? ExcludeFiles { get; }
+    public IReadOnlyList<string>? IncludeFiles { get; }
+    public bool? Enabled { get; }
 
     public static EnvironmentConfiguration Parse(JsonNode node)
     {
         if (node.GetSchemaValueType() is SchemaValueType.String)
         {
-            return new EnvironmentConfiguration(node.ExpectValue<string>(), null);
+            return new EnvironmentConfiguration(node.ExpectValue<string>(), null, null, null);
         }
 
         var obj = node.ExpectObject();
@@ -42,14 +52,27 @@ public sealed class EnvironmentConfiguration
                     .ToArray()
                 : null;
 
-        return new EnvironmentConfiguration(name, excludeFiles);
+        var includeFiles =
+            obj.TryGetNonNullPropertyValue(FieldNames.IncludeFiles, out var includeFilesNode)
+                ? includeFilesNode
+                    .ExpectArray()
+                    .WhereNotNull()
+                    .Select(n => n.ExpectValue<string>())
+                    .ToArray()
+                : null;
+
+        var enabled = obj.MaybeProperty(FieldNames.Enabled)?.ExpectValue<bool>();
+
+        return new EnvironmentConfiguration(name, excludeFiles, includeFiles, enabled);
     }
 
     public EnvironmentConfiguration Merge(EnvironmentConfiguration other)
     {
         var name = other.Name ?? Name;
         var excludeFiles = other.ExcludeFiles ?? ExcludeFiles;
+        var includeFiles = other.IncludeFiles ?? IncludeFiles;
+        var enabled = other.Enabled ?? Enabled;
 
-        return new EnvironmentConfiguration(name, excludeFiles);
+        return new EnvironmentConfiguration(name, excludeFiles, includeFiles, enabled);
     }
 }

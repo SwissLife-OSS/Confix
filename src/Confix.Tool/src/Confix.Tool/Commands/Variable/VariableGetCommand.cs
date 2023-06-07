@@ -14,6 +14,7 @@ public sealed class VariableGetCommand : Command
         this
             .AddPipeline()
             .Use<LoadConfigurationMiddleware>()
+            .UseEnvironment()
             .Use<VariableMiddleware>()
             .AddArgument(VariableProviderNameArgument.Instance)
             .AddArgument(VariableNameArgument.Instance)
