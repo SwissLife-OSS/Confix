@@ -2,16 +2,16 @@ using System.CommandLine;
 
 namespace Confix.Tool.Commands.Variable;
 
-internal sealed class VariableProviderNameArgument : Argument<string?>
+internal sealed class VariableProviderNameOption : Option<string>
 {
-    public static VariableProviderNameArgument Instance { get; } = new();
+    public static VariableProviderNameOption Instance { get; } = new();
 
-    public override Type ValueType => base.ValueType;
-
-    private VariableProviderNameArgument()
-        : base("provider")
+    private VariableProviderNameOption()
+        : base("--provider")
     {
-        Arity = ArgumentArity.ZeroOrOne;
+        Arity = ArgumentArity.ExactlyOne;
         Description = "The name of the provider to resolve the variable from";
+
+        AddAlias("-p");
     }
 }
