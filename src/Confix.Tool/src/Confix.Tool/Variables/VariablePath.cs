@@ -4,13 +4,24 @@ public readonly record struct VariablePath(string ProviderName, string Path)
 {
     public static VariablePath Parse(string variable)
     {
+        if (TryParse(variable, out var parsed) && parsed.HasValue)
+        {
+            return parsed.Value;
+        }
+        throw new VariablePathParseException(variable);
+    }
+
+    public static bool TryParse(string variable, out VariablePath? parsed)
+    {
         var split = variable.Split(':') ?? Array.Empty<string>();
         if (!variable.StartsWith('$') || split.Length != 2)
         {
-            throw new VariablePathParseException(variable);
+            parsed = null;
+            return false;
         }
 
-        return new VariablePath(split[0].Remove(0,1), split[1]);
+        parsed = new VariablePath(split[0].Remove(0, 1), split[1]);
+        return true;
     }
 
     public override string ToString() => $"${ProviderName}:{Path}";

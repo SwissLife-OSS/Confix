@@ -13,7 +13,7 @@ public static class JsonParser
             _ => throw new JsonParserException($"Cant parse type {node.GetType().Name}")
         };
 
-    private static IEnumerable<KeyValuePair<string, string?>> ParseNodeInternal(JsonNode? node) 
+    private static IEnumerable<KeyValuePair<string, string?>> ParseNodeInternal(JsonNode? node)
         => node switch
         {
             JsonArray array => ParseArray(array),
