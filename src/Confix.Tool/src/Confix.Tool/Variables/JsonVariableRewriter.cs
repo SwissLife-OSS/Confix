@@ -1,14 +1,15 @@
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 
 namespace ConfiX.Variables;
 
-public class JsonVariableRewriter
+public sealed class JsonVariableRewriter
 {
-    private readonly Dictionary<VariablePath, string> _variableLookup;
+    private readonly IReadOnlyDictionary<VariablePath, string> _variableLookup;
 
-    public JsonVariableRewriter(Dictionary<VariablePath, string> variableLookup)
+    public JsonVariableRewriter(IReadOnlyDictionary<VariablePath, string> variableLookup)
     {
         _variableLookup = variableLookup;
     }
@@ -34,7 +35,7 @@ public class JsonVariableRewriter
         return result;
     }
 
-    public JsonArray RewriteArray(JsonArray node)
+    private JsonArray RewriteArray(JsonArray node)
     {
         JsonArray result = new();
 
