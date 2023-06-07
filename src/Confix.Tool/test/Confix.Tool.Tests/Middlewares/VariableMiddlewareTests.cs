@@ -59,7 +59,6 @@ public class VariableMiddlewareTests
         // act
         await middleware.InvokeAsync(middelwareContext.Object, next);
 
-
         // assert
         isNextInvoked.Should().BeTrue();
         var variableResolverFeature = featureCollection.Get<VariableResolverFeature>();
