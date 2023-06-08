@@ -1,5 +1,7 @@
+using System.Text.Json.Nodes;
 using ConfiX.Variables;
 using FluentAssertions;
+using Json.More;
 using Xunit;
 namespace Confix.Tool.Tests;
 
@@ -46,7 +48,7 @@ public sealed class LocalVariableProviderTests : IDisposable
         var result = await provider.ResolveAsync("foo", default);
 
         // assert
-        result.Should().Be("42");
+        Assert.True(result.IsEquivalentTo(JsonValue.Create(42)));
     }
 
     [Fact]
@@ -85,8 +87,8 @@ public sealed class LocalVariableProviderTests : IDisposable
 
         // assert
         result.Should().HaveCount(2);
-        result.Should().ContainKey("foo").WhoseValue.Should().Be("42");
-        result.Should().ContainKey("bar").WhoseValue.Should().Be("baz");
+        Assert.True(result["foo"].IsEquivalentTo(JsonValue.Create(42)));
+        Assert.True(result["bar"].IsEquivalentTo(JsonValue.Create("baz")));
     }
 
     [Fact]

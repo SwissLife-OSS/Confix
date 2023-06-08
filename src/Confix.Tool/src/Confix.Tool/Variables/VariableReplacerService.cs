@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace ConfiX.Variables;
@@ -23,10 +24,16 @@ public sealed class VariableReplacerService : IVariableReplacerService
     }
 
     private static IEnumerable<VariablePath> GetVariables(JsonNode node)
-        => JsonParser.ParseNode(node)
-            .Values
-            .Where(v => v is not null)
-            .Select(v => { _ = VariablePath.TryParse(v!, out var parsed); return parsed; })
-            .Where(p => p.HasValue)
-            .Select(p => p!.Value);
+    {
+        foreach (var value in JsonParser.ParseNode(node).Values)
+        {
+            if (value?.GetValue<JsonElement>().ValueKind == JsonValueKind.String)
+            {
+                if (VariablePath.TryParse(value.ToString(), out var parsed) && parsed.HasValue)
+                {
+                    yield return parsed.Value;
+                }
+            }
+        }
+    }
 }

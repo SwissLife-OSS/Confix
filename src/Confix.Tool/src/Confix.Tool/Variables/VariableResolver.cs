@@ -16,15 +16,15 @@ public sealed class VariableResolver : IVariableResolver
         _configurations = configurations;
     }
 
-    public Task<JsonNode> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
+    public Task<JsonValue> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
         => _variableProviderFactory.CreateProvider(GetProviderConfiguration(key.ProviderName))
             .ResolveAsync(key.Path, cancellationToken);
 
-    public async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
+    public async Task<IReadOnlyDictionary<VariablePath, JsonValue>> ResolveVariables(
         IReadOnlyList<VariablePath> keys,
         CancellationToken cancellationToken)
     {
-        Dictionary<VariablePath, JsonNode> resolvedVariables = new();
+        Dictionary<VariablePath, JsonValue> resolvedVariables = new();
 
         foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
         {

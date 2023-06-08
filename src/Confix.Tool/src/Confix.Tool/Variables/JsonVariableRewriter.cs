@@ -6,9 +6,9 @@ namespace ConfiX.Variables;
 
 public sealed class JsonVariableRewriter
 {
-    private readonly IReadOnlyDictionary<VariablePath, JsonNode> _variableLookup;
+    private readonly IReadOnlyDictionary<VariablePath, JsonValue> _variableLookup;
 
-    public JsonVariableRewriter(IReadOnlyDictionary<VariablePath, JsonNode> variableLookup)
+    public JsonVariableRewriter(IReadOnlyDictionary<VariablePath, JsonValue> variableLookup)
     {
         _variableLookup = variableLookup;
     }
