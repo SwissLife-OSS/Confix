@@ -12,6 +12,6 @@ internal sealed class VariableNameArgument : Argument<string>
         : base("name")
     {
         Arity = ArgumentArity.ExactlyOne;
-        Description = "The name of the variable to resolve";
+        Description = "The name of the variable";
     }
 }

@@ -34,7 +34,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
 
     public async Task<JsonValue> ResolveAsync(string path, CancellationToken cancellationToken)
     {
-        KeyVaultSecret result = await _client.GetSecretAsync(path.ToKeyvaultCompatiblePath(), cancellationToken: cancellationToken);
+        KeyVaultSecret result = await _client.GetSecretAsync(path.ToKeyVaultCompatiblePath(), cancellationToken: cancellationToken);
         return JsonValue.Create(result.Value);
     }
 
@@ -52,8 +52,8 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         {
             throw new NotSupportedException("KeyVault only supports String secrets");
         }
-        KeyVaultSecret result = await _client.SetSecretAsync(path.ToKeyvaultCompatiblePath(), (string)value!, cancellationToken);
-        return result.Name;
+        KeyVaultSecret result = await _client.SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, cancellationToken);
+        return result.Name.ToConfixPath();
     }
 }
 
@@ -61,5 +61,5 @@ file static class Extensions
 {
     public static string ToConfixPath(this string path) => path.Replace('-', '.');
 
-    public static string ToKeyvaultCompatiblePath(this string path) => path.Replace('.', '-');
+    public static string ToKeyVaultCompatiblePath(this string path) => path.Replace('.', '-');
 }

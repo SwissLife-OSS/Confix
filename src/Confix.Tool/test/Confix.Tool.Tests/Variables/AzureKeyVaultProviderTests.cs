@@ -4,7 +4,6 @@ using ConfiX.Variables;
 using FluentAssertions;
 using Azure;
 using System.Text.Json.Nodes;
-using System.Text.Json;
 
 namespace Confix.Tool.Tests;
 
