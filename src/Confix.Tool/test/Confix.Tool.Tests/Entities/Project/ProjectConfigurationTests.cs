@@ -185,7 +185,7 @@ public class ProjectConfigurationTests : ParserTestBase
             "TestProject",
             new List<EnvironmentConfiguration>
             {
-                new("env1", new List<string> { "file1" }),
+                new("env1", new List<string> { "file1" }, new List<string> { "file2" }, false),
             },
             new List<ComponentReferenceConfiguration>
             {
@@ -212,7 +212,7 @@ public class ProjectConfigurationTests : ParserTestBase
                 new("Subproject1",
                     new List<EnvironmentConfiguration>
                     {
-                        new("env1", new List<string> { "file1" }),
+                        new("env1", new List<string> { "file1" }, new List<string> { "file2" }, false),
                     },
                     null,
                     null,
@@ -227,7 +227,7 @@ public class ProjectConfigurationTests : ParserTestBase
             "MergedProject",
             new List<EnvironmentConfiguration>
             {
-                new("env1", new List<string> { "file2" }),
+                new("env1", new List<string> { "file2" }, new List<string> { "file3" }, true),
             },
             new List<ComponentReferenceConfiguration>
             {
@@ -254,7 +254,7 @@ public class ProjectConfigurationTests : ParserTestBase
                 new("Subproject1",
                     new List<EnvironmentConfiguration>
                     {
-                        new("env1", new List<string> { "file2" }),
+                        new("env1", new List<string> { "file2" }, new List<string> { "file3" }, false),
                     },
                     null,
                     null,

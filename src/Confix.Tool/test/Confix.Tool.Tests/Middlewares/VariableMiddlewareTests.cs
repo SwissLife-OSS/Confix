@@ -43,6 +43,8 @@ public class VariableMiddlewareTests
             null
         );
         featureCollection.Set(configurationFeature);
+        EnvironmentFeature environmentFeature = new(new EnvironmentDefinition("test", Array.Empty<string>(), Array.Empty<string>(), true));
+        featureCollection.Set(environmentFeature);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
 
         Mock<IVariableProviderFactory> factoryMock = new(MockBehavior.Strict);
@@ -56,7 +58,6 @@ public class VariableMiddlewareTests
 
         // act
         await middleware.InvokeAsync(middelwareContext.Object, next);
-
 
         // assert
         isNextInvoked.Should().BeTrue();

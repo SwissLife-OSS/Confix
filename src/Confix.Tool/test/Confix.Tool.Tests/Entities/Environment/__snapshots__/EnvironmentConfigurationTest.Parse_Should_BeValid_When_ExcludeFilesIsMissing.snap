@@ -1,4 +1,6 @@
 ﻿{
   "Name": "dev",
-  "ExcludeFiles": null
+  "ExcludeFiles": null,
+  "IncludeFiles": null,
+  "Enabled": null
 }
