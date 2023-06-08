@@ -24,7 +24,7 @@ public sealed class ConfigurationAdapterMiddleware : IMiddleware
         if (!configuration.TryGetRepository(out var repositoryFile))
         {
             context.Logger.NoRepositoryFileFound();
-            return;
+            throw new ExitException();
         }
 
         await next(context);
@@ -38,6 +38,7 @@ public sealed class ConfigurationAdapterMiddleware : IMiddleware
             RepositoryRoot = repositoryFile.GetDirectory()
         };
 
+        context.SetStatus("Updating the schemas configuration for IDE...");
         foreach (var adapter in _configurationAdapters)
         {
             await adapter.UpdateJsonSchemasAsync(adapterContext);

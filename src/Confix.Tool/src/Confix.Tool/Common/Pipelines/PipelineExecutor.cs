@@ -56,17 +56,27 @@ public sealed class PipelineExecutor
     /// <returns>The exit code of the pipeline execution.</returns>
     public async Task<int> ExecuteAsync(CancellationToken cancellationToken)
     {
-        var context = new MiddlewareContext
+        var console = _pipeline.Services.GetRequiredService<IAnsiConsole>();
+
+        return await console
+            .Status()
+            .StartAsync("...", Execute);
+
+        async Task<int> Execute(StatusContext ctx)
         {
-            CancellationToken = cancellationToken,
-            Parameter = ParameterCollection.From(_parameter),
-            Console = _pipeline.Services.GetRequiredService<IAnsiConsole>(),
-            Logger = _pipeline.Services.GetRequiredService<IConsoleLogger>(),
-            Execution = ExecutionContext.Create()
-        };
+            var context = new MiddlewareContext
+            {
+                CancellationToken = cancellationToken,
+                Parameter = ParameterCollection.From(_parameter),
+                Console = _pipeline.Services.GetRequiredService<IAnsiConsole>(),
+                Logger = _pipeline.Services.GetRequiredService<IConsoleLogger>(),
+                Execution = ExecutionContext.Create(),
+                Status = ctx
+            };
 
-        await _pipeline.ExecuteAsync(context);
+            await _pipeline.ExecuteAsync(context);
 
-        return context.ExitCode;
+            return context.ExitCode;
+        }
     }
 }

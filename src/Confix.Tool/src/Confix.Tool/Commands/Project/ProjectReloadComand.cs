@@ -30,7 +30,7 @@ public sealed class ProjectReloadCommand : Command
         IProjectComposer projectComposer,
         ISchemaStore schemaStore)
     {
-        await using var spinner = context.Console.Spinner("Reloading the schema of the project...");
+        context.SetStatus("Reloading the schema of the project...");
 
         var cancellationToken = context.CancellationToken;
 
@@ -47,12 +47,12 @@ public sealed class ProjectReloadCommand : Command
         var providerContext =
             new ComponentProviderContext(context.Logger, cancellationToken, project, repository);
 
-        spinner.Message = "Loading components...";
+        context.SetStatus("Loading components...");
         await componentProvider.ExecuteAsync(providerContext);
         var components = providerContext.Components;
         context.Logger.LogComponentsLoaded(components);
 
-        spinner.Message = "Composing the schema...";
+        context.SetStatus("Composing the schema...");
         var jsonSchema = projectComposer.Compose(components);
         context.Logger.LogSchemaCompositionCompleted(project);
 
@@ -128,7 +128,7 @@ file static class Log
         this IConsoleLogger console,
         ICollection<Abstractions.Component> components)
     {
-        console.Information($"Loaded {components.Count} components");
+        console.Success($"Loaded {components.Count} components");
         foreach (var component in components)
         {
             console.Information($"-  @{component.Provider}/{component.ComponentName}");
@@ -139,6 +139,6 @@ file static class Log
         this IConsoleLogger console,
         ProjectDefinition project)
     {
-        console.Information($"Schema composition completed for project {project.Name}");
+        console.Success($"Schema composition completed for project {project.Name}");
     }
 }

@@ -90,7 +90,14 @@ public sealed class PipelineBuilder
         {
             var middleware = _middlewareFactories[i](_services);
             var current = next;
-            next = context => middleware.InvokeAsync(context, current);
+            next = async context =>
+            {
+                var status = context.Status.Status;
+
+                await middleware.InvokeAsync(context, current);
+
+                context.Status.Status = status;
+            };
         }
 
         return new Pipeline(_services, next);

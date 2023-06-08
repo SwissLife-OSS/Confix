@@ -5,6 +5,7 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
 using Confix.Tool.Schema;
 using Json.Schema;
+using Spectre.Console;
 
 namespace Confix.Tool.Entities.Components.DotNet;
 
@@ -31,7 +32,12 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
 
         context.Logger.FoundDotnetProject(csproj);
 
-        await DotnetHelpers.BuildProjectAsync(csproj, context.CancellationToken);
+        var buildResult = await DotnetHelpers.BuildProjectAsync(csproj, context.CancellationToken);
+        if (!buildResult.Succeeded)
+        {
+            context.Logger.DotnetProjectBuildFailed(buildResult.Output);
+            throw new ExitException();
+        }
 
         var projectAssembly = DotnetHelpers.GetAssemblyFileFromCsproj(csproj);
 
@@ -260,7 +266,7 @@ file static class Log
         string assembly,
         string manifest)
     {
-        logger.Information($"Found manifest resource in assembly '{assembly}': {manifest}");
+        logger.Debug($"Found manifest resource in assembly '{assembly}': {manifest}");
     }
 
     public static void ProjectNotFoundInDirectory(
@@ -275,14 +281,6 @@ file static class Log
         logger.Information(".NET Project was not detected");
     }
 
-    public static void ProjectAssemblyFileWasNotFound(
-        this IConsoleLogger logger,
-        DirectoryInfo directory)
-    {
-        logger.Debug(
-            $"Could not find assembly file for project in directory: {directory}");
-    }
-
     public static void ParsingComponent(
         this IConsoleLogger logger,
         Assembly assembly,
@@ -290,5 +288,10 @@ file static class Log
     {
         logger.Debug(
             $"Parsing component from resource '{resourceName}' in assembly '{assembly.FullName}'");
+    }
+
+    public static void DotnetProjectBuildFailed(this IConsoleLogger logger, string output)
+    {
+        logger.Error($"Failed to build project:\n{output.EscapeMarkup()}");
     }
 }
