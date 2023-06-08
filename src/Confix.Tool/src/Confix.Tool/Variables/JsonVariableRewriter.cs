@@ -1,64 +1,26 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Confix.Tool.Schema;
 using Json.More;
+using Json.Schema;
 
 namespace ConfiX.Variables;
 
-public sealed class JsonVariableRewriter
+public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewriterContext>
 {
-    private readonly IReadOnlyDictionary<VariablePath, JsonValue> _variableLookup;
-
-    public JsonVariableRewriter(IReadOnlyDictionary<VariablePath, JsonValue> variableLookup)
-    {
-        _variableLookup = variableLookup;
-    }
-
-    public JsonNode? Rewrite(JsonNode? node)
-        => node switch
+    override protected JsonNode Rewrite(JsonValue value, JsonVariableRewriterContext context)
+        => value.GetSchemaValueType() switch
         {
-            null => null,
-            JsonArray array => RewriteArray(array),
-            JsonObject obj => RewriteObject(obj),
-            JsonValue val => RewriteValue(val),
-            _ => throw new JsonParserException($"Cant rewrite type {node.GetType().Name}")
+            SchemaValueType.String => RewriteVariable((string)value!, context)!,
+            _ => value.Deserialize<JsonNode>()!
         };
 
-    private JsonObject RewriteObject(JsonObject node)
-    {
-        JsonObject result = new();
-        foreach (KeyValuePair<string, JsonNode?> x in node)
-        {
-            result.Add(x.Key, Rewrite(x.Value));
-        }
-
-        return result;
-    }
-
-    private JsonArray RewriteArray(JsonArray node)
-    {
-        JsonArray result = new();
-
-        foreach (JsonNode? x in node)
-        {
-            result.Add(Rewrite(x));
-        }
-
-        return result;
-    }
-
-    private JsonNode? RewriteValue(JsonValue value)
-        => value.GetValue<JsonElement>().ValueKind switch
-        {
-            JsonValueKind.String => RewriteVariable((string)value!),
-            _ => value.Copy()
-        };
-
-    private JsonNode? RewriteVariable(string key)
+    private JsonNode RewriteVariable(string key, JsonVariableRewriterContext context)
     {
         if (VariablePath.TryParse(key, out VariablePath? parsed)
             && parsed.HasValue)
         {
-            return _variableLookup[parsed.Value].Copy();
+            return context.VariableLookup[parsed.Value].Copy()!;
         }
 
         return key;

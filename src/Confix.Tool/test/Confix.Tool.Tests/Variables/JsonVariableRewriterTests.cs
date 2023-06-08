@@ -10,7 +10,7 @@ public class JsonVariableRewriterTests
     public void Rewrite_ShouldReplaceAllVars()
     {
         // arrange
-        JsonNode? node = JsonNode.Parse("""
+        JsonNode node = JsonNode.Parse("""
             {
                 "foo": {
                     "bar": "baz",
@@ -20,7 +20,7 @@ public class JsonVariableRewriterTests
                 "number": 42,
                 "bool": "$test:variable.bool"
             }
-        """);
+        """)!;
         var variableLookup = new Dictionary<VariablePath, JsonValue> {
             { VariablePath.Parse("$test:variable.string"), JsonValue.Create("someReplacedValue")},
             { VariablePath.Parse("$test:variable.number"), JsonValue.Create(420)},
@@ -28,7 +28,7 @@ public class JsonVariableRewriterTests
         };
 
         // act
-        var result = new JsonVariableRewriter(variableLookup).Rewrite(node);
+        var result = new JsonVariableRewriter().Rewrite(node, new(variableLookup));
 
         // assert
         result?.ToString().MatchSnapshot();

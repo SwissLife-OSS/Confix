@@ -4,4 +4,4 @@ namespace Confix.Tool.Middlewares;
 
 public sealed record VariableResolverFeature(
     IVariableResolver Resolver,
-    IVariableReplacerService VariableReplacerService);
+    IVariableReplacerService Replacer);

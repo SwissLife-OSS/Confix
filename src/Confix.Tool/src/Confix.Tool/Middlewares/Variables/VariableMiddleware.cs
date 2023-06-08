@@ -19,12 +19,9 @@ public sealed class VariableMiddleware : IMiddleware
     {
         ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
         EnvironmentFeature environmentFeature = context.Features.Get<EnvironmentFeature>();
-
-        var variableResolver = new VariableResolver(
-                        _variableProviderFactory,
-                        GetProviderConfiguration(
-                            configurationFeature,
-                            environmentFeature.ActiveEnvironment.Name).ToArray());
+        string environmentName = environmentFeature.ActiveEnvironment.Name;
+        var providers = GetProviderConfiguration(configurationFeature, environmentName).ToArray();
+        var variableResolver = new VariableResolver(_variableProviderFactory, providers);
 
         VariableResolverFeature feature = new(
             variableResolver,

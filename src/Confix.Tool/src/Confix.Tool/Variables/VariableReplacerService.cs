@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.Schema;
 
 namespace ConfiX.Variables;
 
@@ -18,9 +19,10 @@ public sealed class VariableReplacerService : IVariableReplacerService
         {
             return null;
         }
-        var resolved = await _variableResolver.ResolveVariables(GetVariables(node).ToArray(), cancellationToken);
+        var variables = GetVariables(node).ToArray();
+        var resolved = await _variableResolver.ResolveVariables(variables, cancellationToken);
 
-        return new JsonVariableRewriter(resolved).Rewrite(node);
+        return new JsonVariableRewriter().Rewrite(node, new(resolved));
     }
 
     private static IEnumerable<VariablePath> GetVariables(JsonNode node)
@@ -28,8 +30,8 @@ public sealed class VariableReplacerService : IVariableReplacerService
         foreach (var value in JsonParser.ParseNode(node).Values)
         {
             if (
-                value?.GetValue<JsonElement>().ValueKind == JsonValueKind.String 
-                && VariablePath.TryParse(value.ToString(), out var parsed) 
+                value?.GetSchemaValueType() == SchemaValueType.String
+                && VariablePath.TryParse(value.ToString(), out var parsed)
                 && parsed.HasValue)
             {
                 yield return parsed.Value;
