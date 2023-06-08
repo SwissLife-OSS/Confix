@@ -1,0 +1,12 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "**/appsettings*.json"
+      ],
+      "url": ".confix/.schemas/SomeService.Host.schema.json",
+      "projectPath": "src/SomeService.Host",
+      "projectName": "SomeService.Host"
+    }
+  ]
+}

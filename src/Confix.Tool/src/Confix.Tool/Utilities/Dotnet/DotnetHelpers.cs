@@ -1,11 +1,14 @@
 using System.Diagnostics;
 using System.Xml.Linq;
+using Confix.Tool.Commands.Logging;
 
 namespace Confix.Tool.Commands.Temp;
 
 public static class DotnetHelpers
 {
-    public static async Task BuildProjectAsync(string path, CancellationToken cancellationToken)
+    public static async Task<ProcessExecutionResult> BuildProjectAsync(
+        string path,
+        CancellationToken cancellationToken)
     {
         var startInfo = new ProcessStartInfo
         {
@@ -21,24 +24,16 @@ public static class DotnetHelpers
         // Read the output to see if there were any errors
         var output = await process.StandardOutput.ReadToEndAsync(cancellationToken);
 
-        Console.WriteLine(output);
-
         await process.WaitForExitAsync(cancellationToken); // Wait for the build process to finish
 
-        if (process.ExitCode != 0)
-        {
-            Console.WriteLine("Build failed.");
-        }
-        else
-        {
-            Console.WriteLine("Build succeeded.");
-        }
+        return new ProcessExecutionResult(process.ExitCode == 0, output);
     }
 
     public static FileInfo? GetAssemblyFileFromCsproj(string csprojPath)
     {
+        var projectFile = new FileInfo(csprojPath);
         // Load the .csproj file as an XDocument
-        XDocument csprojDoc = XDocument.Load(csprojPath);
+        var csprojDoc = XDocument.Load(projectFile.FullName);
 
         XNamespace msbuild = "http://schemas.microsoft.com/developer/msbuild/2003";
 
@@ -51,12 +46,14 @@ public static class DotnetHelpers
             Path.GetFileNameWithoutExtension(csprojPath);
 
         // Construct the path to where the assembly should be built
-        return GetAssemblyInPathByName(Path.GetDirectoryName(csprojPath)!, propertyGroup);
+        return GetAssemblyInPathByName(projectFile.Directory!, propertyGroup);
     }
 
-    public static FileInfo? GetAssemblyInPathByName(string projectDirectory, string assemblyName)
+    public static FileInfo? GetAssemblyInPathByName(
+        DirectoryInfo projectDirectory,
+        string assemblyName)
     {
-        var binDirectory = Path.Join(projectDirectory, "bin");
+        var binDirectory = Path.Join(projectDirectory.FullName, "bin");
         if (!Directory.Exists(binDirectory))
         {
             throw new DirectoryNotFoundException(
@@ -70,8 +67,8 @@ public static class DotnetHelpers
         return firstMatch is null ? null : new FileInfo(firstMatch);
     }
 
-    public static string? FindProjectFileInPath(string directoryPath)
+    public static string? FindProjectFileInPath(DirectoryInfo directory)
         => Directory
-            .EnumerateFiles(directoryPath, "*.csproj", SearchOption.TopDirectoryOnly)
+            .EnumerateFiles(directory.FullName, "*.csproj", SearchOption.TopDirectoryOnly)
             .FirstOrDefault();
 }

@@ -22,6 +22,8 @@
 
     <ItemGroup>
         <Folder Include="Abstractions\" />
+        <Folder Include="Entities\VsCode\" />
         <Folder Include="Utilities\Parsing\" />
+        <Folder Include="Utilities\Project\" />
     </ItemGroup>
 </Project>

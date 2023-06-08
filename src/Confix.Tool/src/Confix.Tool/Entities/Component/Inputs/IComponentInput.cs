@@ -1,6 +1,6 @@
 using Confix.Tool.Common.Pipelines;
 
-namespace Confix.Tool.Entities.Component;
+namespace Confix.Tool.Entities.Components;
 
 public interface IComponentInput
 {

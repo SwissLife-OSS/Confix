@@ -1,5 +1,6 @@
 using System.CommandLine.Builder;
-using Confix.Tool.Entities.Component;
+using Confix.Tool.Entities.Components;
+using Confix.Tool.Middlewares.JsonSchemas;
 using ConfiX.Variables;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,6 +13,9 @@ public static class MiddlewareCommandLineBuilderExtensions
         builder
             .AddSingleton<LoadConfigurationMiddleware>()
             .RegisterComponentInputs()
+            .RegisterComponentProviders()
+            .RegisterConfigurationAdapters()
+            .RegisterJsonSchemaCollectionMiddleware()
             .RegisterVariableMiddleware();
 
         return builder;

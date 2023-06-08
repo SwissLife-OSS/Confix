@@ -7,8 +7,8 @@ public sealed class ComposeCommand : Command
     public ComposeCommand() : base("compose")
     {
         Description = "This command is temporary and will be removed in the future";
-        //AddArgument(PathArgument.Instance);
-
+        // AddArgument(PathArgument.Instance);
+        //
         // this.SetHandler(
         //     ExecuteAsync,
         //     Bind.FromServiceProvider<IAnsiConsole>(),
@@ -20,7 +20,6 @@ public sealed class ComposeCommand : Command
 
 // private static async Task<int> ExecuteAsync(
 //         IAnsiConsole console,
-//         IProjectDiscovery projectDiscovery,
 //         FileInfo input,
 //         CancellationToken cancellationToken)
 //     {
@@ -293,63 +292,29 @@ public sealed class ComposeCommand : Command
 //         public Stream GetStream() => Assembly.GetManifestResourceStream(ResourceName) ??
 //             throw new ExitException($"Could not find resource: {ResourceName}");
 //     }
-// }
 //
-// file class PathArgument : Argument<FileInfo>
-// {
-//     public static PathArgument Instance { get; } = new();
-//
-//     private PathArgument()
-//         : base("path")
+//     file class PathArgument : Argument<FileInfo>
 //     {
-//         Arity = ArgumentArity.ExactlyOne;
-//         Description = "The Path";
-//     }
-// }
+//         public static PathArgument Instance { get; } = new();
 //
-// public static class ProjectDefinitionExtensions
-// {
-//     public static string GetProjectName(this ProjectDefinition project)
-//     {
-//         // TODO maybe read from config?
-//         return project.Location.DirectoryName!.Split(Path.DirectorySeparatorChar).Last();
+//         private PathArgument()
+//             : base("path")
+//         {
+//             Arity = ArgumentArity.ExactlyOne;
+//             Description = "The Path";
+//         }
 //     }
 //
-//     public static string GetSchemaName(this ProjectDefinition project)
+//     public static class ProjectDefinitionExtensions
 //     {
-//         return project.GetProjectName() + ".schema.json";
-//     }
-// }
+//         public static string GetProjectName(this ProjectDefinition project)
+//         {
+//             // TODO maybe read from config?
+//             return project.Location.DirectoryName!.Split(Path.DirectorySeparatorChar).Last();
+//         }
 //
-// public static class RepositoryDefinitionExtensions
-// {
-//     public static string GetVsCodeFolder(this RepositoryDefinition repository)
-//     {
-//         return Path.Combine(repository.Location.DirectoryName!, ".vscode");
+//         public static string GetSchemaName(this ProjectDefinition project)
+//         {
+//             return project.GetProjectName() + ".schema.json";
+//         }
 //     }
-//
-//     public static string GetConfixFolder(this RepositoryDefinition repository)
-//     {
-//         return Path.Combine(repository.Location.DirectoryName!, ".confix");
-//     }
-//
-//     public static string GetSchemasFolder(this RepositoryDefinition repository)
-//     {
-//         return Path.Combine(repository.GetConfixFolder(), ".schemas");
-//     }
-//
-//     public static string GetSettingsJson(this RepositoryDefinition repository)
-//     {
-//         return Path.Combine(repository.GetVsCodeFolder(), "settings.json");
-//     }
-// }
-//
-// public static class StringExtensions
-// {
-//     public static string EnsureFolder(this string str)
-//     {
-//         Directory.CreateDirectory(str);
-//
-//         return str;
-//     }
-// }
