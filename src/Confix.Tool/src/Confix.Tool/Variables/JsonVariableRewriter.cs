@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -7,9 +6,9 @@ namespace ConfiX.Variables;
 
 public sealed class JsonVariableRewriter
 {
-    private readonly IReadOnlyDictionary<VariablePath, string> _variableLookup;
+    private readonly IReadOnlyDictionary<VariablePath, JsonNode> _variableLookup;
 
-    public JsonVariableRewriter(IReadOnlyDictionary<VariablePath, string> variableLookup)
+    public JsonVariableRewriter(IReadOnlyDictionary<VariablePath, JsonNode> variableLookup)
     {
         _variableLookup = variableLookup;
     }
@@ -50,27 +49,18 @@ public sealed class JsonVariableRewriter
     private JsonNode? RewriteValue(JsonValue value)
         => value.GetValue<JsonElement>().ValueKind switch
         {
-            JsonValueKind.String => RewriteVariable((string?)value),
+            JsonValueKind.String => RewriteVariable((string)value!),
             _ => value.Copy()
         };
 
-    private JsonValue? RewriteVariable(string? key)
+    private JsonNode? RewriteVariable(string key)
     {
-        if (
-            key is not null
-            && VariablePath.TryParse(key, out VariablePath? parsed)
+        if (VariablePath.TryParse(key, out VariablePath? parsed)
             && parsed.HasValue)
         {
-            // TODO
-            /* 
-                would be nice to actually put a number into the string 
-                if the resolved value is a number (or bool).
-                we could just try to parse the resolved value and see if it is a number 
-                (probably a bad idea)
-            */
-            return JsonValue.Create(_variableLookup[parsed.Value]);
+            return _variableLookup[parsed.Value].Copy();
         }
 
-        return JsonValue.Create(key);
+        return key;
     }
 }

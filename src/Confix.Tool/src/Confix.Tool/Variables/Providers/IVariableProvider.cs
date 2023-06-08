@@ -1,14 +1,16 @@
+using System.Text.Json.Nodes;
+
 namespace ConfiX.Variables;
 
 public interface IVariableProvider
 {
     Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken);
     
-    Task<string> ResolveAsync(string path, CancellationToken cancellationToken);
+    Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken);
     
-    Task<IReadOnlyDictionary<string, string>> ResolveManyAsync(
+    Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
         CancellationToken cancellationToken);
 
-    Task<string> SetAsync(string path, string value, CancellationToken cancellationToken);
+    Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken);
 }

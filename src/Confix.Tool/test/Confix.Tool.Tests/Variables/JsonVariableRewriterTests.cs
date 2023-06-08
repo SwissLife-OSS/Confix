@@ -20,7 +20,7 @@ public class JsonVariableRewriterTests
                 "number": 42
             }
         """);
-        var variableLookup = new Dictionary<VariablePath, string> {
+        var variableLookup = new Dictionary<VariablePath, JsonNode> {
             { VariablePath.Parse("$test:variable"), "someReplacedValue"}
         };
 

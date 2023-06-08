@@ -19,15 +19,15 @@ public sealed class LocalVariableProvider : IVariableProvider
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
         => Task.FromResult<IReadOnlyList<string>>(_configuration.Value.Keys.ToArray());
 
-    public Task<string> ResolveAsync(string path, CancellationToken cancellationToken)
-        => Task.FromResult(_configuration.Value.GetValueOrDefault(path)
+    public Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
+        => Task.FromResult(JsonNode.Parse(_configuration.Value.GetValueOrDefault(path)!)
             ?? throw new VariableNotFoundException("Value could not be resolved"));
 
-    public async Task<IReadOnlyDictionary<string, string>> ResolveManyAsync(
+    public async Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
         CancellationToken cancellationToken)
     {
-        Dictionary<string, string> values = new();
+        Dictionary<string, JsonNode> values = new();
         List<VariableNotFoundException> errors = new();
 
         foreach (string path in paths)
@@ -51,7 +51,7 @@ public sealed class LocalVariableProvider : IVariableProvider
         return values;
     }
 
-    public Task<string> SetAsync(string path, string value, CancellationToken cancellationToken)
+    public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
