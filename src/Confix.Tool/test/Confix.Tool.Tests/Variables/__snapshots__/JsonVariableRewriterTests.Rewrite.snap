@@ -1,1 +1,10 @@
-﻿{"foo":{"bar":"baz","test":"someReplacedValue"},"bar":["someReplacedValue"],"number":42}
+﻿{
+  "foo": {
+    "bar": "baz",
+    "test": 420
+  },
+  "bar": [
+    "someReplacedValue"
+  ],
+  "number": 42
+}

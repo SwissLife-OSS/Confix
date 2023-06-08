@@ -14,20 +14,21 @@ public class JsonVariableRewriterTests
             {
                 "foo": {
                     "bar": "baz",
-                    "test": "$test:variable"
+                    "test": "$test:variable.number"
                 },
-                "bar": ["$test:variable"],
+                "bar": ["$test:variable.string"],
                 "number": 42
             }
         """);
         var variableLookup = new Dictionary<VariablePath, JsonNode> {
-            { VariablePath.Parse("$test:variable"), "someReplacedValue"}
+            { VariablePath.Parse("$test:variable.string"), "someReplacedValue"},
+            { VariablePath.Parse("$test:variable.number"), JsonValue.Create(420)}
         };
 
         // act
         var result = new JsonVariableRewriter(variableLookup).Rewrite(node);
 
         // assert
-        result?.ToJsonString().MatchSnapshot();
+        result?.ToString().MatchSnapshot();
     }
 }
