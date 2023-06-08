@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
@@ -28,14 +27,14 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         var secrets = new List<string>();
         await foreach (SecretProperties secret in _client.GetPropertiesOfSecretsAsync(cancellationToken))
         {
-            secrets.Add(secret.Name);
+            secrets.Add(secret.Name.ToConfixPath());
         }
         return secrets;
     }
 
     public async Task<JsonValue> ResolveAsync(string path, CancellationToken cancellationToken)
     {
-        KeyVaultSecret result = await _client.GetSecretAsync(path, cancellationToken: cancellationToken);
+        KeyVaultSecret result = await _client.GetSecretAsync(path.ToKeyvaultCompatiblePath(), cancellationToken: cancellationToken);
         return JsonValue.Create(result.Value);
     }
 
@@ -53,7 +52,14 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         {
             throw new NotSupportedException("KeyVault only supports String secrets");
         }
-        KeyVaultSecret result = await _client.SetSecretAsync(path, (string)value!, cancellationToken);
+        KeyVaultSecret result = await _client.SetSecretAsync(path.ToKeyvaultCompatiblePath(), (string)value!, cancellationToken);
         return result.Name;
     }
+}
+
+file static class Extensions
+{
+    public static string ToConfixPath(this string path) => path.Replace('-', '.');
+
+    public static string ToKeyvaultCompatiblePath(this string path) => path.Replace('.', '-');
 }
