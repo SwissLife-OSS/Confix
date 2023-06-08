@@ -11,6 +11,7 @@ public sealed class VsCodeConfigurationAdapter : IConfigurationAdapter
     public async Task UpdateJsonSchemasAsync(IConfigurationAdapterContext context)
     {
         var settingsFile = context.RepositoryRoot.GetSettingsJson();
+        settingsFile.Directory!.EnsureFolder();
 
         var vsCodeSettings = VsCodeSettings.From(await ReadSettingsJson(settingsFile));
 

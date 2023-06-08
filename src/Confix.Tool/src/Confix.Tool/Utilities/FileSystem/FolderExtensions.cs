@@ -19,7 +19,7 @@ public static class FolderExtensions
 
     public static FileInfo GetSettingsJson(this DirectoryInfo fileInfo)
     {
-        return new FileInfo(Path.Combine(GetConfixFolder(fileInfo).FullName, "settings.json"));
+        return new FileInfo(Path.Combine(GetVsCodeFolder(fileInfo).FullName, "settings.json"));
     }
 
     public static DirectoryInfo EnsureFolder(this DirectoryInfo directoryInfo)

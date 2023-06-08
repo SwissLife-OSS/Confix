@@ -2,9 +2,11 @@
   "json.schemas": [
     {
       "fileMatch": [
-        "src/SomeService.Host/**/*.json"
+        "**/appsettings*.json"
       ],
-      "url": ".confix/.schemas/SomeService.Host.schema.json"
+      "url": ".confix/.schemas/SomeService.Host.schema.json",
+      "projectPath": "src/SomeService.Host",
+      "projectName": "SomeService.Host"
     }
   ]
 }

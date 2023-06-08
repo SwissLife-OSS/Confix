@@ -8,17 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a82c6bb5-bd97-4f78-b489-432ca2d68fbe" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContextExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/SomeService.Repo/.confix/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/SomeService.Repo/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/SomeService.Repo/src/SomeService.Host/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../examples/SomeService.Repo/src/SomeService.Host/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectReloadComand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectReloadComand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IMiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IMiddlewareContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationAdapter/ConfigurationAdapterMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationAdapter/ConfigurationAdapterMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Providers/DotNet/DotnetPackageComponentProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Providers/DotNet/DotnetPackageComponentProvider.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Console/Extensions/ConsoleExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Console/Extensions/ConsoleExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/FolderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/FolderExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/VsCode/VsCodeConfigurationAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/VsCode/VsCodeConfigurationAdapter.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,7 +176,7 @@
       <workItem from="1685975643519" duration="5849000" />
       <workItem from="1686036263179" duration="27780000" />
       <workItem from="1686123921935" duration="11036000" />
-      <workItem from="1686208797399" duration="16457000" />
+      <workItem from="1686208797399" duration="17145000" />
     </task>
     <servers />
   </component>
