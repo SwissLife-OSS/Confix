@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Confix.Tool.Commands.Logging;
 using Confix.Tool.Schema;
 
 namespace Confix.Tool.Middlewares;
