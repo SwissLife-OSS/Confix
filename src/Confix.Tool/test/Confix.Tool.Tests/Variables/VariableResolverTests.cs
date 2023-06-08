@@ -1,10 +1,9 @@
 using System.Text.Json.Nodes;
-using Confix.Tool.Commands.Variable;
 using ConfiX.Variables;
 using FluentAssertions;
+using Json.More;
 using Moq;
-using Snapshooter.Xunit;
-using Xunit;
+
 namespace Confix.Tool.Tests;
 
 public class VariableResolverTests
@@ -54,20 +53,20 @@ public class VariableResolverTests
         provider1Mock.Setup(p => p.ResolveManyAsync(
             It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key1", "Key3" })),
             cancellationToken))
-            .ReturnsAsync(new Dictionary<string, string>
+            .ReturnsAsync(new Dictionary<string, JsonValue>
             {
-                { "Key1", "Value1" },
-                { "Key3", "Value3" }
+                { "Key1", JsonValue.Create("Value1") },
+                { "Key3", JsonValue.Create("Value3") }
             });
 
         var provider2Mock = new Mock<IVariableProvider>();
         provider2Mock.Setup(p => p.ResolveManyAsync(
             It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key2", "Key4" })),
             cancellationToken))
-            .ReturnsAsync(new Dictionary<string, string>
+            .ReturnsAsync(new Dictionary<string, JsonValue>
             {
-                { "Key2", "Value2" },
-                { "Key4", "Value4" }
+                { "Key2", JsonValue.Create("Value2") },
+                { "Key4", JsonValue.Create("Value4") }
             });
 
         factoryMock.Setup(f => f.CreateProvider(configurations[0]))
@@ -81,10 +80,10 @@ public class VariableResolverTests
 
         // Assert
         result.Should().HaveCount(4);
-        result.Should().ContainKey(new VariablePath("Provider1", "Key1")).WhoseValue.Should().Be("Value1");
-        result.Should().ContainKey(new VariablePath("Provider2", "Key2")).WhoseValue.Should().Be("Value2");
-        result.Should().ContainKey(new VariablePath("Provider1", "Key3")).WhoseValue.Should().Be("Value3");
-        result.Should().ContainKey(new VariablePath("Provider2", "Key4")).WhoseValue.Should().Be("Value4");
+        Assert.True(result[new VariablePath("Provider1", "Key1")].IsEquivalentTo(JsonValue.Create("Value1")));
+        Assert.True(result[new VariablePath("Provider2", "Key2")].IsEquivalentTo(JsonValue.Create("Value2")));
+        Assert.True(result[new VariablePath("Provider1", "Key3")].IsEquivalentTo(JsonValue.Create("Value3")));
+        Assert.True(result[new VariablePath("Provider2", "Key4")].IsEquivalentTo(JsonValue.Create("Value4")));
     }
 
     [Fact]

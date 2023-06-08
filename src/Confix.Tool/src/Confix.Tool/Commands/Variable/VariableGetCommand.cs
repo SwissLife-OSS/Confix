@@ -3,7 +3,6 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using ConfiX.Variables;
-using Spectre.Console;
 
 namespace Confix.Tool.Commands.Variable;
 
@@ -35,7 +34,7 @@ public sealed class VariableGetCommand : Command
         var result = await resolver
             .ResolveVariable(variablePath, context.CancellationToken);
 
-        context.Logger.PrintVariableResolved(variablePath, result);
+        context.Logger.PrintVariableResolved(variablePath, result.ToJsonString());
     }
 }
 

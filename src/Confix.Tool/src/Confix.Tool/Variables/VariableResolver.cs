@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using Confix.Tool;
 
 namespace ConfiX.Variables;
@@ -15,15 +16,15 @@ public sealed class VariableResolver : IVariableResolver
         _configurations = configurations;
     }
 
-    public Task<string> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
+    public Task<JsonValue> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
         => _variableProviderFactory.CreateProvider(GetProviderConfiguration(key.ProviderName))
             .ResolveAsync(key.Path, cancellationToken);
 
-    public async Task<IReadOnlyDictionary<VariablePath, string>> ResolveVariables(
+    public async Task<IReadOnlyDictionary<VariablePath, JsonValue>> ResolveVariables(
         IReadOnlyList<VariablePath> keys,
         CancellationToken cancellationToken)
     {
-        Dictionary<VariablePath, string> resolvedVariables = new();
+        Dictionary<VariablePath, JsonValue> resolvedVariables = new();
 
         foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
         {
