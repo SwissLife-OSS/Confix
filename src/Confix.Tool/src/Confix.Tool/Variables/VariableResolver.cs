@@ -16,6 +16,21 @@ public sealed class VariableResolver : IVariableResolver
         _configurations = configurations;
     }
 
+    public Task<IEnumerable<VariablePath>> ListVariables(CancellationToken cancellationToken)
+    {
+        var tasks = _configurations.Select(c => ListVariables(c.Name, cancellationToken));
+        return Task.WhenAll(tasks).ContinueWith(t => t.Result.SelectMany(x => x));
+    }
+
+    public async Task<IEnumerable<VariablePath>> ListVariables(string providerName, CancellationToken cancellationToken)
+    {
+        var configuration = GetProviderConfiguration(providerName);
+        var provider = _variableProviderFactory.CreateProvider(configuration);
+        var variableKey = await provider.ListAsync(cancellationToken);
+
+        return variableKey.Select(k => new VariablePath(providerName, k));
+    }
+
     public Task<JsonValue> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
         => _variableProviderFactory.CreateProvider(GetProviderConfiguration(key.ProviderName))
             .ResolveAsync(key.Path, cancellationToken);
