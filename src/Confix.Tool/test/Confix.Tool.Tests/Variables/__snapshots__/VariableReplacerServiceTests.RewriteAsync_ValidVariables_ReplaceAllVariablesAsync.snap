@@ -1,0 +1,6 @@
+﻿{
+  "foo": {
+    "bar": "baz",
+    "test": "Replaced Value of $test:variable.number"
+  }
+}

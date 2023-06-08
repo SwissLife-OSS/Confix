@@ -27,12 +27,12 @@ public sealed class VariableReplacerService : IVariableReplacerService
     {
         foreach (var value in JsonParser.ParseNode(node).Values)
         {
-            if (value?.GetValue<JsonElement>().ValueKind == JsonValueKind.String)
+            if (
+                value?.GetValue<JsonElement>().ValueKind == JsonValueKind.String 
+                && VariablePath.TryParse(value.ToString(), out var parsed) 
+                && parsed.HasValue)
             {
-                if (VariablePath.TryParse(value.ToString(), out var parsed) && parsed.HasValue)
-                {
-                    yield return parsed.Value;
-                }
+                yield return parsed.Value;
             }
         }
     }

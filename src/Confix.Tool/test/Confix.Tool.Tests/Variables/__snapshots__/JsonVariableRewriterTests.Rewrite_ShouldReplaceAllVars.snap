@@ -6,5 +6,6 @@
   "bar": [
     "someReplacedValue"
   ],
-  "number": 42
+  "number": 42,
+  "bool": true
 }
