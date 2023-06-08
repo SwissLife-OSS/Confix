@@ -17,11 +17,11 @@ public static class JsonParser
     private static IEnumerable<KeyValuePair<string, JsonValue?>> ParseNodeInternal(JsonNode? node)
         => node switch
         {
-        JsonArray array => ParseArray(array),
-        JsonObject obj => ParseObject(obj),
-        JsonValue value => new[] { KeyValuePair.Create<string, JsonValue?>("", value) },
-        null => new[] { KeyValuePair.Create<string, JsonValue?>("", null)},
-        _ => throw new JsonParserException($"Cant parse type {node?.GetType().Name}")
+            JsonArray array => ParseArray(array),
+            JsonObject obj => ParseObject(obj),
+            JsonValue value => new[] { KeyValuePair.Create<string, JsonValue?>("", value) },
+            null => new[] { KeyValuePair.Create<string, JsonValue?>("", null)},
+            _ => throw new JsonParserException($"Cant parse type {node?.GetType().Name}")
         };
 
     private static IEnumerable<KeyValuePair<string, JsonValue?>> ParseObject(JsonObject jsonObject)
