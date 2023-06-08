@@ -12,6 +12,7 @@ public static class MiddlewareCommandLineBuilderExtensions
     {
         builder
             .AddSingleton<LoadConfigurationMiddleware>()
+            .AddSingleton<EnvironmentMiddleware>()
             .RegisterComponentInputs()
             .RegisterComponentProviders()
             .RegisterConfigurationAdapters()

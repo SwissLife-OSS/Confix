@@ -46,4 +46,7 @@ public sealed class ParameterCollection : IParameterCollection
     {
         return new ParameterCollection(parameters);
     }
+
+    public static IParameterCollection Empty()
+        => From(new Dictionary<Symbol, object?>());
 }

@@ -1,3 +1,4 @@
+using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
@@ -52,6 +53,7 @@ public class LoadConfigurationMiddlewareTest
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_testComponent, _testHome);
+        middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
         var middleware = new LoadConfigurationMiddleware();
@@ -94,6 +96,7 @@ public class LoadConfigurationMiddlewareTest
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_testProject, _testHome);
+        middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
         var middleware = new LoadConfigurationMiddleware();
@@ -136,6 +139,7 @@ public class LoadConfigurationMiddlewareTest
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_testRepo, _testHome);
+        middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
         var middleware = new LoadConfigurationMiddleware();
@@ -178,6 +182,7 @@ public class LoadConfigurationMiddlewareTest
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_monoRepo, _testHome);
+        middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
         var middleware = new LoadConfigurationMiddleware();

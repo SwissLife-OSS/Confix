@@ -5,17 +5,23 @@
       "Name": "development",
       "ExcludeFiles": [
         "appsettings.staging.json"
-      ]
+      ],
+      "IncludeFiles": null,
+      "Enabled": null
     },
     {
       "Name": "staging",
-      "ExcludeFiles": null
+      "ExcludeFiles": null,
+      "IncludeFiles": null,
+      "Enabled": null
     },
     {
       "Name": "production",
       "ExcludeFiles": [
         "appsettings.staging.json"
-      ]
+      ],
+      "IncludeFiles": null,
+      "Enabled": null
     }
   ],
   "Components": [

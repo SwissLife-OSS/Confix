@@ -1,0 +1,11 @@
+﻿{
+  "foo": {
+    "bar": "baz",
+    "test": 420
+  },
+  "bar": [
+    "someReplacedValue"
+  ],
+  "number": 42,
+  "bool": true
+}

@@ -1,7 +1,8 @@
 using System.Text.Json.Nodes;
 using ConfiX.Variables;
 using FluentAssertions;
-using Xunit;
+using Json.More;
+
 namespace Confix.Tool.Tests;
 
 public class JsonParserTests
@@ -39,8 +40,8 @@ public class JsonParserTests
 
         // act & assert
         result.Should().HaveCount(3);
-        result["foo"].Should().Be("1");
-        result["bar"].Should().Be("baz");
+        Assert.True(result["foo"].IsEquivalentTo(JsonValue.Create(1)));
+        Assert.True(result["bar"].IsEquivalentTo(JsonValue.Create("baz")));
         result["banana"].Should().BeNull();
     }
 
@@ -65,9 +66,9 @@ public class JsonParserTests
 
         // act & assert
         result.Should().HaveCount(4);
-        result["bar"].Should().Be("1");
-        result["foo.foo"].Should().Be("1");
-        result["foo.bar"].Should().Be("baz");
+        Assert.True(result["bar"].IsEquivalentTo(JsonValue.Create(1)));
+        Assert.True(result["foo.foo"].IsEquivalentTo(JsonValue.Create(1)));
+        Assert.True(result["foo.bar"].IsEquivalentTo(JsonValue.Create("baz")));
         result["foo.banana"].Should().BeNull();
     }
 
@@ -92,9 +93,9 @@ public class JsonParserTests
 
         // act & assert
         result.Should().HaveCount(4);
-        result["[0]"].Should().Be("banana");
-        result["[1].foo"].Should().Be("42");
-        result["[1].bar"].Should().Be("baz");
+        Assert.True(result["[0]"].IsEquivalentTo(JsonValue.Create("banana")));
+        Assert.True(result["[1].foo"].IsEquivalentTo(JsonValue.Create(42)));
+        Assert.True(result["[1].bar"].IsEquivalentTo(JsonValue.Create("baz")));
         result["[2]"].Should().BeNull();
     }
 
@@ -123,7 +124,7 @@ public class JsonParserTests
 
         // act & assert
         result.Should().HaveCount(2);
-        result["foo.[0].bar"].Should().Be("42");
-        result["foo.[0].foo.[0].bar.baz"].Should().Be("420");
+        Assert.True(result["foo.[0].bar"].IsEquivalentTo(JsonValue.Create(42)));
+        Assert.True(result["foo.[0].foo.[0].bar.baz"].IsEquivalentTo(JsonValue.Create(420)));
     }
 }

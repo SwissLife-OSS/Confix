@@ -3,7 +3,6 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using ConfiX.Variables;
-using Spectre.Console;
 
 namespace Confix.Tool.Commands.Variable;
 
@@ -14,9 +13,10 @@ public sealed class VariableGetCommand : Command
         this
             .AddPipeline()
             .Use<LoadConfigurationMiddleware>()
+            .UseEnvironment()
             .Use<VariableMiddleware>()
-            .AddArgument(VariableProviderNameArgument.Instance)
             .AddArgument(VariableNameArgument.Instance)
+            .AddOption(VariableProviderNameOption.Instance)
             .UseHandler(InvokeAsync);
 
         Description = "resolves a variable by name";
@@ -26,7 +26,7 @@ public sealed class VariableGetCommand : Command
     {
         var resolver = context.Features.Get<VariableResolverFeature>().Resolver;
         var variableName = context.Parameter.Get(VariableNameArgument.Instance);
-        var variableProviderName = context.Parameter.Get(VariableProviderNameArgument.Instance);
+        context.Parameter.TryGet(VariableProviderNameOption.Instance, out string variableProviderName);
         var variablePath = variableProviderName is null
             ? VariablePath.Parse(variableName)
             : new VariablePath(variableProviderName, variableName);
@@ -34,7 +34,7 @@ public sealed class VariableGetCommand : Command
         var result = await resolver
             .ResolveVariable(variablePath, context.CancellationToken);
 
-        context.Logger.PrintVariableResolved(variablePath, result);
+        context.Logger.PrintVariableResolved(variablePath, result.ToJsonString());
     }
 }
 

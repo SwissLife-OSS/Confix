@@ -15,7 +15,12 @@ public class EnvironmentConfigurationTest : ParserTestBase
                 "excludeFiles": [
                     "file1",
                     "file2"
-                ]
+                ],
+                "includeFiles": [
+                    "file3",
+                    "file4"
+                ],
+                "enabled": true
             }
         """);
     }
