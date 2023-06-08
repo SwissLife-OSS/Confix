@@ -2,12 +2,12 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Json.Schema;
 
 namespace ConfiX.Variables;
 
 public sealed class AzureKeyVaultProvider : IVariableProvider
 {
-    private readonly AzureKeyVaultProviderConfiguration _configuration;
     private readonly SecretClient _client;
 
     public AzureKeyVaultProvider(JsonNode configuration)
@@ -15,9 +15,12 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     { }
 
     public AzureKeyVaultProvider(AzureKeyVaultProviderConfiguration configuration)
+        : this(new SecretClient(new Uri(configuration.Uri), new DefaultAzureCredential()))
+    { }
+
+    public AzureKeyVaultProvider(SecretClient client)
     {
-        _configuration = configuration;
-        _client = new SecretClient(new Uri(_configuration.Uri), new DefaultAzureCredential());
+        _client = client;
     }
 
     public async Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
@@ -46,11 +49,11 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
 
     public async Task<string> SetAsync(string path, JsonValue value, CancellationToken cancellationToken)
     {
-        if (value.GetValue<JsonElement>().ValueKind != JsonValueKind.String)
+        if (value.GetSchemaValueType() != SchemaValueType.String)
         {
             throw new NotSupportedException("KeyVault only supports String secrets");
         }
-        await _client.SetSecretAsync(path, (string)value!, cancellationToken);
-        return path;
+        KeyVaultSecret result = await _client.SetSecretAsync(path, (string)value!, cancellationToken);
+        return result.Name;
     }
 }
