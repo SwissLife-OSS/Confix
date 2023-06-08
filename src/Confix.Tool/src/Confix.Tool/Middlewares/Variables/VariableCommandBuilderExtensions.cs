@@ -20,6 +20,7 @@ public static class VariableCommandBuilderExtensions
     public static CommandLineBuilder AddDefaultVariableProviders(this CommandLineBuilder builder)
     {
         builder.AddVariableProvider("local", (config) => new LocalVariableProvider(config));
+        builder.AddVariableProvider("azure-keyvault", (config) => new AzureKeyVaultProvider(config));
 
         return builder;
     }
