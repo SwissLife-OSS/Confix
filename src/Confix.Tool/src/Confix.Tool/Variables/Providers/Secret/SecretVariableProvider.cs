@@ -31,7 +31,7 @@ public sealed class SecretVariableProvider : IVariableProvider
         byte[] encryptedValue = Decrypt(valueToDecrypt, _privateKey.Value);
         string decryptedValue = Encoding.UTF8.GetString(encryptedValue);
 
-        return Task.FromResult(JsonValue.Create(decryptedValue));
+        return Task.FromResult(JsonNode.Parse(decryptedValue)!.AsValue());
     }
 
     public async Task<IReadOnlyDictionary<string, JsonValue>> ResolveManyAsync(
@@ -44,8 +44,9 @@ public sealed class SecretVariableProvider : IVariableProvider
 
     public Task<string> SetAsync(string path, JsonValue value, CancellationToken cancellationToken)
     {
-        byte[] valueToEncrypt = Encoding.UTF8.GetBytes(value.ToJsonString());
-        byte[] encryptedValue = Encrypt(valueToEncrypt, _publicKey.Value);
+        string valueToEncrypt = value.ToJsonString();
+        byte[] bytesToEncrypt = Encoding.UTF8.GetBytes(valueToEncrypt);
+        byte[] encryptedValue = Encrypt(bytesToEncrypt, _publicKey.Value);
 
         return Task.FromResult(Convert.ToBase64String(encryptedValue));
     }
@@ -54,14 +55,14 @@ public sealed class SecretVariableProvider : IVariableProvider
     {
         using RSA rsa = RSA.Create();
         rsa.ImportFromPem(publicKey);
-        return rsa.Encrypt(valueToEncrypt, RSAEncryptionPadding.OaepSHA512);
+        return rsa.Encrypt(valueToEncrypt, RSAEncryptionPadding.Pkcs1);
     }
 
     private static byte[] Decrypt(ReadOnlySpan<byte> encryptedValue, ReadOnlySpan<char> privateKey)
     {
         using RSA rsa = RSA.Create();
         rsa.ImportFromPem(privateKey);
-        return rsa.Decrypt(encryptedValue, RSAEncryptionPadding.OaepSHA512);
+        return rsa.Decrypt(encryptedValue, RSAEncryptionPadding.Pkcs1);
     }
 
     private static char[] GetKey(string? key, string? keyPath)
