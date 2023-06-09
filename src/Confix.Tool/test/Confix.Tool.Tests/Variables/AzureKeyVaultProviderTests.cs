@@ -87,6 +87,6 @@ public class AzureKeyVaultProviderTests
         var result = await provider.SetAsync("foo", JsonValue.Create("bar"), default);
 
         // assert
-        result.Should().Be("vault-key");
+        result.Should().Be("vault.key");
     }
 }
