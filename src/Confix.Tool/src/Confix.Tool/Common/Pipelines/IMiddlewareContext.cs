@@ -37,7 +37,7 @@ public interface IMiddlewareContext
     /// Represents the console that the pipeline can write to.
     /// </summary>
     IAnsiConsole Console { get; }
-    
+
     /// <summary>
     /// Represents the console output of the current pipeline execution.
     /// </summary>
@@ -59,4 +59,9 @@ public interface IMiddlewareContext
     /// command line after the pipeline has finished executing.
     /// </summary>
     int ExitCode { get; set; }
+
+    /// <summary>
+    /// The context of the spinner. This can be used to update the spinner message.
+    /// </summary>
+    StatusContext Status { get; init; }
 }

@@ -22,6 +22,20 @@ public static class JsonNodeParserExtensions
                 "Expected object but got null")
         };
 
+    public static JsonObject? MaybeObject(this JsonNode? node)
+        => node switch
+        {
+            JsonObject obj => obj,
+
+            JsonArray =>
+                throw new JsonParseException(node, "Expected object but got array"),
+
+            JsonValue =>
+                throw new JsonParseException(node, "Expected object but got value"),
+
+            _ => null
+        };
+
     public static JsonArray ExpectArray(this JsonNode? node)
         => node switch
         {

@@ -14,7 +14,12 @@ public sealed class FeatureCollection : IFeatureCollection
 
     public TFeature Get<TFeature>()
     {
-        return (TFeature) _features[typeof(TFeature)];
+        if (_features.TryGetValue(typeof(TFeature), out var value))
+        {
+            return (TFeature) value;
+        }
+
+        throw new KeyNotFoundException($"The feature of type '{typeof(TFeature)}' was not found.");
     }
 
     public bool TryGet<TFeature>(out TFeature instance)
