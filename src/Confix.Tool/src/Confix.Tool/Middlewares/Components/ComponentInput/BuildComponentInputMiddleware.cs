@@ -1,7 +1,7 @@
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
-using Confix.Tool.Entities.Component;
+using Confix.Tool.Entities.Components;
 
 namespace Confix.Tool.Middlewares;
 

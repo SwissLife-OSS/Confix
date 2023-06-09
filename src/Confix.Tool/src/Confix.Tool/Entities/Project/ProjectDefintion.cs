@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using Confix.Tool.Schema;
+
 namespace Confix.Tool.Abstractions;
 
 public sealed class ProjectDefinition
@@ -12,7 +15,8 @@ public sealed class ProjectDefinition
         IReadOnlyList<VariableProviderDefinition> variableProviders,
         IReadOnlyList<ComponentProviderDefinition> componentProviders,
         IReadOnlyList<ConfigurationFileDefinition> configurationFiles,
-        IReadOnlyList<ProjectDefinition> subprojects)
+        IReadOnlyList<ProjectDefinition> subprojects,
+        DirectoryInfo? directory)
     {
         Name = name;
         Environments = environments;
@@ -22,6 +26,7 @@ public sealed class ProjectDefinition
         ComponentProviders = componentProviders;
         ConfigurationFiles = configurationFiles;
         Subprojects = subprojects;
+        Directory = directory;
     }
 
     public string Name { get; }
@@ -40,10 +45,16 @@ public sealed class ProjectDefinition
 
     public IReadOnlyList<ProjectDefinition> Subprojects { get; }
 
+    [JsonIgnore]
+    public DirectoryInfo? Directory { get; }
+
     public static ProjectDefinition From(ProjectConfiguration configuration)
     {
+        var lastConfigurationFile =
+            configuration.SourceFiles.LastOrDefault(x => x.Name == FileNames.ConfixProject);
+
         var name = configuration.Name
-            ?? configuration.SourceFiles.FirstOrDefault()?.Directory?.Name
+            ?? lastConfigurationFile?.Directory?.Name
             ?? DefaultName;
 
         var environments =
@@ -81,7 +92,8 @@ public sealed class ProjectDefinition
             variableProviders,
             componentProviders,
             configurationFiles,
-            subprojects);
+            subprojects,
+            lastConfigurationFile?.Directory);
     }
 
     public static ProjectDefinition Instance { get; } = new(
@@ -92,5 +104,6 @@ public sealed class ProjectDefinition
         Array.Empty<VariableProviderDefinition>(),
         Array.Empty<ComponentProviderDefinition>(),
         Array.Empty<ConfigurationFileDefinition>(),
-        Array.Empty<ProjectDefinition>());
+        Array.Empty<ProjectDefinition>(),
+        null);
 }

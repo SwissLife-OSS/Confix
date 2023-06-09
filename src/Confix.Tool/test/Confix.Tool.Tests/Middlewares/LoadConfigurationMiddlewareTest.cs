@@ -54,6 +54,7 @@ public class LoadConfigurationMiddlewareTest
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_testComponent, _testHome);
         middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
+        middelwareContext.SetupGet(x => x.Status).Returns(Mock.Of<IStatus>());
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
         var middleware = new LoadConfigurationMiddleware();
@@ -80,8 +81,7 @@ public class LoadConfigurationMiddlewareTest
                 feature.Component,
                 feature.Project,
                 feature.Repository
-            }.ToJsonString()
-            .MatchSnapshot();
+            }.ToJsonString().MatchSnapshot();
     }
 
     [Fact]
@@ -97,6 +97,7 @@ public class LoadConfigurationMiddlewareTest
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_testProject, _testHome);
         middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
+        middelwareContext.SetupGet(x => x.Status).Returns(Mock.Of<IStatus>());
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
         var middleware = new LoadConfigurationMiddleware();
@@ -140,6 +141,7 @@ public class LoadConfigurationMiddlewareTest
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_testRepo, _testHome);
         middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
+        middelwareContext.SetupGet(x => x.Status).Returns(Mock.Of<IStatus>());
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
         var middleware = new LoadConfigurationMiddleware();
@@ -183,6 +185,7 @@ public class LoadConfigurationMiddlewareTest
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_monoRepo, _testHome);
         middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
+        middelwareContext.SetupGet(x => x.Status).Returns(Mock.Of<IStatus>());
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
         var middleware = new LoadConfigurationMiddleware();

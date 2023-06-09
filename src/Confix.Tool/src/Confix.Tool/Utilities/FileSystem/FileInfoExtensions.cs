@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 namespace Confix.Tool.Schema;
 
 public static class FileInfoExtensions
@@ -18,5 +20,18 @@ public static class FileInfoExtensions
 
         // If it's neither, return an empty DirectoryInfo
         return new DirectoryInfo(fileInfo.FullName);
+    }
+
+    /// <summary>
+    /// Deletes the file if it exists and opens a new stream to write to it.
+    /// </summary>
+    public static Stream OpenReplacementStream(this FileInfo fileInfo)
+    {
+        if (fileInfo.Exists)
+        {
+            fileInfo.Delete();
+        }
+
+        return File.Open(fileInfo.FullName, FileMode.Create, FileAccess.Write, FileShare.None);
     }
 }

@@ -17,12 +17,15 @@ public sealed class MiddlewareContext : IMiddlewareContext
 
     /// <inheritdoc />
     public required IExecutionContext Execution { get; init; }
-    
+
     /// <inheritdoc />
     public required IAnsiConsole Console { get; init; }
 
     /// <inheritdoc />
     public required IParameterCollection Parameter { get; init; }
+
+    /// <inheritdoc />
+    public required IStatus Status { get; init; }
 
     /// <inheritdoc />
     public int ExitCode { get; set; } = ExitCodes.Error;

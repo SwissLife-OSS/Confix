@@ -1,8 +1,8 @@
 using Confix.Tool.Abstractions;
 using Factory =
-    System.Func<System.Text.Json.Nodes.JsonNode, Confix.Tool.Entities.Component.IComponentInput>;
+    System.Func<System.Text.Json.Nodes.JsonNode, Confix.Tool.Entities.Components.IComponentInput>;
 
-namespace Confix.Tool.Entities.Component;
+namespace Confix.Tool.Entities.Components;
 
 public sealed class ComponentInputFactory : IComponentInputFactory
 {

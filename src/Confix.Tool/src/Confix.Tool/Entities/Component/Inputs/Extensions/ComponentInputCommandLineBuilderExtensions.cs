@@ -1,10 +1,12 @@
 using System.CommandLine.Builder;
+using Confix.Tool.Middlewares;
+using Microsoft.Extensions.DependencyInjection;
 using Factory =
-    System.Func<System.Text.Json.Nodes.JsonNode, Confix.Tool.Entities.Component.IComponentInput>;
+    System.Func<System.Text.Json.Nodes.JsonNode, Confix.Tool.Entities.Components.IComponentInput>;
 
-namespace Confix.Tool.Entities.Component;
+namespace Confix.Tool.Entities.Components;
 
-public static class ComponentInputCommandBuilderExtensions
+public static class ComponentInputCommandLineBuilderExtensions
 {
     private const string _componentInputs = "Confix.Tool.Entites.Component.ComponentInputs";
 
@@ -30,5 +32,16 @@ public static class ComponentInputCommandBuilderExtensions
         }
 
         return lookup;
+    }
+
+    public static CommandLineBuilder RegisterComponentInputs(this CommandLineBuilder builder)
+    {
+        builder.AddSingleton(sp
+            => new BuildComponentInputMiddleware(
+                sp.GetRequiredService<IComponentInputFactory>()));
+
+        builder.AddComponentInput<GraphQlComponentInput>();
+
+        return builder;
     }
 }

@@ -14,6 +14,8 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
     /// <inheritdoc />
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
+        context.SetStatus("Loading configuration...");
+
         var configurationFiles = context.LoadConfigurationFiles();
 
         var fileCollection = CreateFileCollection(configurationFiles);
@@ -218,7 +220,7 @@ file static class Log
         this IConsoleLogger logger,
         string source,
         string destination)
-        => logger.Information("Merged {0} from {1}", source, destination);
+        => logger.Debug("Merged {0} from {1}", source, destination);
 
     public static void RunningInScope(this IConsoleLogger logger, ConfigurationScope scope)
     {

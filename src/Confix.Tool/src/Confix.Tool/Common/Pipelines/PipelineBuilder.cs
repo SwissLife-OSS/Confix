@@ -66,6 +66,19 @@ public sealed class PipelineBuilder
     }
 
     /// <summary>
+    /// Adds a middleware to the pipeline.
+    /// </summary>
+    /// <typeparam name="TMiddleware">The type of the middleware.</typeparam>
+    /// <returns>The current pipeline builder instance.</returns>
+    public PipelineBuilder Use<TMiddleware>(Func<IServiceProvider, TMiddleware> middlewareFactory)
+        where TMiddleware : IMiddleware
+    {
+        _middlewareFactories.Add(sp => middlewareFactory(sp));
+
+        return this;
+    }
+
+    /// <summary>
     /// Builds the <see cref="Pipeline"/> with the configured middleware components.
     /// </summary>
     /// <returns>A new instance of <see cref="Pipeline"/>.</returns>
@@ -77,7 +90,14 @@ public sealed class PipelineBuilder
         {
             var middleware = _middlewareFactories[i](_services);
             var current = next;
-            next = context => middleware.InvokeAsync(context, current);
+            next = async context =>
+            {
+                var status = context.Status.Status;
+
+                await middleware.InvokeAsync(context, current);
+
+                context.Status.Status = status;
+            };
         }
 
         return new Pipeline(_services, next);

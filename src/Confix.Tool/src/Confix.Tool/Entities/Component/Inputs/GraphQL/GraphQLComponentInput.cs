@@ -4,13 +4,13 @@ using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 
-namespace Confix.Tool.Entities.Component;
+namespace Confix.Tool.Entities.Components;
 
-public sealed class GraphQLComponentInput : IComponentInput
+public sealed class GraphQlComponentInput : IComponentInput
 {
     public static string Type => "graphql";
 
-    private const string _schemaGraphQL = "schema.graphql";
+    private const string SchemaGraphQl = "schema.graphql";
 
     /// <inheritdoc />
     public async Task ExecuteAsync(IMiddlewareContext context)
@@ -30,17 +30,17 @@ public sealed class GraphQLComponentInput : IComponentInput
             .First(x => x.Name == FileNames.ConfixComponent);
 
         var schemaGraphQlFile =
-            new FileInfo(Path.Combine(configurationFile.DirectoryName!, _schemaGraphQL));
+            new FileInfo(Path.Combine(configurationFile.DirectoryName!, SchemaGraphQl));
 
         context.Logger.SearchingForSchemaGraphQl(schemaGraphQlFile);
 
         if (!schemaGraphQlFile.Exists)
         {
-            context.Logger.SchemaGraphQLNotFound();
+            context.Logger.SchemaGraphQlNotFound();
             return;
         }
 
-        context.Logger.SchemaGraphQLFound(schemaGraphQlFile);
+        context.Logger.SchemaGraphQlFound(schemaGraphQlFile);
 
         var schemaJsonFile =
             new FileInfo(Path.Combine(configurationFile.DirectoryName!, FileNames.Schema));
@@ -70,14 +70,14 @@ public sealed class GraphQLComponentInput : IComponentInput
 
 file static class Log
 {
-    public static void SchemaGraphQLFound(
+    public static void SchemaGraphQlFound(
         this IConsoleLogger console,
         FileSystemInfo schemaFile)
     {
         console.Information("GraphQL Schema was found: [dim]{0}[/]", schemaFile.FullName);
     }
 
-    public static void SchemaGraphQLNotFound(this IConsoleLogger console)
+    public static void SchemaGraphQlNotFound(this IConsoleLogger console)
     {
         console.Information("GraphQL Schema was not found. Skipping GraphQL provider");
     }
