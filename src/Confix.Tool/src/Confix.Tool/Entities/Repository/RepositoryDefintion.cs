@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Confix.Tool.Abstractions.Configuration;
 using Confix.Tool.Schema;
 
@@ -19,6 +20,7 @@ public sealed class RepositoryDefinition
 
     public ProjectDefinition? Project { get; }
 
+    [JsonIgnore]
     public DirectoryInfo? Directory { get; }
 
     public static RepositoryDefinition From(RepositoryConfiguration configuration)

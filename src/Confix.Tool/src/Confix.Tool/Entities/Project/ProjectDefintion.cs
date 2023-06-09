@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Confix.Tool.Schema;
 
 namespace Confix.Tool.Abstractions;
@@ -44,6 +45,7 @@ public sealed class ProjectDefinition
 
     public IReadOnlyList<ProjectDefinition> Subprojects { get; }
 
+    [JsonIgnore]
     public DirectoryInfo? Directory { get; }
 
     public static ProjectDefinition From(ProjectConfiguration configuration)

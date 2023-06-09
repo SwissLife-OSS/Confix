@@ -25,7 +25,7 @@ public sealed class MiddlewareContext : IMiddlewareContext
     public required IParameterCollection Parameter { get; init; }
 
     /// <inheritdoc />
-    public required StatusContext Status { get; init; }
+    public required IStatus Status { get; init; }
 
     /// <inheritdoc />
     public int ExitCode { get; set; } = ExitCodes.Error;

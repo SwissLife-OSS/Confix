@@ -63,5 +63,5 @@ public interface IMiddlewareContext
     /// <summary>
     /// The context of the spinner. This can be used to update the spinner message.
     /// </summary>
-    StatusContext Status { get; init; }
+    IStatus Status { get; }
 }
