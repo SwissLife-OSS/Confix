@@ -8,5 +8,7 @@ public sealed class VariableCommand : Command
     {
         Description = "This command is used to manage variables.";
         AddCommand(new VariableGetCommand());
+        AddCommand(new VariableSetCommand());
+        AddCommand(new VariableListCommand());
     }
 }

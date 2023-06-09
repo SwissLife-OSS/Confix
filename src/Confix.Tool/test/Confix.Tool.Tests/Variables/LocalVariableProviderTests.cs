@@ -5,7 +5,7 @@ using Json.More;
 using Xunit;
 namespace Confix.Tool.Tests;
 
-public sealed class LocalVariableProviderTests : IDisposable
+public class LocalVariableProviderTests : IDisposable
 {
     private readonly string tmpFilePath = $"./LocalVariableProviderTests_{Guid.NewGuid():N}.json";
 
