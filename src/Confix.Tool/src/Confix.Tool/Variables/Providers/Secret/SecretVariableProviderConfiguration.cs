@@ -10,7 +10,7 @@ public record SecretVariableProviderConfiguration
 {
     [DefaultValue(SecretVariableProviderAlgorithm.RSA)]
     [JsonPropertyName("algorithm")]
-    public required SecretVariableProviderAlgorithm Algorithm { get; init; }
+    public SecretVariableProviderAlgorithm Algorithm { get; init; }
 
     [JsonPropertyName("publicKey")]
     public string? PublicKey { get; init; }
@@ -28,7 +28,17 @@ public record SecretVariableProviderConfiguration
     {
         try
         {
-            return node.Deserialize(JsonSerialization.Default.SecretVariableProviderConfiguration)!;
+            return (SecretVariableProviderConfiguration)
+                node.Deserialize(
+                    typeof(SecretVariableProviderConfiguration),
+                    new JsonSerialization(
+                        new JsonSerializerOptions
+                        {
+                            Converters =
+                            {
+                                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+                            },
+                        }))!;
         }
         catch (JsonException ex)
         {
