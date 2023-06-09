@@ -30,7 +30,8 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<VariableProviderDefinition>(),
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
-                Array.Empty<ProjectDefinition>()
+                Array.Empty<ProjectDefinition>(),
+                null
             ),
             null,
             null
@@ -76,7 +77,8 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<VariableProviderDefinition>(),
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
-                Array.Empty<ProjectDefinition>()
+                Array.Empty<ProjectDefinition>(),
+                null
             ),
             null,
             null
@@ -123,7 +125,8 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<VariableProviderDefinition>(),
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
-                Array.Empty<ProjectDefinition>()
+                Array.Empty<ProjectDefinition>(),
+                null
             ),
             null,
             null
@@ -175,7 +178,8 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<VariableProviderDefinition>(),
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
-                Array.Empty<ProjectDefinition>()
+                Array.Empty<ProjectDefinition>(),
+                null
             ),
             null,
             null
@@ -227,7 +231,8 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<VariableProviderDefinition>(),
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
-                Array.Empty<ProjectDefinition>()
+                Array.Empty<ProjectDefinition>(),
+                null
             ),
             null,
             null
