@@ -55,14 +55,14 @@ public sealed class SecretVariableProvider : IVariableProvider
     {
         using RSA rsa = RSA.Create();
         rsa.ImportFromPem(publicKey);
-        return rsa.Encrypt(valueToEncrypt, RSAEncryptionPadding.Pkcs1);
+        return rsa.Encrypt(valueToEncrypt, RSAEncryptionPadding.OaepSHA256);
     }
 
     private static byte[] Decrypt(ReadOnlySpan<byte> encryptedValue, ReadOnlySpan<char> privateKey)
     {
         using RSA rsa = RSA.Create();
         rsa.ImportFromPem(privateKey);
-        return rsa.Decrypt(encryptedValue, RSAEncryptionPadding.Pkcs1);
+        return rsa.Decrypt(encryptedValue, RSAEncryptionPadding.OaepSHA256);
     }
 
     private static char[] GetKey(string? key, string? keyPath)
