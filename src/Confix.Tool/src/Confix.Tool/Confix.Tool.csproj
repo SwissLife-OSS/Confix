@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <PackageId>Confix</PackageId>
-        <AssemblyName>Confix.Tool</AssemblyName>
+        <AssemblyName>Confix</AssemblyName>
         <RootNamespace>Confix</RootNamespace>
         <OutputType>Exe</OutputType>
         <ToolCommandName>confix</ToolCommandName>
