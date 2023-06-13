@@ -12,6 +12,10 @@ public record SecretVariableProviderConfiguration
     [JsonPropertyName("algorithm")]
     public SecretVariableProviderAlgorithm Algorithm { get; init; }
 
+    [DefaultValue(EncryptionPadding.OaepSHA256)]
+    [JsonPropertyName("padding")]
+    public EncryptionPadding Padding { get; init; }
+
     [JsonPropertyName("publicKey")]
     public string? PublicKey { get; init; }
 

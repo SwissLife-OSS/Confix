@@ -48,19 +48,27 @@ public sealed class SecretVariableProvider : IVariableProvider
         return Task.FromResult(Convert.ToBase64String(encryptedValue));
     }
 
-    private static byte[] Encrypt(ReadOnlySpan<byte> valueToEncrypt, ReadOnlySpan<char> publicKey)
+    private byte[] Encrypt(ReadOnlySpan<byte> valueToEncrypt, ReadOnlySpan<char> publicKey)
     {
         using RSA rsa = RSA.Create();
         rsa.ImportFromPem(publicKey);
-        return rsa.Encrypt(valueToEncrypt, RSAEncryptionPadding.OaepSHA256);
+        return rsa.Encrypt(valueToEncrypt, Padding);
     }
 
-    private static byte[] Decrypt(ReadOnlySpan<byte> encryptedValue, ReadOnlySpan<char> privateKey)
+    private byte[] Decrypt(ReadOnlySpan<byte> encryptedValue, ReadOnlySpan<char> privateKey)
     {
         using RSA rsa = RSA.Create();
         rsa.ImportFromPem(privateKey);
-        return rsa.Decrypt(encryptedValue, RSAEncryptionPadding.OaepSHA256);
+        return rsa.Decrypt(encryptedValue, Padding);
     }
+
+    private RSAEncryptionPadding Padding => _configuration.Padding switch
+    {
+        EncryptionPadding.OaepSHA256 => RSAEncryptionPadding.OaepSHA256,
+        EncryptionPadding.OaepSHA512 => RSAEncryptionPadding.OaepSHA512,
+        EncryptionPadding.Pkcs1 => RSAEncryptionPadding.Pkcs1,
+        _ => throw new ArgumentException("Invalid padding", nameof(_configuration.Padding))
+    };
 
     private static char[] GetKey(string? key, string? keyPath)
         => key?.ToCharArray()
