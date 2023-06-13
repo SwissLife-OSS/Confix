@@ -25,24 +25,24 @@ public sealed class SecretVariableProvider : IVariableProvider
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
         => Task.FromResult<IReadOnlyList<string>>(Array.Empty<string>());
 
-    public Task<JsonValue> ResolveAsync(string path, CancellationToken cancellationToken)
+    public Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
     {
         byte[] valueToDecrypt = Convert.FromBase64String(path);
         byte[] encryptedValue = Decrypt(valueToDecrypt, _privateKey.Value);
         string decryptedValue = Encoding.UTF8.GetString(encryptedValue);
 
-        return Task.FromResult(JsonNode.Parse(decryptedValue)!.AsValue());
+        return Task.FromResult(JsonNode.Parse(decryptedValue)!);
     }
 
-    public async Task<IReadOnlyDictionary<string, JsonValue>> ResolveManyAsync(
+    public async Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
         CancellationToken cancellationToken)
-        => new Dictionary<string, JsonValue>(await Task.WhenAll(
-            paths.Select(async path => new KeyValuePair<string, JsonValue>(
+        => new Dictionary<string, JsonNode>(await Task.WhenAll(
+            paths.Select(async path => new KeyValuePair<string, JsonNode>(
                 path,
                 await ResolveAsync(path, cancellationToken)))));
 
-    public Task<string> SetAsync(string path, JsonValue value, CancellationToken cancellationToken)
+    public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
     {
         string valueToEncrypt = value.ToJsonString();
         byte[] bytesToEncrypt = Encoding.UTF8.GetBytes(valueToEncrypt);
