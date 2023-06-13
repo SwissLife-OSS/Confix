@@ -38,13 +38,10 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         return JsonValue.Create(result.Value);
     }
 
-    public async Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
+    public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
         CancellationToken cancellationToken)
-        => new Dictionary<string, JsonNode>(await Task.WhenAll(
-            paths.Select(async path => new KeyValuePair<string, JsonNode>(
-                path,
-                await ResolveAsync(path, cancellationToken)))));
+        => paths.ResolveMany(ResolveAsync, cancellationToken);
 
     public async Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
     {

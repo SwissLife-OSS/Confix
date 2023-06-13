@@ -30,33 +30,10 @@ public sealed class LocalVariableProvider : IVariableProvider
         throw new VariableNotFoundException(path);
     }
 
-    public async Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
+    public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
         CancellationToken cancellationToken)
-    {
-        Dictionary<string, JsonNode> values = new();
-        List<VariableNotFoundException> errors = new();
-
-        foreach (string path in paths)
-        {
-            try
-            {
-                var resolvedValue = await ResolveAsync(path, cancellationToken);
-                values.Add(path, resolvedValue);
-            }
-            catch (VariableNotFoundException ex)
-            {
-                errors.Add(ex);
-            }
-        }
-
-        if (errors.Count > 0)
-        {
-            throw new AggregateException(errors);
-        }
-
-        return values;
-    }
+        => paths.ResolveMany(ResolveAsync, cancellationToken);
 
     public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
     {

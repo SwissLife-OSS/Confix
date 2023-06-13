@@ -34,13 +34,10 @@ public sealed class SecretVariableProvider : IVariableProvider
         return Task.FromResult(JsonNode.Parse(decryptedValue)!);
     }
 
-    public async Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
+    public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
         CancellationToken cancellationToken)
-        => new Dictionary<string, JsonNode>(await Task.WhenAll(
-            paths.Select(async path => new KeyValuePair<string, JsonNode>(
-                path,
-                await ResolveAsync(path, cancellationToken)))));
+        => paths.ResolveMany(ResolveAsync, cancellationToken);
 
     public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
     {
