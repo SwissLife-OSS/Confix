@@ -10,8 +10,6 @@ using Confix.Tool.Schema;
 
 namespace Confix.Tool.Commands.Project;
 
-// TODO rename repository => to solution
-// TODO move to feature so that we can reuse it in repo build
 public sealed class ProjectReloadCommand : Command
 {
     public ProjectReloadCommand() : base("reload")
