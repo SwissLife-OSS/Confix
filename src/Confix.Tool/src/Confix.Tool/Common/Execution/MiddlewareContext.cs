@@ -28,5 +28,6 @@ public sealed class MiddlewareContext : IMiddlewareContext
     public required IStatus Status { get; init; }
 
     /// <inheritdoc />
-    public int ExitCode { get; set; } = ExitCodes.Error;
+    public int ExitCode { get; set; } = ExitCodes.Success;
 }
+

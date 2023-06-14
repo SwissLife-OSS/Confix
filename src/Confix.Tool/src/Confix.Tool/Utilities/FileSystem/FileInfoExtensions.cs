@@ -34,4 +34,16 @@ public static class FileInfoExtensions
 
         return File.Open(fileInfo.FullName, FileMode.Create, FileAccess.Write, FileShare.None);
     }
+
+    public static Task<string> ReadAllText(
+        this FileInfo fileInfo,
+        CancellationToken cancellationToken)
+    {
+        return File.ReadAllTextAsync(fileInfo.FullName, cancellationToken);
+    }
+
+    public static string RelativeTo(this FileInfo fileInfo, DirectoryInfo directoryInfo)
+    {
+        return Path.GetRelativePath(directoryInfo.FullName, fileInfo.FullName);
+    }
 }

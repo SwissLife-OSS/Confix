@@ -152,16 +152,16 @@ file static class Extensions
             yield return confixRc;
         }
 
-        var repositoryPath = FileSystemHelpers
-            .FindInTree(context.Execution.CurrentDirectory, FileNames.ConfixRepository);
+        var repositoryPath =
+            context.Execution.CurrentDirectory.FindInTree(FileNames.ConfixRepository);
+
         if (repositoryPath is not null)
         {
             App.Log.ConfigurationFilesLocated(FileNames.ConfixRepository, repositoryPath);
             yield return new FileInfo(repositoryPath);
         }
 
-        var confixProject = FileSystemHelpers
-            .FindInTree(context.Execution.CurrentDirectory, FileNames.ConfixProject);
+        var confixProject = context.Execution.CurrentDirectory.FindInTree(FileNames.ConfixProject);
 
         if (confixProject is not null)
         {
@@ -169,8 +169,8 @@ file static class Extensions
             yield return new FileInfo(confixProject);
         }
 
-        var confixComponent = FileSystemHelpers
-            .FindInTree(context.Execution.CurrentDirectory, FileNames.ConfixComponent);
+        var confixComponent =
+            context.Execution.CurrentDirectory.FindInTree(FileNames.ConfixComponent);
 
         if (confixComponent is not null)
         {
@@ -181,10 +181,7 @@ file static class Extensions
 
     private static IEnumerable<FileInfo> LoadConfixRcs(this IMiddlewareContext context)
     {
-        var confixRcInHome =
-            FileSystemHelpers.FindInPath(context.Execution.HomeDirectory,
-                FileNames.ConfixRc,
-                false);
+        var confixRcInHome = context.Execution.HomeDirectory.FindInPath(FileNames.ConfixRc, false);
 
         if (File.Exists(confixRcInHome))
         {
@@ -192,8 +189,8 @@ file static class Extensions
             yield return new FileInfo(confixRcInHome);
         }
 
-        var confixRcsInTree = FileSystemHelpers
-            .FindAllInTree(context.Execution.CurrentDirectory, FileNames.ConfixRc)
+        var confixRcsInTree = context.Execution.CurrentDirectory
+            .FindAllInTree(FileNames.ConfixRc)
             .Reverse();
 
         foreach (var confixRcInTree in confixRcsInTree)

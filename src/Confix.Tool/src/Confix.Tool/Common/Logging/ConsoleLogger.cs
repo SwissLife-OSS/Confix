@@ -30,5 +30,6 @@ file class NullLogger : IConsoleLogger
     /// <inheritdoc />
     public void Log(ref ILoggerMessage message)
     {
+        // empty on purpose
     }
 }

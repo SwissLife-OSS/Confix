@@ -1,5 +1,4 @@
 using System.CommandLine;
-using System.ComponentModel;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
@@ -7,6 +6,7 @@ using Confix.Tool.Entities.Components;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Middlewares.JsonSchemas;
+using Confix.Tool.Schema;
 
 namespace Confix.Tool.Commands.Project;
 
@@ -17,6 +17,7 @@ public sealed class ProjectReloadCommand : Command
         this
             .AddPipeline()
             .Use<LoadConfigurationMiddleware>()
+            .UseConfigurationFiles()
             .Use<JsonSchemaCollectionMiddleware>()
             .Use<ConfigurationAdapterMiddleware>()
             .Use<BuildComponentProviderMiddleware>()
@@ -36,6 +37,8 @@ public sealed class ProjectReloadCommand : Command
 
         var jsonSchemas = context.Features.Get<JsonSchemaFeature>();
         var configuration = context.Features.Get<ConfigurationFeature>();
+        var files = context.Features.Get<ConfigurationFileFeature>().Files;
+
         configuration.EnsureProjectScope();
 
         var project = configuration.EnsureProject();
@@ -63,67 +66,18 @@ public sealed class ProjectReloadCommand : Command
         {
             Project = project,
             Repository = repository.Directory!,
-            //TODO Here we have to get it from the configuration files
-            FileMatch = new List<string>() { "**/appsettings*.json" },
+            FileMatch = files.Select(x => x.File.RelativeTo(project.Directory!)).ToList(),
             SchemaFile = schemaFile,
             RelativePathToProject =
                 Path.GetRelativePath(repository.Directory!.FullName, project.Directory!.FullName)
         };
+
         jsonSchemas.Schemas.Add(jsonSchemaDefinition);
-    }
-}
-
-file static class Extensions
-{
-    public static void EnsureProjectScope(this ConfigurationFeature configuration)
-    {
-        if (configuration.Scope is not ConfigurationScope.Project)
-        {
-            App.Log.ScopeHasToBeAProject();
-            throw new ExitException();
-        }
-    }
-
-    public static ProjectDefinition EnsureProject(this ConfigurationFeature configuration)
-    {
-        if (configuration.Project is not { } project)
-        {
-            App.Log.NoProjectWasFound();
-            throw new ExitException();
-        }
-
-        return project;
-    }
-
-    public static RepositoryDefinition EnsureRepository(this ConfigurationFeature configuration)
-    {
-        if (configuration.Repository is not { } repository)
-        {
-            App.Log.NoRepositoryWasFound();
-            throw new ExitException();
-        }
-
-        return repository;
     }
 }
 
 file static class Log
 {
-    public static void ScopeHasToBeAProject(this IConsoleLogger console)
-    {
-        console.Error("Scope has to be a project");
-    }
-
-    public static void NoProjectWasFound(this IConsoleLogger console)
-    {
-        console.Error("No project was found");
-    }
-
-    public static void NoRepositoryWasFound(this IConsoleLogger console)
-    {
-        console.Error("No repository was found");
-    }
-
     public static void LogComponentsLoaded(
         this IConsoleLogger console,
         ICollection<Abstractions.Component> components)
