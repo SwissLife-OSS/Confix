@@ -63,7 +63,7 @@ public sealed class ProjectReloadPipeline : Pipeline
         {
             Project = project,
             Repository = repository.Directory!,
-            FileMatch = files.Select(x => x.File.RelativeTo(project.Directory!)).ToList(),
+            FileMatch = files.Select(x => x.File.RelativeTo(repository.Directory!)).ToList(),
             SchemaFile = schemaFile,
             RelativePathToProject =
                 Path.GetRelativePath(repository.Directory!.FullName, project.Directory!.FullName)

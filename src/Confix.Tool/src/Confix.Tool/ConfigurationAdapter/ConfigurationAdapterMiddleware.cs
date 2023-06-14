@@ -1,10 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
-using Confix.Tool.Entities.Components;
 using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Schema;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Middlewares;
 
@@ -12,7 +10,7 @@ public sealed class ConfigurationAdapterMiddleware : IMiddleware
 {
     private readonly IEnumerable<IConfigurationAdapter> _configurationAdapters;
 
-    public ConfigurationAdapterMiddleware(IEnumerable<IConfigurationAdapter> configurationAdapters)
+        public ConfigurationAdapterMiddleware(IEnumerable<IConfigurationAdapter> configurationAdapters)
     {
         _configurationAdapters = configurationAdapters;
     }
