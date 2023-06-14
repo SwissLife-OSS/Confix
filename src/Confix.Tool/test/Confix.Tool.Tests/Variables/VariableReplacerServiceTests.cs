@@ -26,7 +26,7 @@ public class VariableReplacerServiceTests
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
             {
-                var result = new Dictionary<VariablePath, JsonValue>();
+                var result = new Dictionary<VariablePath, JsonNode>();
                 foreach (var key in keys)
                 {
                     result[key] = JsonValue.Create("Replaced Value of " + key);

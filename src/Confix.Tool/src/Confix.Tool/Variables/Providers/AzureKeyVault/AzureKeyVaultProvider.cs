@@ -32,21 +32,18 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         return secrets;
     }
 
-    public async Task<JsonValue> ResolveAsync(string path, CancellationToken cancellationToken)
+    public async Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
     {
         KeyVaultSecret result = await _client.GetSecretAsync(path.ToKeyVaultCompatiblePath(), cancellationToken: cancellationToken);
         return JsonValue.Create(result.Value);
     }
 
-    public async Task<IReadOnlyDictionary<string, JsonValue>> ResolveManyAsync(
+    public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
         CancellationToken cancellationToken)
-        => new Dictionary<string, JsonValue>(await Task.WhenAll(
-            paths.Select(async path => new KeyValuePair<string, JsonValue>(
-                path,
-                await ResolveAsync(path, cancellationToken)))));
+        => paths.ResolveMany(ResolveAsync, cancellationToken);
 
-    public async Task<string> SetAsync(string path, JsonValue value, CancellationToken cancellationToken)
+    public async Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
     {
         if (value.GetSchemaValueType() != SchemaValueType.String)
         {

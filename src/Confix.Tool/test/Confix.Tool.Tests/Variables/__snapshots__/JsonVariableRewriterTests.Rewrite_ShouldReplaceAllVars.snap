@@ -7,5 +7,17 @@
     "someReplacedValue"
   ],
   "number": 42,
-  "bool": true
+  "bool": true,
+  "array": [
+    "a",
+    "b",
+    "c"
+  ],
+  "arrayElement": [
+    "a",
+    {
+      "foo": "someReplacedValue"
+    },
+    420
+  ]
 }

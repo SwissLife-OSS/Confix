@@ -17,9 +17,9 @@ public interface IVariableProvider
     /// <param name="path">The path to the variable.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The value of the variable.</returns>
-    Task<JsonValue> ResolveAsync(string path, CancellationToken cancellationToken);
+    Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken);
 
-    Task<IReadOnlyDictionary<string, JsonValue>> ResolveManyAsync(
+    Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
         CancellationToken cancellationToken);
 
@@ -30,5 +30,5 @@ public interface IVariableProvider
     /// <param name="value">The value to set.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The path of the variable.</returns>
-    Task<string> SetAsync(string path, JsonValue value, CancellationToken cancellationToken);
+    Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken);
 }
