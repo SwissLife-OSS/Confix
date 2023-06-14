@@ -1,24 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <PackageId>Confix</PackageId>
+
         <AssemblyName>Confix</AssemblyName>
         <RootNamespace>Confix</RootNamespace>
         <OutputType>Exe</OutputType>
-        <ToolCommandName>confix</ToolCommandName>
+
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
-
-        <IsPackable>true</IsPackable>
         <IsPublishable>true</IsPublishable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Product>Confix</Product>
+        <PackageId>Confix</PackageId>
+        <IsPackable>true</IsPackable>
+        <ToolCommandName>confix</ToolCommandName>
         <PackAsTool>true</PackAsTool>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseUrl>https://github.com/SwissLife-OSS/Confix-Reloaded/blob/main/LICENSE</PackageLicenseUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryUrl>https://github.com/SwissLife-OSS/Confix-Reloaded.git</RepositoryUrl>
+        <PackageIconUrl>https://github.com/SwissLife-OSS/Confix-Reloaded/raw/main/images/logo_small.png</PackageIconUrl>
     </PropertyGroup>
     <ItemGroup>
         <None Include="../../../../README.md" Pack="true" PackagePath="/"/>
     </ItemGroup>
+
+
     <ItemGroup>
         <PackageReference Include="Azure.Identity" />
         <PackageReference Include="Azure.Security.KeyVault.Secrets" />
