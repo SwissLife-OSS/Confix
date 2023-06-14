@@ -10,7 +10,7 @@ public sealed class ConfigurationAdapterMiddleware : IMiddleware
 {
     private readonly IEnumerable<IConfigurationAdapter> _configurationAdapters;
 
-        public ConfigurationAdapterMiddleware(IEnumerable<IConfigurationAdapter> configurationAdapters)
+    public ConfigurationAdapterMiddleware(IEnumerable<IConfigurationAdapter> configurationAdapters)
     {
         _configurationAdapters = configurationAdapters;
     }
