@@ -8,8 +8,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a82c6bb5-bd97-4f78-b489-432ca2d68fbe" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectReloadCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/ReloadCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/IPipelineDescriptor.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineDefinition.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineDescriptor.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Pipelines/Component/BuildComponentPipeline.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Pipelines/Project/ProjectBuildPipeline.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Pipelines/ReloadCommandPipeline.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Pipelines/Variable/VariableGetPipeline.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Pipelines/Variable/VariableListPipeline.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Pipelines/Variable/VariableSetPipeline.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/SomeService.Repo/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../examples/SomeService.Repo/.vscode/settings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectReloadComand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectReloadComand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Component/BuildComponentCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Component/BuildComponentCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectBuildComand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectBuildComand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectReloadComand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Pipelines/Project/ProjectReloadPipeline.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableGetCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableGetCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableListCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableListCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableNameArgument.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableNameArgument.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableSetCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableSetCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableValueArgument.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Variable/VariableValueArgument.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/ExecutionContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/ExecutionContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/CommandExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/CommandExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/CommandPipelineBuilder.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/CommandPipelineBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/CommandPipelineBuilderExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/Pipeline.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/Pipeline.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineBuilder.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/Extensions/ConfigurationFilesCommandPipelineBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/Extensions/ConfigurationFilesCommandPipelineBuilderExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/ConfixCommandLine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfixCommandLine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/ConfixRootCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfixRootCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Environment/CommandPipelineBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Environment/CommandPipelineBuilderExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/JsonSchema/Extensions/JsonSchemaCollectionCommandPipelineBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/JsonSchema/Extensions/JsonSchemaCollectionCommandPipelineBuilderExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,10 +55,12 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/293b2c9ec6a3444689e8c3bcc96a1e9c1e00/ad/8c8e3eed/IServiceProvider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6079180d5d384052886ffe73d77eee2d185c00/37/1dd0a8db/JsonSerializer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c7bde28a690a4cf2957d2642c015b9fa134b38/ce/b90d1dfb/RegistrationData.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d366ff4362f64001891e842d394922a3c5ae00/68/2d87ddc5/Directory.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1aa641631312a31aa8fd8a5a37dd48c78a8c30d57c287f2546e61128b0e4c2/InvocationContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1ad14158167869db951bbcf16d5fc38e71281bc28bd196a907db5655c82dc/IServiceScopeFactory.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1c668dba5e3d03b1b559e7fc88ac52d27ef654d7a2a1b94ed8270af0eac3/JsonSchema.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1e3ef8e0f531f5eda8476faaad7e4cc6d1b4259df0279c917a648dc6b4f62b/LogLevel.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1ea035c1547ed142f9119447ac49cf52c3610693fab7a2cc4c39cdca693a8/PipeStream.cs" root0="SKIP_HIGHLIGHTING" />
@@ -44,7 +81,9 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3e8f1cfc7f3332b9a0e31b3f10347da0b2775895319a6b9a2b4f25a4c48654bc/Command.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3fdf4ae643ded9669afeb227421a1d78f3725fd51f1d807ebfaff4c63cc72/ValidateSymbolResult.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/42db4366cc1a4aa8712a544842538ba41b30d232a26980e0c5a8db8cad621a5/Environment.UnixOrBrowser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/44957b73ef525b29815fb95315e7edf2e88f4cae57684b5eb99585732615c3b/Argument{T}.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/44c96b3a63733a449514ff3bc5ca42872bb2fc1afdc7aee2a49f965a766f/ParseResultExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/467d97e02728621ed80e8a82be1be79c854d539c183a83f1e82855c54e8bc5f/IServiceScope.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/468a5ebc4269ffdf29df26c195f785ac67d1482aab9b661d552c32ee77bc1ce8/TupleExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/47608864b1adfc892cbdee1ae2d87dd215ea47eef9b5763b2cc3597c23be61/Color.Generated.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/48489b0651fef60b5b4a8dce081e9eb70c3edc27ac1afe25d452d83ae23dd0/JsonArray.IList.cs" root0="SKIP_HIGHLIGHTING" />
@@ -60,6 +99,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5f1dad56c61b385746a9736972657d159d477a3e0caa1ebd355fd9de8bf328f/INamedOutputType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6079180d5d384052886ffe73d77eee2d185c00/_ab56b/JsonValueKind.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/60ba82194989883758949211be7db911997ae3ab0e7ca4fb63031145848f095/NullLogger.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/621526284d3e4868b98948aff942206525763e57e194a27623b66c384466/ServiceProviderServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/64b1e661476dffbbb1ad419b4ca6b031d5ccdac819506279c23cdc840338b5e/AppDomainSetup.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/671639e9dac670438a9ba95bcbe51cb94a56e51c3c20c2613b35fc1276b0623e/FileSystemInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6985961246d6db59a5dec3b54b6fccda22fde33507fc4689be4744552118ee2/Select.SpeedOpt.cs" root0="SKIP_HIGHLIGHTING" />
@@ -118,7 +158,6 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fd2de981813444eba1d7263af6a8be138f13b7494159ced0f4f66052a5472e61/Style.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Common/Execution/ExecutionContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineBuilder.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Common/Pipelines/PipelineExecutor.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Configuration/ComponentReferenceConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Confix.Tool/Entities/Component/Definition/ComponentReferenceDefinition.cs" root0="FORCE_HIGHLIGHTING" />
@@ -140,28 +179,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "pse/adds-configuration-files",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;pse/adds-configuration-files&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "/Users/pascalsenn/Library/Application Support/JetBrains/Rider2023.1/resharper-host/DecompilerCache",
-      "/Users/pascalsenn/Library/Application Support/JetBrains/Rider2023.1/resharper-host/SourcesCache",
-      "/Users/pascalsenn/.local/share/Symbols/src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/Users/pascalsenn/Library/Application Support/JetBrains/Rider2023.1/resharper-host/DecompilerCache&quot;,
+      &quot;/Users/pascalsenn/Library/Application Support/JetBrains/Rider2023.1/resharper-host/SourcesCache&quot;,
+      &quot;/Users/pascalsenn/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

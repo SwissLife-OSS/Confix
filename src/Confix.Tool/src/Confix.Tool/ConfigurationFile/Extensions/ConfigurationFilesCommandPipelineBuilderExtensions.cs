@@ -4,7 +4,7 @@ namespace Confix.Tool.Middlewares;
 
 public static class ConfigurationFilesCommandPipelineBuilderExtensions
 {
-    public static CommandPipelineBuilder UseConfigurationFiles(this CommandPipelineBuilder builder)
+    public static IPipelineDescriptor UseConfigurationFiles(this IPipelineDescriptor builder)
     {
         builder.Use<ConfigurationFileMiddleware>();
 

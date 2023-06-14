@@ -4,7 +4,7 @@ namespace Confix.Tool.Middlewares;
 
 public static class CommandPipelineBuilderExtensions
 {
-    public static CommandPipelineBuilder UseEnvironment(this CommandPipelineBuilder builder) 
+    public static IPipelineDescriptor UseEnvironment(this IPipelineDescriptor builder)
         => builder
             .Use<EnvironmentMiddleware>()
             .AddOption(ActiveEnvironmentOption.Instance);

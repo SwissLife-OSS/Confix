@@ -14,6 +14,11 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
     /// <inheritdoc />
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
+        if (context.Features.TryGet(out ConfigurationFeature _))
+        {
+            return next(context);
+        }
+
         context.SetStatus("Loading configuration...");
 
         var configurationFiles = context.LoadConfigurationFiles();
