@@ -19,8 +19,11 @@ public sealed class SchemaStore : ISchemaStore
 
         await using var stream = schemaFile.OpenReplacementStream();
 
-        await JsonSerializer
-            .SerializeAsync(stream, schema, cancellationToken: cancellationToken);
+        await JsonSerializer.SerializeAsync(
+            stream,
+            schema,
+            new JsonSerializerOptions() { WriteIndented = true },
+            cancellationToken);
 
         App.Log.SchemaIsStored(schemaFile);
 
