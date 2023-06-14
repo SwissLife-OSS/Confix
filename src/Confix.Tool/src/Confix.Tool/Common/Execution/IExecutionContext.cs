@@ -14,7 +14,7 @@ public interface IExecutionContext
     /// Gets the current directory of the execution context. 
     /// This is usually the directory where the application was called or started from.
     /// </summary>
-    string CurrentDirectory { get; }
+    DirectoryInfo CurrentDirectory { get; }
 
     /// <summary>
     /// Gets the home directory of the current user. In a Windows environment, this could be
@@ -22,5 +22,5 @@ public interface IExecutionContext
     /// "/home/johndoe" respectively. The home directory is determined using
     /// <code>Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)</code>.
     /// </summary>   
-    string HomeDirectory { get; }
+    DirectoryInfo HomeDirectory { get; }
 }

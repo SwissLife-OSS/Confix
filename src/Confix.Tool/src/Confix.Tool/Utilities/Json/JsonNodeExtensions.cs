@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using Json.Schema;
@@ -56,7 +57,7 @@ public static class JsonNodeExtensions
         {
             array[i] = source[i]?.Copy();
         }
-        
+
         for (var i = 0; i < node.Count; i++)
         {
             array[i + source.Count] = node[i]?.Copy();
@@ -81,4 +82,14 @@ public static class JsonNodeExtensions
 
         return obj;
     }
+
+    public static async Task SerializeToStreamAsync(
+        this JsonNode node,
+        Stream stream,
+        CancellationToken cancellationToken)
+        => await JsonSerializer.SerializeAsync(
+            stream,
+            node,
+            new JsonSerializerOptions { WriteIndented = true },
+            cancellationToken);
 }

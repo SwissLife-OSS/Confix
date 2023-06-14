@@ -8,15 +8,15 @@ public sealed class ExecutionContext : IExecutionContext
     /// </summary>
     public ExecutionContext(string currentDirectory, string homeDirectory)
     {
-        CurrentDirectory = currentDirectory;
-        HomeDirectory = homeDirectory;
+        CurrentDirectory = new DirectoryInfo(currentDirectory);
+        HomeDirectory = new DirectoryInfo(homeDirectory);
     }
 
     /// <inheritdoc />
-    public string CurrentDirectory { get; }
+    public DirectoryInfo CurrentDirectory { get; }
 
     /// <inheritdoc />
-    public string HomeDirectory { get; }
+    public DirectoryInfo HomeDirectory { get; }
 
     /// <summary>
     /// Creates a new execution context using the current directory and home directory from the

@@ -1,23 +1,36 @@
 namespace Confix.Tool.Commands.Temp;
 
-public static class FileSystemHelpers
+public static class DirectroyExtensions
 {
-    public static string? FindInPath(string directoryPath, string fileName, bool recursive = true)
+    public static string? FindInPath(
+        this DirectoryInfo directory,
+        string fileName,
+        bool recursive = true)
         => Directory
             .EnumerateFiles(
-                directoryPath,
+                directory.FullName,
                 fileName,
                 recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
             .FirstOrDefault();
 
-    public static string? FindInTree(string directoryPath, string fileName)
+    public static IEnumerable<string> FindAllInPath(
+        this DirectoryInfo directory,
+        string pattern,
+        bool recursive = true)
+        => Directory
+            .EnumerateFiles(
+                directory.FullName,
+                pattern,
+                recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+
+    public static string? FindInTree(this DirectoryInfo directory, string fileName)
     {
-        if (!Directory.Exists(directoryPath))
+        if (!directory.Exists)
         {
-            throw new DirectoryNotFoundException($"The directory '{directoryPath}' was not found.");
+            throw new DirectoryNotFoundException($"The directory '{directory}' was not found.");
         }
 
-        var currentDirectory = directoryPath;
+        var currentDirectory = directory.FullName;
         while (true)
         {
             var file = Path.Combine(currentDirectory, fileName);
@@ -36,14 +49,15 @@ public static class FileSystemHelpers
         }
     }
 
-    public static IEnumerable<string> FindAllInTree(string directoryPath, string fileName)
+    public static IEnumerable<string> FindAllInTree(this DirectoryInfo directory, string fileName)
     {
-        if (!Directory.Exists(directoryPath))
+        if (!directory.Exists)
         {
-            throw new DirectoryNotFoundException($"The directory '{directoryPath}' was not found.");
+            throw new DirectoryNotFoundException(
+                $"The directory '{directory.FullName}' was not found.");
         }
 
-        var currentDirectory = directoryPath;
+        var currentDirectory = directory.FullName;
         while (true)
         {
             var file = Path.Combine(currentDirectory, fileName);

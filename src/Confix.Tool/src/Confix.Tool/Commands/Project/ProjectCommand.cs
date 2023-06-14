@@ -9,5 +9,6 @@ public sealed class ProjectCommand : Command
         Description = "This command is used to manage projects.";
 
         AddCommand(new ProjectReloadCommand());
+        AddCommand(new ProjectBuildCommand());
     }
 }

@@ -8,23 +8,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a82c6bb5-bd97-4f78-b489-432ca2d68fbe" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/App.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/App.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/ConsoleLogger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/ConsoleLogger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/ConsoleLoggerExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/ConsoleLoggerExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/DefaultLoggerMessage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/DefaultLoggerMessage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/Glyph.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/Glyph.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/GlyphsExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/GlyphsExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/IConsoleLogger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/IConsoleLogger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/ILoggerMessage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/ILoggerMessage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/StringExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/StringExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/Styles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/Styles.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/Verbosity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/Verbosity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/VerbosityCommandLineBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/VerbosityCommandLineBuilderExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/CompileSchemaCommand.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/ComposeCommand.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/TempCommand.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Temp/TestCommand.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/ConfixRootCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfixRootCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../.confixrc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectBuildComand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/ConfigurationFile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/ConfigurationFileContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/ConfigurationFileFeature.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/ConfigurationFileMiddleware.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/ConfigurationFileProviderFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/Extensions/ConfigurationFileCommandBuilderExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/Extensions/ConfigurationFileCommandLineBuilderExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/Extensions/ConfigurationFilesCommandPipelineBuilderExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/IConfigurationFileContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/IConfigurationFileProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/IConfigurationFileProviderFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/Inline/InlineConfigurationFileProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/ConfigurationFeatureExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Project/BuildProjectMiddleware.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/SomeService.Repo/src/SomeService.Host/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../examples/SomeService.Repo/src/SomeService.Host/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Confix.Tool/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectReloadComand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Project/ProjectReloadComand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/ExecutionContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/ExecutionContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/IExecutionContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/IExecutionContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Execution/MiddlewareContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/ConsoleLogger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Common/Logging/ConsoleLogger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Extensions/MiddlewareCommandLIneBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/Extensions/MiddlewareCommandLIneBuilderExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/ConfigurationFeature.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/ConfigurationFeature.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Middlewares/LoadConfiguration/LoadConfigurationMiddleware.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/FileInfoExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/FileInfoExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/FileSystemHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/FileSystem/DirectroyExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Json/JsonNodeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Confix.Tool/Utilities/Json/JsonNodeExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/RepositoryConfigurationTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/Confix.Tool.Tests/Entities/Repositories/RepositoryConfigurationTest.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +69,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3b787b28d22f8fb453a1f740c3d6c42b4877ad64d4e67982c2623c532fe65/Path.Unix.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3c1af32124f0c12160568466f63255433879dc49a8fc6768cc297144fa53f4/Handler.Func.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ddac1304a13be9fc94eccffebf83ff1bb5e70c4f3cacfb4f8e0ef709c6789eb/CollectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3e2140877cf96c45dc89a7d9153aa215bf7e43f9eb07aaf9b51762d91397d/CommandExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3e8f1cfc7f3332b9a0e31b3f10347da0b2775895319a6b9a2b4f25a4c48654bc/Command.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3fdf4ae643ded9669afeb227421a1d78f3725fd51f1d807ebfaff4c63cc72/ValidateSymbolResult.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/42db4366cc1a4aa8712a544842538ba41b30d232a26980e0c5a8db8cad621a5/Environment.UnixOrBrowser.cs" root0="SKIP_HIGHLIGHTING" />
@@ -154,28 +169,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "pse/adds-component-input",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "Inspections-C#",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "/Users/pascalsenn/Library/Application Support/JetBrains/Rider2023.1/resharper-host/DecompilerCache",
-      "/Users/pascalsenn/Library/Application Support/JetBrains/Rider2023.1/resharper-host/SourcesCache",
-      "/Users/pascalsenn/.local/share/Symbols/src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/Users/pascalsenn/Library/Application Support/JetBrains/Rider2023.1/resharper-host/DecompilerCache&quot;,
+      &quot;/Users/pascalsenn/Library/Application Support/JetBrains/Rider2023.1/resharper-host/SourcesCache&quot;,
+      &quot;/Users/pascalsenn/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -188,6 +203,8 @@
       <workItem from="1686036263179" duration="27780000" />
       <workItem from="1686123921935" duration="11036000" />
       <workItem from="1686208797399" duration="17145000" />
+      <workItem from="1686591903960" duration="1877000" />
+      <workItem from="1686726725203" duration="3426000" />
     </task>
     <servers />
   </component>
@@ -200,14 +217,7 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/src/Confix.Tool/Common/Logging/ConsoleLogger.cs</url>
           <line>18</line>
-          <properties documentPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/ConsoleLogger.cs" initialLine="18" containingFunctionPresentation="Method 'Log'">
-            <startOffsets>
-              <option value="444" />
-            </startOffsets>
-            <endOffsets>
-              <option value="483" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="$PROJECT_DIR$/src/Confix.Tool/Commands/Logging/ConsoleLogger.cs" initialLine="18" containingFunctionPresentation="Method 'Log'" />
           <option name="timeStamp" value="47" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
@@ -222,6 +232,32 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3e2140877cf96c45dc89a7d9153aa215bf7e43f9eb07aaf9b51762d91397d/CommandExtensions.cs</url>
+          <line>57</line>
+          <properties documentPath="$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3e2140877cf96c45dc89a7d9153aa215bf7e43f9eb07aaf9b51762d91397d/CommandExtensions.cs" initialLine="57" containingFunctionPresentation="Method 'InvokeAsync'">
+            <startOffsets>
+              <option value="2495" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2496" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/ConfigurationFile.cs</url>
+          <line>46</line>
+          <properties documentPath="$PROJECT_DIR$/src/Confix.Tool/ConfigurationFile/ConfigurationFile.cs" initialLine="46" containingFunctionPresentation="Method 'TryLoadContentAsync'">
+            <startOffsets>
+              <option value="1229" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1264" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="50" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
