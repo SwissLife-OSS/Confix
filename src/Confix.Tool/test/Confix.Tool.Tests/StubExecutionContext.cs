@@ -6,13 +6,13 @@ public class StubExecutionContext : IExecutionContext
 {
     public StubExecutionContext(string currentDirectory, string homeDirectory)
     {
-        CurrentDirectory = currentDirectory;
-        HomeDirectory = homeDirectory;
+        CurrentDirectory = new(currentDirectory);
+        HomeDirectory = new(homeDirectory);
     }
 
     /// <inheritdoc />
-    public string CurrentDirectory { get; set; }
+    public DirectoryInfo CurrentDirectory { get; set; }
 
     /// <inheritdoc />
-    public string HomeDirectory { get; set; }
+    public DirectoryInfo HomeDirectory { get; set; }
 }
