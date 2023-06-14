@@ -19,7 +19,7 @@ public sealed class VariableResolver : IVariableResolver
     public async Task<VariablePath> SetVariable(
         string providerName,
         string key,
-        JsonValue value,
+        JsonNode value,
         CancellationToken cancellationToken)
     {
         var configuration = GetProviderConfiguration(providerName);
@@ -44,15 +44,15 @@ public sealed class VariableResolver : IVariableResolver
         return variableKey.Select(k => new VariablePath(providerName, k));
     }
 
-    public Task<JsonValue> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
+    public Task<JsonNode> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
         => _variableProviderFactory.CreateProvider(GetProviderConfiguration(key.ProviderName))
             .ResolveAsync(key.Path, cancellationToken);
 
-    public async Task<IReadOnlyDictionary<VariablePath, JsonValue>> ResolveVariables(
+    public async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
         IReadOnlyList<VariablePath> keys,
         CancellationToken cancellationToken)
     {
-        Dictionary<VariablePath, JsonValue> resolvedVariables = new();
+        Dictionary<VariablePath, JsonNode> resolvedVariables = new();
 
         foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
         {
@@ -75,5 +75,4 @@ public sealed class VariableResolver : IVariableResolver
     private VariableProviderConfiguration GetProviderConfiguration(string providerName)
       => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
           ?? throw new InvalidOperationException($"Provider '{providerName}' not found");
-
 }

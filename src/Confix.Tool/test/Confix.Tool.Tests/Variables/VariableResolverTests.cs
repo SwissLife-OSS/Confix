@@ -53,7 +53,7 @@ public class VariableResolverTests
         provider1Mock.Setup(p => p.ResolveManyAsync(
             It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key1", "Key3" })),
             cancellationToken))
-            .ReturnsAsync(new Dictionary<string, JsonValue>
+            .ReturnsAsync(new Dictionary<string, JsonNode>
             {
                 { "Key1", JsonValue.Create("Value1") },
                 { "Key3", JsonValue.Create("Value3") }
@@ -63,7 +63,7 @@ public class VariableResolverTests
         provider2Mock.Setup(p => p.ResolveManyAsync(
             It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key2", "Key4" })),
             cancellationToken))
-            .ReturnsAsync(new Dictionary<string, JsonValue>
+            .ReturnsAsync(new Dictionary<string, JsonNode>
             {
                 { "Key2", JsonValue.Create("Value2") },
                 { "Key4", JsonValue.Create("Value4") }

@@ -18,13 +18,22 @@ public class JsonVariableRewriterTests
                 },
                 "bar": ["$test:variable.string"],
                 "number": 42,
-                "bool": "$test:variable.bool"
+                "bool": "$test:variable.bool",
+                "array": "$test:variable.array",
+                "arrayElement": [
+                    "a",
+                    {
+                        "foo": "$test:variable.string"
+                    },
+                    "$test:variable.number"
+                ]
             }
         """)!;
-        var variableLookup = new Dictionary<VariablePath, JsonValue> {
+        var variableLookup = new Dictionary<VariablePath, JsonNode> {
             { VariablePath.Parse("$test:variable.string"), JsonValue.Create("someReplacedValue")},
             { VariablePath.Parse("$test:variable.number"), JsonValue.Create(420)},
             { VariablePath.Parse("$test:variable.bool"), JsonValue.Create(true)},
+            { VariablePath.Parse("$test:variable.array"), JsonNode.Parse("""["a", "b", "c"]""")!},
         };
 
         // act

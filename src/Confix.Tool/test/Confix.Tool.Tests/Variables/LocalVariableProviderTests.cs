@@ -2,7 +2,7 @@ using System.Text.Json.Nodes;
 using ConfiX.Variables;
 using FluentAssertions;
 using Json.More;
-using Xunit;
+
 namespace Confix.Tool.Tests;
 
 public class LocalVariableProviderTests : IDisposable
@@ -49,6 +49,25 @@ public class LocalVariableProviderTests : IDisposable
 
         // assert
         Assert.True(result.IsEquivalentTo(JsonValue.Create(42)));
+    }
+
+    [Fact]
+    public async Task ResolveAsync_WithArray_CorrectResult()
+    {
+        // arrange
+        await PrepareFile(
+            """
+            {
+                "someArray": ["a", "b", "c"]
+            }
+            """);
+        LocalVariableProvider provider = new(new LocalVariableProviderConfiguration() { FilePath = tmpFilePath });
+
+        // act
+        var result = await provider.ResolveAsync("someArray", default);
+
+        // assert
+        Assert.True(result.IsEquivalentTo(JsonNode.Parse("""["a","b","c"]""")));
     }
 
     [Fact]
