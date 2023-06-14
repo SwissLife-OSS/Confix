@@ -18,6 +18,8 @@ public sealed class ProjectReloadCommand : Command
             .AddPipeline()
             .Use<LoadConfigurationMiddleware>()
             .UseConfigurationFiles()
+            .UseEnvironment()
+            .Use<VariableMiddleware>()
             .Use<JsonSchemaCollectionMiddleware>()
             .Use<ConfigurationAdapterMiddleware>()
             .Use<BuildComponentProviderMiddleware>()
@@ -55,8 +57,12 @@ public sealed class ProjectReloadCommand : Command
         var components = providerContext.Components;
         context.Logger.LogComponentsLoaded(components);
 
+        context.SetStatus("Loading variables...");
+        var variableResolver = context.Features.Get<VariableResolverFeature>().Resolver;
+        var variables = await variableResolver.ListVariables(cancellationToken);
+
         context.SetStatus("Composing the schema...");
-        var jsonSchema = projectComposer.Compose(components);
+        var jsonSchema = projectComposer.Compose(components, variables);
         context.Logger.LogSchemaCompositionCompleted(project);
 
         var schemaFile = await schemaStore

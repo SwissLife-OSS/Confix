@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Schema;
+using ConfiX.Variables;
 using Json.Schema;
 
 namespace Confix.Tool.Entities.Components.DotNet;
@@ -8,10 +9,13 @@ namespace Confix.Tool.Entities.Components.DotNet;
 public sealed class ProjectComposer
     : IProjectComposer
 {
-    public JsonSchema Compose(IEnumerable<Component> components)
+    public JsonSchema Compose(IEnumerable<Component> components, IEnumerable<VariablePath> variables)
     {
         var defs = new Dictionary<string, JsonSchema>();
         var properties = new Dictionary<string, JsonSchema>();
+
+        defs["Variable"] = variables.ToVariableStringType();
+
         foreach (var componentDefinition in components)
         {
             var prefixedJsonSchema =
@@ -45,4 +49,19 @@ public sealed class ProjectComposer
             .Required(properties.Keys.ToArray())
             .Build();
     }
+}
+
+file static class Extensions
+{
+    public static JsonSchemaBuilder ToVariableStringType(this IEnumerable<VariablePath> variables)
+       => new JsonSchemaBuilder()
+            .AnyOf(
+                variables.ToVariableType(),
+                new JsonSchemaBuilder().Type(SchemaValueType.String)
+            );
+
+    private static JsonSchemaBuilder ToVariableType(this IEnumerable<VariablePath> variables)
+        => new JsonSchemaBuilder()
+            .Type(SchemaValueType.String)
+            .Enum(variables.Select(v => v.ToString()));
 }
