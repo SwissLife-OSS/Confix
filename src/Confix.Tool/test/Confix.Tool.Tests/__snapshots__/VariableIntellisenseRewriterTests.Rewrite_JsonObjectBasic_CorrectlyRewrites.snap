@@ -1,0 +1,40 @@
+﻿{
+  "type": "object",
+  "properties": {
+    "street_address": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/variable"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "city": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/variable"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "state": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/variable"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "required": [
+    "street_address",
+    "city",
+    "state"
+  ]
+}
