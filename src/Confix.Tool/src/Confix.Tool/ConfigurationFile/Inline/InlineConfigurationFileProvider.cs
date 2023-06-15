@@ -18,7 +18,7 @@ public sealed class InlineConfigurationFileProvider : IConfigurationFileProvider
         {
             App.Log.FoundAInlineConfigurationFile(file);
 
-            files.Add(new ConfigurationFile { File = new FileInfo(file) });
+            files.Add(new ConfigurationFile { File = file });
         }
 
         return files;
@@ -27,7 +27,7 @@ public sealed class InlineConfigurationFileProvider : IConfigurationFileProvider
 
 file static class Log
 {
-    public static void FoundAInlineConfigurationFile(this IConsoleLogger console, string file)
+    public static void FoundAInlineConfigurationFile(this IConsoleLogger console, FileInfo file)
     {
         console.Debug($"Found a inline configuration file '{file}'");
     }

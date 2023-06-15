@@ -52,6 +52,13 @@ public static partial class CommandLineBuilderExtensions
         return builder;
     }
 
+    public static CommandLineBuilder AddTransient<T>(this CommandLineBuilder builder)
+        where T : class, new()
+    {
+        builder.AddTransient(_ => new T());
+        return builder;
+    }
+
     public static CommandLineBuilder AddTransient<T>(this CommandLineBuilder builder, T instance)
     {
         builder.AddTransient(_ => instance);

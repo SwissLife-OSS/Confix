@@ -10,5 +10,6 @@ public sealed class ProjectCommand : Command
 
         AddCommand(new ProjectReloadCommand());
         AddCommand(new ProjectBuildCommand());
+        AddCommand(new ProjectInitCommand());
     }
 }
