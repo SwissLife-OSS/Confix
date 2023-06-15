@@ -22,15 +22,17 @@ namespace Confix.Tool.Common.Pipelines;
 /// </example>
 public sealed class PipelineExecutor
 {
-    private readonly Pipeline _pipeline;
+    private readonly MiddlewareDelegate _pipeline;
+    private readonly IServiceProvider _services;
     private readonly Dictionary<Symbol, object?> _parameter = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PipelineExecutor"/> class.
     /// </summary>
-    public PipelineExecutor(Pipeline pipeline)
+    public PipelineExecutor(MiddlewareDelegate pipeline, IServiceProvider services)
     {
         _pipeline = pipeline;
+        _services = services;
     }
 
     /// <summary>
@@ -56,7 +58,7 @@ public sealed class PipelineExecutor
     /// <returns>The exit code of the pipeline execution.</returns>
     public async Task<int> ExecuteAsync(CancellationToken cancellationToken)
     {
-        var console = _pipeline.Services.GetRequiredService<IAnsiConsole>();
+        var console = _services.GetRequiredService<IAnsiConsole>();
 
         return await console
             .Status()
@@ -68,13 +70,13 @@ public sealed class PipelineExecutor
             {
                 CancellationToken = cancellationToken,
                 Parameter = ParameterCollection.From(_parameter),
-                Console = _pipeline.Services.GetRequiredService<IAnsiConsole>(),
-                Logger = _pipeline.Services.GetRequiredService<IConsoleLogger>(),
+                Console = _services.GetRequiredService<IAnsiConsole>(),
+                Logger = _services.GetRequiredService<IConsoleLogger>(),
                 Execution = ExecutionContext.Create(),
                 Status = new SpectreStatusContext(ctx)
             };
 
-            await _pipeline.ExecuteAsync(context);
+            await _pipeline(context);
 
             return context.ExitCode;
         }

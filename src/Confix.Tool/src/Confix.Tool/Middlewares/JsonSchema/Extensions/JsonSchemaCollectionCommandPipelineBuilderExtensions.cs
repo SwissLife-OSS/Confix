@@ -4,6 +4,6 @@ namespace Confix.Tool.Middlewares.JsonSchemas;
 
 public static class JsonSchemaCollectionCommandPipelineBuilderExtensions
 {
-    public static PipelineBuilder UseJsonSchemaCollection(this PipelineBuilder builder)
+    public static IPipelineDescriptor UseJsonSchemaCollection(this IPipelineDescriptor builder)
         => builder.Use<JsonSchemaCollectionMiddleware>();
 }

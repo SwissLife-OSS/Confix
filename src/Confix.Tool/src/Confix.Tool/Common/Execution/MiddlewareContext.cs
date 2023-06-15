@@ -3,12 +3,13 @@ using Spectre.Console;
 
 namespace Confix.Tool.Common.Pipelines;
 
-public sealed class MiddlewareContext : IMiddlewareContext
+public sealed record MiddlewareContext : IMiddlewareContext
 {
-    public IFeatureCollection Features { get; } = new FeatureCollection();
+    public IFeatureCollection Features { get; init; } = new FeatureCollection();
 
     /// <inheritdoc />
-    public IDictionary<string, object> ContextData { get; } = new Dictionary<string, object>();
+    public IDictionary<string, object> ContextData { get; init; } =
+        new Dictionary<string, object>();
 
     /// <inheritdoc />
     public required IConsoleLogger Logger { get; init; }
@@ -30,4 +31,3 @@ public sealed class MiddlewareContext : IMiddlewareContext
     /// <inheritdoc />
     public int ExitCode { get; set; } = ExitCodes.Success;
 }
-

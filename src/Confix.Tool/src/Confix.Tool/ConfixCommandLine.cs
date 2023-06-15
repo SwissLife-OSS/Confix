@@ -17,6 +17,7 @@ internal sealed class ConfixCommandLine : CommandLineBuilder
             .RegisterMiddlewares()
             .RegisterConfigurationAdapters()
             .AddSingleton(DefaultConsole.Create())
+            .AddSingleton<IServiceProvider>(sp => sp)
             .UseDefaults()
             .UseVerbosity()
             .AddExceptionHandler();

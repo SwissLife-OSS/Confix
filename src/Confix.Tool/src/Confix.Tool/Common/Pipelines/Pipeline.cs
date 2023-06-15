@@ -1,40 +1,65 @@
+using System.CommandLine;
+
 namespace Confix.Tool.Common.Pipelines;
 
-/// <summary>
-/// Represents a pipeline used to execute a specific command. A pipeline is a chain of middleware
-/// components that are responsible for processing a command. This class is created by the
-/// <see cref="PipelineBuilder"/> and is used to execute the pipeline.
-/// </summary>
-public sealed class Pipeline
+public abstract class Pipeline
 {
-    private readonly MiddlewareDelegate _pipeline;
+    private IReadOnlyList<Func<IServiceProvider, IMiddleware>> _middlewares =
+        Array.Empty<Func<IServiceProvider, IMiddleware>>();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Pipeline"/> class.
-    /// </summary>
-    /// <param name="services">
-    /// The service provider used to resolve services needed by the pipeline.
-    /// </param>
-    /// <param name="pipeline">
-    /// The delegate representing the sequence of middleware components in the pipeline.
-    /// </param>
-    public Pipeline(IServiceProvider services, MiddlewareDelegate pipeline)
+    protected abstract void Configure(IPipelineDescriptor builder);
+
+    protected Pipeline()
     {
-        Services = services;
-        _pipeline = pipeline;
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        var descriptor = new PipelineDescriptor();
+        Configure(descriptor);
+
+        Arguments = descriptor.Definition.Arguments;
+        Options = descriptor.Definition.Options;
+        _middlewares = descriptor.Definition.Middlewares;
+    }
+
+    public IReadOnlySet<Argument> Arguments { get; private set; } = new HashSet<Argument>();
+
+    public IReadOnlySet<Option> Options { get; private set; } = new HashSet<Option>();
+
+    public PipelineExecutor BuildExecutor(IServiceProvider services)
+    {
+        return new PipelineExecutor(BuildDelegate(services), services);
+    }
+
+    public async Task ExecuteAsync(IServiceProvider services, IMiddlewareContext context)
+    {
+        await BuildDelegate(services)(context);
     }
 
     /// <summary>
-    /// Gets the service provider used to resolve services needed by the pipeline.
+    /// Builds the <see cref="Pipeline"/> with the configured middleware components.
     /// </summary>
-    public IServiceProvider Services { get; }
-
-    /// <summary>
-    /// Executes the pipeline using the provided middleware context.
-    /// </summary>
-    /// <param name="context">The context to use for the pipeline execution.</param>
-    public async Task ExecuteAsync(IMiddlewareContext context)
+    /// <returns>A new instance of <see cref="Pipeline"/>.</returns>
+    private MiddlewareDelegate BuildDelegate(IServiceProvider services)
     {
-        await _pipeline(context);
+        MiddlewareDelegate next = _ => Task.CompletedTask;
+
+        for (var i = _middlewares.Count - 1; i >= 0; i--)
+        {
+            var middleware = _middlewares[i](services);
+            var current = next;
+            next = async context =>
+            {
+                var status = context.Status.Status;
+
+                await middleware.InvokeAsync(context, current);
+
+                context.Status.Status = status;
+            };
+        }
+
+        return next;
     }
 }
