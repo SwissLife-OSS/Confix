@@ -7,7 +7,7 @@ public static class MiddlewareCommandLineBuilderExtensions
     public static CommandLineBuilder RegisterJsonSchemaCollectionMiddleware(
         this CommandLineBuilder builder)
     {
-        builder.AddSingleton<JsonSchemaCollectionMiddleware>();
+        builder.AddTransient<JsonSchemaCollectionMiddleware>();
 
         return builder;
     }

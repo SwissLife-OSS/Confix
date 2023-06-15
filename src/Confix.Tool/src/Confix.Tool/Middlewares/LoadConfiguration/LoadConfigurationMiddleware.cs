@@ -188,10 +188,10 @@ file static class Extensions
     {
         var confixRcInHome = context.Execution.HomeDirectory.FindInPath(FileNames.ConfixRc, false);
 
-        if (File.Exists(confixRcInHome))
+        if (confixRcInHome?.Exists is true)
         {
-            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInHome);
-            yield return new FileInfo(confixRcInHome);
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInHome.FullName);
+            yield return confixRcInHome;
         }
 
         var confixRcsInTree = context.Execution.CurrentDirectory
@@ -205,8 +205,8 @@ file static class Extensions
                 continue;
             }
 
-            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInTree);
-            yield return new FileInfo(confixRcInTree);
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInTree.FullName);
+            yield return confixRcInTree;
         }
     }
 }

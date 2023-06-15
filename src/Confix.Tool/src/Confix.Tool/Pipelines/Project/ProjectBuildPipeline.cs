@@ -13,6 +13,7 @@ public sealed class ProjectBuildPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseConfigurationFiles()
             .UseEnvironment()
+            .Use<BuildComponentsOfProjectMiddleware>()
             .Use<VariableMiddleware>()
             .Use<BuildProjectMiddleware>();
     }

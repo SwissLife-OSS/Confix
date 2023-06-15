@@ -12,9 +12,10 @@ public static class MiddlewareCommandLineBuilderExtensions
     public static CommandLineBuilder RegisterMiddlewares(this CommandLineBuilder builder)
     {
         builder
-            .AddSingleton<LoadConfigurationMiddleware>()
-            .AddSingleton<EnvironmentMiddleware>()
-            .AddSingleton<BuildProjectMiddleware>()
+            .AddTransient(sp => new BuildComponentsOfProjectMiddleware(sp))
+            .AddTransient<LoadConfigurationMiddleware>()
+            .AddTransient<EnvironmentMiddleware>()
+            .AddTransient<BuildProjectMiddleware>()
             .RegisterComponentInputs()
             .RegisterConfigurationFiles()
             .RegisterComponentProviders()
