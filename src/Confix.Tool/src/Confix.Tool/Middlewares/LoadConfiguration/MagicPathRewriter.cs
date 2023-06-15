@@ -42,7 +42,7 @@ file static class MagicPathRewriterExtensions
             return stringValue switch
             {
                 string s when s.StartsWith("$home") => MagicPath.Home,
-                string s when s.StartsWith("$repository") => MagicPath.Solution,
+                string s when s.StartsWith("$solution") => MagicPath.Solution,
                 string s when s.StartsWith("$project") => MagicPath.Project,
                 string s when s.StartsWith("./") || s.StartsWith(".\\") => MagicPath.File,
                 _ => null
@@ -81,7 +81,7 @@ file static class MagicPathRewriterExtensions
         => magicPath switch
         {
             MagicPath.Home => value.Remove(0, "$home".Length),
-            MagicPath.Solution => value.Remove(0, "$repository".Length),
+            MagicPath.Solution => value.Remove(0, "$solution".Length),
             MagicPath.Project => value.Remove(0, "$project".Length),
             _ => value
         };
