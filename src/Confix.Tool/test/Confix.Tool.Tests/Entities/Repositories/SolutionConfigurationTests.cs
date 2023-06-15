@@ -7,7 +7,7 @@ using Confix.Tool.Schema;
 
 namespace ConfiX.Entities.Component.Configuration;
 
-public class RepositoryConfigurationTest : ParserTestBase
+public class SolutionConfigurationTests : ParserTestBase
 {
     [Fact]
     public void Parse_Should_BeValid()
