@@ -56,6 +56,4 @@ public sealed class PrefixJsonNamesRewriter : JsonDocumentRewriter<PrefixJsonNam
 
         return newObject;
     }
-
-    public static PrefixJsonNamesRewriter Instance { get; } = new();
 }

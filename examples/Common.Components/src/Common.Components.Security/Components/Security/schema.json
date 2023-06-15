@@ -70,7 +70,9 @@
       "deprecated": false
     }
   },
-  "required": ["Authority"],
+  "required": [
+    "Authority"
+  ],
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
@@ -146,7 +148,9 @@
           "deprecated": false
         }
       },
-      "required": ["Authority"],
+      "required": [
+        "Authority"
+      ],
       "additionalProperties": false
     },
     "OpenIdConnectClient": {
@@ -161,7 +165,10 @@
           "deprecated": false
         }
       },
-      "required": ["ClientId", "Secret"],
+      "required": [
+        "ClientId",
+        "Secret"
+      ],
       "additionalProperties": false
     },
     "Authorization": {
@@ -172,7 +179,9 @@
           "deprecated": false
         }
       },
-      "required": ["PathPolicy"],
+      "required": [
+        "PathPolicy"
+      ],
       "additionalProperties": false
     },
     "PathPolicy": {
@@ -254,7 +263,9 @@
           "deprecated": false
         }
       },
-      "required": ["Path"],
+      "required": [
+        "Path"
+      ],
       "additionalProperties": false
     },
     "Requirement": {
@@ -421,7 +432,9 @@
           "deprecated": false
         }
       },
-      "required": ["Name"],
+      "required": [
+        "Name"
+      ],
       "additionalProperties": false
     },
     "HttpClient": {
@@ -472,7 +485,10 @@
           "deprecated": false
         }
       },
-      "required": ["Name", "Url"],
+      "required": [
+        "Name",
+        "Url"
+      ],
       "additionalProperties": false
     },
     "HttpClientAuthentication": {
@@ -548,7 +564,9 @@
           "deprecated": false
         }
       },
-      "required": ["Mode"],
+      "required": [
+        "Mode"
+      ],
       "additionalProperties": false
     },
     "CustomHeader": {
@@ -563,7 +581,10 @@
           "deprecated": false
         }
       },
-      "required": ["Name", "Value"],
+      "required": [
+        "Name",
+        "Value"
+      ],
       "additionalProperties": false
     },
     "String": {

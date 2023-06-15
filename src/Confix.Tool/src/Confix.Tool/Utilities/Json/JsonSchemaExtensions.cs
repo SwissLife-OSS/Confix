@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using ConfiX.Variables;
 using Json.Schema;
 
 namespace Confix.Tool.Schema;
@@ -12,6 +14,18 @@ public static class JsonSchemaExtensions
 
         var jsonSchemaAsNode = JsonSerializer.SerializeToNode(schema)!;
         var rewritten = visitor.Rewrite(jsonSchemaAsNode, context);
+
+        return rewritten.Deserialize<JsonSchema>()!;
+    }
+
+    public static JsonSchema AddVariableIntellisense(this JsonSchema schema, JsonObject variableRef)
+    {
+        var context = new VariableIntellisenseContext(
+             variableRef
+        );
+
+        var jsonSchemaAsNode = JsonSerializer.SerializeToNode(schema)!;
+        var rewritten = new VariableIntellisenseRewriter().Rewrite(jsonSchemaAsNode, context);
 
         return rewritten.Deserialize<JsonSchema>()!;
     }

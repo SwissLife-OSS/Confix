@@ -28,7 +28,7 @@
             {
                 "name": "local", 
                 "type": "local", 
-                "path": "variables.json"
+                "path": "/Users/florian/repos/Confix-Reloaded/examples/SomeService.Repo/src/SomeService.Host/variables.json"
             }
         ]
     }
