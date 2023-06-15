@@ -10,12 +10,12 @@ public sealed class SchemaStore : ISchemaStore
 {
     /// <inheritdoc />
     public async Task<FileInfo> StoreAsync(
-        RepositoryDefinition repository,
+        SolutionDefinition solution,
         ProjectDefinition project,
         JsonSchema schema,
         CancellationToken cancellationToken)
     {
-        var schemaFile = GetSchemaFile(repository, project);
+        var schemaFile = GetSchemaFile(solution, project);
 
         await using var stream = schemaFile.OpenReplacementStream();
 
@@ -31,19 +31,19 @@ public sealed class SchemaStore : ISchemaStore
     }
 
     private static FileInfo GetSchemaFile(
-        RepositoryDefinition repository,
+        SolutionDefinition solution,
         ProjectDefinition project)
     {
-        if (repository.Directory is not { } directory)
+        if (solution.Directory is not { } directory)
         {
-            throw new ExitException("Could not find directory of repository");
+            throw new ExitException("Could not find directory of solution");
         }
 
         // the name of the schema is the name of the project with the .schema.json extension 
         // this way we guarantee that the schema name is unique
         var schemaName = project.Name + FileNames.Extensions.SchemaJson;
 
-        // the schemas folder is in the root of the repository under .confix/schemas
+        // the schemas folder is in the root of the solution under .confix/schemas
         var schemasFolder = directory.GetSchemasFolder().EnsureFolder().FullName;
 
         return new FileInfo(Path.Combine(schemasFolder, schemaName));

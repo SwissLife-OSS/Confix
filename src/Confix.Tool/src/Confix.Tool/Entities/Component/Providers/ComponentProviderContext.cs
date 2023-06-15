@@ -10,19 +10,19 @@ public class ComponentProviderContext
         IConsoleLogger logger,
         CancellationToken cancellationToken,
         ProjectDefinition project,
-        RepositoryDefinition repository)
+        SolutionDefinition solution)
     {
         Logger = logger;
         CancellationToken = cancellationToken;
         Project = project;
-        Repository = repository;
+        Solution = solution;
     }
 
     /// <inheritdoc />
     public ProjectDefinition Project { get; }
 
     /// <inheritdoc />
-    public RepositoryDefinition Repository { get; }
+    public SolutionDefinition Solution { get; }
 
     /// <inheritdoc />
     public IConsoleLogger Logger { get; }

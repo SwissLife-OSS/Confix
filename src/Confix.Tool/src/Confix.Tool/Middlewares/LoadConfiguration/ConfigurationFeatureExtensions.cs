@@ -25,15 +25,15 @@ public static class ConfigurationFeatureExtensions
         return project;
     }
 
-    public static RepositoryDefinition EnsureRepository(this ConfigurationFeature configuration)
+    public static SolutionDefinition EnsureSolution(this ConfigurationFeature configuration)
     {
-        if (configuration.Repository is not { } repository)
+        if (configuration.Solution is not { } solution)
         {
-            App.Log.NoRepositoryWasFound();
+            App.Log.NoSolutionWasFound();
             throw new ExitException();
         }
 
-        return repository;
+        return solution;
     }
 }
 
@@ -49,8 +49,8 @@ file static class Log
         console.Error("No project was found");
     }
 
-    public static void NoRepositoryWasFound(this IConsoleLogger console)
+    public static void NoSolutionWasFound(this IConsoleLogger console)
     {
-        console.Error("No repository was found");
+        console.Error("No solution was found");
     }
 }

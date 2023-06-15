@@ -9,13 +9,13 @@ public class ConfigurationFeature
         IConfigurationFileCollection configurationFiles,
         ProjectDefinition? project,
         ComponentDefinition? component,
-        RepositoryDefinition? repository)
+        SolutionDefinition? solution)
     {
         Scope = scope;
         ConfigurationFiles = configurationFiles;
         Project = project;
         Component = component;
-        Repository = repository;
+        Solution = solution;
     }
 
     public ConfigurationScope Scope { get; }
@@ -26,5 +26,5 @@ public class ConfigurationFeature
 
     public ComponentDefinition? Component { get; }
 
-    public RepositoryDefinition? Repository { get; }
+    public SolutionDefinition? Solution { get; }
 }

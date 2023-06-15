@@ -5,5 +5,5 @@ public enum ConfigurationScope
     None,
     Component,
     Project,
-    Repository
+    Solution
 }

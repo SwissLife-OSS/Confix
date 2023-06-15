@@ -10,7 +10,7 @@ public interface IComponentProviderContext
 {
     ProjectDefinition Project { get; }
 
-    RepositoryDefinition Repository { get; }
+    SolutionDefinition Solution { get; }
 
     /// <inheritdoc cref="Logger{T}"/>>
     IConsoleLogger Logger { get; }

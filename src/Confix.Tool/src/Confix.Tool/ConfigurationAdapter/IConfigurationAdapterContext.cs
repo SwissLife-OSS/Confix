@@ -9,7 +9,7 @@ public interface IConfigurationAdapterContext
 
     IReadOnlyList<JsonSchemaDefinition> Schemas { get; }
 
-    DirectoryInfo RepositoryRoot { get; }
+    DirectoryInfo SolutionRoot { get; }
 
     IConsoleLogger Logger { get; }
 }

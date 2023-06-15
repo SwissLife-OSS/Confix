@@ -42,7 +42,7 @@ public class ReloadCommandPipeline : Pipeline
 
                 break;
 
-            case ConfigurationScope.Repository:
+            case ConfigurationScope.Solution:
                 break;
 
             default:
