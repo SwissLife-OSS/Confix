@@ -1,7 +1,7 @@
 namespace Confix.Tool.Common.Pipelines;
 
 /// <inheritdoc />
-public sealed class ExecutionContext : IExecutionContext
+public sealed record ExecutionContext : IExecutionContext
 {
     /// <summary>
     /// initializes a new instance of <see cref="ExecutionContext"/>
@@ -13,10 +13,10 @@ public sealed class ExecutionContext : IExecutionContext
     }
 
     /// <inheritdoc />
-    public DirectoryInfo CurrentDirectory { get; }
+    public DirectoryInfo CurrentDirectory { get; init; }
 
     /// <inheritdoc />
-    public DirectoryInfo HomeDirectory { get; }
+    public DirectoryInfo HomeDirectory { get; init; }
 
     /// <summary>
     /// Creates a new execution context using the current directory and home directory from the

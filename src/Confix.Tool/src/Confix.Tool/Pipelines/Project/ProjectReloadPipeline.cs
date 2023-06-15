@@ -1,4 +1,3 @@
-using System.CommandLine;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
@@ -10,12 +9,12 @@ using Confix.Tool.Schema;
 
 namespace Confix.Tool.Commands.Project;
 
-public sealed class ProjectReloadCommand : Command
+public sealed class ProjectReloadPipeline : Pipeline
 {
-    public ProjectReloadCommand() : base("reload")
+    /// <inheritdoc />
+    protected override void Configure(IPipelineDescriptor builder)
     {
-        this
-            .AddPipeline()
+        builder
             .Use<LoadConfigurationMiddleware>()
             .UseConfigurationFiles()
             .UseEnvironment()
@@ -24,8 +23,6 @@ public sealed class ProjectReloadCommand : Command
             .Use<ConfigurationAdapterMiddleware>()
             .Use<BuildComponentProviderMiddleware>()
             .UseHandler<IProjectComposer, ISchemaStore>(InvokeAsync);
-
-        Description = "Reloads the schema of a project";
     }
 
     private static async Task InvokeAsync(
@@ -72,7 +69,7 @@ public sealed class ProjectReloadCommand : Command
         {
             Project = project,
             Repository = repository.Directory!,
-            FileMatch = files.Select(x => x.File.RelativeTo(project.Directory!)).ToList(),
+            FileMatch = files.Select(x => x.File.RelativeTo(repository.Directory!)).ToList(),
             SchemaFile = schemaFile,
             RelativePathToProject =
                 Path.GetRelativePath(repository.Directory!.FullName, project.Directory!.FullName)

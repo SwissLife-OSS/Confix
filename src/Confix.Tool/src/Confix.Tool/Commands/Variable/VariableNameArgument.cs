@@ -6,8 +6,6 @@ internal sealed class VariableNameArgument : Argument<string>
 {
     public static VariableNameArgument Instance { get; } = new();
 
-    public override Type ValueType => base.ValueType;
-
     private VariableNameArgument()
         : base("name")
     {
