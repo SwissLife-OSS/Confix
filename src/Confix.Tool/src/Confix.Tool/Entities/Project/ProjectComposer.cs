@@ -10,9 +10,11 @@ namespace Confix.Tool.Entities.Components.DotNet;
 public sealed class ProjectComposer
     : IProjectComposer
 {
-    private static class WellKnown{
+    private static class WellKnown
+    {
         public const string ConfixVariables = "Confix_Variables";
     }
+
     public JsonSchema Compose(IEnumerable<Component> components, IEnumerable<VariablePath> variables)
     {
         var enumeratedComponents = components.ToArray();

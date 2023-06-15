@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using Json.Schema;
@@ -19,7 +20,7 @@ public sealed class VariableIntellisenseRewriter : JsonDocumentRewriter<Variable
     {
         string? typeName = obj
             .Where(x => x.Key == TypeKeyword.Name)
-            .Select(x => (string)x.Value!)
+            .Select(x => $"{x.Value}")
             .SingleOrDefault();
 
         return typeName switch
