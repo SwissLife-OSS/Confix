@@ -1,34 +1,7 @@
 ﻿{
-  "Component": {
-    "Name": "TestComponent",
-    "Inputs": [
-      {
-        "Type": "graphql",
-        "Value": {
-          "type": "graphql",
-          "additional": "property"
-        }
-      },
-      {
-        "Type": "dotnet",
-        "Value": {
-          "type": "dotnet",
-          "additional2": "property"
-        }
-      }
-    ],
-    "Outputs": [
-      {
-        "Type": "schema",
-        "Value": {
-          "type": "schema",
-          "additional2": "property"
-        }
-      }
-    ]
-  },
+  "Component": null,
   "Project": {
-    "Name": "project",
+    "Name": "__Default",
     "Environments": [
       {
         "Name": "dev",
@@ -39,7 +12,7 @@
         "Enabled": false
       },
       {
-        "Name": "uat",
+        "Name": "prod",
         "ExcludeFiles": [
           "a"
         ],
@@ -47,7 +20,7 @@
         "Enabled": false
       },
       {
-        "Name": "prod",
+        "Name": "uat",
         "ExcludeFiles": [
           "a"
         ],

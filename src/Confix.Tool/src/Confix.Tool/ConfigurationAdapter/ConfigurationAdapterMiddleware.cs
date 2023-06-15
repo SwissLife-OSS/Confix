@@ -19,9 +19,9 @@ public sealed class ConfigurationAdapterMiddleware : IMiddleware
     public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         var configuration = context.Features.Get<ConfigurationFeature>();
-        if (!configuration.TryGetRepository(out var repositoryFile))
+        if (!configuration.TryGetSolution(out var solutionFile))
         {
-            context.Logger.NoRepositoryFileFound();
+            context.Logger.NoSolutionFileFound();
             throw new ExitException();
         }
 
@@ -33,7 +33,7 @@ public sealed class ConfigurationAdapterMiddleware : IMiddleware
             Logger = context.Logger,
             CancellationToken = context.CancellationToken,
             Schemas = jsonSchemaFeature.Schemas.ToArray(),
-            RepositoryRoot = repositoryFile.GetDirectory()
+            SolutionRoot = solutionFile.GetDirectory()
         };
 
         context.SetStatus("Updating the schemas configuration for IDE...");
@@ -46,24 +46,24 @@ public sealed class ConfigurationAdapterMiddleware : IMiddleware
 
 file static class Logs
 {
-    public static void NoRepositoryFileFound(this IConsoleLogger logger)
+    public static void NoSolutionFileFound(this IConsoleLogger logger)
     {
         logger.Error(
-            "No repository file found, could not load VSCode Settings. Please make sure that the current directory is a Confix repository.");
+            "No solution file found, could not load VSCode Settings. Please make sure that the current directory is a Confix solution.");
     }
 }
 
 file static class Extensions
 {
-    public static bool TryGetRepository(
+    public static bool TryGetSolution(
         this ConfigurationFeature feature,
-        [NotNullWhen(true)] out FileInfo? repositoryFile)
+        [NotNullWhen(true)] out FileInfo? solutionFile)
     {
-        var repository =
-            feature.ConfigurationFiles.FirstOrDefault(x => x.Name == FileNames.ConfixRepository);
+        var solution =
+            feature.ConfigurationFiles.FirstOrDefault(x => x.Name == FileNames.ConfixSolution);
 
-        repositoryFile = repository;
+        solutionFile = solution;
 
-        return repository is not null;
+        return solution is not null;
     }
 }

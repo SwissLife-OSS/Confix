@@ -9,7 +9,7 @@ public sealed class VsCodeConfigurationAdapter : IConfigurationAdapter
     /// <inheritdoc />
     public async Task UpdateJsonSchemasAsync(IConfigurationAdapterContext context)
     {
-        var settingsFile = context.RepositoryRoot.GetSettingsJson();
+        var settingsFile = context.SolutionRoot.GetSettingsJson();
         settingsFile.Directory!.EnsureFolder();
 
         var vsCodeSettings = VsCodeSettings.From(await ReadSettingsJson(settingsFile));
@@ -33,7 +33,7 @@ public sealed class VsCodeConfigurationAdapter : IConfigurationAdapter
                 ProjectName = schema.Project.Name,
                 ProjectPath = schema.RelativePathToProject,
                 Url = Path
-                    .GetRelativePath(context.RepositoryRoot.FullName, schema.SchemaFile.FullName)
+                    .GetRelativePath(context.SolutionRoot.FullName, schema.SchemaFile.FullName)
             };
 
             vsCodeSettings.Schemas.Add(mapped);

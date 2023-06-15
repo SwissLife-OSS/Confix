@@ -26,7 +26,7 @@
         <PackageIconUrl>https://github.com/SwissLife-OSS/Confix-Reloaded/raw/main/images/logo_small.png</PackageIconUrl>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="../../../../README.md" Pack="true" PackagePath="/"/>
+        <None Include="../../../../README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
 

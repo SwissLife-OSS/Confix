@@ -19,7 +19,7 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
         context.Logger.StartLoadingComponents(context.Project.Name);
 
         var projectDirectory = context.EnsureProject();
-        context.EnsureRepository();
+        context.EnsureSolution();
 
         var csproj = DotnetHelpers.FindProjectFileInPath(projectDirectory);
 
@@ -208,11 +208,11 @@ file static class Extensions
         throw new ExitException($"Could not find directory for project: {project.Name}");
     }
 
-    public static DirectoryInfo EnsureRepository(this IComponentProviderContext context)
+    public static DirectoryInfo EnsureSolution(this IComponentProviderContext context)
     {
-        if (context.Repository.Directory is not { Exists: true } directoryInfo)
+        if (context.Solution.Directory is not { Exists: true } directoryInfo)
         {
-            throw new ExitException("A repository directory is required to load components");
+            throw new ExitException("A solution directory is required to load components");
         }
 
         return directoryInfo;

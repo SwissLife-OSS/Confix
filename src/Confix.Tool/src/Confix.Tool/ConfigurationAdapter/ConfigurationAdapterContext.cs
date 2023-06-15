@@ -10,7 +10,7 @@ public sealed class ConfigurationAdapterContext
 
     public required IReadOnlyList<JsonSchemaDefinition> Schemas { get; init; }
 
-    public required DirectoryInfo RepositoryRoot { get; init; }
+    public required DirectoryInfo SolutionRoot { get; init; }
 
     public required IConsoleLogger Logger { get; init; }
 }

@@ -6,6 +6,8 @@ using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Schema;
+using HotChocolate;
+using Path = System.IO.Path;
 
 namespace Confix.Tool.Commands.Project;
 
@@ -41,13 +43,13 @@ public sealed class ProjectReloadPipeline : Pipeline
         configuration.EnsureProjectScope();
 
         var project = configuration.EnsureProject();
-        var repository = configuration.EnsureRepository();
+        var solution = configuration.EnsureSolution();
 
         var componentProvider =
             context.Features.Get<ComponentProviderExecutorFeature>().Executor;
 
         var providerContext =
-            new ComponentProviderContext(context.Logger, cancellationToken, project, repository);
+            new ComponentProviderContext(context.Logger, cancellationToken, project, solution);
 
         context.SetStatus("Loading components...");
         await componentProvider.ExecuteAsync(providerContext);
@@ -63,16 +65,16 @@ public sealed class ProjectReloadPipeline : Pipeline
         context.Logger.LogSchemaCompositionCompleted(project);
 
         var schemaFile = await schemaStore
-            .StoreAsync(repository, project, jsonSchema, cancellationToken);
+            .StoreAsync(solution, project, jsonSchema, cancellationToken);
 
         var jsonSchemaDefinition = new JsonSchemaDefinition()
         {
             Project = project,
-            Repository = repository.Directory!,
-            FileMatch = files.Select(x => x.File.RelativeTo(repository.Directory!)).ToList(),
+            Solution = solution.Directory!,
+            FileMatch = files.Select(x => x.File.RelativeTo(solution.Directory!)).ToList(),
             SchemaFile = schemaFile,
             RelativePathToProject =
-                Path.GetRelativePath(repository.Directory!.FullName, project.Directory!.FullName)
+                Path.GetRelativePath(solution.Directory!.FullName, project.Directory!.FullName)
         };
 
         jsonSchemas.Schemas.Add(jsonSchemaDefinition);

@@ -54,6 +54,6 @@ file static class Log
     public static void LoadedComponentProvider(this IConsoleLogger console)
     {
         console.Warning(
-            "No component providers loaded because no component providers were defined. You can define component providers in the 'confix.json' or the 'confix.repository' file.");
+            "No component providers loaded because no component providers were defined. You can define component providers in the 'confix.json' or the 'confix.solution' file.");
     }
 }

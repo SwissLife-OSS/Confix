@@ -3,110 +3,59 @@
     "Security_Configuration": {
       "type": "object",
       "properties": {
-        "Authority": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        },
+        "Authority": { "$ref": "#/$defs/Security_String", "deprecated": false },
         "OpenIdConnectClient": {
           "anyOf": [
-            {
-              "$ref": "#/$defs/Security_OpenIdConnectClient"
-            },
-            {
-              "type": "null"
-            }
+            { "$ref": "#/$defs/Security_OpenIdConnectClient" },
+            { "type": "null" }
           ],
           "deprecated": false
         },
         "Cors": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_Cors"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_Cors" }, { "type": "null" }],
           "deprecated": false
         },
         "TokenClients": {
           "anyOf": [
             {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Confix_Variables"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/Security_TokenClient"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/$defs/Security_TokenClient" },
+                  { "type": "null" }
+                ]
+              }
             },
-            {
-              "type": "null"
-            }
+            { "type": "null" }
           ],
           "deprecated": false
         },
         "HttpClients": {
           "anyOf": [
             {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Confix_Variables"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/Security_HttpClient"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/$defs/Security_HttpClient" },
+                  { "type": "null" }
+                ]
+              }
             },
-            {
-              "type": "null"
-            }
+            { "type": "null" }
           ],
           "deprecated": false
         }
       },
-      "required": [
-        "Authority"
-      ],
+      "required": ["Authority"],
       "additionalProperties": false
     },
     "Security_OpenIdConnectClient": {
       "type": "object",
       "properties": {
-        "ClientId": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        },
-        "Secret": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        }
+        "ClientId": { "$ref": "#/$defs/Security_String", "deprecated": false },
+        "Secret": { "$ref": "#/$defs/Security_String", "deprecated": false }
       },
-      "required": [
-        "ClientId",
-        "Secret"
-      ],
+      "required": ["ClientId", "Secret"],
       "additionalProperties": false
     },
     "Security_Authorization": {
@@ -117,50 +66,28 @@
           "deprecated": false
         }
       },
-      "required": [
-        "PathPolicy"
-      ],
+      "required": ["PathPolicy"],
       "additionalProperties": false
     },
     "Security_PathPolicy": {
       "type": "object",
       "properties": {
         "GlobalRequiredScopes": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Policies": {
           "anyOf": [
             {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Confix_Variables"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/Security_Policy"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/$defs/Security_Policy" },
+                  { "type": "null" }
+                ]
+              }
             },
-            {
-              "type": "null"
-            }
+            { "type": "null" }
           ],
           "deprecated": false
         }
@@ -171,89 +98,43 @@
     "Security_Policy": {
       "type": "object",
       "properties": {
-        "Path": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        },
+        "Path": { "$ref": "#/$defs/Security_String", "deprecated": false },
         "Requirements": {
           "anyOf": [
             {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Confix_Variables"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/Security_Requirement"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/$defs/Security_Requirement" },
+                  { "type": "null" }
+                ]
+              }
             },
-            {
-              "type": "null"
-            }
+            { "type": "null" }
           ],
           "deprecated": false
         },
         "Mode": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         }
       },
-      "required": [
-        "Path"
-      ],
+      "required": ["Path"],
       "additionalProperties": false
     },
     "Security_Requirement": {
       "type": "object",
       "properties": {
         "Type": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Name": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Value": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         }
       },
@@ -264,25 +145,11 @@
       "type": "object",
       "properties": {
         "OriginMatch": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "PreflightMaxAge": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         }
       },
@@ -292,610 +159,186 @@
     "Security_TokenClient": {
       "type": "object",
       "properties": {
-        "Name": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        },
+        "Name": { "$ref": "#/$defs/Security_String", "deprecated": false },
         "Authority": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "ClientId": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Secret": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Scopes": {
           "anyOf": [
             {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Confix_Variables"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/Security_String"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/$defs/Security_String" },
+                  { "type": "null" }
+                ]
+              }
             },
-            {
-              "type": "null"
-            }
+            { "type": "null" }
           ],
           "deprecated": false
         },
         "GrantType": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Username": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "PersonalAccessToken": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         }
       },
-      "required": [
-        "Name"
-      ],
+      "required": ["Name"],
       "additionalProperties": false
     },
     "Security_HttpClient": {
       "type": "object",
       "properties": {
-        "Name": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        },
-        "Url": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        },
+        "Name": { "$ref": "#/$defs/Security_String", "deprecated": false },
+        "Url": { "$ref": "#/$defs/Security_String", "deprecated": false },
         "Timeout": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Authentication": {
           "anyOf": [
-            {
-              "$ref": "#/$defs/Security_HttpClientAuthentication"
-            },
-            {
-              "type": "null"
-            }
+            { "$ref": "#/$defs/Security_HttpClientAuthentication" },
+            { "type": "null" }
           ],
           "deprecated": false
         },
         "Policies": {
           "anyOf": [
-            {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Confix_Variables"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/$defs/Security_String"
-                  }
-                }
-              ]
-            },
-            {
-              "type": "null"
-            }
+            { "type": "array", "items": { "$ref": "#/$defs/Security_String" } },
+            { "type": "null" }
           ],
           "deprecated": false
         }
       },
-      "required": [
-        "Name",
-        "Url"
-      ],
+      "required": ["Name", "Url"],
       "additionalProperties": false
     },
     "Security_HttpClientAuthentication": {
       "type": "object",
       "properties": {
-        "Mode": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        },
+        "Mode": { "$ref": "#/$defs/Security_String", "deprecated": false },
         "TokenClientName": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Certificate": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Username": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "Password": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_String" }, { "type": "null" }],
           "deprecated": false
         },
         "CustomHeaders": {
           "anyOf": [
             {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Confix_Variables"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/Security_CustomHeader"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/$defs/Security_CustomHeader" },
+                  { "type": "null" }
+                ]
+              }
             },
-            {
-              "type": "null"
-            }
+            { "type": "null" }
           ],
           "deprecated": false
         }
       },
-      "required": [
-        "Mode"
-      ],
+      "required": ["Mode"],
       "additionalProperties": false
     },
     "Security_CustomHeader": {
       "type": "object",
       "properties": {
-        "Name": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        },
-        "Value": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        }
+        "Name": { "$ref": "#/$defs/Security_String", "deprecated": false },
+        "Value": { "$ref": "#/$defs/Security_String", "deprecated": false }
       },
-      "required": [
-        "Name",
-        "Value"
-      ],
+      "required": ["Name", "Value"],
       "additionalProperties": false
     },
     "Security_String": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Confix_Variables"
-        },
-        {
-          "type": "string",
-          "hasVariable": true,
-          "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
-        }
-      ]
+      "type": "string",
+      "hasVariable": true,
+      "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
     },
     "Security_Boolean": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Confix_Variables"
-        },
-        {
-          "type": "boolean",
-          "hasVariable": true,
-          "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
-        }
-      ]
+      "type": "boolean",
+      "hasVariable": true,
+      "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
     },
     "Security": {
       "properties": {
-        "Authority": {
-          "$ref": "#/$defs/Security_String",
-          "deprecated": false
-        },
+        "Authority": { "$ref": "#/$defs/Security_String", "deprecated": false },
         "OpenIdConnectClient": {
           "anyOf": [
-            {
-              "$ref": "#/$defs/Security_OpenIdConnectClient"
-            },
-            {
-              "type": "null"
-            }
+            { "$ref": "#/$defs/Security_OpenIdConnectClient" },
+            { "type": "null" }
           ],
           "deprecated": false
         },
         "Cors": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_Cors"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "anyOf": [{ "$ref": "#/$defs/Security_Cors" }, { "type": "null" }],
           "deprecated": false
         },
         "TokenClients": {
           "anyOf": [
             {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Confix_Variables"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/Security_TokenClient"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/$defs/Security_TokenClient" },
+                  { "type": "null" }
+                ]
+              }
             },
-            {
-              "type": "null"
-            }
+            { "type": "null" }
           ],
           "deprecated": false
         },
         "HttpClients": {
           "anyOf": [
             {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Confix_Variables"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/Security_HttpClient"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "$ref": "#/$defs/Security_HttpClient" },
+                  { "type": "null" }
+                ]
+              }
             },
-            {
-              "type": "null"
-            }
+            { "type": "null" }
           ],
           "deprecated": false
         }
       },
-      "required": [
-        "Authority"
-      ],
+      "required": ["Authority"],
       "additionalProperties": false,
       "examples": [],
       "title": ""
-    },
-    "DataProtection_Configuration": {
-      "type": "object",
-      "properties": {
-        "Mode": {
-          "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
-        },
-        "Storage": {
-          "$ref": "#/$defs/DataProtection_DpStorageConfiguration",
-          "deprecated": false
-        },
-        "KeyVault": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/DataProtection_DpKeyVaultConfiguration"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "deprecated": false
-        }
-      },
-      "required": [
-        "Mode",
-        "Storage"
-      ],
-      "additionalProperties": false
-    },
-    "DataProtection_DpStorageConfiguration": {
-      "type": "object",
-      "properties": {
-        "ConnectionString": {
-          "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
-        },
-        "Path": {
-          "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
-        }
-      },
-      "required": [
-        "ConnectionString",
-        "Path"
-      ],
-      "additionalProperties": false
-    },
-    "DataProtection_DpKeyVaultConfiguration": {
-      "type": "object",
-      "properties": {
-        "ClientId": {
-          "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
-        },
-        "Secret": {
-          "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
-        },
-        "KeyUrl": {
-          "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
-        }
-      },
-      "required": [
-        "ClientId",
-        "Secret",
-        "KeyUrl"
-      ],
-      "additionalProperties": false
-    },
-    "DataProtection_String": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Confix_Variables"
-        },
-        {
-          "type": "string",
-          "hasVariable": true,
-          "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
-        }
-      ]
-    },
-    "DataProtection_Boolean": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Confix_Variables"
-        },
-        {
-          "type": "boolean",
-          "hasVariable": true,
-          "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
-        }
-      ]
-    },
-    "DataProtection": {
-      "properties": {
-        "Mode": {
-          "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
-        },
-        "Storage": {
-          "$ref": "#/$defs/DataProtection_DpStorageConfiguration",
-          "deprecated": false
-        },
-        "KeyVault": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/DataProtection_DpKeyVaultConfiguration"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "deprecated": false
-        }
-      },
-      "required": [
-        "Mode",
-        "Storage"
-      ],
-      "additionalProperties": false,
-      "examples": [],
-      "title": ""
-    },
-    "Other_Configuration": {
-      "type": "object",
-      "properties": {
-        "Other": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Other_Other"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "deprecated": false
-        }
-      },
-      "required": [],
-      "additionalProperties": false
-    },
-    "Other_Other": {
-      "type": "object",
-      "properties": {
-        "Foo": {
-          "$ref": "#/$defs/Other_String",
-          "deprecated": false
-        }
-      },
-      "required": [
-        "Foo"
-      ],
-      "additionalProperties": false
-    },
-    "Other_String": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Confix_Variables"
-        },
-        {
-          "type": "string",
-          "hasVariable": true,
-          "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
-        }
-      ]
-    },
-    "Other_Boolean": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Confix_Variables"
-        },
-        {
-          "type": "boolean",
-          "hasVariable": true,
-          "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
-        }
-      ]
-    },
-    "Other": {
-      "properties": {
-        "Other": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Other_Other"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "deprecated": false
-        }
-      },
-      "required": [],
-      "additionalProperties": false,
-      "examples": [],
-      "title": ""
-    },
-    "Confix_Variables": {
-      "type": "string",
-      "enum": [
-        "$local:foo.bar",
-        "$local:test"
-      ]
     }
   },
-  "properties": {
-    "Security": {
-      "$ref": "#/$defs/Security"
-    },
-    "DataProtection": {
-      "$ref": "#/$defs/DataProtection"
-    },
-    "Other": {
-      "$ref": "#/$defs/Other"
-    }
-  },
-  "required": [
-    "Security",
-    "DataProtection",
-    "Other"
-  ]
+  "properties": { "Security": { "$ref": "#/$defs/Security" } },
+  "required": ["Security"]
 }

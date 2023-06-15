@@ -12,7 +12,7 @@ public sealed class JsonSchemaDefinition
 
     public required FileInfo SchemaFile { get; set; }
 
-    public required DirectoryInfo Repository { get; set; }
+    public required DirectoryInfo Solution { get; set; }
 
     public required string RelativePathToProject { get; set; }
 
