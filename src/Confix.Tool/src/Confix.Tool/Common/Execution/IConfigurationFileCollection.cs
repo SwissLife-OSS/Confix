@@ -9,7 +9,7 @@ namespace Confix.Tool.Middlewares;
 /// <p>
 /// Represents a collection of configuration files with different scopes, each file being a .confix
 /// file relevant to the current execution context. The interface provides access to the runtime,
-/// repository, project, and component configurations which are the merged configurations of their
+/// solution, project, and component configurations which are the merged configurations of their
 /// respective .confix files.
 /// </p>
 /// <p>
@@ -29,16 +29,16 @@ public interface IConfigurationFileCollection : IReadOnlyList<JsonFile>
     RuntimeConfiguration? RuntimeConfiguration { get; }
 
     /// <summary>
-    /// Gets the repository configuration file. This is the merged .confix.repository file, if
-    /// available, including related repository settings from the
+    /// Gets the solution configuration file. This is the merged .confix.solution file, if
+    /// available, including related solution settings from the
     /// <see cref="FileNames.ConfixRc"/> file.
     /// </summary>
-    RepositoryConfiguration? Repository { get; }
+    SolutionConfiguration? Solution { get; }
 
     /// <summary>
     /// Gets the project configuration file. This is the merged
     /// <see cref="FileNames.ConfixProject"/> file, if available, including related project settings
-    /// from the <see cref="FileNames.ConfixRc"/> file and <see cref="FileNames.ConfixRepository"/>
+    /// from the <see cref="FileNames.ConfixRc"/> file and <see cref="FileNames.ConfixSolution"/>
     /// configuration.
     /// </summary>
     ProjectConfiguration? Project { get; }
@@ -46,7 +46,7 @@ public interface IConfigurationFileCollection : IReadOnlyList<JsonFile>
     /// <summary>
     /// Gets the component configuration file. This is the .confix.component file of the current
     /// component, if available, including related settings from the
-    /// <see cref="FileNames.ConfixRc"/> file, project, and repository configurations.
+    /// <see cref="FileNames.ConfixRc"/> file, project, and solution configurations.
     /// </summary>
     ComponentConfiguration? Component { get; }
 }

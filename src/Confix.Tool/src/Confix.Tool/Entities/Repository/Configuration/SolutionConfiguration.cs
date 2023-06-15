@@ -5,7 +5,7 @@ using Confix.Utilities.Json;
 
 namespace Confix.Tool.Abstractions.Configuration;
 
-public sealed class RepositoryConfiguration
+public sealed class SolutionConfiguration
 {
     private static class FieldNames
     {
@@ -13,7 +13,7 @@ public sealed class RepositoryConfiguration
         public const string Project = "project";
     }
 
-    public RepositoryConfiguration(
+    public SolutionConfiguration(
         ProjectConfiguration? project,
         ComponentConfiguration? component,
         IReadOnlyList<JsonFile> sourceFiles)
@@ -29,12 +29,12 @@ public sealed class RepositoryConfiguration
 
     public IReadOnlyList<JsonFile> SourceFiles { get; }
 
-    public static RepositoryConfiguration Parse(JsonNode? node)
+    public static SolutionConfiguration Parse(JsonNode? node)
     {
         return Parse(node, Array.Empty<JsonFile>());
     }
 
-    public static RepositoryConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> sourceFiles)
+    public static SolutionConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> sourceFiles)
     {
         var obj = node.ExpectObject();
 
@@ -46,10 +46,10 @@ public sealed class RepositoryConfiguration
             ? ProjectConfiguration.Parse(projectNode.ExpectObject())
             : null;
 
-        return new RepositoryConfiguration(project, component, sourceFiles);
+        return new SolutionConfiguration(project, component, sourceFiles);
     }
 
-    public RepositoryConfiguration Merge(RepositoryConfiguration? other)
+    public SolutionConfiguration Merge(SolutionConfiguration? other)
     {
         if (other is null)
         {
@@ -62,12 +62,13 @@ public sealed class RepositoryConfiguration
 
         var sourceFiles = SourceFiles.Concat(other.SourceFiles).Distinct().ToArray();
 
-        return new RepositoryConfiguration(project, component, sourceFiles);
+        return new SolutionConfiguration(project, component, sourceFiles);
     }
 
-    public static RepositoryConfiguration? LoadFromFiles(IEnumerable<JsonFile> files)
+
+    public static SolutionConfiguration? LoadFromFiles(IEnumerable<JsonFile> files)
     {
-        var confixRc = files.FirstOrDefault(x => x.File.Name == FileNames.ConfixRepository);
+        var confixRc = files.FirstOrDefault(x => x.File.Name == FileNames.ConfixSolution);
         if (confixRc is null)
         {
             return null;

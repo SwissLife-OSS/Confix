@@ -54,6 +54,6 @@ file static class Log
     public static void LoadedComponentInput(this IConsoleLogger console)
     {
         console.Warning(
-            "No component inputs loaded because no component inputs were defined. You can define component inputs in the 'confix.json' or the 'confix.repository' file.");
+            "No component inputs loaded because no component inputs were defined. You can define component inputs in the 'confix.json' or the 'confix.solution' file.");
     }
 }

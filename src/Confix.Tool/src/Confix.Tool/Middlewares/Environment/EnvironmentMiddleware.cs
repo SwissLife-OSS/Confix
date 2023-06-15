@@ -8,7 +8,12 @@ public sealed class EnvironmentMiddleware : IMiddleware
 {
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
-        EnvironmentDefinition activeEnvironment = ResolveFromArgument(context) ?? ResolveFromConfiguration(context);
+        if (context.Features.TryGet(out EnvironmentFeature _))
+        {
+            return next(context);
+        }
+
+        var activeEnvironment = ResolveFromArgument(context) ?? ResolveFromConfiguration(context);
 
         context.Logger.EnvironmentResolved(activeEnvironment.Name);
         context.Features.Set(new EnvironmentFeature(activeEnvironment));
@@ -21,22 +26,25 @@ public sealed class EnvironmentMiddleware : IMiddleware
         if (context.Parameter.TryGet(ActiveEnvironmentOption.Instance, out string environmentName))
         {
             if (context.Features.Get<ConfigurationFeature>()
-                .Project?
-                .Environments
-                .FirstOrDefault(e => e.Name.Equals(environmentName)) is { } env)
+                    .Project?
+                    .Environments
+                    .FirstOrDefault(e => e.Name.Equals(environmentName)) is { } env)
             {
                 return env;
             }
+
             context.Logger.EnvironmentNotFound(environmentName);
             throw InvalidEnvironmentConfiguration();
         }
+
         return null;
     }
 
     private static EnvironmentDefinition ResolveFromConfiguration(IMiddlewareContext context)
     {
         ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
-        var enabledEnvironments = configurationFeature.Project?.Environments.Where(e => e.Enabled).ToArray()
+        var enabledEnvironments =
+            configurationFeature.Project?.Environments.Where(e => e.Enabled).ToArray()
             ?? Array.Empty<EnvironmentDefinition>();
 
         if (enabledEnvironments.Length == 0)
@@ -44,15 +52,14 @@ public sealed class EnvironmentMiddleware : IMiddleware
             context.Logger.EnvironmentNotSet();
             throw InvalidEnvironmentConfiguration();
         }
-        else if (enabledEnvironments.Length == 1)
+
+        if (enabledEnvironments.Length == 1)
         {
             return enabledEnvironments[0];
         }
-        else
-        {
-            context.Logger.MultipleActiveEnvironments();
-            throw InvalidEnvironmentConfiguration();
-        }
+
+        context.Logger.MultipleActiveEnvironments();
+        throw InvalidEnvironmentConfiguration();
     }
 
     private static ExitException InvalidEnvironmentConfiguration()
@@ -63,6 +70,7 @@ file static class Log
 {
     public static void EnvironmentResolved(this IConsoleLogger console, string environment)
         => console.Success("Active Environment is {0}", environment.AsHighlighted());
+
     public static void EnvironmentNotFound(this IConsoleLogger console, string environment)
         => console.Error("No environment with name {0} configured", environment.AsHighlighted());
 
@@ -70,5 +78,6 @@ file static class Log
         => console.Error("Multiple Environments are marked as active");
 
     public static void EnvironmentNotSet(this IConsoleLogger console)
-        => console.Error($"No active environment set. Use --environment or set one environment in .confixrc as active");
+        => console.Error(
+            $"No active environment set. Use --environment or set one environment in .confixrc as active");
 }

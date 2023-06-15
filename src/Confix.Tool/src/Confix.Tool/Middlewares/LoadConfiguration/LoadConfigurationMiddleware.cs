@@ -23,7 +23,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
 
         context.SetStatus("Loading configuration...");
 
-        var configurationFiles =  context.LoadConfigurationFiles(context.CancellationToken).ToBlockingEnumerable();
+        var configurationFiles = context.LoadConfigurationFiles(context.CancellationToken).ToBlockingEnumerable();
         var configurationFilesWithReplacedMagicStrings = ReplaceMagicStrings(context, configurationFiles);
         var fileCollection = CreateFileCollection(configurationFilesWithReplacedMagicStrings);
 
@@ -31,7 +31,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         {
             FileNames.ConfixComponent => ConfigurationScope.Component,
             FileNames.ConfixProject => ConfigurationScope.Project,
-            FileNames.ConfixRepository => ConfigurationScope.Repository,
+            FileNames.ConfixSolution => ConfigurationScope.Solution,
             _ => ConfigurationScope.None
         };
 
@@ -45,8 +45,8 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
             ? ComponentDefinition.From(fileCollection.Component)
             : null;
 
-        var repositoryDefinition = fileCollection.Repository is not null
-            ? RepositoryDefinition.From(fileCollection.Repository)
+        var solutionDefinition = fileCollection.Solution is not null
+            ? SolutionDefinition.From(fileCollection.Solution)
             : null;
 
         var feature = new ConfigurationFeature(
@@ -54,7 +54,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
             fileCollection,
             projectDefinition,
             componentDefinition,
-            repositoryDefinition);
+            solutionDefinition);
 
         context.Features.Set(feature);
 
@@ -68,39 +68,39 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         var files = new List<JsonFile>(configurationFiles);
 
         var confixConfiguration = RuntimeConfiguration.LoadFromFiles(files);
-        var repositoryConfiguration = RepositoryConfiguration.LoadFromFiles(files);
+        var solutionConfiguration = SolutionConfiguration.LoadFromFiles(files);
 
-        if (repositoryConfiguration is not null &&
+        if (solutionConfiguration is not null &&
             confixConfiguration is { Project: not null } or { Component: not null })
         {
-            App.Log.MergedConfigurationFiles(FileNames.ConfixRepository, FileNames.ConfixRc);
+            App.Log.MergedConfigurationFiles(FileNames.ConfixSolution, FileNames.ConfixRc);
 
-            repositoryConfiguration = new RepositoryConfiguration(
+            solutionConfiguration = new SolutionConfiguration(
                     confixConfiguration.Project,
                     confixConfiguration.Component,
                     confixConfiguration.SourceFiles)
-                .Merge(repositoryConfiguration);
+                .Merge(solutionConfiguration);
         }
 
         var projectConfiguration = ProjectConfiguration.LoadFromFiles(files);
-        var project = repositoryConfiguration?.Project ?? confixConfiguration.Project;
+        var project = solutionConfiguration?.Project ?? confixConfiguration.Project;
         if (project is not null)
         {
-            App.Log.MergedConfigurationFiles(FileNames.ConfixProject, FileNames.ConfixRepository);
+            App.Log.MergedConfigurationFiles(FileNames.ConfixProject, FileNames.ConfixSolution);
             projectConfiguration = project?.Merge(projectConfiguration);
         }
 
         var componentConfiguration = ComponentConfiguration.LoadFromFiles(files);
-        var component = repositoryConfiguration?.Component ?? confixConfiguration.Component;
+        var component = solutionConfiguration?.Component ?? confixConfiguration.Component;
         if (component is not null)
         {
-            App.Log.MergedConfigurationFiles(FileNames.ConfixComponent, FileNames.ConfixRepository);
+            App.Log.MergedConfigurationFiles(FileNames.ConfixComponent, FileNames.ConfixSolution);
             componentConfiguration = component.Merge(componentConfiguration);
         }
 
         return new ConfigurationFileCollection(
             confixConfiguration,
-            repositoryConfiguration,
+            solutionConfiguration,
             projectConfiguration,
             componentConfiguration,
             files);
@@ -110,14 +110,14 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         IMiddlewareContext middlewareContext,
         IEnumerable<JsonFile> configurationFiles)
     {
-        var repositoryFile = configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixRepository);
+        var solutionFile = configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixSolution);
         var projectFile = configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixProject);
 
         foreach (var file in configurationFiles)
         {
             MagicPathContext context = new(
                     middlewareContext.Execution.CurrentDirectory,
-                    repositoryFile?.File.Directory,
+                    solutionFile?.File.Directory,
                     projectFile?.File.Directory,
                     file.File.Directory!);
 
@@ -135,13 +135,13 @@ file sealed class ConfigurationFileCollection
 
     public ConfigurationFileCollection(
         RuntimeConfiguration? configuration,
-        RepositoryConfiguration? repositoryConfiguration,
+        SolutionConfiguration? solutionConfiguration,
         ProjectConfiguration? projectConfiguration,
         ComponentConfiguration? componentConfiguration,
         IReadOnlyList<JsonFile> collection)
     {
         RuntimeConfiguration = configuration;
-        Repository = repositoryConfiguration;
+        Solution = solutionConfiguration;
         Project = projectConfiguration;
         Component = componentConfiguration;
         _collection = collection;
@@ -149,7 +149,7 @@ file sealed class ConfigurationFileCollection
 
     public RuntimeConfiguration? RuntimeConfiguration { get; }
 
-    public RepositoryConfiguration? Repository { get; }
+    public SolutionConfiguration? Solution { get; }
 
     public ProjectConfiguration? Project { get; }
 
@@ -174,28 +174,28 @@ file static class Extensions
 {
     public static async IAsyncEnumerable<JsonFile> LoadConfigurationFiles(
         this IMiddlewareContext context,
-        [EnumeratorCancellation]CancellationToken cancellationToken)
+        [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         foreach (var confixRc in context.LoadConfixRcs())
         {
             yield return await JsonFile.FromFile(confixRc, cancellationToken);
         }
 
-        var repositoryPath =
-            context.Execution.CurrentDirectory.FindInTree(FileNames.ConfixRepository);
+        var solutionPath =
+            context.Execution.CurrentDirectory.FindInTree(FileNames.ConfixSolution);
 
-        if (repositoryPath is not null)
+        if (solutionPath is not null)
         {
-            App.Log.ConfigurationFilesLocated(FileNames.ConfixRepository, repositoryPath);
-            yield return await JsonFile.FromFile(new(repositoryPath), cancellationToken);
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixSolution, solutionPath);
+            yield return await JsonFile.FromFile(new(solutionPath), cancellationToken);
         }
 
         var confixProject = context.Execution.CurrentDirectory.FindInTree(FileNames.ConfixProject);
 
         if (confixProject is not null)
         {
-            App.Log.ConfigurationFilesLocated(FileNames.ConfixRepository, confixProject);
-           yield return await JsonFile.FromFile(new(confixProject), cancellationToken);
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixSolution, confixProject);
+            yield return await JsonFile.FromFile(new(confixProject), cancellationToken);
         }
 
         var confixComponent =
@@ -212,10 +212,10 @@ file static class Extensions
     {
         var confixRcInHome = context.Execution.HomeDirectory.FindInPath(FileNames.ConfixRc, false);
 
-        if (File.Exists(confixRcInHome))
+        if (confixRcInHome?.Exists is true)
         {
-            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInHome);
-            yield return new FileInfo(confixRcInHome);
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInHome.FullName);
+            yield return confixRcInHome;
         }
 
         var confixRcsInTree = context.Execution.CurrentDirectory
@@ -229,8 +229,8 @@ file static class Extensions
                 continue;
             }
 
-            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInTree);
-            yield return new FileInfo(confixRcInTree);
+            App.Log.ConfigurationFilesLocated(FileNames.ConfixRc, confixRcInTree.FullName);
+            yield return confixRcInTree;
         }
     }
 }
@@ -253,7 +253,7 @@ file static class Log
         if (scope is ConfigurationScope.None)
         {
             logger.Warning(
-                "Could not determine configuration scope. This means that no .confix.project, .confix.component or .confix.repository file was found.");
+                "Could not determine configuration scope. This means that no .confix.project, .confix.component or .confix.solution file was found.");
         }
         else
         {

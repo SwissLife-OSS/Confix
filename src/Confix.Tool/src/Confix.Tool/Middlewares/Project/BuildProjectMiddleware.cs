@@ -1,7 +1,6 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
-using Confix.Tool.Schema;
 using Spectre.Console;
 
 namespace Confix.Tool.Middlewares.Project;
@@ -36,6 +35,8 @@ public sealed class BuildProjectMiddleware : IMiddleware
             file.Content = await variableReplacer
                 .RewriteAsync(content, context.CancellationToken);
         }
+
+        await next(context);
     }
 }
 

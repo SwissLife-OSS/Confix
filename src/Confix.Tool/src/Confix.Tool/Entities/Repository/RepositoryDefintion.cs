@@ -4,9 +4,9 @@ using Confix.Tool.Schema;
 
 namespace Confix.Tool.Abstractions;
 
-public sealed class RepositoryDefinition
+public sealed class SolutionDefinition
 {
-    public RepositoryDefinition(
+    public SolutionDefinition(
         ProjectDefinition? project,
         ComponentDefinition? component,
         DirectoryInfo? directory)
@@ -23,10 +23,10 @@ public sealed class RepositoryDefinition
     [JsonIgnore]
     public DirectoryInfo? Directory { get; }
 
-    public static RepositoryDefinition From(RepositoryConfiguration configuration)
+    public static SolutionDefinition From(SolutionConfiguration configuration)
     {
         var lastConfigurationFile =
-            configuration.SourceFiles.LastOrDefault(x => x.File.Name == FileNames.ConfixRepository);
+            configuration.SourceFiles.LastOrDefault(x => x.File.Name == FileNames.ConfixSolution);
 
         var project = configuration.Project is not null
             ? ProjectDefinition.From(configuration.Project)
@@ -36,6 +36,6 @@ public sealed class RepositoryDefinition
             ? ComponentDefinition.From(configuration.Component)
             : null;
 
-        return new RepositoryDefinition(project, component, lastConfigurationFile?.File.Directory);
+        return new SolutionDefinition(project, component, lastConfigurationFile?.File.Directory);
     }
 }

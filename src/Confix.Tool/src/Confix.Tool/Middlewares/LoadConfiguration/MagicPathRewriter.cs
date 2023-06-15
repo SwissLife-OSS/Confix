@@ -6,7 +6,7 @@ namespace Confix.Tool.Middlewares;
 
 public record MagicPathContext(
     DirectoryInfo HomeDirectory,
-    DirectoryInfo? RepositoryDirectory,
+    DirectoryInfo? SolutionDirectory,
     DirectoryInfo? ProjectDirectory,
     DirectoryInfo FileDirectory
 );
@@ -28,7 +28,7 @@ public sealed class MagicPathRewriter : JsonDocumentRewriter<MagicPathContext>
 file enum MagicPath
 {
     Home,
-    Repository,
+    Solution,
     Project,
     File
 }
@@ -42,7 +42,7 @@ file static class MagicPathRewriterExtensions
             return stringValue switch
             {
                 string s when s.StartsWith("$home") => MagicPath.Home,
-                string s when s.StartsWith("$repository") => MagicPath.Repository,
+                string s when s.StartsWith("$repository") => MagicPath.Solution,
                 string s when s.StartsWith("$project") => MagicPath.Project,
                 string s when s.StartsWith("./") || s.StartsWith(".\\") => MagicPath.File,
                 _ => null
@@ -62,8 +62,8 @@ file static class MagicPathRewriterExtensions
             {
                 MagicPath.Home => Path.Combine(context.HomeDirectory.FullName, stringValue),
 
-                MagicPath.Repository when context.RepositoryDirectory is not null
-                    => Path.Combine(context.RepositoryDirectory.FullName, stringValue),
+                MagicPath.Solution when context.SolutionDirectory is not null
+                    => Path.Combine(context.SolutionDirectory.FullName, stringValue),
 
                 MagicPath.Project when context.ProjectDirectory is not null
                     => Path.Combine(context.ProjectDirectory.FullName, stringValue),
@@ -81,7 +81,7 @@ file static class MagicPathRewriterExtensions
         => magicPath switch
         {
             MagicPath.Home => value.Remove(0, "$home".Length),
-            MagicPath.Repository => value.Remove(0, "$repository".Length),
+            MagicPath.Solution => value.Remove(0, "$repository".Length),
             MagicPath.Project => value.Remove(0, "$project".Length),
             _ => value
         };

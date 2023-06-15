@@ -6,7 +6,7 @@ namespace Confix.Tool.Entities.Components.DotNet;
 public interface ISchemaStore
 {
     Task<FileInfo> StoreAsync(
-        RepositoryDefinition repository,
+        SolutionDefinition solution,
         ProjectDefinition project,
         JsonSchema schema,
         CancellationToken cancellationToken);

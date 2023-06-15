@@ -63,7 +63,7 @@ public class RepositoryConfigurationTest : ParserTestBase
     public void Merge_Should_ReturnOriginalConfiguration_When_OtherConfigurationIsNull()
     {
         // Arrange
-        var original = new RepositoryConfiguration(
+        var original = new SolutionConfiguration(
             ProjectConfiguration.Empty,
             new ComponentConfiguration("TestComponent",
                 new List<ComponentInputConfiguration>(),
@@ -83,7 +83,7 @@ public class RepositoryConfigurationTest : ParserTestBase
     public void Merge_Should_ReturnMergedConfiguration_When_OtherConfigurationIsNotNull()
     {
         // Arrange
-        var original = new RepositoryConfiguration(
+        var original = new SolutionConfiguration(
             ProjectConfiguration.Empty,
             new ComponentConfiguration("TestComponent",
                 new List<ComponentInputConfiguration>(),
@@ -91,7 +91,8 @@ public class RepositoryConfigurationTest : ParserTestBase
                 Array.Empty<JsonFile>()
             ),
             Array.Empty<JsonFile>());
-        var other = new RepositoryConfiguration(
+
+        var other = new SolutionConfiguration(
             new ProjectConfiguration("MergedProject",
                 null,
                 null,
@@ -124,17 +125,17 @@ public class RepositoryConfigurationTest : ParserTestBase
         var configuration = Array.Empty<JsonFile>();
 
         // Act
-        var result = RepositoryConfiguration.LoadFromFiles(configuration);
+        var result = SolutionConfiguration.LoadFromFiles(configuration);
 
         // Assert
         Assert.Null(result);
     }
 
     [Fact]
-    public async Task LoadFromFiles_Should_LoadRepositoryConfigurationFromFileAsync()
+    public async Task LoadFromFiles_Should_LoadSolutionConfigurationFromFileAsync()
     {
         // Arrange
-        var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixRepository);
+        var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixSolution);
         File.WriteAllText(confixRcPath,
             """
                 {
@@ -155,7 +156,7 @@ public class RepositoryConfigurationTest : ParserTestBase
         };
 
         // Act
-        var result = RepositoryConfiguration.LoadFromFiles(configuration);
+        var result = SolutionConfiguration.LoadFromFiles(configuration);
 
         // Assert
         Assert.NotNull(result);
@@ -168,6 +169,6 @@ public class RepositoryConfigurationTest : ParserTestBase
 
     public override object Parse(JsonNode json)
     {
-        return RepositoryConfiguration.Parse(json);
+        return SolutionConfiguration.Parse(json);
     }
 }

@@ -6,7 +6,7 @@ using Confix.Tool.Middlewares;
 
 namespace Confix.Tool.Commands;
 
-public sealed class ReloadCommandPipeline : Pipeline
+public class BuildCommandPipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
@@ -19,7 +19,7 @@ public sealed class ReloadCommandPipeline : Pipeline
 
     private static async Task InvokeAsync(IMiddlewareContext context, IServiceProvider services)
     {
-        context.SetStatus("Reloading the schema of the project...");
+        context.SetStatus("Building the schema of the project...");
 
         var configuration = context.Features.Get<ConfigurationFeature>();
 
@@ -31,13 +31,13 @@ public sealed class ReloadCommandPipeline : Pipeline
                 throw new ExitException();
 
             case ConfigurationScope.Component:
-                App.Log.ComponentsDoNotSupportReload();
+                App.Log.ComponentsDoNotSupportBuild();
                 throw new ExitException();
 
             case ConfigurationScope.Project:
             {
                 var projectDirectory = configuration.Project!.Directory!;
-                var pipeline = new ProjectReloadPipeline();
+                var pipeline = new ProjectBuildPipeline();
                 var projectContext = context
                     .WithExecutingDirectory(projectDirectory);
 
@@ -48,7 +48,7 @@ public sealed class ReloadCommandPipeline : Pipeline
             case ConfigurationScope.Solution:
             {
                 var solutionDirectory = configuration.Solution!.Directory!;
-                var pipeline = new SolutionReloadPipeline();
+                var pipeline = new SolutionBuildPipeline();
                 var solutionContext = context
                     .WithExecutingDirectory(solutionDirectory);
 
@@ -72,7 +72,7 @@ file static class Log
             $"No confix context was found in the executing directory: [yellow]{directory}[/]");
     }
 
-    public static void ComponentsDoNotSupportReload(this IConsoleLogger console)
+    public static void ComponentsDoNotSupportBuild(this IConsoleLogger console)
     {
         console.Error(
             "Components do not support reload. `reload` only works for projects and solutions.");

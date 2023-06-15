@@ -13,7 +13,7 @@ public static class FileNames
 
     public const string ConfixProject = ".confix.project";
 
-    public const string ConfixRepository = ".confix.repository";
+    public const string ConfixSolution = ".confix.solution";
 
     public const string ConfixRc = ".confixrc";
 }

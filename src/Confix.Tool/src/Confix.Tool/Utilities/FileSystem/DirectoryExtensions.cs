@@ -1,8 +1,8 @@
 namespace Confix.Tool.Commands.Temp;
 
-public static class DirectroyExtensions
+public static class DirectoryExtensions
 {
-    public static string? FindInPath(
+    public static FileInfo? FindInPath(
         this DirectoryInfo directory,
         string fileName,
         bool recursive = true)
@@ -11,9 +11,10 @@ public static class DirectroyExtensions
                 directory.FullName,
                 fileName,
                 recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+            .Select(x => new FileInfo(x))
             .FirstOrDefault();
 
-    public static IEnumerable<string> FindAllInPath(
+    public static IEnumerable<FileInfo> FindAllInPath(
         this DirectoryInfo directory,
         string pattern,
         bool recursive = true)
@@ -21,7 +22,8 @@ public static class DirectroyExtensions
             .EnumerateFiles(
                 directory.FullName,
                 pattern,
-                recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+            .Select(x => new FileInfo(x));
 
     public static string? FindInTree(this DirectoryInfo directory, string fileName)
     {
@@ -49,7 +51,7 @@ public static class DirectroyExtensions
         }
     }
 
-    public static IEnumerable<string> FindAllInTree(this DirectoryInfo directory, string fileName)
+    public static IEnumerable<FileInfo> FindAllInTree(this DirectoryInfo directory, string fileName)
     {
         if (!directory.Exists)
         {
@@ -63,7 +65,7 @@ public static class DirectroyExtensions
             var file = Path.Combine(currentDirectory, fileName);
             if (File.Exists(file))
             {
-                yield return file;
+                yield return new FileInfo(file);
             }
 
             var parentDirectory = Directory.GetParent(currentDirectory);

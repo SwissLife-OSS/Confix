@@ -32,7 +32,7 @@ public class LoadConfigurationMiddlewareTest
         _confixRoot = Path.Combine(_testRoot, FileNames.ConfixRc);
         _testComponentConfig = Path.Combine(_testComponent, FileNames.ConfixComponent);
         _testProjectConfig = Path.Combine(_testProject, FileNames.ConfixProject);
-        _testRepoConfig = Path.Combine(_testRepo, FileNames.ConfixRepository);
+        _testRepoConfig = Path.Combine(_testRepo, FileNames.ConfixSolution);
         _testHomeConfig = Path.Combine(_testHome, FileNames.ConfixRc);
 
         Directory.CreateDirectory(_testHome);
@@ -76,12 +76,12 @@ public class LoadConfigurationMiddlewareTest
         Assert.Equal(ConfigurationScope.Component, feature.Scope);
         Assert.NotNull(feature.Component);
         Assert.NotNull(feature.Project);
-        Assert.NotNull(feature.Repository);
+        Assert.NotNull(feature.Solution);
         new
             {
                 feature.Component,
                 feature.Project,
-                feature.Repository
+                feature.Solution
             }.ToJsonString().MatchSnapshot();
     }
 
@@ -120,18 +120,18 @@ public class LoadConfigurationMiddlewareTest
         Assert.Equal(ConfigurationScope.Project, feature.Scope);
         Assert.Null(feature.Component);
         Assert.NotNull(feature.Project);
-        Assert.NotNull(feature.Repository);
+        Assert.NotNull(feature.Solution);
         new
             {
                 feature.Component,
                 feature.Project,
-                feature.Repository
+                feature.Solution
             }.ToJsonString()
             .MatchSnapshot();
     }
 
     [Fact]
-    public async Task Should_Discover_Repository()
+    public async Task Should_Discover_Solution()
     {
         // arrange
         await SetupHome();
@@ -162,15 +162,15 @@ public class LoadConfigurationMiddlewareTest
         Assert.True(isInvoked);
         var feature = featureCollection.Get<ConfigurationFeature>();
         Assert.NotNull(feature);
-        Assert.Equal(ConfigurationScope.Repository, feature.Scope);
+        Assert.Equal(ConfigurationScope.Solution, feature.Scope);
         Assert.Null(feature.Component);
         Assert.NotNull(feature.Project);
-        Assert.NotNull(feature.Repository);
+        Assert.NotNull(feature.Solution);
         new
             {
                 feature.Component,
                 feature.Project,
-                feature.Repository
+                feature.Solution
             }.ToJsonString()
             .MatchSnapshot();
     }
@@ -209,13 +209,13 @@ public class LoadConfigurationMiddlewareTest
         Assert.NotNull(feature);
         Assert.Equal(ConfigurationScope.None, feature.Scope);
         Assert.Null(feature.Component);
-        Assert.Null(feature.Repository);
+        Assert.Null(feature.Solution);
         Assert.NotNull(feature.Project);
         new
             {
                 feature.Component,
                 feature.Project,
-                feature.Repository
+                feature.Solution
             }.ToJsonString()
             .MatchSnapshot();
     }
