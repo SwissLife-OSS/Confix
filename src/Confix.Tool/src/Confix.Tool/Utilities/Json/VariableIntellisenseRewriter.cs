@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Json.More;
 using Json.Schema;
 
 namespace Confix.Tool.Schema;
@@ -17,8 +18,9 @@ public sealed class VariableIntellisenseRewriter : JsonDocumentRewriter<Variable
     protected override JsonNode Rewrite(JsonObject obj, VariableIntellisenseContext context)
     {
         string? typeName = obj
-            .Select(x => x.Key)
-            .SingleOrDefault(x => x == TypeKeyword.Name);
+            .Where(x => x.Key == TypeKeyword.Name)
+            .Select(x => (string)x.Value!)
+            .SingleOrDefault();
 
         return typeName switch
         {
@@ -32,8 +34,8 @@ public sealed class VariableIntellisenseRewriter : JsonDocumentRewriter<Variable
         {
             [AnyOfKeyword.Name] = new JsonArray()
                 {
+                    context.VariableReference.Copy(),
                     base.Rewrite(obj, context),
-                    context.VariableReference,
                 }
         };
 }
