@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 
@@ -15,7 +16,7 @@ public sealed class RepositoryConfiguration
     public RepositoryConfiguration(
         ProjectConfiguration? project,
         ComponentConfiguration? component,
-        IReadOnlyList<FileInfo> sourceFiles)
+        IReadOnlyList<JsonFile> sourceFiles)
     {
         Project = project;
         Component = component;
@@ -26,14 +27,14 @@ public sealed class RepositoryConfiguration
 
     public ProjectConfiguration? Project { get; }
 
-    public IReadOnlyList<FileInfo> SourceFiles { get; }
+    public IReadOnlyList<JsonFile> SourceFiles { get; }
 
     public static RepositoryConfiguration Parse(JsonNode? node)
     {
-        return Parse(node, Array.Empty<FileInfo>());
+        return Parse(node, Array.Empty<JsonFile>());
     }
 
-    public static RepositoryConfiguration Parse(JsonNode? node, IReadOnlyList<FileInfo> sourceFiles)
+    public static RepositoryConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> sourceFiles)
     {
         var obj = node.ExpectObject();
 
@@ -64,15 +65,15 @@ public sealed class RepositoryConfiguration
         return new RepositoryConfiguration(project, component, sourceFiles);
     }
 
-    public static RepositoryConfiguration? LoadFromFiles(IEnumerable<FileInfo> files)
+    public static RepositoryConfiguration? LoadFromFiles(IEnumerable<JsonFile> files)
     {
-        var confixRc = files.FirstOrDefault(x => x.Name == FileNames.ConfixRepository);
+        var confixRc = files.FirstOrDefault(x => x.File.Name == FileNames.ConfixRepository);
         if (confixRc is null)
         {
             return null;
         }
 
-        var json = JsonNode.Parse(File.ReadAllText(confixRc.FullName));
+        var json = confixRc.Content;
         return Parse(json, new[] { confixRc });
     }
 }

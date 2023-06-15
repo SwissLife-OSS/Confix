@@ -26,7 +26,7 @@ public sealed class RepositoryDefinition
     public static RepositoryDefinition From(RepositoryConfiguration configuration)
     {
         var lastConfigurationFile =
-            configuration.SourceFiles.LastOrDefault(x => x.Name == FileNames.ConfixRepository);
+            configuration.SourceFiles.LastOrDefault(x => x.File.Name == FileNames.ConfixRepository);
 
         var project = configuration.Project is not null
             ? ProjectDefinition.From(configuration.Project)
@@ -36,6 +36,6 @@ public sealed class RepositoryDefinition
             ? ComponentDefinition.From(configuration.Component)
             : null;
 
-        return new RepositoryDefinition(project, component, lastConfigurationFile?.Directory);
+        return new RepositoryDefinition(project, component, lastConfigurationFile?.File.Directory);
     }
 }

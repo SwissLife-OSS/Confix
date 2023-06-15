@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ public sealed class RuntimeConfiguration
         bool isRoot,
         ProjectConfiguration? project,
         ComponentConfiguration? component,
-        IReadOnlyList<FileInfo> sourceFiles)
+        IReadOnlyList<JsonFile> sourceFiles)
     {
         IsRoot = isRoot;
         Project = project;
@@ -33,14 +34,14 @@ public sealed class RuntimeConfiguration
 
     public ProjectConfiguration? Project { get; }
 
-    public IReadOnlyList<FileInfo> SourceFiles { get; }
+    public IReadOnlyList<JsonFile> SourceFiles { get; }
 
     public static RuntimeConfiguration Parse(JsonNode? node)
     {
-        return Parse(node, Array.Empty<FileInfo>());
+        return Parse(node, Array.Empty<JsonFile>());
     }
 
-    public static RuntimeConfiguration Parse(JsonNode? node, IReadOnlyList<FileInfo> sourceFiles)
+    public static RuntimeConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> sourceFiles)
     {
         var obj = node.ExpectObject();
 
@@ -76,13 +77,13 @@ public sealed class RuntimeConfiguration
         return new RuntimeConfiguration(isRoot, project, component, sourceFiles);
     }
 
-    public static RuntimeConfiguration LoadFromFiles(IEnumerable<FileInfo> files)
+    public static RuntimeConfiguration LoadFromFiles(IEnumerable<JsonFile> files)
     {
-        var config = new RuntimeConfiguration(true, null, null, Array.Empty<FileInfo>());
+        var config = new RuntimeConfiguration(true, null, null, Array.Empty<JsonFile>());
 
-        foreach (var file in files.Where(x => x.Name == FileNames.ConfixRc))
+        foreach (var file in files.Where(x => x.File.Name == FileNames.ConfixRc))
         {
-            var json = JsonNode.Parse(File.ReadAllText(file.FullName));
+            var json = file.Content;
             var innerConfig = Parse(json, new[] { file });
             if (innerConfig.IsRoot)
             {

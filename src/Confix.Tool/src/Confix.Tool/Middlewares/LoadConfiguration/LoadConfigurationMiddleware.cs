@@ -6,26 +6,28 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
+using System.Runtime.CompilerServices;
 
 namespace Confix.Tool.Middlewares;
 
 public sealed class LoadConfigurationMiddleware : IMiddleware
 {
     /// <inheritdoc />
-    public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
+    public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         if (context.Features.TryGet(out ConfigurationFeature _))
         {
-            return next(context);
+            await next(context);
+            return;
         }
 
         context.SetStatus("Loading configuration...");
 
-        var configurationFiles = context.LoadConfigurationFiles();
+        var configurationFiles =  context.LoadConfigurationFiles(context.CancellationToken).ToBlockingEnumerable();
+        var configurationFilesWithReplacedMagicStrings = ReplaceMagicStrings(context, configurationFiles);
+        var fileCollection = CreateFileCollection(configurationFilesWithReplacedMagicStrings);
 
-        var fileCollection = CreateFileCollection(configurationFiles);
-
-        var scope = fileCollection.LastOrDefault()?.Name switch
+        var scope = fileCollection.LastOrDefault()?.File.Name switch
         {
             FileNames.ConfixComponent => ConfigurationScope.Component,
             FileNames.ConfixProject => ConfigurationScope.Project,
@@ -58,13 +60,12 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
 
         context.Logger.ConfigurationLoaded();
 
-        return next(context);
+        await next(context);
     }
 
-    private static IConfigurationFileCollection CreateFileCollection(
-        IEnumerable<FileInfo> configurationFiles)
+    private static IConfigurationFileCollection CreateFileCollection(IEnumerable<JsonFile> configurationFiles)
     {
-        var files = new List<FileInfo>(configurationFiles);
+        var files = new List<JsonFile>(configurationFiles);
 
         var confixConfiguration = RuntimeConfiguration.LoadFromFiles(files);
         var repositoryConfiguration = RepositoryConfiguration.LoadFromFiles(files);
@@ -104,19 +105,40 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
             componentConfiguration,
             files);
     }
+
+    private static IEnumerable<JsonFile> ReplaceMagicStrings(
+        IMiddlewareContext middlewareContext,
+        IEnumerable<JsonFile> configurationFiles)
+    {
+        var repositoryFile = configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixRepository);
+        var projectFile = configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixProject);
+
+        foreach (var file in configurationFiles)
+        {
+            MagicPathContext context = new(
+                    middlewareContext.Execution.CurrentDirectory,
+                    repositoryFile?.File.Directory,
+                    projectFile?.File.Directory,
+                    file.File.Directory!);
+
+            var rewritten = new MagicPathRewriter().Rewrite(file.Content, context);
+
+            yield return file with { Content = rewritten };
+        }
+    }
 }
 
 file sealed class ConfigurationFileCollection
     : IConfigurationFileCollection
 {
-    private readonly IReadOnlyList<FileInfo> _collection;
+    private readonly IReadOnlyList<JsonFile> _collection;
 
     public ConfigurationFileCollection(
         RuntimeConfiguration? configuration,
         RepositoryConfiguration? repositoryConfiguration,
         ProjectConfiguration? projectConfiguration,
         ComponentConfiguration? componentConfiguration,
-        IReadOnlyList<FileInfo> collection)
+        IReadOnlyList<JsonFile> collection)
     {
         RuntimeConfiguration = configuration;
         Repository = repositoryConfiguration;
@@ -134,7 +156,7 @@ file sealed class ConfigurationFileCollection
     public ComponentConfiguration? Component { get; }
 
     /// <inheritdoc />
-    public IEnumerator<FileInfo> GetEnumerator()
+    public IEnumerator<JsonFile> GetEnumerator()
         => _collection.GetEnumerator();
 
     /// <inheritdoc />
@@ -145,16 +167,18 @@ file sealed class ConfigurationFileCollection
     public int Count => _collection.Count;
 
     /// <inheritdoc />
-    public FileInfo this[int index] => _collection[index];
+    public JsonFile this[int index] => _collection[index];
 }
 
 file static class Extensions
 {
-    public static IEnumerable<FileInfo> LoadConfigurationFiles(this IMiddlewareContext context)
+    public static async IAsyncEnumerable<JsonFile> LoadConfigurationFiles(
+        this IMiddlewareContext context,
+        [EnumeratorCancellation]CancellationToken cancellationToken)
     {
         foreach (var confixRc in context.LoadConfixRcs())
         {
-            yield return confixRc;
+            yield return await JsonFile.FromFile(confixRc, cancellationToken);
         }
 
         var repositoryPath =
@@ -163,7 +187,7 @@ file static class Extensions
         if (repositoryPath is not null)
         {
             App.Log.ConfigurationFilesLocated(FileNames.ConfixRepository, repositoryPath);
-            yield return new FileInfo(repositoryPath);
+            yield return await JsonFile.FromFile(new(repositoryPath), cancellationToken);
         }
 
         var confixProject = context.Execution.CurrentDirectory.FindInTree(FileNames.ConfixProject);
@@ -171,7 +195,7 @@ file static class Extensions
         if (confixProject is not null)
         {
             App.Log.ConfigurationFilesLocated(FileNames.ConfixRepository, confixProject);
-            yield return new FileInfo(confixProject);
+           yield return await JsonFile.FromFile(new(confixProject), cancellationToken);
         }
 
         var confixComponent =
@@ -180,7 +204,7 @@ file static class Extensions
         if (confixComponent is not null)
         {
             App.Log.ConfigurationFilesLocated(FileNames.ConfixComponent, confixComponent);
-            yield return new FileInfo(confixComponent);
+            yield return await JsonFile.FromFile(new(confixComponent), cancellationToken);
         }
     }
 
@@ -240,3 +264,4 @@ file static class Log
     public static void ConfigurationLoaded(this IConsoleLogger logger)
         => logger.Success("Configuration loaded");
 }
+

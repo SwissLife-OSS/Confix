@@ -19,7 +19,7 @@ namespace Confix.Tool.Middlewares;
 /// directory.
 /// </p>
 /// </summary>
-public interface IConfigurationFileCollection : IReadOnlyList<FileInfo>
+public interface IConfigurationFileCollection : IReadOnlyList<JsonFile>
 {
     /// <summary>
     /// Gets the runtime configuration file. This is the merged configuration of all

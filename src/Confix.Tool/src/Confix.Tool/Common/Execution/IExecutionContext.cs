@@ -1,12 +1,15 @@
 namespace Confix.Tool.Common.Pipelines;
 
 /// <summary>
+/// <para>
 /// Represents the context of the current execution, providing information such as the current
 /// directory and home directory. This interface is used to pass information about the execution
 /// environment to middlewares, which can help avoid binding the middlewares to the command line.
-/// 
+/// </para>
+/// <para>
 /// The execution context is vital for many operations that require knowledge about the file
 /// system's current state or user-specific data (like user's home directory).
+/// </para>
 /// </summary>
 public interface IExecutionContext
 {

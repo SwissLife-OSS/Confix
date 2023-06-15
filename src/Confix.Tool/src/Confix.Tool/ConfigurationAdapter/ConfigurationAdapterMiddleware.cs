@@ -60,9 +60,9 @@ file static class Extensions
         [NotNullWhen(true)] out FileInfo? repositoryFile)
     {
         var repository =
-            feature.ConfigurationFiles.FirstOrDefault(x => x.Name == FileNames.ConfixRepository);
+            feature.ConfigurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixRepository);
 
-        repositoryFile = repository;
+        repositoryFile = repository?.File;
 
         return repository is not null;
     }

@@ -54,6 +54,7 @@ public class LoadConfigurationMiddlewareTest
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_testComponent, _testHome);
         middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
+        middelwareContext.SetupGet(x => x.CancellationToken).Returns(CancellationToken.None);
         middelwareContext.SetupGet(x => x.Status).Returns(Mock.Of<IStatus>());
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
@@ -96,6 +97,7 @@ public class LoadConfigurationMiddlewareTest
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_testProject, _testHome);
+        middelwareContext.SetupGet(x => x.CancellationToken).Returns(CancellationToken.None);
         middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
         middelwareContext.SetupGet(x => x.Status).Returns(Mock.Of<IStatus>());
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
@@ -141,6 +143,7 @@ public class LoadConfigurationMiddlewareTest
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_testRepo, _testHome);
         middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
+        middelwareContext.SetupGet(x => x.CancellationToken).Returns(CancellationToken.None);
         middelwareContext.SetupGet(x => x.Status).Returns(Mock.Of<IStatus>());
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
@@ -185,6 +188,7 @@ public class LoadConfigurationMiddlewareTest
         var featureCollection = new FeatureCollection();
         var executionContext = new StubExecutionContext(_monoRepo, _testHome);
         middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
+        middelwareContext.SetupGet(x => x.CancellationToken).Returns(CancellationToken.None);
         middelwareContext.SetupGet(x => x.Status).Returns(Mock.Of<IStatus>());
         middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);

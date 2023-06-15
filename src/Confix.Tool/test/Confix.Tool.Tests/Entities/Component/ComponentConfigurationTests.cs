@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 
 namespace ConfiX.Entities.Component.Configuration;
@@ -92,7 +93,7 @@ public class ComponentConfigurationTests : ParserTestBase
         var original = new ComponentConfiguration("TestComponent",
             new List<ComponentInputConfiguration>(),
             new List<ComponentOutputConfiguration>(),
-            Array.Empty<FileInfo>());
+            Array.Empty<JsonFile>());
 
         // Act
         var merged = original.Merge(null);
@@ -114,7 +115,7 @@ public class ComponentConfigurationTests : ParserTestBase
             {
                 new("Test", JsonNode.Parse("{}")!)
             },
-            Array.Empty<FileInfo>());
+            Array.Empty<JsonFile>());
         var other = new ComponentConfiguration("MergedComponent",
             new List<ComponentInputConfiguration>()
             {
@@ -124,7 +125,7 @@ public class ComponentConfigurationTests : ParserTestBase
             {
                 new("Test2", JsonNode.Parse("{}")!)
             },
-            Array.Empty<FileInfo>());
+            Array.Empty<JsonFile>());
 
         // Act
         var merged = original.Merge(other);
@@ -140,7 +141,7 @@ public class ComponentConfigurationTests : ParserTestBase
     public void LoadFromFiles_Should_ReturnNull_When_ConfixRcFileNotPresent()
     {
         // Arrange
-        var configuration = Array.Empty<FileInfo>();
+        var configuration = Array.Empty<JsonFile>();
 
         // Act
         var result = ComponentConfiguration.LoadFromFiles(configuration);
@@ -150,14 +151,10 @@ public class ComponentConfigurationTests : ParserTestBase
     }
 
     [Fact]
-    public void LoadFromFiles_Should_LoadFromFile()
+    public async Task LoadFromFiles_Should_LoadFromFileAsync()
     {
         // Arrange
         var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixComponent);
-        var configuration = new List<FileInfo>
-        {
-            new(confixRcPath)
-        };
         File.WriteAllText(
             confixRcPath,
             """
@@ -168,6 +165,10 @@ public class ComponentConfigurationTests : ParserTestBase
             }
             """);
 
+        var configuration = new List<JsonFile>
+        {
+            await JsonFile.FromFile(new(confixRcPath), default)
+        };
         // Act
         var result = ComponentConfiguration.LoadFromFiles(configuration);
 
@@ -182,14 +183,10 @@ public class ComponentConfigurationTests : ParserTestBase
     }
 
     [Fact]
-    public void LoadFromFiles_Should_OnlyLoadComponent()
+    public async Task LoadFromFiles_Should_OnlyLoadComponentAsync()
     {
         // Arrange
         var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixProject);
-        var configuration = new List<FileInfo>
-        {
-            new(confixRcPath)
-        };
         File.WriteAllText(
             confixRcPath,
             """
@@ -199,6 +196,11 @@ public class ComponentConfigurationTests : ParserTestBase
                 "outputs": []
             }
             """);
+
+        var configuration = new List<JsonFile>
+        {
+           await JsonFile.FromFile(new(confixRcPath), default)
+        };
 
         // Act
         var result = ComponentConfiguration.LoadFromFiles(configuration);
