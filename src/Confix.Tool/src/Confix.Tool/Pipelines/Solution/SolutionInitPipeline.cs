@@ -35,15 +35,17 @@ file static class Log
 {
     public static void LogSolutionAlreadyExists(
         this IConsoleLogger console,
-        FileInfo solutionFile)
+        FileInfo info)
     {
-        console.Error($"Solution already exists: [grey]{solutionFile.FullName}[/]");
+        console.Error(
+            $"Solution already exists: {info.Directory?.Name.ToLink(info)} [dim]{info.FullName}[/]");
     }
 
     public static void LogSolutionCreated(
         this IConsoleLogger console,
-        FileInfo solutionFile)
+        FileInfo info)
     {
-        console.Information($"Solution created: [grey]{solutionFile.FullName}[/]");
+        console.Information(
+            $"Solution created: {info.Directory?.Name.ToLink(info)} [dim]{info.FullName}[/]");
     }
 }

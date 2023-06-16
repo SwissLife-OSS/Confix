@@ -19,7 +19,7 @@ public sealed class ConfigurationFileMiddleware : IMiddleware
     public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         context.SetStatus("Loading configuration files...");
-        
+
         var configuration = context.Features.Get<ConfigurationFeature>();
         var project = configuration.EnsureProject();
 
@@ -68,6 +68,7 @@ file static class Logs
         this IConsoleLogger console,
         ConfigurationFile file)
     {
-        console.Information($"Persisting configuration file '{file.File.FullName}'");
+        console.Information($"Persisting configuration file {file.File.ToLink()}");
+        console.Debug($" -> {file.File.FullName}");
     }
 }

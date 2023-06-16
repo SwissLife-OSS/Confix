@@ -1,13 +1,12 @@
 using System.Diagnostics;
 using System.Xml.Linq;
-using Confix.Tool.Commands.Logging;
 
 namespace Confix.Tool.Commands.Temp;
 
 public static class DotnetHelpers
 {
     public static async Task<ProcessExecutionResult> BuildProjectAsync(
-        string path,
+        FileInfo path,
         CancellationToken cancellationToken)
     {
         var startInfo = new ProcessStartInfo
@@ -29,9 +28,8 @@ public static class DotnetHelpers
         return new ProcessExecutionResult(process.ExitCode == 0, output);
     }
 
-    public static FileInfo? GetAssemblyFileFromCsproj(string csprojPath)
+    public static FileInfo? GetAssemblyFileFromCsproj(FileInfo projectFile)
     {
-        var projectFile = new FileInfo(csprojPath);
         // Load the .csproj file as an XDocument
         var csprojDoc = XDocument.Load(projectFile.FullName);
 
@@ -43,7 +41,7 @@ public static class DotnetHelpers
                 ?.Element(msbuild + "PropertyGroup")
                 ?.Element(msbuild + "AssemblyName")
                 ?.Value ??
-            Path.GetFileNameWithoutExtension(csprojPath);
+            Path.GetFileNameWithoutExtension(projectFile.FullName);
 
         // Construct the path to where the assembly should be built
         return GetAssemblyInPathByName(projectFile.Directory!, propertyGroup);
@@ -67,8 +65,9 @@ public static class DotnetHelpers
         return firstMatch is null ? null : new FileInfo(firstMatch);
     }
 
-    public static string? FindProjectFileInPath(DirectoryInfo directory)
+    public static FileInfo? FindProjectFileInPath(DirectoryInfo directory)
         => Directory
             .EnumerateFiles(directory.FullName, "*.csproj", SearchOption.TopDirectoryOnly)
+            .Select(x => new FileInfo(x))
             .FirstOrDefault();
 }

@@ -36,15 +36,17 @@ file static class Log
 {
     public static void LogComponentAlreadyExists(
         this IConsoleLogger console,
-        FileInfo componentFile)
+        FileInfo info)
     {
-        console.Error($"Component already exists: [grey]{componentFile.FullName}[/]");
+        console.Error(
+            $"Component already exists:{info.Directory?.Name.ToLink(info)} [dim]{info.FullName}[/]");
     }
 
     public static void LogComponentCreated(
         this IConsoleLogger console,
-        FileInfo componentFile)
+        FileInfo info)
     {
-        console.Information($"Component created: [grey]{componentFile.FullName}[/]");
+        console.Information(
+            $"Component created:{info.Directory?.Name.ToLink(info)} [dim]{info.FullName}[/]");
     }
 }

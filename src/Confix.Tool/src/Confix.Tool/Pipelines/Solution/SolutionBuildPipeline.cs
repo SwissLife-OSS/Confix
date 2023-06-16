@@ -45,8 +45,9 @@ file static class Log
 {
     public static void LogProjectedDetected(
         this IConsoleLogger console,
-        FileInfo project)
+        FileInfo info)
     {
-        console.Information($"Project detected: [grey]{project.FullName}[/]");
+        console.Information(
+            $"Project detected: {info.Directory?.Name.ToLink(info)} [dim]{info.FullName}[/]");
     }
 }

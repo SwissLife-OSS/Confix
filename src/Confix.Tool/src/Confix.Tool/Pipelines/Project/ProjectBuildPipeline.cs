@@ -15,6 +15,7 @@ public sealed class ProjectBuildPipeline : Pipeline
             .UseEnvironment()
             .Use<BuildComponentsOfProjectMiddleware>()
             .Use<VariableMiddleware>()
-            .Use<BuildProjectMiddleware>();
+            .Use<BuildProjectMiddleware>()
+            .Use<ValidationMiddleware>();
     }
 }

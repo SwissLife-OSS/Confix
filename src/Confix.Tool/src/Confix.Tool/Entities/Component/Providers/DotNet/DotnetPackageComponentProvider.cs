@@ -256,9 +256,9 @@ file static class Log
         logger.Debug($"Assembly file not found for assembly: {assembly}");
     }
 
-    public static void FoundDotnetProject(this IConsoleLogger logger, string csproj)
+    public static void FoundDotnetProject(this IConsoleLogger logger, FileSystemInfo csproj)
     {
-        logger.Information($"Found .NET project: {csproj}");
+        logger.Information($"Found .NET project:{csproj.ToLink()} [dim]{csproj.FullName}[/]");
     }
 
     public static void FoundManifestResourceInAssembly(

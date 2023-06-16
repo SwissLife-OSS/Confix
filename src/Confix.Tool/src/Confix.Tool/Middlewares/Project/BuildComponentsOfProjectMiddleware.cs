@@ -49,6 +49,7 @@ file static class Log
         this IConsoleLogger console,
         FileInfo component)
     {
-        console.Information($"Component detected: [grey]{component.FullName}[/]");
+        console.Information(
+            $"Component detected:{component.Directory?.Name.ToLink(component)} [dim]{component.FullName}[/]");
     }
 }
