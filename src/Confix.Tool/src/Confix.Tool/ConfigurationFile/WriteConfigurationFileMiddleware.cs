@@ -11,7 +11,6 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
     /// <inheritdoc />
     public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
-        await next(context);
         context.SetStatus("Persisting configuration changes");
 
         var feature = context.Features.Get<ConfigurationFileFeature>();
@@ -28,6 +27,8 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
             await using var stream = file.File.OpenReplacementStream();
             await file.Content.SerializeToStreamAsync(stream, context.CancellationToken);
         }
+        
+        await next(context);
     }
 }
 

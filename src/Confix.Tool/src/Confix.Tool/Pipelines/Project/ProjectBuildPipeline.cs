@@ -12,11 +12,11 @@ public sealed class ProjectBuildPipeline : Pipeline
         builder
             .Use<LoadConfigurationMiddleware>()
             .UseReadConfigurationFiles()
-            .UseWriteConfigurationFiles()
             .UseEnvironment()
             .Use<BuildComponentsOfProjectMiddleware>()
             .Use<VariableMiddleware>()
             .Use<BuildProjectMiddleware>()
-            .Use<ValidationMiddleware>();
+            .Use<ValidationMiddleware>()
+            .UseWriteConfigurationFiles();
     }
 }
