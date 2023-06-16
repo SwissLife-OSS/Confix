@@ -4,7 +4,7 @@ using Confix.Tool.Middlewares.Project;
 
 namespace Confix.Tool.Commands.Project;
 
-public sealed class ProjectBuildPipeline : Pipeline
+public sealed class ProjectValidatePipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
@@ -16,7 +16,6 @@ public sealed class ProjectBuildPipeline : Pipeline
             .Use<BuildComponentsOfProjectMiddleware>()
             .Use<VariableMiddleware>()
             .Use<BuildProjectMiddleware>()
-            .Use<ValidationMiddleware>()
-            .UseWriteConfigurationFiles();
+            .Use<ValidationMiddleware>();
     }
 }

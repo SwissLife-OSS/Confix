@@ -1,4 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Schema;
@@ -30,6 +32,24 @@ public sealed class SchemaStore : ISchemaStore
         return schemaFile;
     }
 
+    /// <inheritdoc />
+    public bool TryLoad(
+        SolutionDefinition solution,
+        ProjectDefinition project,
+        [NotNullWhen(true)] out JsonSchema? schema)
+    {
+        var schemaFile = GetSchemaFile(solution, project);
+
+        if (!schemaFile.Exists)
+        {
+            schema = null;
+            return false;
+        }
+
+        schema = JsonSchema.FromFile(schemaFile.FullName);
+        return true;
+    }
+
     private static FileInfo GetSchemaFile(
         SolutionDefinition solution,
         ProjectDefinition project)
@@ -54,6 +74,7 @@ file static class Log
 {
     public static void SchemaIsStored(this IConsoleLogger console, FileInfo schemaFile)
     {
-        console.Success($"Schema is stored at '{schemaFile.FullName}'");
+        console.Success($"Schema is stored at {schemaFile.ToLink()}");
+        console.Debug($" -> {schemaFile.FullName}");
     }
 }

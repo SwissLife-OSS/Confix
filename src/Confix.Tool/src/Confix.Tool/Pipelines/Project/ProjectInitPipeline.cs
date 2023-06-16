@@ -35,15 +35,15 @@ file static class Log
 {
     public static void LogProjectAlreadyExists(
         this IConsoleLogger console,
-        FileInfo projectFile)
+        FileInfo info)
     {
-        console.Error($"Project already exists: [grey]{projectFile.FullName}[/]");
+        console.Error($"Project already exists: {info.Directory?.Name.ToLink(info)} [dim]{info.FullName}[/]");
     }
 
     public static void LogProjectCreated(
         this IConsoleLogger console,
-        FileInfo projectFile)
+        FileInfo info)
     {
-        console.Information($"Project created: [grey]{projectFile.FullName}[/]");
+        console.Information($"Project created: {info.Directory?.Name.ToLink(info)} [dim]{info.FullName}[/]");
     }
 }

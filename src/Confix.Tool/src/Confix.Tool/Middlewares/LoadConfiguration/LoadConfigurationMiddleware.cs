@@ -34,7 +34,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
             _ => ConfigurationScope.None
         };
 
-        context.Logger.RunningInScope(scope);
+        context.Logger.RunningInScope(scope, fileCollection);
 
         var projectDefinition = fileCollection.Project is not null
             ? ProjectDefinition.From(fileCollection.Project)
@@ -247,7 +247,10 @@ file static class Log
         string destination)
         => logger.Debug("Merged {0} from {1}", source, destination);
 
-    public static void RunningInScope(this IConsoleLogger logger, ConfigurationScope scope)
+    public static void RunningInScope(
+        this IConsoleLogger logger,
+        ConfigurationScope scope,
+        IConfigurationFileCollection fileCollection)
     {
         if (scope is ConfigurationScope.None)
         {

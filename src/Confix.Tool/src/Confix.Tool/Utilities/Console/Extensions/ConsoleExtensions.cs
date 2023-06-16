@@ -15,7 +15,7 @@ public static class ConsoleExtensions
     {
         console.MarkupLine($"[green]{message.EscapeMarkup()}[/]");
     }
-
+    
     /// <summary>
     /// Writes a json object to the console
     /// </summary>

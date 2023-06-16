@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Json.Schema;
 
@@ -10,4 +12,9 @@ public interface ISchemaStore
         ProjectDefinition project,
         JsonSchema schema,
         CancellationToken cancellationToken);
+
+    bool TryLoad(
+        SolutionDefinition solution,
+        ProjectDefinition project,
+        [NotNullWhen(true)] out JsonSchema? schema);
 }

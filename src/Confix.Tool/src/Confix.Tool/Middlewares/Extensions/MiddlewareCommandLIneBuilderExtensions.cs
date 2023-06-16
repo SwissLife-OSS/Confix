@@ -1,5 +1,6 @@
 using System.CommandLine.Builder;
 using Confix.Tool.Entities.Components;
+using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Middlewares.Project;
 using ConfiX.Variables;
@@ -13,6 +14,7 @@ public static class MiddlewareCommandLineBuilderExtensions
     {
         builder
             .AddTransient(sp => new BuildComponentsOfProjectMiddleware(sp))
+            .AddTransient(sp => new ValidationMiddleware(sp.GetRequiredService<ISchemaStore>()))
             .AddTransient<LoadConfigurationMiddleware>()
             .AddTransient<EnvironmentMiddleware>()
             .AddTransient<BuildProjectMiddleware>()

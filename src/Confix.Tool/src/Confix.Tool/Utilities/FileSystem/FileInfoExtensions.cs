@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Spectre.Console;
 
 namespace Confix.Tool.Schema;
 
@@ -46,4 +47,10 @@ public static class FileInfoExtensions
     {
         return Path.GetRelativePath(directoryInfo.FullName, fileInfo.FullName);
     }
+
+    public static string ToLink(this FileSystemInfo fileInfo)
+        => $"'{fileInfo.Name.EscapeMarkup().ToLink(fileInfo)}'";
+
+    public static string ToLink(this string str, FileSystemInfo fileInfo)
+        => $"[link={fileInfo.FullName.EscapeMarkup()}]{str}[/]";
 }
