@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Snapshooter.Xunit;
 
@@ -167,7 +168,7 @@ public class ProjectConfigurationTests : ParserTestBase
             new List<ComponentProviderConfiguration>(),
             new List<ConfigurationFileConfiguration>(),
             new List<ProjectConfiguration>(),
-            Array.Empty<FileInfo>()
+            Array.Empty<JsonFile>()
         );
 
         // Act
@@ -220,9 +221,9 @@ public class ProjectConfigurationTests : ParserTestBase
                     null,
                     null,
                     null,
-                    Array.Empty<FileInfo>())
+                    Array.Empty<JsonFile>())
             },
-            Array.Empty<FileInfo>());
+            Array.Empty<JsonFile>());
         var other = new ProjectConfiguration(
             "MergedProject",
             new List<EnvironmentConfiguration>
@@ -262,9 +263,9 @@ public class ProjectConfigurationTests : ParserTestBase
                     null,
                     null,
                     null,
-                    Array.Empty<FileInfo>()),
+                    Array.Empty<JsonFile>()),
             },
-            Array.Empty<FileInfo>()
+            Array.Empty<JsonFile>()
         );
 
         // Act
@@ -297,7 +298,7 @@ public class ProjectConfigurationTests : ParserTestBase
     public void LoadFromFiles_Should_ReturnNull_When_ConfigurationFileNotPresent()
     {
         // Arrange
-        var files = Array.Empty<FileInfo>();
+        var files = Array.Empty<JsonFile>();
 
         // Act
         var result = ProjectConfiguration.LoadFromFiles(files);
@@ -307,7 +308,7 @@ public class ProjectConfigurationTests : ParserTestBase
     }
 
     [Fact]
-    public void LoadFromFiles_Should_LoadConfigurationFromFile()
+    public async Task LoadFromFiles_Should_LoadConfigurationFromFile()
     {
         // Arrange
         var confixRcPath = Path.Combine(
@@ -315,11 +316,6 @@ public class ProjectConfigurationTests : ParserTestBase
             Path.GetRandomFileName(),
             FileNames.ConfixProject);
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath)!);
-
-        var files = new List<FileInfo>
-        {
-            new(confixRcPath)
-        };
 
         File.WriteAllText(confixRcPath,
             """
@@ -383,6 +379,10 @@ public class ProjectConfigurationTests : ParserTestBase
                 }
             """);
 
+        var files = new List<JsonFile>
+        {
+           await JsonFile.FromFile(new(confixRcPath), default)
+        };
         // Act
         var result = ProjectConfiguration.LoadFromFiles(files);
 
@@ -399,7 +399,7 @@ public class ProjectConfigurationTests : ParserTestBase
             result.VariableProviders,
             result.Name,
             result.Subprojects,
-            SourceFiles = result.SourceFiles.Select(x => x.FullName)
+            SourceFiles = result.SourceFiles.Select(x => x.File.FullName)
         }.MatchSnapshot(o => o.IgnoreField("SourceFiles"));
 
         // Cleanup

@@ -27,10 +27,10 @@ public sealed class GraphQlComponentInput : IComponentInput
         }
 
         var configurationFile = configuration.ConfigurationFiles.Component.SourceFiles
-            .First(x => x.Name == FileNames.ConfixComponent);
+            .First(x => x.File.Name == FileNames.ConfixComponent);
 
         var schemaGraphQlFile =
-            new FileInfo(Path.Combine(configurationFile.DirectoryName!, SchemaGraphQl));
+            new FileInfo(Path.Combine(configurationFile.File.DirectoryName!, SchemaGraphQl));
 
         context.Logger.SearchingForSchemaGraphQl(schemaGraphQlFile);
 
@@ -43,7 +43,7 @@ public sealed class GraphQlComponentInput : IComponentInput
         context.Logger.SchemaGraphQlFound(schemaGraphQlFile);
 
         var schemaJsonFile =
-            new FileInfo(Path.Combine(configurationFile.DirectoryName!, FileNames.Schema));
+            new FileInfo(Path.Combine(configurationFile.File.DirectoryName!, FileNames.Schema));
 
         var schema =
             await SchemaHelpers.LoadSchemaAsync(schemaGraphQlFile.FullName, cancellationToken);

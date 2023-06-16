@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 
@@ -17,7 +18,7 @@ public sealed class ComponentConfiguration
         string? name,
         IReadOnlyList<ComponentInputConfiguration>? inputs,
         IReadOnlyList<ComponentOutputConfiguration>? outputs,
-        IReadOnlyList<FileInfo> sourceFiles)
+        IReadOnlyList<JsonFile> sourceFiles)
     {
         Name = name;
         Inputs = inputs;
@@ -31,14 +32,14 @@ public sealed class ComponentConfiguration
 
     public IReadOnlyList<ComponentOutputConfiguration>? Outputs { get; }
 
-    public IReadOnlyList<FileInfo> SourceFiles { get; }
+    public IReadOnlyList<JsonFile> SourceFiles { get; }
 
     public static ComponentConfiguration Parse(JsonNode? node)
     {
-        return Parse(node, Array.Empty<FileInfo>());
+        return Parse(node, Array.Empty<JsonFile>());
     }
 
-    public static ComponentConfiguration Parse(JsonNode? node, IReadOnlyList<FileInfo> sourceFiles)
+    public static ComponentConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> sourceFiles)
     {
         var obj = node.ExpectObject();
 
@@ -81,15 +82,15 @@ public sealed class ComponentConfiguration
         return new ComponentConfiguration(name, inputs, outputs, sourceFiles);
     }
 
-    public static ComponentConfiguration? LoadFromFiles(IEnumerable<FileInfo> files)
+    public static ComponentConfiguration? LoadFromFiles(IEnumerable<JsonFile> files)
     {
-        var config = files.FirstOrDefault(x => x.Name == FileNames.ConfixComponent);
+        var config = files.FirstOrDefault(x => x.File.Name == FileNames.ConfixComponent);
         if (config is null)
         {
             return null;
         }
 
-        var json = JsonNode.Parse(File.ReadAllText(config.FullName));
+        var json = config.Content;
         return Parse(json, new[] { config });
     }
 }

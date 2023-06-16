@@ -2,7 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Schema;
-using Microsoft.Extensions.Logging;
 
 namespace Confix.Tool.Middlewares;
 

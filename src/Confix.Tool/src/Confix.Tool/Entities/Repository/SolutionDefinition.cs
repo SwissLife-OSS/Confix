@@ -26,7 +26,7 @@ public sealed class SolutionDefinition
     public static SolutionDefinition From(SolutionConfiguration configuration)
     {
         var lastConfigurationFile =
-            configuration.SourceFiles.LastOrDefault(x => x.Name == FileNames.ConfixSolution);
+            configuration.SourceFiles.LastOrDefault(x => x.File.Name == FileNames.ConfixSolution);
 
         var project = configuration.Project is not null
             ? ProjectDefinition.From(configuration.Project)
@@ -36,6 +36,6 @@ public sealed class SolutionDefinition
             ? ComponentDefinition.From(configuration.Component)
             : null;
 
-        return new SolutionDefinition(project, component, lastConfigurationFile?.Directory);
+        return new SolutionDefinition(project, component, lastConfigurationFile?.File.Directory);
     }
 }

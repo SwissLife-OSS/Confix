@@ -2,11 +2,12 @@ using System;
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 
 namespace ConfiX.Entities.Component.Configuration;
 
-public class RepositoryConfigurationTest : ParserTestBase
+public class SolutionConfigurationTests : ParserTestBase
 {
     [Fact]
     public void Parse_Should_BeValid()
@@ -67,9 +68,9 @@ public class RepositoryConfigurationTest : ParserTestBase
             new ComponentConfiguration("TestComponent",
                 new List<ComponentInputConfiguration>(),
                 new List<ComponentOutputConfiguration>(),
-                Array.Empty<FileInfo>()
+                Array.Empty<JsonFile>()
             ),
-            Array.Empty<FileInfo>());
+            Array.Empty<JsonFile>());
 
         // Act
         var merged = original.Merge(null);
@@ -87,9 +88,10 @@ public class RepositoryConfigurationTest : ParserTestBase
             new ComponentConfiguration("TestComponent",
                 new List<ComponentInputConfiguration>(),
                 new List<ComponentOutputConfiguration>(),
-                Array.Empty<FileInfo>()
+                Array.Empty<JsonFile>()
             ),
-            Array.Empty<FileInfo>());
+            Array.Empty<JsonFile>());
+
         var other = new SolutionConfiguration(
             new ProjectConfiguration("MergedProject",
                 null,
@@ -99,13 +101,13 @@ public class RepositoryConfigurationTest : ParserTestBase
                 null,
                 null,
                 null,
-                Array.Empty<FileInfo>()),
+                Array.Empty<JsonFile>()),
             new ComponentConfiguration("MergedComponent",
                 new List<ComponentInputConfiguration>(),
                 new List<ComponentOutputConfiguration>(),
-                Array.Empty<FileInfo>()
+                Array.Empty<JsonFile>()
             ),
-            Array.Empty<FileInfo>());
+            Array.Empty<JsonFile>());
 
         // Act
         var merged = original.Merge(other);
@@ -120,7 +122,7 @@ public class RepositoryConfigurationTest : ParserTestBase
     public void LoadFromFiles_Should_ReturnNull_When_ConfixRcFileNotPresent()
     {
         // Arrange
-        var configuration = Array.Empty<FileInfo>();
+        var configuration = Array.Empty<JsonFile>();
 
         // Act
         var result = SolutionConfiguration.LoadFromFiles(configuration);
@@ -130,15 +132,10 @@ public class RepositoryConfigurationTest : ParserTestBase
     }
 
     [Fact]
-    public void LoadFromFiles_Should_LoadSolutionConfigurationFromFile()
+    public async Task LoadFromFiles_Should_LoadSolutionConfigurationFromFileAsync()
     {
         // Arrange
         var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixSolution);
-        var configuration = new List<FileInfo>
-        {
-            new(confixRcPath)
-        };
-        
         File.WriteAllText(confixRcPath,
             """
                 {
@@ -152,6 +149,11 @@ public class RepositoryConfigurationTest : ParserTestBase
                     }
                 }
             """);
+
+        var configuration = new List<JsonFile>
+        {
+            await JsonFile.FromFile(new(confixRcPath), default)
+        };
 
         // Act
         var result = SolutionConfiguration.LoadFromFiles(configuration);

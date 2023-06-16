@@ -2,6 +2,7 @@ using System.Text.Json.Nodes;
 using ConfiX.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Schema;
+using Confix.Tool.Middlewares;
 
 namespace ConfiX.Entities.Component.Configuration;
 
@@ -70,7 +71,7 @@ public class RuntimeConfigurationTest : ParserTestBase
         var original = new RuntimeConfiguration(true,
             ProjectConfiguration.Empty,
             null,
-            Array.Empty<FileInfo>());
+            Array.Empty<JsonFile>());
 
         // Act
         var merged = original.Merge(null);
@@ -90,8 +91,8 @@ public class RuntimeConfigurationTest : ParserTestBase
                 "TestComponent",
                 new List<ComponentInputConfiguration>(),
                 new List<ComponentOutputConfiguration>(),
-                Array.Empty<FileInfo>()),
-            Array.Empty<FileInfo>());
+                Array.Empty<JsonFile>()),
+            Array.Empty<JsonFile>());
         var other = new RuntimeConfiguration(
             false,
             new ProjectConfiguration("MergedProject",
@@ -102,12 +103,12 @@ public class RuntimeConfigurationTest : ParserTestBase
                 null,
                 null,
                 null,
-                Array.Empty<FileInfo>()),
+                Array.Empty<JsonFile>()),
             new ComponentConfiguration("MergedComponent",
                 new List<ComponentInputConfiguration>(),
                 new List<ComponentOutputConfiguration>(),
-                Array.Empty<FileInfo>()),
-            Array.Empty<FileInfo>());
+                Array.Empty<JsonFile>()),
+            Array.Empty<JsonFile>());
 
         // Act
         var merged = original.Merge(other);
@@ -120,7 +121,7 @@ public class RuntimeConfigurationTest : ParserTestBase
     }
 
     [Fact]
-    public void LoadFromFiles_Should_LoadConfigurationFromFile_ShouldMerge()
+    public async Task LoadFromFiles_Should_LoadConfigurationFromFile_ShouldMergeAsync()
     {
         // Arrange
         var confixRcPath1 =
@@ -130,13 +131,6 @@ public class RuntimeConfigurationTest : ParserTestBase
 
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath1)!);
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath2)!);
-
-        var configuration = new List<FileInfo>
-        {
-            new(confixRcPath1),
-            new(confixRcPath2)
-        };
-
         File.WriteAllText(confixRcPath1,
             """
             {
@@ -165,6 +159,12 @@ public class RuntimeConfigurationTest : ParserTestBase
                 }
             }
             """);
+            
+        var configuration = new List<JsonFile>
+        {
+            await JsonFile.FromFile(new(confixRcPath1), default),
+            await JsonFile.FromFile(new(confixRcPath2), default)
+        };
 
         // Act
         var result = RuntimeConfiguration.LoadFromFiles(configuration);
@@ -181,7 +181,7 @@ public class RuntimeConfigurationTest : ParserTestBase
     }
 
     [Fact]
-    public void LoadFromFiles_Should_LoadAndMergeConfigurationsFromMultipleFiles()
+    public async Task LoadFromFiles_Should_LoadAndMergeConfigurationsFromMultipleFilesAsync()
     {
         // Arrange
         var confixRcPath1 =
@@ -190,13 +190,6 @@ public class RuntimeConfigurationTest : ParserTestBase
             Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
         var confixRcPath3 =
             Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
-
-        var configuration = new List<FileInfo>
-        {
-            new(confixRcPath1),
-            new(confixRcPath2),
-            new(confixRcPath3)
-        };
 
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath1)!);
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath2)!);
@@ -242,6 +235,13 @@ public class RuntimeConfigurationTest : ParserTestBase
                     "project": null
                 }
             """);
+
+        var configuration = new List<JsonFile>
+        {
+            await JsonFile.FromFile(new(confixRcPath1), default),
+            await JsonFile.FromFile(new(confixRcPath2), default),
+            await JsonFile.FromFile(new(confixRcPath3), default)
+        };
 
         // Act
         var result = RuntimeConfiguration.LoadFromFiles(configuration);

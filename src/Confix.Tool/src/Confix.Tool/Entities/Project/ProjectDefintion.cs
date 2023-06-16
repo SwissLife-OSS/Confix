@@ -51,10 +51,10 @@ public sealed class ProjectDefinition
     public static ProjectDefinition From(ProjectConfiguration configuration)
     {
         var lastConfigurationFile =
-            configuration.SourceFiles.LastOrDefault(x => x.Name == FileNames.ConfixProject);
+            configuration.SourceFiles.LastOrDefault(x => x.File.Name == FileNames.ConfixProject);
 
         var name = configuration.Name
-            ?? lastConfigurationFile?.Directory?.Name
+            ?? lastConfigurationFile?.File.Directory?.Name
             ?? DefaultName;
 
         var environments =
@@ -93,7 +93,7 @@ public sealed class ProjectDefinition
             componentProviders,
             configurationFiles,
             subprojects,
-            lastConfigurationFile?.Directory);
+            lastConfigurationFile?.File.Directory);
     }
 
     public static ProjectDefinition Instance { get; } = new(
