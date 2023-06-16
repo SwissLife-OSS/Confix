@@ -20,7 +20,8 @@ public sealed record GitVariableProviderConfiguration
     public required string FilePath { get; init; }
 
     [JsonPropertyName("cloneDirectory")]
-    public required string CloneDirectory { get; init; }
+    // todo: default of .confix/.variables/git/hash would be cool
+    public required string CloneDirectory { get; init; } 
 
     [DefaultValue(1)]
     [JsonPropertyName("depth")]
