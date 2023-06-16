@@ -128,28 +128,6 @@ file static class Extensions
         return tree;
     }
 
-    private static T AddResult<T>(this T node, EvaluationResults results) where T : IHasTreeNodes
-    {
-        if (results.HasErrors)
-        {
-            foreach (var (_, error) in results.Errors!)
-            {
-                node.AddNode($"[red bold]{Glyph.Cross.ToMarkup()}[/] {error.EscapeMarkup()}");
-            }
-        }
-        else
-        {
-            foreach (var result in results.Details)
-            {
-                var lastSegment = result.InstanceLocation.Segments.LastOrDefault()
-                    ?.Value.EscapeMarkup() ?? "";
-                node.AddNode(lastSegment).AddResult(result);
-            }
-        }
-
-        return node;
-    }
-
     public static JsonSchema GetSchema(
         this ISchemaStore store,
         SolutionDefinition solution,
