@@ -1,7 +1,5 @@
-using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
-using Spectre.Console;
 
 namespace Confix.Tool.Middlewares.Project;
 

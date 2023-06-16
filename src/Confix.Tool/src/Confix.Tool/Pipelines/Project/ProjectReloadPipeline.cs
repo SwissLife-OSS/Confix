@@ -18,7 +18,7 @@ public sealed class ProjectReloadPipeline : Pipeline
     {
         builder
             .Use<LoadConfigurationMiddleware>()
-            .UseConfigurationFiles()
+            .UseReadConfigurationFiles()
             .UseEnvironment()
             .Use<VariableMiddleware>()
             .Use<JsonSchemaCollectionMiddleware>()

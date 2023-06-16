@@ -8,7 +8,8 @@ public static class ConfigurationFileCommandLineBuilderExtensions
 {
     public static CommandLineBuilder RegisterConfigurationFiles(this CommandLineBuilder builder)
     {
-        builder.AddSingleton(sp => new ConfigurationFileMiddleware(
+        builder.AddSingleton<WriteConfigurationFileMiddleware>();
+        builder.AddSingleton(sp => new ReadConfigurationFileMiddleware(
             sp.GetRequiredService<IConfigurationFileProviderFactory>()));
 
         builder.AddConfigurationFileProvider<InlineConfigurationFileProvider>();
