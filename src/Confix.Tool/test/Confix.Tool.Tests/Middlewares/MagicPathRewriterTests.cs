@@ -39,9 +39,10 @@ public class MagicPathRewriterTests
         {
             ["fileLinux"] = "./foo/bar",
             ["fileWindows"] = """.\foo\bar""",
-            ["home"] = "$home:foo/bar",
-            ["solution"] = "$solution:foo/bar",
-            ["project"] = "$project:foo/bar",
+            ["home"] = "$home:/foo/bar",
+            ["tilde"] = "~/foo/bar",
+            ["solution"] = "$solution:/foo/bar",
+            ["project"] = "$project:/foo/bar",
         };
         var rewriter = new MagicPathRewriter();
 

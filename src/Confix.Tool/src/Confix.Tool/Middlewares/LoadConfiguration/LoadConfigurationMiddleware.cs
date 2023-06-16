@@ -13,12 +13,11 @@ namespace Confix.Tool.Middlewares;
 public sealed class LoadConfigurationMiddleware : IMiddleware
 {
     /// <inheritdoc />
-    public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
+    public  Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         if (context.Features.TryGet(out ConfigurationFeature _))
         {
-            await next(context);
-            return;
+            return next(context);
         }
 
         context.SetStatus("Loading configuration...");
@@ -60,7 +59,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
 
         context.Logger.ConfigurationLoaded();
 
-        await next(context);
+        return next(context);
     }
 
     private static IConfigurationFileCollection CreateFileCollection(IEnumerable<JsonFile> configurationFiles)

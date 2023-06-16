@@ -19,13 +19,13 @@ public sealed class MagicPathRewriter : JsonDocumentRewriter<MagicPathContext>
     protected override JsonNode Rewrite(JsonValue value, MagicPathContext context)
         => value.GetSchemaValueType() switch
         {
-            SchemaValueType.String when value.ToMagicPath() is { } magicPath
-                => value.RewriteMagicPath(magicPath, context),
+            SchemaValueType.String when MagicPath.From(value) is { } magicPath
+                => JsonValue.Create(magicPath.Replace(context)),
             _ => base.Rewrite(value!, context)
         };
 }
 
-file enum MagicPath
+file enum MagicPathType
 {
     Home,
     Solution,
@@ -33,53 +33,57 @@ file enum MagicPath
     File
 }
 
-file static class MagicPathRewriterExtensions
+file class MagicPath
 {
-    public static MagicPath? ToMagicPath(this JsonValue value)
+    private static class Prefix
+    {
+        public const string Home = "$home:/";
+        public const string Tilde = "~/";
+        public const string Solution = "$solution:/";
+        public const string Project = "$project:/";
+        public const string FileLinux = "./";
+        public const string FileWindows = ".\\";
+    }
+
+    private readonly MagicPathType _type;
+    private readonly string _path;
+
+    public MagicPath(MagicPathType type, string path)
+    {
+        _type = type;
+        _path = path;
+    }
+
+    public static MagicPath? From(JsonValue value)
     {
         if ((string?)value is { } stringValue)
         {
             return stringValue switch
             {
-                string s when s.StartsWith("$home:") => MagicPath.Home,
-                string s when s.StartsWith("$solution:") => MagicPath.Solution,
-                string s when s.StartsWith("$project:") => MagicPath.Project,
-                string s when s.StartsWith("./") || s.StartsWith(".\\") => MagicPath.File,
+                string s when s.StartsWith(Prefix.Home) => new MagicPath(MagicPathType.Home, s.Remove(0, Prefix.Home.Length)),
+                string s when s.StartsWith(Prefix.Tilde) => new MagicPath(MagicPathType.Home, s.Remove(0, Prefix.Tilde.Length)),
+                string s when s.StartsWith(Prefix.Solution) => new MagicPath(MagicPathType.Solution, s.Remove(0, Prefix.Solution.Length)),
+                string s when s.StartsWith(Prefix.Project) => new MagicPath(MagicPathType.Project, s.Remove(0, Prefix.Project.Length)),
+                string s when s.StartsWith(Prefix.FileLinux) => new MagicPath(MagicPathType.File, s.Remove(0, Prefix.FileLinux.Length)),
+                string s when s.StartsWith(Prefix.FileWindows) => new MagicPath(MagicPathType.File, s.Remove(0, Prefix.FileWindows.Length)),
                 _ => null
             };
         }
         return null;
     }
 
-    public static JsonNode RewriteMagicPath(
-        this JsonValue value,
-        MagicPath magicPath,
-        MagicPathContext context)
-    {
-        var stringValue = ((string)value!).RemoveMagicPathPrefix(magicPath);
-        var combinedStringValue = magicPath switch
+    public string Replace(MagicPathContext context)
+        => _type switch
         {
-            MagicPath.Home => Path.Combine(context.HomeDirectory.FullName, stringValue),
-            MagicPath.Solution when context.SolutionDirectory is not null
-                => Path.Combine(context.SolutionDirectory.FullName, stringValue),
-            MagicPath.Project when context.ProjectDirectory is not null
-                => Path.Combine(context.ProjectDirectory.FullName, stringValue),
-            MagicPath.File => Path.Combine(context.FileDirectory.FullName, stringValue),
+            MagicPathType.Home => Path.Combine(context.HomeDirectory.FullName, _path),
+            MagicPathType.Solution when context.SolutionDirectory is not null
+                => Path.Combine(context.SolutionDirectory.FullName, _path),
+            MagicPathType.Project when context.ProjectDirectory is not null
+                => Path.Combine(context.ProjectDirectory.FullName, _path),
+            MagicPathType.File => Path.Combine(context.FileDirectory.FullName, _path),
             _ => throw new ArgumentOutOfRangeException(
-                nameof(magicPath),
-                magicPath,
+                nameof(_type),
+                _type,
                 "The magic path is not supported in this context")
-        };
-        return JsonValue.Create(combinedStringValue);
-    }
-
-    private static string RemoveMagicPathPrefix(this string value, MagicPath magicPath)
-        => magicPath switch
-        {
-            MagicPath.Home => value.Remove(0, "$home:".Length),
-            MagicPath.Solution => value.Remove(0, "$solution:".Length),
-            MagicPath.Project => value.Remove(0, "$project:".Length),
-            MagicPath.File => value.Remove(0, "./".Length),
-            _ => value
         };
 }

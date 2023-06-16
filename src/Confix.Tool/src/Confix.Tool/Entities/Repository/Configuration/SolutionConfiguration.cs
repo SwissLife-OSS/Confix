@@ -65,7 +65,6 @@ public sealed class SolutionConfiguration
         return new SolutionConfiguration(project, component, sourceFiles);
     }
 
-
     public static SolutionConfiguration? LoadFromFiles(IEnumerable<JsonFile> files)
     {
         var confixRc = files.FirstOrDefault(x => x.File.Name == FileNames.ConfixSolution);
