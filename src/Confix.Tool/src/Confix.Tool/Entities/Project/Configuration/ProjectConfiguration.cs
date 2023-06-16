@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 
@@ -27,7 +28,7 @@ public sealed class ProjectConfiguration
         IReadOnlyList<ComponentProviderConfiguration>? componentProviders,
         IReadOnlyList<ConfigurationFileConfiguration>? configurationFiles,
         IReadOnlyList<ProjectConfiguration>? subprojects,
-        IReadOnlyList<FileInfo> sourceFiles)
+        IReadOnlyList<JsonFile> sourceFiles)
     {
         Name = name;
         Environments = environments;
@@ -56,12 +57,12 @@ public sealed class ProjectConfiguration
 
     public IReadOnlyList<ProjectConfiguration>? Subprojects { get; }
 
-    public IReadOnlyList<FileInfo> SourceFiles { get; }
+    public IReadOnlyList<JsonFile> SourceFiles { get; }
 
     public static ProjectConfiguration Parse(JsonNode? node)
-        => Parse(node, Array.Empty<FileInfo>());
+        => Parse(node, Array.Empty<JsonFile>());
 
-    public static ProjectConfiguration Parse(JsonNode? node, IReadOnlyList<FileInfo> sourceFiles)
+    public static ProjectConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> sourceFiles)
     {
         var obj = node.ExpectObject();
 
@@ -174,18 +175,18 @@ public sealed class ProjectConfiguration
             sourceFiles);
     }
 
-    public static ProjectConfiguration? LoadFromFiles(IEnumerable<FileInfo> files)
+    public static ProjectConfiguration? LoadFromFiles(IEnumerable<JsonFile> files)
     {
-        var config = files.FirstOrDefault(x => x.Name == FileNames.ConfixProject);
+        var config = files.FirstOrDefault(x => x.File.Name == FileNames.ConfixProject);
         if (config is null)
         {
             return null;
         }
 
-        var json = JsonNode.Parse(File.ReadAllText(config.FullName));
+        var json = config.Content;
         return Parse(json, new[] { config });
     }
 
     public static ProjectConfiguration Empty { get; } =
-        new(null, null, null, null, null, null, null, null, Array.Empty<FileInfo>());
+        new(null, null, null, null, null, null, null, null, Array.Empty<JsonFile>());
 }

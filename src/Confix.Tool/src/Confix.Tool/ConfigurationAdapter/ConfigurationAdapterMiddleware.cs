@@ -60,9 +60,9 @@ file static class Extensions
         [NotNullWhen(true)] out FileInfo? solutionFile)
     {
         var solution =
-            feature.ConfigurationFiles.FirstOrDefault(x => x.Name == FileNames.ConfixSolution);
+            feature.ConfigurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixSolution);
 
-        solutionFile = solution;
+        solutionFile = solution?.File;
 
         return solution is not null;
     }
