@@ -82,7 +82,7 @@ file static class Log
         this IConsoleLogger console,
         ConfigurationFile file)
     {
-        console.Debug($"The configuration file '{file.File.ToLink()}' is valid.");
+        console.Success($"The configuration file {file.File.ToLink()} is valid.");
     }
 }
 
