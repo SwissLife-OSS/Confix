@@ -1,3 +1,4 @@
+
 using System.Diagnostics;
 using Confix.Tool.Commands.Logging;
 
@@ -9,6 +10,17 @@ public static class GitHelpers
         GitCloneConfiguration configuration,
         CancellationToken cancellationToken)
     {
+        List<string> arguments = new()
+        {
+            "clone"
+        };
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+        arguments.Add(configuration.RepositoryUrl);
+        arguments.Add(configuration.Location);
+
         using Process process = new()
         {
             StartInfo = new()
@@ -18,13 +30,7 @@ public static class GitHelpers
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                ArgumentList = {
-                    "clone",
-                    $"--depth={configuration.Depth}",
-                    $"--branch {configuration.Branch}",
-                    configuration.Arguments,
-                    configuration.RepositoryUrl,
-                    configuration.Location}
+                Arguments = string.Join(" ", arguments)
             }
         };
 
@@ -37,7 +43,8 @@ public static class GitHelpers
 
             string output = await process.StandardOutput.ReadToEndAsync(cancellationToken);
             App.Log.GitCloneOutput(output);
-            App.Log.GitCloneFinished(process.ExitCode);
+
+            process.EnsureExitCode();
         }
         catch (Exception ex)
         {
@@ -49,16 +56,22 @@ public static class GitHelpers
 public record GitCloneConfiguration(
     string RepositoryUrl,
     string Location,
-    string Branch,
-    int Depth,
-    string? Arguments
+    string[]? Arguments
 );
 
 file static class LogExtensions
 {
+    public static void EnsureExitCode(this Process process)
+    {
+        if (process.ExitCode != 0)
+        {
+            throw new Exception($"Process exited with code {process.ExitCode}");
+        }
+    }
+
     public static void GitCloneStarted(this IConsoleLogger log, string repositoryUrl)
     {
-        log.Information($"Cloning {repositoryUrl}...");
+        log.Debug($"Cloning {repositoryUrl} ...");
     }
 
     public static void GitCloneOutput(this IConsoleLogger log, string output)
@@ -68,7 +81,7 @@ file static class LogExtensions
 
     public static void GitCloneFinished(this IConsoleLogger log, int exitCode)
     {
-        log.Information($"Cloning completed with exit code {exitCode}");
+        log.Debug($"Cloning completed with exit code {exitCode}");
     }
 
     public static void GitCloneFailed(this IConsoleLogger log, Exception ex)
