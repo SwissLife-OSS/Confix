@@ -17,8 +17,7 @@ public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewr
 
     private JsonNode RewriteVariable(string key, JsonVariableRewriterContext context)
     {
-        if (VariablePath.TryParse(key, out VariablePath? parsed)
-            && parsed.HasValue)
+        if (VariablePath.TryParse(key, out VariablePath? parsed))
         {
             return context.VariableLookup[parsed.Value].Copy()!;
         }

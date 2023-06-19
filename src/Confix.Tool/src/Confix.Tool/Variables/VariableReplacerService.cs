@@ -31,8 +31,7 @@ public sealed class VariableReplacerService : IVariableReplacerService
         {
             if (
                 value?.GetSchemaValueType() == SchemaValueType.String
-                && VariablePath.TryParse(value.ToString(), out var parsed)
-                && parsed.HasValue)
+                && VariablePath.TryParse(value.ToString(), out var parsed))
             {
                 yield return parsed.Value;
             }

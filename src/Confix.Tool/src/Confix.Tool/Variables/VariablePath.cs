@@ -1,17 +1,19 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ConfiX.Variables;
 
 public readonly record struct VariablePath(string ProviderName, string Path)
 {
     public static VariablePath Parse(string variable)
     {
-        if (TryParse(variable, out var parsed) && parsed.HasValue)
+        if (TryParse(variable, out var parsed))
         {
             return parsed.Value;
         }
         throw new VariablePathParseException(variable);
     }
 
-    public static bool TryParse(string variable, out VariablePath? parsed)
+    public static bool TryParse(string variable, [NotNullWhen(true)]out VariablePath? parsed)
     {
         var split = variable.Split(':') ?? Array.Empty<string>();
         if (!variable.StartsWith('$') || split.Length != 2)
