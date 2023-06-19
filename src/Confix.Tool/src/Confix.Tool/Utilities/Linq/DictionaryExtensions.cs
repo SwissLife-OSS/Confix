@@ -22,7 +22,7 @@ public static class DictionaryExtensions
     public static bool TryGetValue<T>(
         this IDictionary<string, object> dictionary,
         string key,
-        [NotNullWhen(true)] out T value)
+        [NotNullWhen(true)] out T? value)
     {
         if (dictionary.TryGetValue(key, out var result) && result is T resultT)
         {

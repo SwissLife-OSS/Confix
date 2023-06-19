@@ -1,4 +1,5 @@
 using System.CommandLine.Builder;
+using Confix.ConfigurationFiles;
 using Confix.Tool.Entities.Components;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,7 @@ public static class ConfigurationFileCommandLineBuilderExtensions
             sp.GetRequiredService<IConfigurationFileProviderFactory>()));
 
         builder.AddConfigurationFileProvider<InlineConfigurationFileProvider>();
+        builder.AddConfigurationFileProvider<AppSettingsConfigurationFileProvider>();
 
         return builder;
     }

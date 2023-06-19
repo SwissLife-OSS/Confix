@@ -47,7 +47,9 @@ public static class JsonNodeParserExtensions
             JsonValue =>
                 throw new JsonParseException(node, "Expected array but got value"),
 
-            _ => throw new JsonParseException(node, "Expected array but got null")
+            _ => throw new JsonParseException(
+                node ?? JsonNull.SignalNode,
+                "Expected array but got null")
         };
 
     public static T ExpectValue<T>(this JsonNode? node)

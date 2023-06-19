@@ -32,23 +32,11 @@ public record SecretVariableProviderConfiguration
     {
         try
         {
-            return (SecretVariableProviderConfiguration)
-                node.Deserialize(
-                    typeof(SecretVariableProviderConfiguration),
-                    new JsonSerialization(
-                        new JsonSerializerOptions
-                        {
-                            Converters =
-                            {
-                                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
-                            },
-                        }))!;
+            return node.Deserialize(JsonSerialization.Default.SecretVariableProviderConfiguration)!;
         }
         catch (JsonException ex)
         {
-            throw new ArgumentException(
-                "Configuration of SecretVariableProvider is invalid",
-                ex);
+            throw new ArgumentException("Configuration of SecretVariableProvider is invalid", ex);
         }
     }
 }

@@ -77,4 +77,7 @@ public static class DirectoryExtensions
             currentDirectory = parentDirectory.FullName;
         }
     }
+
+    public static DirectoryInfo Append(this DirectoryInfo directory, string path)
+        => new(Path.Join(directory.FullName, path));
 }
