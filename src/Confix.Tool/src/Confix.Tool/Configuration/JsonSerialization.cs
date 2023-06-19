@@ -7,6 +7,7 @@ namespace ConfiX.Extensions;
 [JsonSerializable(typeof(LocalVariableProviderConfiguration))]
 [JsonSerializable(typeof(AzureKeyVaultProviderConfiguration))]
 [JsonSerializable(typeof(SecretVariableProviderConfiguration))]
+[JsonSerializable(typeof(GitVariableProviderConfiguration))]
 public partial class JsonSerialization : JsonSerializerContext
 {
 }

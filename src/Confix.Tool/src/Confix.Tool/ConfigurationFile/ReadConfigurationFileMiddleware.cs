@@ -1,4 +1,8 @@
+using Confix.Tool.Abstractions;
+using Confix.Tool.Commands.Logging;
+using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
+using Microsoft.Extensions.Logging;
 
 namespace Confix.Tool.Middlewares;
 
@@ -38,8 +42,36 @@ public sealed class ReadConfigurationFileMiddleware : IMiddleware
             }
         }
 
+        ApplyOutputFileOption(context, project, feature);
+
         context.Features.Set(feature);
 
         await next(context);
+    }
+
+    private static void ApplyOutputFileOption(
+        IMiddlewareContext context,
+        ProjectDefinition project,
+        ConfigurationFileFeature feature)
+    {
+        if (!context.Parameter.TryGet(OutputFileOption.Instance, out FileInfo outputFileOption))
+        {
+            return;
+        }
+
+        context.Logger.OutputFileOverride(outputFileOption.FullName);
+        
+        foreach (var t in feature.Files)
+        {
+            t.OutputFile = outputFileOption;
+        }
+    }
+}
+
+file static class Log
+{
+    public static void OutputFileOverride(this IConsoleLogger logger, string outputFile)
+    {
+        logger.Debug($"Overriding the output file with '{outputFile}'");
     }
 }
