@@ -47,7 +47,6 @@ public sealed class LocalVariableProvider : IVariableProvider
         return JsonParser.ParseNode(node);
     }
 
-
     public ValueTask DisposeAsync()
     {
         return ValueTask.CompletedTask;
