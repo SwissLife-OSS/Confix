@@ -481,3 +481,7 @@ $RECYCLE.BIN/
 
 # VSCode
 .vscode/
+
+#nextjs
+.next/
+out/

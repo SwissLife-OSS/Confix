@@ -1,0 +1,54 @@
+# Variables
+
+Confix has the concept of variables. These variables are typically used to reference secrets, or any configuration data that should not be directly entered into the configuration files. They can be used for values are not known at development time. 
+
+In Confix, variables have a distinct structure: `$providerName:path.to.resource`, where `providerName` refers to the source or provider of the variable value, and `path.to.resource` indicates the specific resource or secret in the provider's repository.
+
+Variables are resolved during the `build` operation of the configuration. This operation can take place at various stages of your development lifecycle. You can also `validate` your configuration against a specific environment to ensure that all variables can be resolved before deployment. For more on this, see the `Deploying your App` section.
+
+The specification for variable providers is contained in the `.confix.project` file, or inherited from `.confixrc`. During project initialization, all potential variables are fetched from the providers (if possible), offering intelligent code completion during your development.
+
+## Providers
+
+Different providers can be utilized to manage your variables:
+
+- **$keyvault**: Use this when your variables are stored in Azure Key Vault. The path should be the name of the variable as it is in the key vault.
+  
+- **$vault**: For those utilizing HashiCorp Vault for secret management, this is the appropriate provider.
+  
+- **\$secret**: This provider allows you to inline the secrets directly into your config using public-private key encryption. For instance, `$secret:aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1hM1o3ekVjN0FYUQ==`.
+
+- **$local**: Use this provider to reference local variables, typically stored in a `variables.json` file in your document root.
+  
+- **$git**: This provider fetches variables from a specific git repository.
+
+## Example JSON with Variables
+
+Here's an example JSON configuration file that uses Confix variables:
+
+```json
+{
+  "database": {
+    "connectionString": "$keyvault:database.connectionString",
+    "maxPoolSize": 12 
+  },
+  "logging": {
+    "level": "$git:logging.level",
+    "destinatin": "$git:logging.server.url"
+  },
+  "appSecrets": {
+    "apiKey": "$secret:aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1hM1o3ekVjN0FYUQ==",
+    "jwtSecret": "$vault:jwt.secret"
+  }
+}
+```
+
+## Commands
+
+To manage variables in Confix, you can use the following commands:
+
+- `confix variables reload`: This command reloads the variables for a project from the providers. Useful for updating your local environment with newly created variables.
+
+- `confix variables set <variable> <value>`: This command sets the value for a specified variable.
+
+- `confix variables get <variable>`: This command retrieves the current value of a specified variable.
