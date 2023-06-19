@@ -1,8 +1,8 @@
-using System.CommandLine;
+using Confix.Tool.Commands.Project;
 
 namespace Confix.Tool.Commands.Variable;
 
-public sealed class VariableSetCommand : Command
+public sealed class VariableSetCommand : PipelineCommand<VariableSetPipeline>
 {
     public VariableSetCommand() : base("set")
     {
