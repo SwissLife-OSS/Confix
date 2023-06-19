@@ -9,7 +9,7 @@ public sealed record AzureKeyVaultProviderConfiguration
 {
     [JsonPropertyName("Uri")]
     public required string Uri { get; init; }
-    
+
     public static AzureKeyVaultProviderConfiguration Parse(JsonNode node)
     {
         try
