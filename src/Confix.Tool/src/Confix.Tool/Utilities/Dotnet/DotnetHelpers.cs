@@ -62,18 +62,26 @@ public static class DotnetHelpers
             csprojDoc.Add(project);
         }
 
-        var propertyGroup = project.Elements(Xml.PropertyGroup).FirstOrDefault();
-        if (propertyGroup == null)
+        var propertyGroups = project.Elements(Xml.PropertyGroup).ToArray();
+        if (propertyGroups.Length == 0)
         {
             App.Log.CsprojFileDoesNotContainAPropertyGroupElement(csprojFile.FullName);
-            propertyGroup = new XElement(Xml.PropertyGroup);
-            project.Add(propertyGroup);
+            var group = new XElement(Xml.PropertyGroup);
+            project.Add(group);
+            propertyGroups = new[] { group };
         }
 
-        var userSecretsId = propertyGroup.Element(Xml.UserSecretsId)?.Value;
+        var userSecretsId = propertyGroups.Select(x => x.Element(Xml.UserSecretsId))
+            .OfType<XElement>()
+            .FirstOrDefault()
+            ?.Value;
+        
         if (userSecretsId == null)
         {
+            var propertyGroup = propertyGroups.First();
+
             userSecretsId = Guid.NewGuid().ToString();
+
             propertyGroup.Add(new XElement(Xml.UserSecretsId, userSecretsId));
 
             App.Log.AddedUserSecretsIdToTheCsprojFile(userSecretsId);
