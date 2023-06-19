@@ -58,8 +58,6 @@ public sealed class GitVariableProvider : IVariableProvider
     private static string GetCloneDirectory(GitVariableProviderConfiguration providerConfiguration)
         => Path.Combine(Path.GetTempPath(), ".confix", "git", providerConfiguration.GetMd5Hash());
 
-
-
     private async Task EnsureCloned(CancellationToken cancellationToken)
     {
         if (Directory.Exists(_cloneDirectory))
