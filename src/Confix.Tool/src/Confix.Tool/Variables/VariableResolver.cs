@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using Confix.Tool;
+using Confix.Tool.Commands.Logging;
 using Json.Schema;
 
 namespace ConfiX.Variables;
@@ -48,6 +49,7 @@ public sealed class VariableResolver : IVariableResolver
 
     public async Task<JsonNode> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
     {
+        App.Log.ResolvingVariable(key);
         var configuration = GetProviderConfiguration(key.ProviderName);
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
         var resolvedValue = await provider.ResolveAsync(key.Path, cancellationToken);
@@ -83,6 +85,7 @@ public sealed class VariableResolver : IVariableResolver
         IReadOnlySet<string> paths,
         CancellationToken cancellationToken)
     {
+        App.Log.ResolvingVariables(providerName, paths.Count);
         Dictionary<VariablePath, JsonNode> resolvedVariables = new();
         Dictionary<VariablePath, string> nestedVariables = new();
 
@@ -135,5 +138,21 @@ public static class Extension
 
         variablePath = default;
         return false;
+    }
+}
+
+file static class LogExtensionts
+{
+    public static void ResolvingVariable(this IConsoleLogger log, VariablePath key)
+    {
+        log.Information("Resolving variable {0}", $"{key}".AsHighlighted());
+    }
+
+    public static void ResolvingVariables(this IConsoleLogger log, string providerName, int count)
+    {
+        log.Information(
+            "Resolving {0} variables from {1}",
+            $"{count}".AsHighlighted(),
+            providerName.AsHighlighted());
     }
 }
