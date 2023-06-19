@@ -6,6 +6,7 @@ const withNextra = require("nextra")({
 module.exports = withNextra({
   output: "export",
   distDir: "out",
+  basePath: "/Confix-Reloaded",
   images: {
     unoptimized: true,
   },
