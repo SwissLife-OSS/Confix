@@ -60,7 +60,7 @@ public sealed class VariableResolver : IVariableResolver
             IVariableProvider provider = _variableProviderFactory.CreateProvider(providerConfiguration);
 
             var resolved = await provider.ResolveManyAsync(
-                group.Select(x => x.Path).ToArray(),
+                group.Select(x => x.Path).Distinct().ToArray(),
                 cancellationToken);
 
             resolved.ForEach((r) =>

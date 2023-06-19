@@ -15,7 +15,7 @@ internal static class VariableProviderExtensions
         ConcurrentQueue<KeyValuePair<string, JsonNode>> resolvedVariables = new();
 
         await Parallel.ForEachAsync(
-            paths.Distinct(),
+            paths,
             new ParallelOptions { CancellationToken = cancellationToken },
             async (path, ctx) =>
             {
