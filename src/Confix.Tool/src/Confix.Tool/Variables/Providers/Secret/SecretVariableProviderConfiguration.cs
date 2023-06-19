@@ -32,7 +32,7 @@ public record SecretVariableProviderConfiguration
     {
         try
         {
-            return node.Deserialize(JsonSerialization.Default.SecretVariableProviderConfiguration)!;
+            return node.Deserialize(JsonSerialization.Enum.SecretVariableProviderConfiguration)!;
         }
         catch (JsonException ex)
         {
