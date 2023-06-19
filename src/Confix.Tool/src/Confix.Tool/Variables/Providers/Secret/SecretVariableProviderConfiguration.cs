@@ -10,10 +10,12 @@ public record SecretVariableProviderConfiguration
 {
     [DefaultValue(SecretVariableProviderAlgorithm.RSA)]
     [JsonPropertyName("algorithm")]
+    [JsonConverter(typeof(JsonStringEnumCamelCaseConverter))]
     public SecretVariableProviderAlgorithm Algorithm { get; init; }
 
     [DefaultValue(EncryptionPadding.OaepSHA256)]
     [JsonPropertyName("padding")]
+    [JsonConverter(typeof(JsonStringEnumCamelCaseConverter))]
     public EncryptionPadding Padding { get; init; }
 
     [JsonPropertyName("publicKey")]
@@ -32,7 +34,7 @@ public record SecretVariableProviderConfiguration
     {
         try
         {
-            return node.Deserialize(JsonSerialization.Enum.SecretVariableProviderConfiguration)!;
+            return node.Deserialize(JsonSerialization.Default.SecretVariableProviderConfiguration)!;
         }
         catch (JsonException ex)
         {
