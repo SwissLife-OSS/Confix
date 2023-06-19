@@ -13,7 +13,9 @@ public sealed record ConfigurationFile
 {
     private JsonNode? _content;
 
-    public required FileInfo File { get; set; }
+    public required FileInfo InputFile { get; set; }
+
+    public required FileInfo OutputFile { get; set; }
 
     [MemberNotNullWhen(true, nameof(Content))]
     public bool HasContentChanged { get; private set; }
@@ -42,7 +44,7 @@ public sealed record ConfigurationFile
                 return _content;
             }
 
-            var content = await File.ReadAllText(cancellationToken);
+            var content = await InputFile.ReadAllText(cancellationToken);
             _content = JsonNode.Parse(content);
             return _content;
         }

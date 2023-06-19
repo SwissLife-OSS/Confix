@@ -7,7 +7,7 @@ namespace ConfiX.Variables;
 internal static class VariableProviderExtensions
 {
     public static async Task<IReadOnlyDictionary<string, JsonNode>> ResolveMany(
-        this IReadOnlyList<string> paths,
+        this IEnumerable<string> paths,
         Func<string, CancellationToken, Task<JsonNode>> resolveAsync,
         CancellationToken cancellationToken)
     {
@@ -15,7 +15,7 @@ internal static class VariableProviderExtensions
         ConcurrentQueue<KeyValuePair<string, JsonNode>> resolvedVariables = new();
 
         await Parallel.ForEachAsync(
-            paths,
+            paths.Distinct(),
             new ParallelOptions { CancellationToken = cancellationToken },
             async (path, ctx) =>
             {
