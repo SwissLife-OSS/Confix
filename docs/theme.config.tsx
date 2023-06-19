@@ -1,18 +1,17 @@
-import React from 'react'
-import { DocsThemeConfig } from 'nextra-theme-docs'
+import { DocsThemeConfig } from "nextra-theme-docs";
+import React from "react";
 
 const config: DocsThemeConfig = {
-  logo: <span>My Project</span>,
+  logo: <span>Confix</span>,
   project: {
-    link: 'https://github.com/shuding/nextra-docs-template',
+    link: "https://github.com/swisslife-oss/confix",
   },
-  chat: {
-    link: 'https://discord.com',
+  docsRepositoryBase: "https://github.com/swisslife-oss/confix",
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s - Confix",
+    };
   },
-  docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
-  footer: {
-    text: 'Nextra Docs Template',
-  },
-}
+};
 
-export default config
+export default config;
