@@ -2,7 +2,7 @@ using System.Text.Json.Nodes;
 
 namespace ConfiX.Variables;
 
-public interface IVariableProvider
+public interface IVariableProvider: IAsyncDisposable
 {
     /// <summary>
     /// Gets all available variables

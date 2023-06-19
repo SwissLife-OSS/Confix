@@ -44,6 +44,6 @@ file static class Logs
         this IConsoleLogger logger,
         ConfigurationFile file)
     {
-        logger.Debug($"Replacing variables in configuration file '{file.File.Name}'");
+        logger.Debug($"Replacing variables in configuration file '{file.InputFile.Name}'");
     }
 }

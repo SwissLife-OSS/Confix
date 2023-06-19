@@ -75,14 +75,14 @@ file static class Log
         this IConsoleLogger console,
         ConfigurationFile file)
     {
-        console.Error($"The configuration file {file.File.ToLink()} is invalid.");
+        console.Error($"The configuration file {file.InputFile.ToLink()} is invalid.");
     }
 
     public static void ValidConfigurationFile(
         this IConsoleLogger console,
         ConfigurationFile file)
     {
-        console.Success($"The configuration file {file.File.ToLink()} is valid.");
+        console.Success($"The configuration file {file.InputFile.ToLink()} is valid.");
     }
 }
 
@@ -171,7 +171,7 @@ file static class Extensions
     {
         var result = await file.TryLoadContentAsync(cancellationToken);
         return result ?? throw new ExitException(
-            $"The configuration file '{file.File.Name}' could not be found.");
+            $"The configuration file '{file.InputFile.Name}' could not be found.");
     }
 
     public static CustomLogger CreateLog(this IConsoleLogger log)

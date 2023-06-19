@@ -18,7 +18,7 @@ public sealed class InlineConfigurationFileProvider : IConfigurationFileProvider
         {
             App.Log.FoundAInlineConfigurationFile(file);
 
-            files.Add(new ConfigurationFile { File = file });
+            files.Add(new ConfigurationFile { InputFile = file, OutputFile = file });
         }
 
         return files;
