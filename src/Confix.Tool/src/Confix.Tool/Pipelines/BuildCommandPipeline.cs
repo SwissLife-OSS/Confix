@@ -14,6 +14,7 @@ public class BuildCommandPipeline : Pipeline
         builder
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
+            .UseReadConfigurationFiles()
             .UseHandler<IServiceProvider>(InvokeAsync);
     }
 

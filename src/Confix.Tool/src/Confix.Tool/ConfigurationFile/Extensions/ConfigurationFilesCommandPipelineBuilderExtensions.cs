@@ -13,6 +13,7 @@ public static class ConfigurationFilesCommandPipelineBuilderExtensions
 
     public static IPipelineDescriptor UseReadConfigurationFiles(this IPipelineDescriptor builder)
     {
+        builder.AddOption(OutputFileOption.Instance);
         builder.Use<ReadConfigurationFileMiddleware>();
 
         return builder;
