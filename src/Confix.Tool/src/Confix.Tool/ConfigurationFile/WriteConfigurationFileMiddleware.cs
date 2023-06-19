@@ -24,7 +24,7 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
 
             context.Logger.PersistingConfigurationFile(file);
 
-            await using var stream = file.File.OpenReplacementStream();
+            await using var stream = file.OutputFile.OpenReplacementStream();
             await file.Content.SerializeToStreamAsync(stream, context.CancellationToken);
         }
         
@@ -38,7 +38,7 @@ file static class Logs
         this IConsoleLogger console,
         ConfigurationFile file)
     {
-        console.Information($"Persisting configuration file {file.File.ToLink()}");
-        console.Debug($" -> {file.File.FullName}");
+        console.Information($"Persisting configuration file {file.OutputFile.ToLink()}");
+        console.Debug($" -> {file.OutputFile.FullName}");
     }
 }
