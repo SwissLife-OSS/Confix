@@ -48,6 +48,11 @@ public sealed class SecretVariableProvider : IVariableProvider
         return Task.FromResult(Convert.ToBase64String(encryptedValue));
     }
 
+    public ValueTask DisposeAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
+
     private byte[] Encrypt(ReadOnlySpan<byte> valueToEncrypt, ReadOnlySpan<char> publicKey)
     {
         using RSA rsa = RSA.Create();

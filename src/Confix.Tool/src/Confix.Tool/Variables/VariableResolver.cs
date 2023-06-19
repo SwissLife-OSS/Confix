@@ -23,7 +23,7 @@ public sealed class VariableResolver : IVariableResolver
         CancellationToken cancellationToken)
     {
         var configuration = GetProviderConfiguration(providerName);
-        var provider = _variableProviderFactory.CreateProvider(configuration);
+        await using var provider = _variableProviderFactory.CreateProvider(configuration);
         var providerPath = await provider.SetAsync(key, value, cancellationToken);
 
         return new VariablePath(providerName, providerPath);
@@ -38,15 +38,18 @@ public sealed class VariableResolver : IVariableResolver
     public async Task<IEnumerable<VariablePath>> ListVariables(string providerName, CancellationToken cancellationToken)
     {
         var configuration = GetProviderConfiguration(providerName);
-        var provider = _variableProviderFactory.CreateProvider(configuration);
+        await using var provider = _variableProviderFactory.CreateProvider(configuration);
         var variableKey = await provider.ListAsync(cancellationToken);
 
         return variableKey.Select(k => new VariablePath(providerName, k));
     }
 
-    public Task<JsonNode> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
-        => _variableProviderFactory.CreateProvider(GetProviderConfiguration(key.ProviderName))
-            .ResolveAsync(key.Path, cancellationToken);
+    public async Task<JsonNode> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
+    {
+        var configuration = GetProviderConfiguration(key.ProviderName);
+        await using var provider = _variableProviderFactory.CreateProvider(configuration);
+        return await provider.ResolveAsync(key.Path, cancellationToken);
+    }
 
     public async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
         IReadOnlyList<VariablePath> keys,
@@ -57,7 +60,7 @@ public sealed class VariableResolver : IVariableResolver
         foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
         {
             var providerConfiguration = GetProviderConfiguration(group.Key);
-            IVariableProvider provider = _variableProviderFactory.CreateProvider(providerConfiguration);
+            await using IVariableProvider provider = _variableProviderFactory.CreateProvider(providerConfiguration);
 
             var resolved = await provider.ResolveManyAsync(
                 group.Select(x => x.Path).Distinct().ToArray(),
