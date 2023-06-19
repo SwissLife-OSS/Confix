@@ -1,0 +1,45 @@
+import { Callout } from "nextra/components";
+
+# Azure KeyVault
+
+Use this provider to store your variables in Azure Key Vault.
+
+<Callout type="info">
+  Dots (.) in variable-paths are automatically replaced by '-' before storing in
+  the Key Vault due to the Key Vault not supporting dots
+</Callout>
+
+## Configuration
+
+| Field | Value                         |
+| :---- | ----------------------------- |
+| Uri   | The Uri of the Azure KeyVault |
+
+**Sample**
+
+```json copy filename=".confixrc"
+{
+  "variableProviders": [
+    {
+      "name": "keyvault",
+      "type": "azure-keyvault",
+      "environmentOverride": {
+        "dev": {
+          "url": "https://mykeyvault-dev.vault.azure.net"
+        },
+        "qa": {
+          "url": "https://mykeyvault-qa.vault.azure.net"
+        },
+        "prod": {
+          "url": "https://mykeyvault-prod.vault.azure.net"
+        }
+      }
+    }
+  ]
+}
+```
+
+## Authentication
+
+The implementation uses [DefaultAzureCredential](https://learn.microsoft.com/en-us/dotnet/api/azure.identity.defaultazurecredential?view=azure-dotnet) to authenticate.
+During local development `az login` can be used to authenticate.
