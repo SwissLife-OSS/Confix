@@ -1,11 +1,35 @@
-# Introduction
- 
-Welcome to Nextra! This is a basic docs template. You can use it as a starting point for your own project :)
+# Confix - Simple Application Configuration
 
-## What is Nextra?
+Managing application configuration has evolved into an intricate process in the modern software development landscape. Enter Confix, a tool specifically designed to untangle this complexity. Confix aids you in managing your application configuration throughout different stages of the software lifecycle, spanning from local development to production deployment.
 
-A **simple**, **powerful** and **flexible** site generation framework with everything you love from Next.js.
+Everything you need is the `confix cli` and `VSCode`
 
-## Documentation
+![Intro-0](../../images/intro-0.png)
 
-The documentation is available at [https://nextra.site](https://nextra.site).
+## Principles
+
+The principles guiding the design and development of Confix include Simplicity, Composability, Flexibility, and Security.
+
+### Simplicity
+
+Building an application locally is relatively straightforward, yet deploying the same application often poses significant challenges. In theory, deploying your app to a cloud provider seems like a breeze, but the reality often contrasts with this expectation. On a local machine, running an application is as easy as executing `dotnet run` or `npm start`, utilizing a local database, without having to worry about secrets or similar factors.
+
+However, when it comes to deployment, you might find yourself grappling with concerns like, "How do I get this configuration into my app?" Confix simplifies this process; you merely store the configuration in a JSON file in your Git repository. Through the JSON Schemas, your IDE will help you with writing the configuration correctly with code completion and validation.
+
+### Composability
+
+In enterprise settings, you frequently encounter shared code. There might be an internal library that you wish to reuse in multiple locations or across various services. You might, for example, only want to create extensions for configuring logging or the database connection once.
+
+To facilitate this, Confix encourages reusability of configuration. With Confix, you can compose components that help you reuse parts of your shared code across your applications and services.
+
+### Flexibility
+
+Confix is built upon the philosophy that every configuration file should be a JSON file that is easy to create and consume. If your application can load JSON files, it can utilize Confix as an app configuration manager. This principle ensures that you can load your configuration the same way, regardless of whether you are in a production environment or in a development one.
+
+### Security
+
+While Confix is a powerful tool for managing application configuration, it is not designed to manage secrets. Instead, it provides a mechanism for representing secrets within your configuration using variables, but it does not store the secrets themselves. The actual secret storage is left to your discretion and your preferred storage method.
+
+With Confix, you can easily integrate your preferred method of storing secrets. You might choose to store your secrets in Azure Key Vault, HashiCorp Vault, or perhaps as environment variables. Alternatively, you may decide to encrypt them and store them in the same JSON file as your other configuration data.
+
+By adhering to these principles, Confix aims to streamline the application configuration process, making it more efficient and less error-prone. Enjoy the simplicity and flexibility of Confix, and say goodbye to the complications of application configuration.
