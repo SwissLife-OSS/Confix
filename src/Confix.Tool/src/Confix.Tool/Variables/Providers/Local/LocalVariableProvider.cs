@@ -46,4 +46,10 @@ public sealed class LocalVariableProvider : IVariableProvider
         JsonNode node = JsonNode.Parse(fileStream) ?? throw new JsonException("Invalid Json Node");
         return JsonParser.ParseNode(node);
     }
+
+
+    public ValueTask DisposeAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
 }

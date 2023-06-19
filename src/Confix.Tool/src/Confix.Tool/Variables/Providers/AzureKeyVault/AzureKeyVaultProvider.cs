@@ -52,6 +52,11 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         KeyVaultSecret result = await _client.SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, cancellationToken);
         return result.Name.ToConfixPath();
     }
+
+    public ValueTask DisposeAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
 }
 
 file static class Extensions

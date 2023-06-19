@@ -36,7 +36,7 @@ public static class GitHelpers
 
         try
         {
-            App.Log.GitCloneStarted(configuration.RepositoryUrl);
+            App.Log.GitCloneStarted(configuration.RepositoryUrl, configuration.Location);
             process.Start();
 
             await process.WaitForExitAsync(cancellationToken);
@@ -69,9 +69,9 @@ file static class LogExtensions
         }
     }
 
-    public static void GitCloneStarted(this IConsoleLogger log, string repositoryUrl)
+    public static void GitCloneStarted(this IConsoleLogger log, string repositoryUrl, string location)
     {
-        log.Debug($"Cloning {repositoryUrl} ...");
+        log.Debug($"Cloning {repositoryUrl} to {location}");
     }
 
     public static void GitCloneOutput(this IConsoleLogger log, string output)

@@ -1,3 +1,6 @@
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace ConfiX.Variables;
@@ -15,16 +18,11 @@ public sealed class GitVariableProvider : IVariableProvider
     public GitVariableProvider(GitVariableProviderConfiguration configuration)
     {
         _configuration = configuration;
-        _cloneDirectory = GetCloneDirectory();
+        _cloneDirectory = GetCloneDirectory(configuration);
         _localVariableProvider = new LocalVariableProvider(new LocalVariableProviderConfiguration
         {
             FilePath = Path.Combine(_cloneDirectory, configuration.FilePath)
         });
-    }
-
-    ~GitVariableProvider()
-    {
-        Directory.Delete(_cloneDirectory, true);
     }
 
     public async Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
@@ -51,8 +49,16 @@ public sealed class GitVariableProvider : IVariableProvider
         return await _localVariableProvider.SetAsync(path, value, cancellationToken);
     }
 
-    private static string GetCloneDirectory()
-        => Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+    public ValueTask DisposeAsync()
+    {
+        Directory.Delete(_cloneDirectory, true);
+        return ValueTask.CompletedTask;
+    }
+
+    private static string GetCloneDirectory(GitVariableProviderConfiguration providerConfiguration)
+        => Path.Combine(Path.GetTempPath(), ".confix", "git", providerConfiguration.GetMd5Hash());
+
+
 
     private async Task EnsureCloned(CancellationToken cancellationToken)
     {
@@ -68,5 +74,14 @@ public sealed class GitVariableProvider : IVariableProvider
         );
 
         await GitHelpers.Clone(configuration, cancellationToken);
+    }
+}
+
+file static class Extensions
+{
+    public static string GetMd5Hash(this object obj)
+    {
+        var hash = MD5.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(obj)));
+        return Convert.ToHexString(hash);
     }
 }
