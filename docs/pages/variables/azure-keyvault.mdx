@@ -23,17 +23,7 @@ Use this provider to store your variables in Azure Key Vault.
     {
       "name": "keyvault",
       "type": "azure-keyvault",
-      "environmentOverride": {
-        "dev": {
-          "url": "https://mykeyvault-dev.vault.azure.net"
-        },
-        "qa": {
-          "url": "https://mykeyvault-qa.vault.azure.net"
-        },
-        "prod": {
-          "url": "https://mykeyvault-prod.vault.azure.net"
-        }
-      }
+      "uri": "https://mykeyvault-dev.vault.azure.net"
     }
   ]
 }

@@ -20,6 +20,23 @@ The `type` field defines the type of the provider. Each type carries its specifi
 
 The `environmentOverride` attribute lets you override provider-specific configuration based on the environment. This can be useful when, for instance, a provider has different URLs for different environments like development, staging, or production.
 
+**Sample**
+
+```json
+{
+  "name": "local",
+  "type": "local",
+  "path": "./variables.json",
+  "environmentOverride": {
+    "dev": {
+      "path": "./variables.dev.json"
+    }
+  }
+}
+```
+
+This provider would use the `./variables.json` unless the environment is `dev`, in which case `./variables.dev.json` would be used.
+
 ### Sample Configuration
 
 Here is an example JSON demonstrating the structure of the `variableProviders` property:
@@ -53,8 +70,8 @@ Here is an example JSON demonstrating the structure of the `variableProviders` p
 
 ### Supported Providers
 
-| Type           | Descriptions                                           | Docs                               |
-| :------------- | ------------------------------------------------------ | ---------------------------------- |
+| Type           | Descriptions                                           | Docs                                |
+| :------------- | ------------------------------------------------------ | ----------------------------------- |
 | azure-keyvault | Variables stored in an Azure KeyVault                  | [Docs↗](./variables/azure-keyvault) |
 | git            | fetch variables stored in a separate git repository    | [Docs↗](./variables/git)            |
 | local          | reference local variables stored in a `json` file      | [Docs↗](./variables/local)          |
