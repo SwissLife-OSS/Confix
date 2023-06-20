@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using Confix.Tool;
+using Confix.Tool.Commands.Logging;
+using Json.Schema;
 
 namespace ConfiX.Variables;
 
@@ -46,30 +49,70 @@ public sealed class VariableResolver : IVariableResolver
 
     public async Task<JsonNode> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
     {
+        App.Log.ResolvingVariable(key);
         var configuration = GetProviderConfiguration(key.ProviderName);
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
-        return await provider.ResolveAsync(key.Path, cancellationToken);
+        var resolvedValue = await provider.ResolveAsync(key.Path, cancellationToken);
+
+        if (resolvedValue.IsVariable(out VariablePath? variablePath))
+        {
+            return await ResolveVariable(variablePath.Value, cancellationToken);
+        }
+        return resolvedValue;
     }
 
     public async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
         IReadOnlyList<VariablePath> keys,
         CancellationToken cancellationToken)
     {
-        Dictionary<VariablePath, JsonNode> resolvedVariables = new();
+        List<KeyValuePair<VariablePath, JsonNode>> resolvedVariables = new(keys.Count);
 
         foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
         {
-            var providerConfiguration = GetProviderConfiguration(group.Key);
-            await using IVariableProvider provider = _variableProviderFactory.CreateProvider(providerConfiguration);
-
-            var resolved = await provider.ResolveManyAsync(
-                group.Select(x => x.Path).Distinct().ToArray(),
+            var providerResults = await ResolveVariables(
+                group.Key,
+                group.Select(k => k.Path).Distinct().ToList(),
                 cancellationToken);
 
-            resolved.ForEach((r) =>
+            resolvedVariables.AddRange(providerResults);
+        }
+
+        return new Dictionary<VariablePath, JsonNode>(resolvedVariables);
+    }
+
+    private async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
+        string providerName,
+        IReadOnlyList<string> paths,
+        CancellationToken cancellationToken)
+    {
+        App.Log.ResolvingVariables(providerName, paths.Count);
+        Dictionary<VariablePath, JsonNode> resolvedVariables = new();
+        Dictionary<VariablePath, string> nestedVariables = new();
+
+        var providerConfiguration = GetProviderConfiguration(providerName);
+        await using IVariableProvider provider = _variableProviderFactory.CreateProvider(providerConfiguration);
+
+        var resolved = await provider.ResolveManyAsync(paths, cancellationToken);
+        foreach (KeyValuePair<string, JsonNode> r in resolved)
+        {
+            if (r.Value.IsVariable(out VariablePath? variablePath))
+            {
+                nestedVariables.Add(variablePath.Value, r.Key);
+            }
+            else
+            {
                 resolvedVariables.Add(
-                    group.First(i => i.Path == r.Key),
-                    r.Value));
+                    new(providerName, r.Key),
+                    r.Value);
+            }
+        }
+
+        var resolvedNestedVariables = await ResolveVariables(nestedVariables.Keys.ToList(), cancellationToken);
+        foreach (KeyValuePair<VariablePath, JsonNode> r in resolvedNestedVariables)
+        {
+            resolvedVariables.Add(
+                new(providerName, nestedVariables[r.Key]),
+                r.Value);
         }
 
         return resolvedVariables;
@@ -78,4 +121,38 @@ public sealed class VariableResolver : IVariableResolver
     private VariableProviderConfiguration GetProviderConfiguration(string providerName)
       => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
           ?? throw new InvalidOperationException($"Provider '{providerName}' not found");
+}
+
+public static class Extension
+{
+    public static bool IsVariable(
+        this JsonNode node,
+        [NotNullWhen(true)] out VariablePath? variablePath)
+    {
+        if (node.GetSchemaValueType() == SchemaValueType.String
+            && VariablePath.TryParse((string)node!, out VariablePath? parsed))
+        {
+            variablePath = parsed;
+            return true;
+        }
+
+        variablePath = default;
+        return false;
+    }
+}
+
+file static class LogExtensionts
+{
+    public static void ResolvingVariable(this IConsoleLogger log, VariablePath key)
+    {
+        log.Information("Resolving variable {0}", $"{key}".AsHighlighted());
+    }
+
+    public static void ResolvingVariables(this IConsoleLogger log, string providerName, int count)
+    {
+        log.Information(
+            "Resolving {0} variables from {1}",
+            $"{count}".AsHighlighted(),
+            providerName.AsHighlighted());
+    }
 }

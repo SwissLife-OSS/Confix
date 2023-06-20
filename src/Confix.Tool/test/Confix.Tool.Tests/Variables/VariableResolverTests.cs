@@ -14,7 +14,6 @@ public class VariableResolverTests
         // Arrange
         var factoryMock = new Mock<IVariableProviderFactory>();
 
-
         var keys = new List<VariablePath>
         {
             new VariablePath("Provider1", "Key1"),
@@ -84,6 +83,127 @@ public class VariableResolverTests
         Assert.True(result[new VariablePath("Provider2", "Key2")].IsEquivalentTo(JsonValue.Create("Value2")));
         Assert.True(result[new VariablePath("Provider1", "Key3")].IsEquivalentTo(JsonValue.Create("Value3")));
         Assert.True(result[new VariablePath("Provider2", "Key4")].IsEquivalentTo(JsonValue.Create("Value4")));
+    }
+
+    [Fact]
+    public async Task ResolveVariables_DuplicatePaths_OnlyFetchOnce()
+    {
+        // Arrange
+        var factoryMock = new Mock<IVariableProviderFactory>();
+
+        var keys = new List<VariablePath>
+        {
+            new VariablePath("Provider1", "Key1"),
+            new VariablePath("Provider1", "Key1"),
+        };
+
+        var configurations = new List<VariableProviderConfiguration>
+        {
+            new VariableProviderConfiguration
+            {
+                Name = "Provider1",
+                Type = "local",
+                Configuration = JsonNode.Parse("""
+                    {
+                        "path": "/path/to/file.json"
+                    }
+                    """)!
+            }
+        };
+        var resolver = new VariableResolver(factoryMock.Object, configurations);
+        var cancellationToken = CancellationToken.None;
+
+        var provider1Mock = new Mock<IVariableProvider>();
+        provider1Mock.Setup(p => p.ResolveManyAsync(
+            It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key1" })),
+            cancellationToken))
+            .ReturnsAsync(new Dictionary<string, JsonNode>
+            {
+                { "Key1", JsonValue.Create("Value1") },
+            });
+
+        factoryMock.Setup(f => f.CreateProvider(configurations[0]))
+            .Returns(provider1Mock.Object);
+
+        // Act
+        var result = await resolver.ResolveVariables(keys, cancellationToken);
+
+        // Assert
+        result.Should().HaveCount(1);
+        Assert.True(result[new VariablePath("Provider1", "Key1")].IsEquivalentTo(JsonValue.Create("Value1")));
+
+        provider1Mock.Verify(p => p.ResolveManyAsync(
+            It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key1" })),
+            cancellationToken), Times.Once);
+    }
+
+    [Fact]
+    public async Task ResolveVariables_NestedVariables_CorrectResult()
+    {
+        // Arrange
+        var factoryMock = new Mock<IVariableProviderFactory>();
+
+        var keys = new List<VariablePath>
+        {
+            new VariablePath("Provider1", "Key1"),
+        };
+
+        var configurations = new List<VariableProviderConfiguration>
+        {
+            new VariableProviderConfiguration
+            {
+                Name = "Provider1",
+                Type = "local",
+                Configuration = JsonNode.Parse("""
+                    {
+                        "path": "/path/to/file.json"
+                    }
+                    """)!
+            },
+            new VariableProviderConfiguration
+            {
+                Name = "Provider2",
+                Type = "local",
+                Configuration = JsonNode.Parse("""
+                    {
+                        "path": "/path/to/file.json"
+                    }
+                    """)!
+            }
+        };
+        var resolver = new VariableResolver(factoryMock.Object, configurations);
+        var cancellationToken = CancellationToken.None;
+
+        var provider1Mock = new Mock<IVariableProvider>();
+        provider1Mock.Setup(p => p.ResolveManyAsync(
+            It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key1" })),
+            cancellationToken))
+            .ReturnsAsync(new Dictionary<string, JsonNode>
+            {
+                { "Key1", JsonValue.Create(new VariablePath("Provider2", "Key2").ToString())},
+            });
+
+        var provider2Mock = new Mock<IVariableProvider>();
+        provider2Mock.Setup(p => p.ResolveManyAsync(
+            It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key2" })),
+            cancellationToken))
+            .ReturnsAsync(new Dictionary<string, JsonNode>
+            {
+                { "Key2", JsonValue.Create("FinalResult" ) },
+            });
+
+        factoryMock.Setup(f => f.CreateProvider(configurations[0]))
+            .Returns(provider1Mock.Object);
+
+        factoryMock.Setup(f => f.CreateProvider(configurations[1]))
+            .Returns(provider2Mock.Object);
+
+        // Act
+        var result = await resolver.ResolveVariables(keys, cancellationToken);
+
+        // Assert
+        result.Should().HaveCount(1);
+        Assert.True(result[new VariablePath("Provider1", "Key1")].IsEquivalentTo(JsonValue.Create("FinalResult")));
     }
 
     [Fact]

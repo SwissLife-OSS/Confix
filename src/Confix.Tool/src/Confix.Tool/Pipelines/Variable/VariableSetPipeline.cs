@@ -26,7 +26,7 @@ public sealed class VariableSetPipeline : Pipeline
         var variableName = context.Parameter.Get(VariableNameArgument.Instance);
         var variableValue = context.Parameter.Get(VariableValueArgument.Instance);
 
-        if (VariablePath.TryParse(variableName, out var parsed) && parsed.HasValue)
+        if (VariablePath.TryParse(variableName, out var parsed))
         {
             var result = await resolver
                 .SetVariable(
