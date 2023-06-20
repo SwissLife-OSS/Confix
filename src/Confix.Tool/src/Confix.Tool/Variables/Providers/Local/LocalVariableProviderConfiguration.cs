@@ -14,7 +14,7 @@ public sealed record LocalVariableProviderConfiguration
     {
         try
         {
-            return node.Deserialize(JsonSerialization.Default.LocalVariableProviderConfiguration)!;
+            return node.Deserialize(JsonSerialization.Instance.LocalVariableProviderConfiguration)!;
         }
         catch (JsonException ex)
         {

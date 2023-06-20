@@ -9,32 +9,24 @@ namespace ConfiX.Variables;
 public record SecretVariableProviderConfiguration
 {
     [DefaultValue(SecretVariableProviderAlgorithm.RSA)]
-    [JsonPropertyName("algorithm")]
-    [JsonConverter(typeof(JsonStringEnumCamelCaseConverter))]
     public SecretVariableProviderAlgorithm Algorithm { get; init; }
 
     [DefaultValue(EncryptionPadding.OaepSHA256)]
-    [JsonPropertyName("padding")]
-    [JsonConverter(typeof(JsonStringEnumCamelCaseConverter))]
     public EncryptionPadding Padding { get; init; }
 
-    [JsonPropertyName("publicKey")]
     public string? PublicKey { get; init; }
 
-    [JsonPropertyName("publicKeyPath")]
     public string? PublicKeyPath { get; init; }
 
-    [JsonPropertyName("privateKey")]
     public string? PrivateKey { get; init; }
 
-    [JsonPropertyName("privateKeyPath")]
     public string? PrivateKeyPath { get; init; }
 
     public static SecretVariableProviderConfiguration Parse(JsonNode node)
     {
         try
         {
-            return node.Deserialize(JsonSerialization.Default.SecretVariableProviderConfiguration)!;
+            return node.Deserialize(JsonSerialization.Instance.SecretVariableProviderConfiguration)!;
         }
         catch (JsonException ex)
         {
