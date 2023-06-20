@@ -6,4 +6,4 @@ Documentation is powered by [Nextra](https://nextra.site).
 
 First, run `npm install` to install the dependencies.
 
-Then, run `npm run dev` to start the development server and visit localhost:3000/Confix-Reloaded.
+Then, run `npm run dev` to start the development server and visit localhost:3000/Confix.
