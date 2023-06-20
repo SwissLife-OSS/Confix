@@ -20,10 +20,10 @@
         <ToolCommandName>confix</ToolCommandName>
         <PackAsTool>true</PackAsTool>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageLicenseUrl>https://github.com/SwissLife-OSS/Confix-Reloaded/blob/main/LICENSE</PackageLicenseUrl>
+        <PackageLicenseUrl>https://github.com/SwissLife-OSS/Confix/blob/main/LICENSE</PackageLicenseUrl>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <RepositoryUrl>https://github.com/SwissLife-OSS/Confix-Reloaded.git</RepositoryUrl>
-        <PackageIconUrl>https://github.com/SwissLife-OSS/Confix-Reloaded/raw/main/images/logo_small.png</PackageIconUrl>
+        <RepositoryUrl>https://github.com/SwissLife-OSS/Confix.git</RepositoryUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/SwissLife-OSS/Confix/main/images/logo_small.png</PackageIconUrl>
     </PropertyGroup>
     <ItemGroup>
         <None Include="../../../../README.md" Pack="true" PackagePath="/" />
