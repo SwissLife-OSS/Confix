@@ -71,7 +71,7 @@ public sealed class VariableResolver : IVariableResolver
         {
             var providerResults = await ResolveVariables(
                 group.Key,
-                group.Select(k => k.Path).ToHashSet(),
+                group.Select(k => k.Path).Distinct().ToList(),
                 cancellationToken);
 
             resolvedVariables.AddRange(providerResults);
@@ -82,7 +82,7 @@ public sealed class VariableResolver : IVariableResolver
 
     private async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
         string providerName,
-        IReadOnlySet<string> paths,
+        IReadOnlyList<string> paths,
         CancellationToken cancellationToken)
     {
         App.Log.ResolvingVariables(providerName, paths.Count);
@@ -92,7 +92,7 @@ public sealed class VariableResolver : IVariableResolver
         var providerConfiguration = GetProviderConfiguration(providerName);
         await using IVariableProvider provider = _variableProviderFactory.CreateProvider(providerConfiguration);
 
-        var resolved = await provider.ResolveManyAsync(paths.ToArray(), cancellationToken);
+        var resolved = await provider.ResolveManyAsync(paths, cancellationToken);
         foreach (KeyValuePair<string, JsonNode> r in resolved)
         {
             if (r.Value.IsVariable(out VariablePath? variablePath))
