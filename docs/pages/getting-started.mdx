@@ -1,0 +1,38 @@
+import { Steps } from "nextra-theme-docs";
+
+# Getting Started
+
+<Steps>
+
+### Install the tool
+
+The tool is published to [Nuget](https://www.nuget.org/packages/Confix) and can be installed using
+```bash
+dotnet tool install Confix
+```
+
+Requirements: 
+- [.NET SDK](https://dotnet.microsoft.com/download) (version 7.0 or later)
+
+### Create a `.confixrc`
+
+TODO: add docu what should be in there or have a confix init providing usable defaults
+
+### Initialise Confix Solution
+
+```bash
+confix solution init
+```
+
+This should happen in the folder where you usually open your IDE since files required for Variable Intellisense will be created here.
+
+### Initialise Confix Project
+
+```bash
+confix project init
+```
+
+This should happen next to your `.csproj` of your project
+
+
+</Steps>
