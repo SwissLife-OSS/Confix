@@ -1,0 +1,64 @@
+# Local File
+
+This provider allows you to access variable defined in a different `json` file.
+
+## Configuration
+
+| Field | Value                       |
+| :---- | :-------------------------- |
+| Path  | The Path to the `json` file |
+
+**Sample**
+
+```json copy filename=".confixrc"
+{
+  "variableProviders": [
+    {
+      "name": "local",
+      "type": "local",
+      "path": "./variables.json"
+    }
+  ]
+}
+```
+
+## File Structure
+
+The file must be a valid `json`. Individual properties can be accessed using [JsonPaths](https://www.ietf.org/archive/id/draft-goessner-dispatch-jsonpath-00.html)
+
+**Sample**
+
+```json filename="variables.json"
+{
+  "faction": "Empire",
+  "leader": "Emperor Palpatine",
+  "capital": "Coruscant",
+  "military.star_destroyers": 15,
+  "planets": [
+    {
+      "name": "Coruscant",
+      "terrain": "Urban",
+      "population": 1000000000000
+    },
+    {
+      "name": "Kashyyyk",
+      "terrain": "Forest",
+      "population": 45000000
+    },
+    {
+      "name": "Mustafar",
+      "terrain": "Volcanic",
+      "population": 2000
+    }
+  ],
+  "enemies": ["Rebel Alliance", "Jedi Order"]
+}
+```
+
+| Variable Path            | Value                              |
+| :----------------------- | :--------------------------------- |
+| faction                  | Empire                             |
+| military.star_destroyers | 15                                 |
+| planets[0]               | `{ "name": "Coruscant", ...}`      |
+| planets[0].name          | Coruscant                          |
+| enemies                  | `["Rebel Alliance", "Jedi Order"]` |

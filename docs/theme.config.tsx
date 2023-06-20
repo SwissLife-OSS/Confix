@@ -14,6 +14,7 @@ const config: DocsThemeConfig = {
       titleTemplate: "%s - Confix",
     };
   },
+  sidebar: { defaultMenuCollapseLevel: 1 },
 };
 
 export default config;
