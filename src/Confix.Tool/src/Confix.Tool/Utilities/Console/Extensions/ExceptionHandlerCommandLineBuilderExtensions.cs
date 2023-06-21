@@ -22,6 +22,16 @@ public static class ExceptionHandlerCommandLineBuilderExtensions
         {
             await next(context);
         }
+        catch (AggregateException exception) when (exception.InnerExceptions.Any(e => e is ExitException))
+        {
+            context.ExitCode = ExitCodes.Error;
+
+            var console = context.BindingContext.GetRequiredService<IAnsiConsole>();
+            foreach (var exitException in exception.InnerExceptions)
+            {
+                console.Error(exitException.Message);
+            }
+        }
         catch (ExitException exception) when (exception is { Message: var message })
         {
             context.ExitCode = ExitCodes.Error;
