@@ -35,26 +35,28 @@ public sealed class ReloadCommandPipeline : Pipeline
                 throw new ExitException();
 
             case ConfigurationScope.Project:
-            {
-                var projectDirectory = configuration.Project!.Directory!;
-                var pipeline = new ProjectReloadPipeline();
-                var projectContext = context
-                    .WithExecutingDirectory(projectDirectory);
+                {
+                    var projectDirectory = configuration.Project!.Directory!;
+                    var pipeline = new ProjectReloadPipeline();
+                    var projectContext = context
+                        .WithExecutingDirectory(projectDirectory)
+                        .WithFeatureCollection();
 
-                await pipeline.ExecuteAsync(services, projectContext);
-                return;
-            }
+                    await pipeline.ExecuteAsync(services, projectContext);
+                    return;
+                }
 
             case ConfigurationScope.Solution:
-            {
-                var solutionDirectory = configuration.Solution!.Directory!;
-                var pipeline = new SolutionReloadPipeline();
-                var solutionContext = context
-                    .WithExecutingDirectory(solutionDirectory);
+                {
+                    var solutionDirectory = configuration.Solution!.Directory!;
+                    var pipeline = new SolutionReloadPipeline();
+                    var solutionContext = context
+                        .WithExecutingDirectory(solutionDirectory)
+                        .WithFeatureCollection();
 
-                await pipeline.ExecuteAsync(services, solutionContext);
-                return;
-            }
+                    await pipeline.ExecuteAsync(services, solutionContext);
+                    return;
+                }
 
             default:
                 throw new ArgumentOutOfRangeException();
