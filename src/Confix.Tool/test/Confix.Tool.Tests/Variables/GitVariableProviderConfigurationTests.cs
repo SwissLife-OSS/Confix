@@ -38,7 +38,7 @@ public class GitVariableProviderConfigurationTests
 
         // assert
         result.Should().Be(new GitVariableProviderConfiguration(
-            "foo-bar", 
+            "foo-bar",
             "some.file"));
     }
 }
