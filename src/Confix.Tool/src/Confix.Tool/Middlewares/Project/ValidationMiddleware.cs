@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
@@ -6,7 +5,6 @@ using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Schema;
 using Json.Schema;
-using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
 namespace Confix.Tool.Middlewares.Project;

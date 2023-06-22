@@ -1,10 +1,10 @@
 using System.Text.Json.Nodes;
-using ConfiX.Variables;
+using Confix.ConfigurationFiles;
 using FluentAssertions;
 
 namespace Confix.Tool.Tests;
 
-public class GitVariableProviderConfigurationTests
+public class AppSettingsConfigurationFileProviderConfigurationTests
 {
 
     [Fact]
@@ -14,7 +14,7 @@ public class GitVariableProviderConfigurationTests
         var configuration = JsonNode.Parse("{}")!;
 
         // act
-        Action act = () => GitVariableProviderConfiguration.Parse(configuration);
+        Action act = () => AppSettingsConfigurationFileProviderConfiguration.Parse(configuration);
 
         // assert
         act.Should().Throw<ArgumentException>();
@@ -26,19 +26,17 @@ public class GitVariableProviderConfigurationTests
         // arrange
         var configuration = JsonNode.Parse(
             """
-            {
-                "repositoryUrl": "foo-bar",
-                "FilePath": "some.file"
-            }
-            """
+                {
+                    "useUserSecrets": true
+                }
+                """
         )!;
 
         // act
-        var result = GitVariableProviderConfiguration.Parse(configuration);
+        var result = AppSettingsConfigurationFileProviderConfiguration.Parse(configuration);
 
         // assert
-        result.Should().Be(new GitVariableProviderConfiguration(
-            "foo-bar",
-            "some.file"));
+        result.Should().Be(new AppSettingsConfigurationFileProviderConfiguration(
+            true));
     }
 }

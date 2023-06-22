@@ -5,10 +5,10 @@ using ConfiX.Extensions;
 
 namespace Confix.ConfigurationFiles;
 
-public class AppSettingsConfigurationFileProviderConfiguration
+public sealed record AppSettingsConfigurationFileProviderConfiguration(
+    [property: JsonRequired] bool? UseUserSecrets
+)
 {
-    public bool? UseUserSecrets { get; init; }
-
     public static AppSettingsConfigurationFileProviderConfiguration Parse(JsonNode node)
     {
         try
