@@ -84,7 +84,7 @@ public class AzureKeyVaultProviderTests
         AzureKeyVaultProvider provider = new(secretClientMock.Object);
 
         // act
-        var result = await provider.SetAsync("foo", JsonValue.Create("bar"), default);
+        var result = await provider.SetAsync("foo", JsonValue.Create("bar")!, default);
 
         // assert
         result.Should().Be("vault.key");

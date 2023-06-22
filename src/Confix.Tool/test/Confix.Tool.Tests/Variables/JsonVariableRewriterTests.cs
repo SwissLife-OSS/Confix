@@ -30,7 +30,7 @@ public class JsonVariableRewriterTests
             }
         """)!;
         var variableLookup = new Dictionary<VariablePath, JsonNode> {
-            { VariablePath.Parse("$test:variable.string"), JsonValue.Create("someReplacedValue")},
+            { VariablePath.Parse("$test:variable.string"), JsonValue.Create("someReplacedValue")!},
             { VariablePath.Parse("$test:variable.number"), JsonValue.Create(420)},
             { VariablePath.Parse("$test:variable.bool"), JsonValue.Create(true)},
             { VariablePath.Parse("$test:variable.array"), JsonNode.Parse("""["a", "b", "c"]""")!},
