@@ -119,4 +119,21 @@ public static class ConsoleLoggerExtensions
 
         logger.Log(ref loggerMessage);
     }
+
+     public static void TraceException(
+        this IConsoleLogger logger,
+        Exception exception,
+        params object[] arguments)
+    {
+        ILoggerMessage loggerMessage = new DefaultLoggerMessage
+        {
+            Template = string.Empty,
+            Arguments = arguments,
+            Verbosity = Verbosity.Diagnostic,
+            Style = Styles.Error,
+            Exception = exception
+        };
+
+        logger.Log(ref loggerMessage);
+    }
 }

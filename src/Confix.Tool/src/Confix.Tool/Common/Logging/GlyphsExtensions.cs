@@ -1,3 +1,5 @@
+using Spectre.Console;
+
 namespace Confix.Tool.Commands.Logging;
 
 public static class GlyphsExtensions
