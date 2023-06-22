@@ -3,6 +3,7 @@ using Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Confix.Tool;
+using Confix.Tool.Commands.Logging;
 using Json.Schema;
 
 namespace ConfiX.Variables;
@@ -75,7 +76,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         {
             throw new ExitException("Authentication for Key Vault failed", ex)
             {
-                Help = "try running 'az login' to authenticate with Azure"
+                Help = $"try running {"az login".AsHighlighted()} to authenticate with Azure"
             };
         }
     }

@@ -3,6 +3,7 @@ using System.CommandLine.Invocation;
 using Confix.Tool.Commands.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Spectre.Console;
 
 namespace Confix.Tool;
 
@@ -27,16 +28,18 @@ public static class ExceptionHandlerCommandLineBuilderExtensions
         {
             context.ExitCode = ExitCodes.Error;
 
-            var console = context.BindingContext.GetRequiredService<IConsoleLogger>();
+            var logger = context.BindingContext.GetRequiredService<IConsoleLogger>();
+            var console = context.BindingContext.GetRequiredService<IAnsiConsole>();
             foreach (var innerException in exception.InnerExceptions)
             {
                 if (innerException is ExitException exitException)
                 {
-                    console.ExitException(exitException);
+                    logger.ExitException(exitException);
+                    console.PrintHelp(exitException);
                 }
                 else
                 {
-                    console.UnhandledException(innerException);
+                    logger.UnhandledException(innerException);
                 }
             }
         }
@@ -45,6 +48,7 @@ public static class ExceptionHandlerCommandLineBuilderExtensions
             context.ExitCode = ExitCodes.Error;
 
             context.BindingContext.GetRequiredService<IConsoleLogger>().ExitException(exception);
+            context.BindingContext.GetRequiredService<IAnsiConsole>().PrintHelp(exception);
         }
         catch (Exception ex) when (ex is OperationCanceledException or TaskCanceledException)
         {
@@ -64,17 +68,19 @@ file static class LogExtensions
     {
         logger.Error("Confix failed.");
         logger.Information($"[red]{exception.Message}[/]");
+        logger.TraceException(exception);
+    }
+
+    public static void PrintHelp(this IAnsiConsole console, ExitException exception)
+    {
         if (exception.Help is not null)
         {
-            ILoggerMessage helpMessage = new DefaultLoggerMessage
+            var panel = new Panel(exception.Help)
             {
-                Verbosity = Verbosity.Normal,
-                Template = $"[green1]{exception.Help}[/]",
-                Glyph = Glyph.LightBulb
+                Header = new PanelHeader($"{Emoji.Known.LightBulb} Help", Justify.Left),
             };
-            logger.Log(ref helpMessage);
+            console.Write(panel);
         }
-        logger.TraceException(exception);
     }
 
     public static void UnhandledException(this IConsoleLogger logger, Exception exception)

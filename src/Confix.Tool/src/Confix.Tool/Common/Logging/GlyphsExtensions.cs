@@ -11,7 +11,6 @@ public static class GlyphsExtensions
             Glyph.Cross => "[red bold]✕[/]",
             Glyph.QuestionMark => "[lime bold]?[/]",
             Glyph.ExlamationMark => "[yellow bold]![/]",
-            Glyph.LightBulb => "💡",
             _ => throw new ArgumentOutOfRangeException(nameof(glyph), glyph, null)
         };
 }
