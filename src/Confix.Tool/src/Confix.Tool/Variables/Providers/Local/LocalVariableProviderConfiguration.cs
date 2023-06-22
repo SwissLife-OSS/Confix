@@ -6,14 +6,14 @@ using ConfiX.Extensions;
 namespace ConfiX.Variables;
 
 public sealed record LocalVariableProviderConfiguration(
-  string Path
+  [property: JsonRequired]string Path
 )
 {
     public static LocalVariableProviderConfiguration Parse(JsonNode node)
     {
         try
         {
-            return node.Deserialize(JsonSerialization.Default.LocalVariableProviderConfiguration)!;
+            return node.Deserialize(JsonSerialization.Instance.LocalVariableProviderConfiguration)!;
         }
         catch (JsonException ex)
         {

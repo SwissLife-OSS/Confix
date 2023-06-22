@@ -1,4 +1,6 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Confix.ConfigurationFiles;
 using ConfiX.Variables;
 
@@ -12,4 +14,12 @@ namespace ConfiX.Extensions;
 [JsonSerializable(typeof(AppSettingsConfigurationFileProviderConfiguration))]
 public partial class JsonSerialization : JsonSerializerContext
 {
+    private static readonly JsonSerializerOptions options = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+    };
+
+    public static JsonSerialization Instance { get; } = new(options);
 }

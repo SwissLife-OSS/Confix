@@ -7,7 +7,6 @@ namespace Confix.ConfigurationFiles;
 
 public class AppSettingsConfigurationFileProviderConfiguration
 {
-    [JsonPropertyName("useUserSecrets")]
     public bool? UseUserSecrets { get; init; }
 
     public static AppSettingsConfigurationFileProviderConfiguration Parse(JsonNode node)

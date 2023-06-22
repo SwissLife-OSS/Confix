@@ -12,7 +12,7 @@ public sealed record AzureKeyVaultProviderConfiguration(
     {
         try
         {
-            return node.Deserialize(JsonSerialization.Default.AzureKeyVaultProviderConfiguration)!;
+            return node.Deserialize(JsonSerialization.Instance.AzureKeyVaultProviderConfiguration)!;
         }
         catch (JsonException ex)
         {
