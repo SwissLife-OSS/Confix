@@ -2,7 +2,7 @@ import { Callout } from "nextra/components";
 
 # Azure KeyVault
 
-Use this provider to store your variables in Azure Key Vault.
+Use this provider to store your variables as a `Secret` in Azure Key Vault.
 
 <Callout type="info">
   Dots (.) in variable-paths are automatically replaced by '-' before storing in
@@ -33,3 +33,12 @@ Use this provider to store your variables in Azure Key Vault.
 
 The implementation uses [DefaultAzureCredential](https://learn.microsoft.com/en-us/dotnet/api/azure.identity.defaultazurecredential?view=azure-dotnet) to authenticate.
 During local development `az login` can be used to authenticate.
+
+The Authenticated user requires the following Secret permissions:
+
+| Action              | Required Permission |
+| :------------------ | ------------------- |
+| confix reload       | `list`              |
+| confix build        | `get`               |
+| confix variable set | `set`               |
+| confix variable get | `get`               |
