@@ -14,7 +14,7 @@ public class AppSettingsConfigurationFileProviderConfiguration
         try
         {
             return node.Deserialize(
-                JsonSerialization.Default.AppSettingsConfigurationFileProviderConfiguration)!;
+                JsonSerialization.Instance.AppSettingsConfigurationFileProviderConfiguration)!;
         }
         catch (JsonException ex)
         {
