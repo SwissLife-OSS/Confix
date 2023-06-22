@@ -17,4 +17,5 @@ public sealed class JsonSchemaDefinition
     public required string RelativePathToProject { get; set; }
 
     public required IList<string> FileMatch { get; set; }
+    
 }
