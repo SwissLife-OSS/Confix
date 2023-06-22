@@ -21,7 +21,7 @@ public class LocalVariableProviderConfigurationTests
         var config = LocalVariableProviderConfiguration.Parse(jsonNode);
 
         // Assert
-        config.FilePath.Should().Be("/path/to/file.json");
+        config.Path.Should().Be("/path/to/file.json");
     }
 
     [Fact]

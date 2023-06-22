@@ -5,22 +5,17 @@ using ConfiX.Extensions;
 
 namespace ConfiX.Variables;
 
-public sealed record GitVariableProviderConfiguration
+public sealed record GitVariableProviderConfiguration(
+    [property: JsonRequired]string RepositoryUrl,
+    [property: JsonRequired]string FilePath,
+    string[]? Arguments = null
+)
 {
-    [JsonPropertyName("repositoryUrl")]
-    public required string RepositoryUrl { get; init; }
-
-    [JsonPropertyName("filePath")]
-    public required string FilePath { get; init; }
-
-    [JsonPropertyName("arguments")]
-    public string[]? Arguments { get; init; }
-
     public static GitVariableProviderConfiguration Parse(JsonNode node)
     {
         try
         {
-            return node.Deserialize(JsonSerialization.Default.GitVariableProviderConfiguration)!;
+            return node.Deserialize(JsonSerialization.Instance.GitVariableProviderConfiguration)!;
         }
         catch (JsonException ex)
         {

@@ -42,7 +42,7 @@ public sealed class LocalVariableProvider : IVariableProvider
 
     private static Dictionary<string, JsonNode?> ParseConfiguration(LocalVariableProviderConfiguration config)
     {
-        using FileStream fileStream = File.OpenRead(config.FilePath);
+        using FileStream fileStream = File.OpenRead(config.Path);
         JsonNode node = JsonNode.Parse(fileStream) ?? throw new JsonException("Invalid Json Node");
         return JsonParser.ParseNode(node);
     }
