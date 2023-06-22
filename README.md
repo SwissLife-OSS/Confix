@@ -7,9 +7,7 @@
 
 # Confix - Simple Application Configuration
 
-<p align="center">
-<img src="images/logo.png">
-<p>
+![Logo](./images/logo.svg)
 
 - [Confix - Simple Application Configuration](#confix---simple-application-configuration)
   - [Introduction](#introduction)
