@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Commands.Logging;
 using Confix.Tool.Schema;
 using Json.Schema;
 
@@ -17,12 +18,17 @@ public record MagicPathContext(
 public sealed class MagicPathRewriter : JsonDocumentRewriter<MagicPathContext>
 {
     protected override JsonNode Rewrite(JsonValue value, MagicPathContext context)
-        => value.GetSchemaValueType() switch
+    {
+        switch (value.GetSchemaValueType())
         {
-            SchemaValueType.String when MagicPath.From(value) is { } magicPath
-                => JsonValue.Create(magicPath.Replace(context)),
-            _ => base.Rewrite(value!, context)
-        };
+            case SchemaValueType.String when MagicPath.From(value) is { } magicPath:
+                string replacedValue = magicPath.Replace(context);
+                App.Log.ReplacedMagicPath(magicPath, replacedValue);
+                return JsonValue.Create(replacedValue);
+            default:
+                return base.Rewrite(value!, context);
+        }
+    }
 }
 
 file enum MagicPathType
@@ -47,11 +53,13 @@ file class MagicPath
 
     private readonly MagicPathType _type;
     private readonly string _path;
+    private readonly string _original;
 
-    public MagicPath(MagicPathType type, string path)
+    public MagicPath(MagicPathType type, string path, string original)
     {
         _type = type;
         _path = path;
+        _original = original;
     }
 
     public static MagicPath? From(JsonValue value)
@@ -60,12 +68,36 @@ file class MagicPath
         {
             return stringValue switch
             {
-                string s when s.StartsWith(Prefix.Home) => new MagicPath(MagicPathType.Home, s.Remove(0, Prefix.Home.Length)),
-                string s when s.StartsWith(Prefix.Tilde) => new MagicPath(MagicPathType.Home, s.Remove(0, Prefix.Tilde.Length)),
-                string s when s.StartsWith(Prefix.Solution) => new MagicPath(MagicPathType.Solution, s.Remove(0, Prefix.Solution.Length)),
-                string s when s.StartsWith(Prefix.Project) => new MagicPath(MagicPathType.Project, s.Remove(0, Prefix.Project.Length)),
-                string s when s.StartsWith(Prefix.FileLinux) => new MagicPath(MagicPathType.File, s.Remove(0, Prefix.FileLinux.Length)),
-                string s when s.StartsWith(Prefix.FileWindows) => new MagicPath(MagicPathType.File, s.Remove(0, Prefix.FileWindows.Length)),
+                string s when s.StartsWith(Prefix.Home)
+                    => new MagicPath(
+                        MagicPathType.Home,
+                        s.Remove(0, Prefix.Home.Length),
+                        stringValue),
+                string s when s.StartsWith(Prefix.Tilde)
+                    => new MagicPath(
+                        MagicPathType.Home,
+                        s.Remove(0, Prefix.Tilde.Length),
+                        stringValue),
+                string s when s.StartsWith(Prefix.Solution)
+                    => new MagicPath(
+                        MagicPathType.Solution,
+                        s.Remove(0, Prefix.Solution.Length),
+                        stringValue),
+                string s when s.StartsWith(Prefix.Project)
+                    => new MagicPath(
+                        MagicPathType.Project,
+                        s.Remove(0, Prefix.Project.Length),
+                        stringValue),
+                string s when s.StartsWith(Prefix.FileLinux)
+                    => new MagicPath(
+                        MagicPathType.File,
+                        s.Remove(0, Prefix.FileLinux.Length),
+                        stringValue),
+                string s when s.StartsWith(Prefix.FileWindows)
+                    => new MagicPath(
+                        MagicPathType.File,
+                        s.Remove(0, Prefix.FileWindows.Length),
+                        stringValue),
                 _ => null
             };
         }
@@ -73,17 +105,29 @@ file class MagicPath
     }
 
     public string Replace(MagicPathContext context)
-        => _type switch
+    {
+        switch (_type)
         {
-            MagicPathType.Home => Path.Combine(context.HomeDirectory.FullName, _path),
-            MagicPathType.Solution when context.SolutionDirectory is not null
-                => Path.Combine(context.SolutionDirectory.FullName, _path),
-            MagicPathType.Project when context.ProjectDirectory is not null
-                => Path.Combine(context.ProjectDirectory.FullName, _path),
-            MagicPathType.File => Path.Combine(context.FileDirectory.FullName, _path),
-            _ => throw new ArgumentOutOfRangeException(
-                nameof(_type),
-                _type,
-                "The magic path is not supported in this context")
-        };
+            case MagicPathType.Home:
+                return Path.Combine(context.HomeDirectory.FullName, _path);
+            case MagicPathType.Solution when context.SolutionDirectory is not null:
+                return Path.Combine(context.SolutionDirectory.FullName, _path);
+            case MagicPathType.Project when context.ProjectDirectory is not null:
+                return Path.Combine(context.ProjectDirectory.FullName, _path);
+            case MagicPathType.File:
+                return Path.Combine(context.FileDirectory.FullName, _path);
+            default:
+                App.Log.NotSupportedInContext(_type);
+                return _original;
+        }
+    }
+}
+
+file static class LogExtensions
+{
+    public static void NotSupportedInContext(this IConsoleLogger log, MagicPathType type)
+        => log.Debug($"Magic path type {0} is not supported in this context.", type.ToString());
+
+    public static void ReplacedMagicPath(this IConsoleLogger log, MagicPath magicPath, string replacedValue)
+        => log.Debug($"Replaced magic path {0} with {1}.", magicPath, replacedValue);
 }

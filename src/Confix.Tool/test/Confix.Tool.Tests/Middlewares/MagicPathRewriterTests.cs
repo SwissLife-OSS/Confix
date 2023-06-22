@@ -52,4 +52,36 @@ public class MagicPathRewriterTests
         // assert
         Snapshot.Match(result.ToJsonString(new() { WriteIndented = true }));
     }
+
+    [Fact]
+    public void Rewrite_ProjectInNonProjectScope_Ignores(){
+        // arrange
+        var sampleObject = new JsonObject()
+        {
+            ["project"] = "$project:/foo/bar",
+        };
+        var rewriter = new MagicPathRewriter();
+
+        // act
+        var result = rewriter.Rewrite(sampleObject, _context with { ProjectDirectory = null });
+
+        // assert
+        Assert.True(sampleObject.IsEquivalentTo(result));
+    }
+
+    [Fact]
+    public void Rewrite_SolutionInNonSolutionScope_Ignores(){
+        // arrange
+        var sampleObject = new JsonObject()
+        {
+            ["solution"] = "$solution:/foo/bar",
+        };
+        var rewriter = new MagicPathRewriter();
+
+        // act
+        var result = rewriter.Rewrite(sampleObject, _context with { SolutionDirectory = null });
+
+        // assert
+        Assert.True(sampleObject.IsEquivalentTo(result));
+    }
 }
