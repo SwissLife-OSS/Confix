@@ -9,6 +9,9 @@ on:
 jobs:
   ci-build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '7.0.x', '8.0.x' ]
     defaults:
       run:
         working-directory: ./src/Confix.Tool
@@ -17,7 +20,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        global-json-file: ./global.json
+        dotnet-version: ${{ matrix.dotnet-version }}
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
