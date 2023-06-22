@@ -54,8 +54,8 @@ public class VariableResolverTests
             cancellationToken))
             .ReturnsAsync(new Dictionary<string, JsonNode>
             {
-                { "Key1", JsonValue.Create("Value1") },
-                { "Key3", JsonValue.Create("Value3") }
+                { "Key1", JsonValue.Create("Value1")! },
+                { "Key3", JsonValue.Create("Value3")! }
             });
 
         var provider2Mock = new Mock<IVariableProvider>();
@@ -64,8 +64,8 @@ public class VariableResolverTests
             cancellationToken))
             .ReturnsAsync(new Dictionary<string, JsonNode>
             {
-                { "Key2", JsonValue.Create("Value2") },
-                { "Key4", JsonValue.Create("Value4") }
+                { "Key2", JsonValue.Create("Value2")! },
+                { "Key4", JsonValue.Create("Value4")! }
             });
 
         factoryMock.Setup(f => f.CreateProvider(configurations[0]))
@@ -119,7 +119,7 @@ public class VariableResolverTests
             cancellationToken))
             .ReturnsAsync(new Dictionary<string, JsonNode>
             {
-                { "Key1", JsonValue.Create("Value1") },
+                { "Key1", JsonValue.Create("Value1")! },
             });
 
         factoryMock.Setup(f => f.CreateProvider(configurations[0]))
@@ -180,7 +180,7 @@ public class VariableResolverTests
             cancellationToken))
             .ReturnsAsync(new Dictionary<string, JsonNode>
             {
-                { "Key1", JsonValue.Create(new VariablePath("Provider2", "Key2").ToString())},
+                { "Key1", JsonValue.Create(new VariablePath("Provider2", "Key2").ToString())!},
             });
 
         var provider2Mock = new Mock<IVariableProvider>();
@@ -189,7 +189,7 @@ public class VariableResolverTests
             cancellationToken))
             .ReturnsAsync(new Dictionary<string, JsonNode>
             {
-                { "Key2", JsonValue.Create("FinalResult" ) },
+                { "Key2", JsonValue.Create("FinalResult")! },
             });
 
         factoryMock.Setup(f => f.CreateProvider(configurations[0]))

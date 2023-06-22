@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using ConfiX.Variables;
 using FluentAssertions;
+using Snapshooter.Xunit;
 
 namespace Confix.Tool.Tests;
 
@@ -17,10 +18,7 @@ public class SecretVariableProviderConfigurationTests
         var result = SecretVariableProviderConfiguration.Parse(configuration);
 
         // assert
-        result.Should().Be(new SecretVariableProviderConfiguration
-        {
-            Algorithm = SecretVariableProviderAlgorithm.RSA,
-        });
+        result.Should().MatchSnapshot();
     }
 
     [Fact]
@@ -41,12 +39,7 @@ public class SecretVariableProviderConfigurationTests
         var result = SecretVariableProviderConfiguration.Parse(configuration);
 
         // assert
-        result.Should().Be(new SecretVariableProviderConfiguration
-        {
-            Algorithm = SecretVariableProviderAlgorithm.RSA,
-            PublicKey = "SomePublicKey",
-            PrivateKey = "SomePrivateKey",
-        });
+        result.Should().MatchSnapshot();
     }
 
     [Fact]
@@ -67,11 +60,6 @@ public class SecretVariableProviderConfigurationTests
         var result = SecretVariableProviderConfiguration.Parse(configuration);
 
         // assert
-        result.Should().Be(new SecretVariableProviderConfiguration
-        {
-            Algorithm = SecretVariableProviderAlgorithm.RSA,
-            PublicKeyPath = "./pub.pem",
-            PrivateKeyPath = "./priv.pem",
-        });
+        result.Should().MatchSnapshot();
     }
 }

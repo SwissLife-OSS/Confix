@@ -7,7 +7,6 @@ namespace Confix.ConfigurationFiles;
 
 public class AppSettingsConfigurationFileProviderConfiguration
 {
-    [JsonPropertyName("useUserSecrets")]
     public bool? UseUserSecrets { get; init; }
 
     public static AppSettingsConfigurationFileProviderConfiguration Parse(JsonNode node)
@@ -15,7 +14,7 @@ public class AppSettingsConfigurationFileProviderConfiguration
         try
         {
             return node.Deserialize(
-                JsonSerialization.Default.AppSettingsConfigurationFileProviderConfiguration)!;
+                JsonSerialization.Instance.AppSettingsConfigurationFileProviderConfiguration)!;
         }
         catch (JsonException ex)
         {

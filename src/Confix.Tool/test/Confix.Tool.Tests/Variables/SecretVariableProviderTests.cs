@@ -38,10 +38,14 @@ public class SecretVariableProviderTests
     public async Task ListAsync_IsNonSense_ReturnsEmptyArrayAsync()
     {
         // arrange
-        SecretVariableProvider provider = new(new SecretVariableProviderConfiguration
-        {
-            Algorithm = SecretVariableProviderAlgorithm.RSA,
-        });
+        SecretVariableProvider provider = new(new SecretVariableProviderConfiguration(
+            SecretVariableProviderAlgorithm.RSA,
+            EncryptionPadding.OaepSHA256,
+            null,
+            null,
+            null,
+            null)
+        );
 
         // act
         var result = await provider.ListAsync(default);
@@ -56,12 +60,15 @@ public class SecretVariableProviderTests
     public async Task ResolveAsync_Should_Decrypt(object value)
     {
         // arrange
-        SecretVariableProvider provider = new(new SecretVariableProviderConfiguration
-        {
-            Algorithm = SecretVariableProviderAlgorithm.RSA,
-            PublicKey = PUBLIC_KEY,
-            PrivateKey = PRIVATE_KEY,
-        });
+        SecretVariableProvider provider = new(new SecretVariableProviderConfiguration(
+            SecretVariableProviderAlgorithm.RSA,
+            EncryptionPadding.OaepSHA256,
+            PUBLIC_KEY,
+            null,
+            PRIVATE_KEY,
+            null)
+        );
+
         var initialSecret = JsonValue.Create(value)!;
         var encryptedSecret = await provider.SetAsync("not relevant here", initialSecret, default);
 
