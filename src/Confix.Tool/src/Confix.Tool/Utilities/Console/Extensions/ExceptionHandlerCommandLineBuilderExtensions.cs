@@ -2,6 +2,7 @@ using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
 using Confix.Tool.Commands.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Confix.Tool;
 
@@ -27,9 +28,16 @@ public static class ExceptionHandlerCommandLineBuilderExtensions
             context.ExitCode = ExitCodes.Error;
 
             var console = context.BindingContext.GetRequiredService<IConsoleLogger>();
-            foreach (var exitException in exception.InnerExceptions)
+            foreach (var innerException in exception.InnerExceptions)
             {
-                console.ExitException(exitException);
+                if (innerException is ExitException exitException)
+                {
+                    console.ExitException(exitException);
+                }
+                else
+                {
+                    console.UnhandledException(innerException);
+                }
             }
         }
         catch (ExitException exception) when (exception is { Message: var message })
@@ -52,13 +60,19 @@ public static class ExceptionHandlerCommandLineBuilderExtensions
 
 file static class LogExtensions
 {
-    public static void ExitException(this IConsoleLogger logger, Exception exception)
+    public static void ExitException(this IConsoleLogger logger, ExitException exception)
     {
         logger.Error("Confix failed.");
         logger.Information($"[red]{exception.Message}[/]");
-        if (exception.InnerException is not null)
+        if (exception.Help is not null)
         {
-            logger.Debug(exception.InnerException.Message);
+            ILoggerMessage helpMessage = new DefaultLoggerMessage
+            {
+                Verbosity = Verbosity.Normal,
+                Template = $"[green1]{exception.Help}[/]",
+                Glyph = Glyph.LightBulb
+            };
+            logger.Log(ref helpMessage);
         }
         logger.TraceException(exception);
     }

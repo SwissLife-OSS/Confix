@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Confix.Tool;
@@ -63,13 +64,19 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         {
             return await action();
         }
-        catch (Exception ex) when (
-            ex is Azure.RequestFailedException ||
-            ex is AuthenticationFailedException)
+        catch (RequestFailedException ex)
         {
-            throw new ExitException(
-                "Access to Key Vault failed",
-                ex);
+            throw new ExitException("Access to Key Vault failed", ex)
+            {
+                Help = "check if you have the required permissions to access the Key Vault"
+            };
+        }
+        catch (AuthenticationFailedException ex)
+        {
+            throw new ExitException("Authentication for Key Vault failed", ex)
+            {
+                Help = "try running 'az login' to authenticate with Azure"
+            };
         }
     }
 

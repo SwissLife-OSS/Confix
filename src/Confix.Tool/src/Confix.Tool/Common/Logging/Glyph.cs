@@ -6,4 +6,5 @@ public enum Glyph
     Cross,
     QuestionMark,
     ExlamationMark,
+    LightBulb,
 }
