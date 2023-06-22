@@ -9,7 +9,7 @@
         <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
         <RootNamespace>ConfiX</RootNamespace>
         <Nullable>enable</Nullable>
-        <LangVersion>preview</LangVersion>
+        <LangVersion>11</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
