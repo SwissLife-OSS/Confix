@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Abstractions;
 using Confix.Tool.Common.Pipelines;
 using Confix.Utilities.Json;
 using ConfiX.Variables;
@@ -38,20 +39,13 @@ public sealed class VariableMiddleware : IMiddleware
     {
         if (configurationFeature.Project is null) { yield break; }
 
-        foreach (var provider in configurationFeature.Project.VariableProviders)
+        foreach (VariableProviderDefinition provider in configurationFeature.Project.VariableProviders)
         {
-            JsonNode config = provider.Value;
-
-            if (provider.EnvironmentOverrides.GetValueOrDefault(environmentName) is { } envOverride)
-            {
-                config = config.Merge(envOverride)!;
-            }
-
             yield return new VariableProviderConfiguration
             {
                 Name = provider.Name,
                 Type = provider.Type,
-                Configuration = config
+                Configuration = provider.ValueWithOverrides(environmentName)
             };
         }
     }

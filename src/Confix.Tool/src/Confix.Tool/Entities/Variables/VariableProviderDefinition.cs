@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Text.Json.Nodes;
+using Confix.Utilities.Json;
 
 namespace Confix.Tool.Abstractions;
 
@@ -39,5 +40,14 @@ public sealed class VariableProviderDefinition
         var value = configuration.Values;
 
         return new VariableProviderDefinition(name, type, environmentOverrides, value);
+    }
+
+    public JsonNode ValueWithOverrides(string environmentName)
+    {
+        if (EnvironmentOverrides.GetValueOrDefault(environmentName) is { } envOverride)
+        {
+            return Value.Merge(envOverride)!;
+        }
+        return Value;
     }
 }
