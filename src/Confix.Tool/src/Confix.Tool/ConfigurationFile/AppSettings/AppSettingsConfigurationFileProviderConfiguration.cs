@@ -1,12 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using ConfiX.Extensions;
 
 namespace Confix.ConfigurationFiles;
 
 public sealed record AppSettingsConfigurationFileProviderConfiguration(
-    [property: JsonRequired] bool? UseUserSecrets
+    bool? UseUserSecrets
 )
 {
     public static AppSettingsConfigurationFileProviderConfiguration Parse(JsonNode node)

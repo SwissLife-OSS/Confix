@@ -6,18 +6,17 @@ namespace Confix.Tool.Tests;
 
 public class AppSettingsConfigurationFileProviderConfigurationTests
 {
-
     [Fact]
-    public void Parse_EmptyObject_ThrowsArgumentException()
+    public void Parse_EmptyObject_SetsNull()
     {
         // arrange
         var configuration = JsonNode.Parse("{}")!;
 
         // act
-        Action act = () => AppSettingsConfigurationFileProviderConfiguration.Parse(configuration);
+        var result = AppSettingsConfigurationFileProviderConfiguration.Parse(configuration);
 
         // assert
-        act.Should().Throw<ArgumentException>();
+        result.Should().Be(new AppSettingsConfigurationFileProviderConfiguration(null));
     }
 
     [Fact]
@@ -36,7 +35,6 @@ public class AppSettingsConfigurationFileProviderConfigurationTests
         var result = AppSettingsConfigurationFileProviderConfiguration.Parse(configuration);
 
         // assert
-        result.Should().Be(new AppSettingsConfigurationFileProviderConfiguration(
-            true));
+        result.Should().Be(new AppSettingsConfigurationFileProviderConfiguration(true));
     }
 }
