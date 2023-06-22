@@ -1,10 +1,9 @@
 import { DocsThemeConfig } from "nextra-theme-docs";
-import Image from "next/image";
-import Logo from "../images/logo.png";
+import { Logo } from "./components/logo";
 import React from "react";
 
 const config: DocsThemeConfig = {
-  logo: <Image src={Logo} alt="" height={48} />,
+  logo: <Logo height="36"/>,
   project: {
     link: "https://github.com/swisslife-oss/confix",
   },
