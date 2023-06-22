@@ -5,11 +5,10 @@ using ConfiX.Extensions;
 
 namespace ConfiX.Variables;
 
-public sealed record LocalVariableProviderConfiguration
+public sealed record LocalVariableProviderConfiguration(
+  string Path
+)
 {
-    [JsonPropertyName("path")]
-    public required string FilePath { get; init; }
-
     public static LocalVariableProviderConfiguration Parse(JsonNode node)
     {
         try

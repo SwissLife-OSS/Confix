@@ -1,21 +1,15 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using ConfiX.Extensions;
 
 namespace ConfiX.Variables;
 
-public sealed record GitVariableProviderConfiguration
+public sealed record GitVariableProviderConfiguration(
+    string RepositoryUrl,
+    string FilePath,
+    string[]? Arguments
+)
 {
-    [JsonPropertyName("repositoryUrl")]
-    public required string RepositoryUrl { get; init; }
-
-    [JsonPropertyName("filePath")]
-    public required string FilePath { get; init; }
-
-    [JsonPropertyName("arguments")]
-    public string[]? Arguments { get; init; }
-
     public static GitVariableProviderConfiguration Parse(JsonNode node)
     {
         try

@@ -1,15 +1,13 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using ConfiX.Extensions;
 
 namespace ConfiX.Variables;
 
-public sealed record AzureKeyVaultProviderConfiguration
+public sealed record AzureKeyVaultProviderConfiguration(
+    string Uri
+)
 {
-    [JsonPropertyName("Uri")]
-    public required string Uri { get; init; }
-
     public static AzureKeyVaultProviderConfiguration Parse(JsonNode node)
     {
         try

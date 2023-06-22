@@ -19,10 +19,9 @@ public sealed class GitVariableProvider : IVariableProvider
     {
         _configuration = configuration;
         _cloneDirectory = GetCloneDirectory(configuration);
-        _localVariableProvider = new LocalVariableProvider(new LocalVariableProviderConfiguration
-        {
-            FilePath = Path.Combine(_cloneDirectory, configuration.FilePath)
-        });
+        _localVariableProvider = new LocalVariableProvider(new LocalVariableProviderConfiguration(
+            Path.Combine(_cloneDirectory, configuration.FilePath)
+        ));
     }
 
     public async Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
