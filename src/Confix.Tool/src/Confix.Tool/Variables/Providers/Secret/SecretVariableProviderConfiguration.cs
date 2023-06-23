@@ -13,7 +13,8 @@ public record SecretVariableProviderConfiguration(
     string? PublicKey,
     string? PublicKeyPath,
     string? PrivateKey,
-    string? PrivateKeyPath
+    string? PrivateKeyPath,
+    string? Password
 )
 {
     public static SecretVariableProviderConfiguration Parse(JsonNode node)
