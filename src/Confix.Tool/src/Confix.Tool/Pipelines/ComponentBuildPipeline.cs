@@ -6,7 +6,7 @@ using Confix.Tool.Middlewares;
 
 namespace Confix.Tool.Commands;
 
-public class BuildCommandPipeline : Pipeline
+public class ComponentBuildPipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
@@ -32,8 +32,15 @@ public class BuildCommandPipeline : Pipeline
                 throw new ExitException();
 
             case ConfigurationScope.Component:
-                App.Log.ComponentsDoNotSupportBuild();
-                throw new ExitException();
+            {
+                var projectDirectory = configuration.Project!.Directory!;
+                var pipeline = new ComponentBuildPipeline();
+                var projectContext = context
+                    .WithExecutingDirectory(projectDirectory);
+
+                await pipeline.ExecuteAsync(services, projectContext);
+                return;
+            }
 
             case ConfigurationScope.Project:
             {
@@ -71,11 +78,5 @@ file static class Log
     {
         console.Error(
             $"No confix context was found in the executing directory: [yellow]{directory}[/]");
-    }
-
-    public static void ComponentsDoNotSupportBuild(this IConsoleLogger console)
-    {
-        console.Error(
-            "Components do not support reload. `reload` only works for projects and solutions.");
     }
 }
