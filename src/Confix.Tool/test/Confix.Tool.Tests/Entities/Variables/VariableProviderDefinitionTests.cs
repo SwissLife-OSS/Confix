@@ -1,5 +1,7 @@
 using System.Text.Json.Nodes;
+using Confix.Tool;
 using Confix.Tool.Abstractions;
+using FluentAssertions;
 using Json.More;
 
 namespace ConfiX.Entities.Component.Configuration;
@@ -129,5 +131,80 @@ public class VariableProviderDefinitionTests
         {
             ["key"] = "override",
         }));
+    }
+
+    [Fact]
+    public void From_WithoutName_ValidationException()
+    {
+        // Arrange
+        var configuration = new VariableProviderConfiguration(
+            null,
+            "type",
+            new Dictionary<string, JsonObject>(),
+            new JsonObject()
+        );
+
+        // Act
+        var exception = Assert.Throws<ValidationException>(() => VariableProviderDefinition.From(configuration));
+
+        // Assert
+        exception.Errors.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void From_WithoutType_ValidationException()
+    {
+        var configuration = new VariableProviderConfiguration(
+             "name",
+             null,
+             new Dictionary<string, JsonObject>(),
+             new JsonObject()
+         );
+
+        // Act
+        var exception = Assert.Throws<ValidationException>(() => VariableProviderDefinition.From(configuration));
+
+        // Assert
+        exception.Errors.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void From_WithoutNameAndType_ValidationException()
+    {
+        var configuration = new VariableProviderConfiguration(
+            null,
+            null,
+            new Dictionary<string, JsonObject>(),
+            new JsonObject()
+        );
+
+        // Act
+        var exception = Assert.Throws<ValidationException>(() => VariableProviderDefinition.From(configuration));
+
+        // Assert
+        exception.Errors.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public void From_WithValues_Valid()
+    {
+        var configuration = new VariableProviderConfiguration(
+            "name",
+            "type",
+            new Dictionary<string, JsonObject>(),
+            new JsonObject()
+            {
+                ["key"] = "value"
+            }
+        );
+
+        // Act
+        var result = VariableProviderDefinition.From(configuration);
+
+        // Assert
+        result.Name.Should().Be(configuration.Name);
+        result.Type.Should().Be(configuration.Type);
+        result.EnvironmentOverrides.Should().BeEmpty();
+        result.Value.Should().BeEquivalentTo(configuration.Values);
     }
 }
