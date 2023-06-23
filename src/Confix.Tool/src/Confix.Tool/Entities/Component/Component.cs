@@ -24,11 +24,11 @@ public class Component
 
     public string ComponentName { get; }
 
-    public string? Version { get; }
+    public string? Version { get; set; }
 
-    public bool IsEnabled { get; }
+    public bool IsEnabled { get; set; }
 
     public JsonSchema Schema { get; }
 
-    public IReadOnlyList<string> MountingPoints { get; }
+    public IReadOnlyList<string> MountingPoints { get; set; }
 }
