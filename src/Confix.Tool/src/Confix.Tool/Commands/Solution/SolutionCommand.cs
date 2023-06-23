@@ -11,5 +11,6 @@ public sealed class SolutionCommand : Command
         AddCommand(new SolutionReloadCommand());
         AddCommand(new SolutionBuildCommand());
         AddCommand(new SolutionInitCommand());
+        AddCommand(new SolutionValidateCommand());
     }
 }
