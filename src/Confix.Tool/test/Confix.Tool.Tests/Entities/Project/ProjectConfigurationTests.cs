@@ -317,7 +317,7 @@ public class ProjectConfigurationTests : ParserTestBase
             FileNames.ConfixProject);
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath)!);
 
-        File.WriteAllText(confixRcPath,
+        await File.WriteAllTextAsync(confixRcPath,
             """
                 {
                     "name": "TestProject",
