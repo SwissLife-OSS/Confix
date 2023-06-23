@@ -36,7 +36,7 @@ public class VariableProviderFactoryTests
     }
 
     [Fact]
-    public void CreateProvider_UnknownProviderType_ThrowsInvalidOperationException()
+    public void CreateProvider_UnknownProviderType_ExitException()
     {
         // Arrange
         var factory = new VariableProviderFactory(
@@ -57,7 +57,6 @@ public class VariableProviderFactoryTests
         };
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(()
-            => factory.CreateProvider(configuration));
+        Assert.Throws<ExitException>(() => factory.CreateProvider(configuration));
     }
 }
