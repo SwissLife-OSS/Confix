@@ -9,10 +9,10 @@ public static class ConfigurationAdapterCommandLineBuilderExtensions
     {
         builder.AddSingleton(sp => new ConfigurationAdapterMiddleware(
             sp.GetRequiredService<IEnumerable<IConfigurationAdapter>>()));
-        
+
         builder.AddConfigurationAdapter<VsCodeConfigurationAdapter>();
+        builder.AddConfigurationAdapter<IntelliJConfigurationAdapter>();
 
         return builder;
     }
 }
-

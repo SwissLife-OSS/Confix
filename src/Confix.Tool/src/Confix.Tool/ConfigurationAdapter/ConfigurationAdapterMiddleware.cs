@@ -3,6 +3,7 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Schema;
+using Spectre.Console;
 
 namespace Confix.Tool.Middlewares;
 
