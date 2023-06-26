@@ -19,12 +19,27 @@ public sealed class ComponentRepositoryDefinition
 
     public static ComponentRepositoryDefinition From(ComponentRepositoryConfiguration configuration)
     {
-        var name = configuration.Name ??
-            throw new InvalidOperationException("Name is not defined.");
-        var type = configuration.Type ??
-            throw new InvalidOperationException("Type is not defined.");
-        var values = configuration.Values;
+        List<string> validationErrors = new();
+        if (configuration.Name is null)
+        {
+            validationErrors.Add("Name is not defined.");
+        }
+        if (configuration.Type is null)
+        {
+            validationErrors.Add("Type is not defined.");
+        }
+        if (validationErrors.Any())
+        {
+            throw new ValidationException("Invalid component repository configuration.")
+            {
+                Errors = validationErrors
+            };
+        }
 
-        return new ComponentRepositoryDefinition(name, type, values);
+
+        return new ComponentRepositoryDefinition(
+            configuration.Name!,
+            configuration.Type!,
+            configuration.Values);
     }
 }
