@@ -17,10 +17,7 @@ public class SolutionConfigurationTests : ParserTestBase
             {
                 "project": {
                     "environments": [
-                        {
-                            "name": "development",
-                            "excludeFiles": ["appsettings.staging.json"]
-                        },
+                        "development",
                         "staging"
                     ]
                 },

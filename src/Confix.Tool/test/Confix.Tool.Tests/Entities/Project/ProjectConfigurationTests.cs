@@ -16,15 +16,9 @@ public class ProjectConfigurationTests : ParserTestBase
             {
                 "name": "TestProject",
                 "environments": [
-                    {
-                        "name": "development",
-                        "excludeFiles": ["appsettings.staging.json"]
-                    },
+                    "development",
                     "staging",
-                    {
-                        "name": "production",
-                        "excludeFiles": ["appsettings.staging.json"]
-                    }
+                    "production"
                 ],
                 "components": {
                     "@dotnet-package/BlobStorage": {
@@ -186,7 +180,7 @@ public class ProjectConfigurationTests : ParserTestBase
             "TestProject",
             new List<EnvironmentConfiguration>
             {
-                new("env1", new List<string> { "file1" }, new List<string> { "file2" }, false),
+                new("env1", false),
             },
             new List<ComponentReferenceConfiguration>
             {
@@ -213,7 +207,7 @@ public class ProjectConfigurationTests : ParserTestBase
                 new("Subproject1",
                     new List<EnvironmentConfiguration>
                     {
-                        new("env1", new List<string> { "file1" }, new List<string> { "file2" }, false),
+                        new("env1", false),
                     },
                     null,
                     null,
@@ -228,7 +222,7 @@ public class ProjectConfigurationTests : ParserTestBase
             "MergedProject",
             new List<EnvironmentConfiguration>
             {
-                new("env1", new List<string> { "file2" }, new List<string> { "file3" }, true),
+                new("env1", true),
             },
             new List<ComponentReferenceConfiguration>
             {
@@ -255,7 +249,7 @@ public class ProjectConfigurationTests : ParserTestBase
                 new("Subproject1",
                     new List<EnvironmentConfiguration>
                     {
-                        new("env1", new List<string> { "file2" }, new List<string> { "file3" }, false),
+                        new("env1", false),
                     },
                     null,
                     null,
@@ -275,7 +269,6 @@ public class ProjectConfigurationTests : ParserTestBase
         Assert.NotSame(original, merged);
         Assert.Equal("MergedProject", merged.Name);
         Assert.Single(merged.Environments!);
-        Assert.Equal("file2", merged.Environments!.First().ExcludeFiles!.First());
         Assert.Single(merged.Components!);
         Assert.False(merged.Components!.First().IsEnabled);
         Assert.Single(merged.Repositories!);
@@ -290,8 +283,6 @@ public class ProjectConfigurationTests : ParserTestBase
         Assert.Single(merged.Subprojects!);
         Assert.Equal("Subproject1", merged.Subprojects!.First().Name);
         Assert.Single(merged.Subprojects!.First().Environments!);
-        Assert.Equal("file2",
-            merged.Subprojects!.First().Environments!.First().ExcludeFiles!.First());
     }
 
     [Fact]
@@ -322,15 +313,9 @@ public class ProjectConfigurationTests : ParserTestBase
                 {
                     "name": "TestProject",
                     "environments": [
-                        {
-                            "name": "development",
-                            "excludeFiles": ["appsettings.staging.json"]
-                        },
+                        "develonment",
                         "staging",
-                        {
-                            "name": "production",
-                            "excludeFiles": ["appsettings.staging.json"]
-                        }
+                        "production"
                     ],
                     "components": {
                         "@dotnet-package/BlobStorage": {
