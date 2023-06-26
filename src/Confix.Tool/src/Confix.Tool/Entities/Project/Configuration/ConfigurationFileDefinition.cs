@@ -16,9 +16,14 @@ public sealed class ConfigurationFileDefinition
 
     public static ConfigurationFileDefinition From(ConfigurationFileConfiguration configuration)
     {
-        var type = configuration.Type
-            ?? throw new InvalidOperationException("Configuration type is not defined.");
+        if (string.IsNullOrWhiteSpace(configuration.Type))
+        {
+            throw new ValidationException("ConfigurationFileDefinition is invalid.")
+            {
+                Errors = new[] { "Type is required." }
+            };
+        }
 
-        return new ConfigurationFileDefinition(type, configuration.Value);
+        return new ConfigurationFileDefinition(configuration.Type, configuration.Value);
     }
 }
