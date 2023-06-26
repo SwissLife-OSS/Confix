@@ -24,56 +24,49 @@ public static class ExceptionHandlerCommandLineBuilderExtensions
         {
             await next(context);
         }
-        catch (AggregateException exception) when (exception.InnerExceptions.Any(e => e is ExitException))
+        catch (AggregateException exception) when (exception.InnerExceptions.Any(e => e is ExitException or ValidationException))
         {
-            context.ExitCode = ExitCodes.Error;
-
-            var logger = context.BindingContext.GetRequiredService<IConsoleLogger>();
-            var console = context.BindingContext.GetRequiredService<IAnsiConsole>();
             foreach (var innerException in exception.InnerExceptions)
             {
-                if (innerException is ExitException exitException)
-                {
-                    logger.ExitException(exitException);
-                    console.PrintHelp(exitException);
-                }
-                else if (innerException is ValidationException validationException)
-                {
-                    logger.ValidationException(validationException);
-                    console.PrintValidationError(validationException);
-                }
-                else
-                {
-                    logger.UnhandledException(innerException);
-                }
+                context.HandleException(innerException);
             }
-        }
-        catch (ExitException exception) when (exception is { Message: var message })
-        {
-            context.ExitCode = ExitCodes.Error;
-
-            context.BindingContext.GetRequiredService<IConsoleLogger>().ExitException(exception);
-            context.BindingContext.GetRequiredService<IAnsiConsole>().PrintHelp(exception);
-        }
-        catch (ValidationException exception)
-        {
-            context.BindingContext.GetRequiredService<IConsoleLogger>().ValidationException(exception);
-            context.BindingContext.GetRequiredService<IAnsiConsole>().PrintValidationError(exception);
-        }
-        catch (Exception ex) when (ex is OperationCanceledException or TaskCanceledException)
-        {
         }
         catch (Exception exception)
         {
-            context.ExitCode = ExitCodes.Error;
-            App.Log.UnhandledException(exception);
-            throw;
+            context.HandleException(exception);
         }
     }
+
+
 }
 
 file static class LogExtensions
 {
+    public static void HandleException(this InvocationContext context, Exception exception)
+    {
+        var logger = context.BindingContext.GetRequiredService<IConsoleLogger>();
+        var console = context.BindingContext.GetRequiredService<IAnsiConsole>();
+
+        switch (exception)
+        {
+            case OperationCanceledException or TaskCanceledException:
+                // ignored on purpose
+                return;
+            case ExitException exitException:
+                logger.ExitException(exitException);
+                console.PrintHelp(exitException);
+                break;
+            case ValidationException validationException:
+                logger.ValidationException(validationException);
+                console.PrintValidationError(validationException);
+                break;
+            default:
+                logger.UnhandledException(exception);
+                throw exception;
+        }
+
+        context.ExitCode = ExitCodes.Error;
+    }
     public static void ExitException(this IConsoleLogger logger, ExitException exception)
     {
         logger.Error("Confix failed.");
