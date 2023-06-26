@@ -114,7 +114,6 @@ file class SchemaNode
                 break;
         }
 
-
         foreach (var (name, child) in Children)
         {
             schema.Properties((name, child.BuildSchema()));
