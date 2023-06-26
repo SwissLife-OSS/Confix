@@ -155,7 +155,7 @@ public class ComponentConfigurationTests : ParserTestBase
     {
         // Arrange
         var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixComponent);
-        File.WriteAllText(
+        await File.WriteAllTextAsync(
             confixRcPath,
             """
             {
@@ -187,7 +187,7 @@ public class ComponentConfigurationTests : ParserTestBase
     {
         // Arrange
         var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixProject);
-        File.WriteAllText(
+        await File.WriteAllTextAsync(
             confixRcPath,
             """
             {

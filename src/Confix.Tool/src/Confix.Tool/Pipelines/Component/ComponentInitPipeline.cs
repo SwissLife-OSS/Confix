@@ -1,25 +1,40 @@
 using Confix.Tool.Commands.Logging;
+using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 
 namespace Confix.Tool.Commands.Solution;
 
 public sealed class ComponentInitPipeline : Pipeline
 {
+    private class Folder
+    {
+        public const string Components = "Components";
+    }
+
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
     {
-        builder.UseHandler(InvokeAsync);
+        builder
+            .AddArgument(ComponentNameArgument.Instance)
+            .Use<LoadConfigurationMiddleware>()
+            .UseHandler(InvokeAsync);
     }
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
         context.SetStatus("Initialize the component...");
+        var configuration = context.Features.Get<ConfigurationFeature>();
 
-        var executingDirectory = context.Execution.CurrentDirectory;
-        var componentFilePath =
-            Path.Combine(executingDirectory.FullName, FileNames.ConfixComponent);
-        var componentFile = new FileInfo(componentFilePath);
+        configuration.EnsureProjectScope();
+        var project = configuration.EnsureProject();
+
+        var componentName = context.Parameter.Get(ComponentNameArgument.Instance);
+        var componentFolder = project.Directory!.Append(Folder.Components).Append(componentName);
+        componentFolder.EnsureFolder();
+
+        var componentFile = componentFolder.AppendFile(FileNames.ConfixComponent);
 
         if (componentFile.Exists)
         {
@@ -27,7 +42,8 @@ public sealed class ComponentInitPipeline : Pipeline
             throw new ExitException();
         }
 
-        await File.WriteAllTextAsync(componentFile.FullName, "{}");
+        await File
+            .WriteAllTextAsync(componentFile.FullName, $$""" { "name":"{{componentName}}" } """);
         context.Logger.LogComponentCreated(componentFile);
     }
 }
