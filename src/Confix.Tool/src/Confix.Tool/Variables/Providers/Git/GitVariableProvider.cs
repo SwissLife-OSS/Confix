@@ -63,7 +63,8 @@ public sealed class GitVariableProvider : IVariableProvider
                 Environment.SpecialFolder.ApplicationData,
                 Environment.SpecialFolderOption.Create),
             ".confix",
-            "git", providerConfiguration.GetMd5Hash());
+            "git", 
+            providerConfiguration.GetMd5Hash());
 
     private async Task EnsureClonedAsync(bool forcePull, CancellationToken cancellationToken)
     {
