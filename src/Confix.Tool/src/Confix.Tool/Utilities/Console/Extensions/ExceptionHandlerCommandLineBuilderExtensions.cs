@@ -37,6 +37,11 @@ public static class ExceptionHandlerCommandLineBuilderExtensions
                     logger.ExitException(exitException);
                     console.PrintHelp(exitException);
                 }
+                else if (innerException is ValidationException validationException)
+                {
+                    logger.ValidationException(validationException);
+                    console.PrintValidationError(validationException);
+                }
                 else
                 {
                     logger.UnhandledException(innerException);
@@ -49,6 +54,11 @@ public static class ExceptionHandlerCommandLineBuilderExtensions
 
             context.BindingContext.GetRequiredService<IConsoleLogger>().ExitException(exception);
             context.BindingContext.GetRequiredService<IAnsiConsole>().PrintHelp(exception);
+        }
+        catch (ValidationException exception)
+        {
+            context.BindingContext.GetRequiredService<IConsoleLogger>().ValidationException(exception);
+            context.BindingContext.GetRequiredService<IAnsiConsole>().PrintValidationError(exception);
         }
         catch (Exception ex) when (ex is OperationCanceledException or TaskCanceledException)
         {
@@ -81,6 +91,22 @@ file static class LogExtensions
             };
             console.Write(panel);
         }
+    }
+
+    public static void ValidationException(this IConsoleLogger logger, ValidationException exception)
+    {
+        logger.Error("Confix failed due to faulty configuration.");
+        logger.TraceException(exception);
+    }
+
+    public static void PrintValidationError(this IAnsiConsole console, ValidationException exception)
+    {
+        var validationErrorTree = new Tree($"[red]{exception.Message}[/]");
+        foreach (var error in exception.Errors)
+        {
+            validationErrorTree.AddNode($"[red]{error}[/]");
+        }
+        console.Write(validationErrorTree);
     }
 
     public static void UnhandledException(this IConsoleLogger logger, Exception exception)
