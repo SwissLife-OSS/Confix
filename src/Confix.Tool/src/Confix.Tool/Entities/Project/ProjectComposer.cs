@@ -114,9 +114,6 @@ file class SchemaNode
                 break;
         }
 
-        if (Schemas.Count > 0)
-        {
-        }
 
         foreach (var (name, child) in Children)
         {
