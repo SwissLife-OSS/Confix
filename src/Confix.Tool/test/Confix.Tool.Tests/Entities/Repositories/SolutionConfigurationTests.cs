@@ -136,7 +136,7 @@ public class SolutionConfigurationTests : ParserTestBase
     {
         // Arrange
         var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixSolution);
-        File.WriteAllText(confixRcPath,
+        await File.WriteAllTextAsync(confixRcPath,
             """
                 {
                     "component": {
