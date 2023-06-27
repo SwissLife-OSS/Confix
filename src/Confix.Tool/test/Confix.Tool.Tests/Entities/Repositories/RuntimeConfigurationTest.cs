@@ -131,7 +131,7 @@ public class RuntimeConfigurationTest : ParserTestBase
 
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath1)!);
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath2)!);
-        File.WriteAllText(confixRcPath1,
+        await File.WriteAllTextAsync(confixRcPath1,
             """
             {
                 "isRoot": false,
@@ -145,7 +145,7 @@ public class RuntimeConfigurationTest : ParserTestBase
                 }
             }
             """);
-        File.WriteAllText(confixRcPath2,
+        await File.WriteAllTextAsync(confixRcPath2,
             """
             {
                 "isRoot": false,
@@ -159,7 +159,7 @@ public class RuntimeConfigurationTest : ParserTestBase
                 }
             }
             """);
-            
+
         var configuration = new List<JsonFile>
         {
             await JsonFile.FromFile(new(confixRcPath1), default),
@@ -195,7 +195,7 @@ public class RuntimeConfigurationTest : ParserTestBase
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath2)!);
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath3)!);
 
-        File.WriteAllText(confixRcPath1,
+        await File.WriteAllTextAsync(confixRcPath1,
             """
             {
                 "isRoot": false,
@@ -209,7 +209,7 @@ public class RuntimeConfigurationTest : ParserTestBase
                 }
             }
             """);
-        File.WriteAllText(confixRcPath2,
+        await File.WriteAllTextAsync(confixRcPath2,
             """
                 {
                     "isRoot": true,
@@ -223,7 +223,7 @@ public class RuntimeConfigurationTest : ParserTestBase
                     }
                 }
             """);
-        File.WriteAllText(confixRcPath3,
+        await File.WriteAllTextAsync(confixRcPath3,
             """
                 {
                     "isRoot": false,
@@ -250,6 +250,73 @@ public class RuntimeConfigurationTest : ParserTestBase
         Assert.NotNull(result);
         Assert.True(result.IsRoot);
         Assert.Equal("Component3", result.Component?.Name);
+        Assert.Equal("Project2", result.Project?.Name);
+
+        // Cleanup
+        File.Delete(confixRcPath1);
+        File.Delete(confixRcPath2);
+        File.Delete(confixRcPath3);
+    }
+
+    [Fact]
+    public async Task LoadFromFiles_Should_LoadAndMergeEmptyIntermediateShouldNotClear()
+    {
+        // Arrange
+        var confixRcPath1 =
+            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+        var confixRcPath2 =
+            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+        var confixRcPath3 =
+            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+
+        Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath1)!);
+        Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath2)!);
+        Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath3)!);
+
+        await File.WriteAllTextAsync(confixRcPath1,
+            """
+            {
+                "isRoot": false,
+                "component": {
+                    "name": "Component1",
+                    "inputs": [],
+                    "outputs": []
+                },
+                "project": {
+                    "name": "Project1"
+                }
+            }
+            """);
+        await File.WriteAllTextAsync(confixRcPath2,
+            """
+                {
+                    "isRoot": true,
+                    "component": {
+                        "name": "Component2",
+                        "inputs": [],
+                        "outputs": []
+                    },
+                    "project": {
+                        "name": "Project2"
+                    }
+                }
+            """);
+        await File.WriteAllTextAsync(confixRcPath3, """ { } """);
+
+        var configuration = new List<JsonFile>
+        {
+            await JsonFile.FromFile(new(confixRcPath1), default),
+            await JsonFile.FromFile(new(confixRcPath2), default),
+            await JsonFile.FromFile(new(confixRcPath3), default)
+        };
+
+        // Act
+        var result = RuntimeConfiguration.LoadFromFiles(configuration);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.True(result.IsRoot);
+        Assert.Equal("Component2", result.Component?.Name);
         Assert.Equal("Project2", result.Project?.Name);
 
         // Cleanup

@@ -5,11 +5,20 @@ namespace Confix.Tool.Common.Pipelines;
 
 public static class PipelineDescriptorExtensions
 {
+    public static IPipelineDescriptor Use(
+        this IPipelineDescriptor builder,
+        Func<IMiddlewareContext, MiddlewareDelegate, Task> action)
+    {
+        builder.Use(new DelegateMiddleware(action));
+
+        return builder;
+    }
+
     public static IPipelineDescriptor UseHandler(
         this IPipelineDescriptor builder,
         Func<IMiddlewareContext, Task> action)
     {
-        builder.Use(new DelegateMiddleware((context, _) => action(context)));
+        builder.Use((context, _) => action(context));
 
         return builder;
     }

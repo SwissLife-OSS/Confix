@@ -5,7 +5,7 @@ public sealed class ComponentReferenceDefinition
     public ComponentReferenceDefinition(
         string provider,
         string componentName,
-        string version,
+        string? version,
         bool isEnabled,
         IReadOnlyList<string> mountingPoints)
     {
@@ -20,7 +20,7 @@ public sealed class ComponentReferenceDefinition
 
     public string ComponentName { get; }
 
-    public string Version { get; }
+    public string? Version { get; }
 
     public bool IsEnabled { get; }
 
@@ -50,11 +50,17 @@ public sealed class ComponentReferenceDefinition
             };
         }
 
+         var mountingPoints = configuration.MountingPoints ?? Array.Empty<string>();
+        if (mountingPoints.Count == 0)
+        {
+            mountingPoints = new[] { configuration.ComponentName! };
+        }
+
         return new ComponentReferenceDefinition(
             configuration.Provider!,
             configuration.ComponentName!,
             configuration.Version!,
             configuration.IsEnabled,
-            configuration.MountingPoints ?? Array.Empty<string>());
+            mountingPoints);
     }
 }

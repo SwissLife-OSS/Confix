@@ -6,7 +6,7 @@ using Confix.Tool.Middlewares;
 
 namespace Confix.Tool.Commands;
 
-public class BuildCommandPipeline : Pipeline
+public sealed class ValidateCommandPipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
@@ -14,13 +14,12 @@ public class BuildCommandPipeline : Pipeline
         builder
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
-            .UseReadConfigurationFiles()
             .UseHandler<IServiceProvider>(InvokeAsync);
     }
 
     private static async Task InvokeAsync(IMiddlewareContext context, IServiceProvider services)
     {
-        context.SetStatus("Building the schema of the project...");
+        context.SetStatus("Validating...");
 
         var configuration = context.Features.Get<ConfigurationFeature>();
 
@@ -32,30 +31,32 @@ public class BuildCommandPipeline : Pipeline
                 throw new ExitException();
 
             case ConfigurationScope.Component:
-                App.Log.ComponentsDoNotSupportBuild();
+                App.Log.ComponentsDoNotSupportValidate();
                 throw new ExitException();
 
             case ConfigurationScope.Project:
-            {
-                var projectDirectory = configuration.Project!.Directory!;
-                var pipeline = new ProjectBuildPipeline();
-                var projectContext = context
-                    .WithExecutingDirectory(projectDirectory);
+                {
+                    var projectDirectory = configuration.Project!.Directory!;
+                    var pipeline = new ProjectValidatePipeline();
+                    var projectContext = context
+                        .WithExecutingDirectory(projectDirectory)
+                        .WithFeatureCollection();
 
-                await pipeline.ExecuteAsync(services, projectContext);
-                return;
-            }
+                    await pipeline.ExecuteAsync(services, projectContext);
+                    return;
+                }
 
             case ConfigurationScope.Solution:
-            {
-                var solutionDirectory = configuration.Solution!.Directory!;
-                var pipeline = new SolutionBuildPipeline();
-                var solutionContext = context
-                    .WithExecutingDirectory(solutionDirectory);
+                {
+                    var solutionDirectory = configuration.Solution!.Directory!;
+                    var pipeline = new SolutionValidatePipeline();
+                    var solutionContext = context
+                        .WithExecutingDirectory(solutionDirectory)
+                        .WithFeatureCollection();
 
-                await pipeline.ExecuteAsync(services, solutionContext);
-                return;
-            }
+                    await pipeline.ExecuteAsync(services, solutionContext);
+                    return;
+                }
 
             default:
                 throw new ArgumentOutOfRangeException();
@@ -73,7 +74,7 @@ file static class Log
             $"No confix context was found in the executing directory: [yellow]{directory}[/]");
     }
 
-    public static void ComponentsDoNotSupportBuild(this IConsoleLogger console)
+    public static void ComponentsDoNotSupportValidate(this IConsoleLogger console)
     {
         console.Error(
             "Components do not support reload. `reload` only works for projects and solutions.");

@@ -21,6 +21,7 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
             AppSettingsConfigurationFileProviderConfiguration.Parse(context.Definition.Value);
 
         var input = context.Project.Directory!.FindInPath(FileNames.AppSettings, false);
+        
         if (input is null)
         {
             return Array.Empty<ConfigurationFile>();

@@ -45,7 +45,7 @@ public sealed class RuntimeConfiguration
     {
         var obj = node.ExpectObject();
 
-        var isRoot = !obj.TryGetNonNullPropertyValue(FieldNames.IsRoot, out var isRootNode) ||
+        var isRoot = obj.TryGetNonNullPropertyValue(FieldNames.IsRoot, out var isRootNode) &&
             isRootNode.ExpectValue<bool>();
 
         var component = obj.TryGetNonNullPropertyValue(FieldNames.Component, out var componentNode)

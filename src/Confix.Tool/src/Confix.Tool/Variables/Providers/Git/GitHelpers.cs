@@ -6,7 +6,7 @@ namespace ConfiX.Variables;
 
 public static class GitHelpers
 {
-    public static async Task Clone(
+    public static async Task CloneAsync(
         GitCloneConfiguration configuration,
         CancellationToken cancellationToken)
     {
@@ -19,7 +19,7 @@ public static class GitHelpers
             arguments.AddRange(configuration.Arguments);
         }
         arguments.Add(configuration.RepositoryUrl);
-        arguments.Add(configuration.Location);
+        arguments.Add($"\"{configuration.Location}\"");
 
         using Process process = new()
         {
@@ -51,10 +51,61 @@ public static class GitHelpers
             App.Log.GitCloneFailed(ex);
         }
     }
+    
+    public static async Task PullAsync(
+        GitPullConfiguration configuration,
+        CancellationToken cancellationToken)
+    {
+        List<string> arguments = new()
+        {
+            "-C",
+            $"\"{configuration.Location}\"",
+            "pull"
+        };
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+
+        using Process process = new()
+        {
+            StartInfo = new()
+            {
+                FileName = "git",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                Arguments = string.Join(" ", arguments)
+            }
+        };
+
+        try
+        {
+            App.Log.GitPullStarted(configuration.Location);
+            process.Start();
+
+            await process.WaitForExitAsync(cancellationToken);
+
+            string output = await process.StandardOutput.ReadToEndAsync(cancellationToken);
+            App.Log.GitPullOutput(output);
+
+            process.EnsureExitCode();
+        }
+        catch (Exception ex)
+        {
+            App.Log.GitPullFailed(ex);
+        }
+    }
 }
 
 public record GitCloneConfiguration(
     string RepositoryUrl,
+    string Location,
+    string[]? Arguments
+);
+
+public record GitPullConfiguration(
     string Location,
     string[]? Arguments
 );
@@ -87,5 +138,20 @@ file static class LogExtensions
     public static void GitCloneFailed(this IConsoleLogger log, Exception ex)
     {
         log.Exception("Git clone failed", ex);
+    }
+    
+    public static void GitPullStarted(this IConsoleLogger log, string location)
+    {
+        log.Debug($"Pulling repository from {location}");
+    }
+    
+    public static void GitPullOutput(this IConsoleLogger log, string output)
+    {
+        log.Debug(output);
+    }
+    
+    public static void GitPullFailed(this IConsoleLogger log, Exception ex)
+    {
+        log.Exception("Git pull failed", ex);
     }
 }

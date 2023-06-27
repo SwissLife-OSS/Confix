@@ -13,7 +13,8 @@ public sealed class GitVariableProvider : IVariableProvider
 
     public GitVariableProvider(JsonNode configuration)
         : this(GitVariableProviderConfiguration.Parse(configuration))
-    { }
+    {
+    }
 
     public GitVariableProvider(GitVariableProviderConfiguration configuration)
         : this(GitVariableProviderDefinition.From(configuration))
@@ -30,25 +31,27 @@ public sealed class GitVariableProvider : IVariableProvider
 
     public async Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
     {
-        await EnsureCloned(cancellationToken);
+        await EnsureClonedAsync(true, cancellationToken);
         return await _localVariableProvider.ListAsync(cancellationToken);
     }
 
     public async Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
     {
-        await EnsureCloned(cancellationToken);
+        await EnsureClonedAsync(true, cancellationToken);
         return await _localVariableProvider.ResolveAsync(path, cancellationToken);
     }
 
-    public async Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(IReadOnlyList<string> paths, CancellationToken cancellationToken)
+    public async Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
+        IReadOnlyList<string> paths, CancellationToken cancellationToken)
     {
-        await EnsureCloned(cancellationToken);
+        await EnsureClonedAsync(true, cancellationToken);
         return await _localVariableProvider.ResolveManyAsync(paths, cancellationToken);
     }
 
-    public async Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
+    public async Task<string> SetAsync(string path, JsonNode value,
+        CancellationToken cancellationToken)
     {
-        await EnsureCloned(cancellationToken);
+        await EnsureClonedAsync(true, cancellationToken);
         return await _localVariableProvider.SetAsync(path, value, cancellationToken);
     }
 
@@ -59,22 +62,40 @@ public sealed class GitVariableProvider : IVariableProvider
     }
 
     private static string GetCloneDirectory(GitVariableProviderDefinition providerDefinition)
-        => Path.Combine(Path.GetTempPath(), ".confix", "git", providerDefinition.GetMd5Hash());
+        => Path.Combine(
+            Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData,
+                Environment.SpecialFolderOption.Create),
+            ".confix",
+            "git",
+            providerDefinition.GetMd5Hash());
 
-    private async Task EnsureCloned(CancellationToken cancellationToken)
+    private async Task EnsureClonedAsync(bool forcePull, CancellationToken cancellationToken)
     {
         if (Directory.Exists(_cloneDirectory))
         {
-            return;
+            if (!forcePull)
+            {
+                return;
+            }
+
+            GitPullConfiguration configuration = new(
+                _cloneDirectory,
+                _definition.Arguments
+            );
+
+            await GitHelpers.PullAsync(configuration, cancellationToken);
         }
+        else
+        {
+            GitCloneConfiguration configuration = new(
+                _definition.RepositoryUrl,
+                _cloneDirectory,
+                _definition.Arguments
+            );
 
-        GitCloneConfiguration configuration = new(
-            _definition.RepositoryUrl,
-            _cloneDirectory,
-            _definition.Arguments
-        );
-
-        await GitHelpers.Clone(configuration, cancellationToken);
+            await GitHelpers.CloneAsync(configuration, cancellationToken);
+        }
     }
 }
 

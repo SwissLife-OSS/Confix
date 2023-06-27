@@ -1,3 +1,4 @@
+using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Middlewares.Project;
@@ -14,6 +15,7 @@ public sealed class ProjectBuildPipeline : Pipeline
             .UseReadConfigurationFiles()
             .UseEnvironment()
             .Use<BuildComponentsOfProjectMiddleware>()
+            .UseCompleteWhenNoConfigurationFiles()
             .Use<VariableMiddleware>()
             .Use<BuildProjectMiddleware>()
             .Use<ValidationMiddleware>()
