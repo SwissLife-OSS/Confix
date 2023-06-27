@@ -50,7 +50,7 @@ public sealed class ComponentReferenceDefinition
             };
         }
 
-         var mountingPoints = configuration.MountingPoints ?? Array.Empty<string>();
+        var mountingPoints = configuration.MountingPoints ?? Array.Empty<string>();
         if (mountingPoints.Count == 0)
         {
             mountingPoints = new[] { configuration.ComponentName! };

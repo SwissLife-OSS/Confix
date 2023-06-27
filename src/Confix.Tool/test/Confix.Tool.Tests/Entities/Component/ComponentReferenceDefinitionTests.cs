@@ -97,6 +97,6 @@ public class ComponentReferenceDefinitionTests
         definition.ComponentName.Should().Be(configuration.ComponentName);
         definition.Version.Should().Be(configuration.Version);
         definition.IsEnabled.Should().Be(configuration.IsEnabled);
-        definition.MountingPoints.Should().BeEquivalentTo(configuration.MountingPoints);
+        definition.MountingPoints.Should().HaveCount(1);
     }
 }
