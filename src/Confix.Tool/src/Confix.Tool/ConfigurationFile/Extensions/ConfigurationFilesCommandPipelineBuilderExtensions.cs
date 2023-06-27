@@ -1,3 +1,4 @@
+using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 
 namespace Confix.Tool.Middlewares;
@@ -17,5 +18,34 @@ public static class ConfigurationFilesCommandPipelineBuilderExtensions
         builder.Use<ReadConfigurationFileMiddleware>();
 
         return builder;
+    }
+
+    public static IPipelineDescriptor UseCompleteWhenNoConfigurationFiles(
+        this IPipelineDescriptor builder)
+    {
+        builder.Use(Middleware);
+
+        return builder;
+    }
+
+    private static Task Middleware(IMiddlewareContext context, MiddlewareDelegate next)
+    {
+        var files = context.Features.Get<ConfigurationFileFeature>().Files;
+
+        if (files.Count == 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        return next(context);
+    }
+}
+
+file static class Logs
+{
+    public static void SkippedProjectBuildBecauseNoConfigurationFilesWereFound(
+        this IConsoleLogger logger)
+    {
+        logger.Debug("Skipped command execution build because no configuration files were found");
     }
 }

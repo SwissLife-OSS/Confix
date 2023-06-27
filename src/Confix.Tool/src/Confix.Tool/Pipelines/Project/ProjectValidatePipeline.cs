@@ -14,6 +14,7 @@ public sealed class ProjectValidatePipeline : Pipeline
             .UseReadConfigurationFiles()
             .UseEnvironment()
             .Use<BuildComponentsOfProjectMiddleware>()
+            .UseCompleteWhenNoConfigurationFiles()
             .Use<VariableMiddleware>()
             .Use<BuildProjectMiddleware>()
             .Use<ValidationMiddleware>();
