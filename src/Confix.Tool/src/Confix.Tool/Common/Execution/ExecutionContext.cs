@@ -8,6 +8,7 @@ public sealed record ExecutionContext : IExecutionContext
     /// </summary>
     public ExecutionContext(string currentDirectory, string homeDirectory)
     {
+        
         CurrentDirectory = new DirectoryInfo(currentDirectory);
         HomeDirectory = new DirectoryInfo(homeDirectory);
     }

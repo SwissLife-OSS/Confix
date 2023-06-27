@@ -13,8 +13,8 @@ public class ComponentBuildPipeline : Pipeline
     {
         builder
             .Use<LoadConfigurationMiddleware>()
-            .UseEnvironment()
-            .UseReadConfigurationFiles()
+            .AddOption(ActiveEnvironmentOption.Instance)
+            .AddOption(OutputFileOption.Instance)
             .UseHandler<IServiceProvider>(InvokeAsync);
     }
 
