@@ -23,7 +23,7 @@ public sealed class GitVariableProvider : IVariableProvider
     {
         _definition = definition;
         _cloneDirectory = GetCloneDirectory(_definition);
-        _localVariableProvider = new LocalVariableProvider(new LocalVariableProviderConfiguration(
+        _localVariableProvider = new LocalVariableProvider(new LocalVariableProviderDefinition(
             Path.Combine(_cloneDirectory, _definition.FilePath)
         ));
     }
