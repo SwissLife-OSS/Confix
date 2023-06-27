@@ -198,24 +198,12 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
 
 file static class Extensions
 {
-    public static string FullNameOrThrow(this ProjectDefinition project)
+    public static void EnsureSolution(this IComponentProviderContext context)
     {
-        if (project.Directory?.FullName is { } fullName && project.Directory.Exists)
-        {
-            return fullName;
-        }
-
-        throw new ExitException($"Could not find directory for project: {project.Name}");
-    }
-
-    public static DirectoryInfo EnsureSolution(this IComponentProviderContext context)
-    {
-        if (context.Solution.Directory is not { Exists: true } directoryInfo)
+        if (context.Solution.Directory is not { Exists: true })
         {
             throw new ExitException("A solution directory is required to load components");
         }
-
-        return directoryInfo;
     }
 
     public static DirectoryInfo EnsureProject(this IComponentProviderContext context)

@@ -5,7 +5,7 @@ public sealed class ComponentReferenceDefinition
     public ComponentReferenceDefinition(
         string provider,
         string componentName,
-        string version,
+        string? version,
         bool isEnabled,
         IReadOnlyList<string> mountingPoints)
     {
@@ -20,7 +20,7 @@ public sealed class ComponentReferenceDefinition
 
     public string ComponentName { get; }
 
-    public string Version { get; }
+    public string? Version { get; }
 
     public bool IsEnabled { get; }
 
@@ -34,10 +34,13 @@ public sealed class ComponentReferenceDefinition
         var componentName = configuration.ComponentName ??
             throw new InvalidOperationException("Component name is required.");
 
-        var version = configuration.Version ??
-            throw new InvalidOperationException("Component version is required.");
+        var version = configuration.Version;
 
         var mountingPoints = configuration.MountingPoints ?? Array.Empty<string>();
+        if (mountingPoints.Count == 0)
+        {
+            mountingPoints = new[] { componentName };
+        }
 
         return new ComponentReferenceDefinition(
             provider,
