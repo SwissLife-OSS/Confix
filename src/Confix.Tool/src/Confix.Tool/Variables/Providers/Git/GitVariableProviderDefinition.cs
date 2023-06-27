@@ -27,8 +27,8 @@ public sealed record GitVariableProviderDefinition(
         }
 
         return new(
-            configuration.RepositoryUrl,
-            configuration.FilePath,
+            configuration.RepositoryUrl!,
+            configuration.FilePath!,
             configuration.Arguments ?? Array.Empty<string>()
         );
     }
