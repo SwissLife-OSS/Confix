@@ -25,8 +25,8 @@ export const Logo: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     <path
       fill="none"
       stroke="currentColor"
-      stroke-miterlimit="10"
-      stroke-width="5"
+      strokeMiterlimit="10"
+      strokeWidth="5"
       d="m104.01 138.43-10.86 6-10.86-6v-12l10.86-6 10.86 6v12z"
     ></path>
     <path
