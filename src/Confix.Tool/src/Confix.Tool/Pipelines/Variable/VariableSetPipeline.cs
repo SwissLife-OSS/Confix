@@ -28,11 +28,15 @@ public sealed class VariableSetPipeline : Pipeline
 
         if (VariablePath.TryParse(variableName, out var parsed))
         {
+            if (parsed.Value.Suffix is not null)
+            {
+                throw new ExitException("Variable suffix is not supported while setting variable.");
+            }
             var result = await resolver
                 .SetVariable(
                     parsed.Value.ProviderName,
                     parsed.Value.Path,
-                    JsonValue.Create(variableValue),
+                    JsonValue.Create(variableValue)!,
                     context.CancellationToken);
 
             context.Logger.VariableSet(result);
