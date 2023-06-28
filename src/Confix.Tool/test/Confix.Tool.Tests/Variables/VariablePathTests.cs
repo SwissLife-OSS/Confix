@@ -4,19 +4,24 @@ namespace Confix.Tool.Tests;
 
 public class VariablePathTests
 {
-    [Fact]
-    public void Parse_ValidVariableName_CorrectResult()
+    [Theory]
+    [InlineData("$foo:bar", "foo", "bar", null)]
+    [InlineData("$foo:bar:baz", "foo", "bar", "baz")]
+    [InlineData("$foo.bar:baz.x", "foo.bar", "baz.x", null)]
+    [InlineData("$foo.bar:baz.x:suffix", "foo.bar", "baz.x", "suffix")]
+    [InlineData("$foo.bar:baz.x:suffix:with:colon", "foo.bar", "baz.x", "suffix:with:colon")]
+    public void Parse_ValidVariableName_CorrectResult(string variableName, string providerName, string path, string? suffix)
     {
         // arrange & act
-        VariablePath result = VariablePath.Parse("$foo.bar:baz.x");
+        VariablePath result = VariablePath.Parse(variableName);
 
         // assert
-        result.ProviderName.Should().Be("foo.bar");
-        result.Path.Should().Be("baz.x");
+        result.ProviderName.Should().Be(providerName);
+        result.Path.Should().Be(path);
+        result.Suffix.Should().Be(suffix);
     }
 
     [Theory]
-    [InlineData("$foo:bar:baz")]
     [InlineData("bar")]
     [InlineData("$foo.bar")]
     [InlineData("foo:bar")]
@@ -37,10 +42,10 @@ public class VariablePathTests
         path.HasValue.Should().BeTrue();
         path!.Value.ProviderName.Should().Be("foo.bar");
         path!.Value.Path.Should().Be("baz.x");
+        path!.Value.Suffix.Should().BeNull();
     }
 
     [Theory]
-    [InlineData("$foo:bar:baz")]
     [InlineData("bar")]
     [InlineData("$foo.bar")]
     [InlineData("foo:bar")]
