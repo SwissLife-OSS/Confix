@@ -1,4 +1,5 @@
 using Confix.Tool.Abstractions;
+using Confix.Tool.Commands.Logging;
 using Factory =
     System.Func<System.Text.Json.Nodes.JsonNode,
         Confix.Tool.Middlewares.IConfigurationFileProvider>;
@@ -18,8 +19,11 @@ public sealed class ConfigurationFileProviderFactory : IConfigurationFileProvide
     {
         if (!_lookup.TryGetValue(definition.Type, out var factory))
         {
-            throw new InvalidOperationException(
-                $"Component file provider '{definition.Type}' is not registered.");
+            throw new ExitException(
+                $"No Component file provider of type {definition.Type.AsHighlighted()} known")
+            {
+                Help = "Check the documentation for a list of supported Component file providers"
+            };
         }
 
         return factory(definition.Value);

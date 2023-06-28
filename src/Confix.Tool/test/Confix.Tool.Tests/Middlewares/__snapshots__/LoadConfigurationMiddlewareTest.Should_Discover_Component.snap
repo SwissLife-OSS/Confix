@@ -32,26 +32,14 @@
     "Environments": [
       {
         "Name": "dev",
-        "ExcludeFiles": [
-          "a"
-        ],
-        "IncludeFiles": [],
         "Enabled": false
       },
       {
         "Name": "uat",
-        "ExcludeFiles": [
-          "a"
-        ],
-        "IncludeFiles": [],
         "Enabled": false
       },
       {
         "Name": "prod",
-        "ExcludeFiles": [
-          "a"
-        ],
-        "IncludeFiles": [],
         "Enabled": false
       }
     ],
@@ -69,26 +57,14 @@
       "Environments": [
         {
           "Name": "dev",
-          "ExcludeFiles": [
-            "a"
-          ],
-          "IncludeFiles": [],
           "Enabled": false
         },
         {
           "Name": "prod",
-          "ExcludeFiles": [
-            "a"
-          ],
-          "IncludeFiles": [],
           "Enabled": false
         },
         {
           "Name": "uat",
-          "ExcludeFiles": [
-            "a"
-          ],
-          "IncludeFiles": [],
           "Enabled": false
         }
       ],

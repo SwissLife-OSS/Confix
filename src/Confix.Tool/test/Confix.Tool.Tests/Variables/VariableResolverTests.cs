@@ -207,7 +207,7 @@ public class VariableResolverTests
     }
 
     [Fact]
-    public async Task ResolveVariable_ProviderNotFound_ThrowsInvalidOperationExceptionAsync()
+    public async Task ResolveVariable_ProviderNotFound_ThrowsExitException()
     {
         // Arrange
         var factoryMock = new Mock<IVariableProviderFactory>();
@@ -216,12 +216,12 @@ public class VariableResolverTests
         var cancellationToken = CancellationToken.None;
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<ExitException>(() =>
             resolver.ResolveVariable(new VariablePath("Provider1", "Key1"), cancellationToken));
     }
 
     [Fact]
-    public async Task ResolveVariables_ProviderNotFound_ThrowsInvalidOperationExceptionAsync()
+    public async Task ResolveVariables_ProviderNotFound_ThrowsExitException()
     {
         // Arrange
         var factoryMock = new Mock<IVariableProviderFactory>();
@@ -236,7 +236,7 @@ public class VariableResolverTests
         var cancellationToken = CancellationToken.None;
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        await Assert.ThrowsAsync<ExitException>(() =>
             resolver.ResolveVariables(keys, cancellationToken));
     }
 }

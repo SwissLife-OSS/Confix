@@ -15,7 +15,7 @@ public class EnvironmentMiddlewareTests
     public async Task InvokeAsync_EnabledEnvironment_ShouldSetFeature()
     {
         // arrange
-        var testEnvironment = new EnvironmentDefinition("test", Array.Empty<string>(), Array.Empty<string>(), true);
+        var testEnvironment = new EnvironmentDefinition("test", true);
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
 
         var featureCollection = new FeatureCollection();
@@ -108,8 +108,6 @@ public class EnvironmentMiddlewareTests
         // arrange
         var testEnvironment = new EnvironmentDefinition(
             "test",
-            Array.Empty<string>(),
-            Array.Empty<string>(),
             false);
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
 
@@ -156,13 +154,9 @@ public class EnvironmentMiddlewareTests
         // arrange
         var testEnvironment1 = new EnvironmentDefinition(
             "tes1",
-            Array.Empty<string>(),
-            Array.Empty<string>(),
             true);
         var testEnvironment2 = new EnvironmentDefinition(
             "test2",
-            Array.Empty<string>(),
-            Array.Empty<string>(),
             true);
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
 
@@ -209,13 +203,9 @@ public class EnvironmentMiddlewareTests
         // arrange
         var testEnvironment1 = new EnvironmentDefinition(
             "test1",
-            Array.Empty<string>(),
-            Array.Empty<string>(),
             false);
         var testEnvironment2 = new EnvironmentDefinition(
             "test2",
-            Array.Empty<string>(),
-            Array.Empty<string>(),
             true);
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
 

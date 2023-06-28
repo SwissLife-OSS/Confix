@@ -12,14 +12,6 @@ public class EnvironmentConfigurationTest : ParserTestBase
             """
             {
                 "name": "dev",
-                "excludeFiles": [
-                    "file1",
-                    "file2"
-                ],
-                "includeFiles": [
-                    "file3",
-                    "file4"
-                ],
                 "enabled": true
             }
         """);
@@ -29,17 +21,6 @@ public class EnvironmentConfigurationTest : ParserTestBase
     public void Parse_Should_BeValid_When_OnlyName()
     {
         ExpectValid("\"dev\"");
-    }
-
-    [Fact]
-    public void Parse_Should_BeValid_When_ExcludeFilesIsMissing()
-    {
-        ExpectValid(
-            """
-            {
-                "name": "dev"
-            }
-        """);
     }
 
     [Fact]

@@ -7,7 +7,7 @@ namespace ConfiX.Variables;
 
 public sealed class SecretVariableProvider : IVariableProvider
 {
-    private readonly SecretVariableProviderConfiguration _configuration;
+    private readonly SecretVariableProviderDefinition _definition;
     private readonly Lazy<char[]> _privateKey;
     private readonly Lazy<char[]> _publicKey;
 
@@ -16,10 +16,14 @@ public sealed class SecretVariableProvider : IVariableProvider
     { }
 
     public SecretVariableProvider(SecretVariableProviderConfiguration configuration)
+        : this(SecretVariableProviderDefinition.From(configuration))
+    { }
+
+    public SecretVariableProvider(SecretVariableProviderDefinition definition)
     {
-        _configuration = configuration;
-        _privateKey = new Lazy<char[]>(() => GetKey(_configuration.PrivateKey, _configuration.PrivateKeyPath));
-        _publicKey = new Lazy<char[]>(() => GetKey(_configuration.PublicKey, _configuration.PublicKeyPath));
+        _definition = definition;
+        _privateKey = new Lazy<char[]>(() => GetKey(_definition.PrivateKey, _definition.PrivateKeyPath));
+        _publicKey = new Lazy<char[]>(() => GetKey(_definition.PublicKey, _definition.PublicKeyPath));
     }
 
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
@@ -67,18 +71,24 @@ public sealed class SecretVariableProvider : IVariableProvider
         return rsa.Decrypt(encryptedValue, Padding);
     }
 
-    private RSAEncryptionPadding Padding => _configuration.Padding switch
+    private RSAEncryptionPadding Padding => _definition.Padding switch
     {
         EncryptionPadding.OaepSHA256 => RSAEncryptionPadding.OaepSHA256,
         EncryptionPadding.OaepSHA512 => RSAEncryptionPadding.OaepSHA512,
         EncryptionPadding.Pkcs1 => RSAEncryptionPadding.Pkcs1,
-        _ => throw new ArgumentException("Invalid padding", nameof(_configuration.Padding))
+        _ => throw new ArgumentException("Invalid padding", nameof(_definition.Padding))
     };
 
     private static char[] GetKey(string? key, string? keyPath)
         => key?.ToCharArray()
             ?? ReadKeyFile(keyPath)
-            ?? throw new ExitException("Key or path to key must be set");
+            ?? throw new ExitException("Key or path to key must be set for this operation")
+            {
+                Help = """
+                    If you are trying to set a variable, make sure the Public Key is set.
+                    If you are trying to resolve a variable, make sure the Private Key is set.
+                """
+            };
 
     private static char[]? ReadKeyFile(string? path)
         => path is not null ? File.ReadAllText(path).ToCharArray() : null;

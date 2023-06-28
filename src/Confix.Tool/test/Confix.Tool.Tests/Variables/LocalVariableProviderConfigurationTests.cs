@@ -25,7 +25,7 @@ public class LocalVariableProviderConfigurationTests
     }
 
     [Fact]
-    public void Parse_InvalidJsonNode_MissingProperty_ThrowsArgumentException()
+    public void Parse_InvalidJsonNode_MissingProperty_SetsNull()
     {
         // Arrange
         var jsonNode = JsonNode.Parse("""
@@ -34,8 +34,10 @@ public class LocalVariableProviderConfigurationTests
             }
             """)!;
 
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => LocalVariableProviderConfiguration.Parse(jsonNode))
-            .InnerException.Should().BeOfType<JsonException>();
+        // Act
+        var config = LocalVariableProviderConfiguration.Parse(jsonNode);
+
+        // Assert
+        config.Path.Should().BeNull();
     }
 }

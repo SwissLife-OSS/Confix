@@ -120,7 +120,7 @@ public sealed class VariableResolver : IVariableResolver
 
     private VariableProviderConfiguration GetProviderConfiguration(string providerName)
       => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
-          ?? throw new InvalidOperationException($"Provider '{providerName}' not found");
+          ?? throw new ExitException($"No VariableProvider with name '{providerName.AsHighlighted()}' configured.");
 }
 
 public static class Extension

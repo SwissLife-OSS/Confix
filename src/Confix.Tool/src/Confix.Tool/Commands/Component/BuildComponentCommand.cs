@@ -1,8 +1,4 @@
-using System.CommandLine;
-using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Project;
-using Confix.Tool.Middlewares;
-using Spectre.Console;
 
 namespace Confix.Tool.Commands.Component;
 

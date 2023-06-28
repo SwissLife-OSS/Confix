@@ -28,24 +28,38 @@ public sealed class ComponentReferenceDefinition
 
     public static ComponentReferenceDefinition From(ComponentReferenceConfiguration configuration)
     {
-        var provider = configuration.Provider ??
-            throw new InvalidOperationException("Component provider is required.");
+        List<string> validationErrors = new();
+        if (configuration.Provider is null)
+        {
+            validationErrors.Add("Provider is not defined.");
+        }
+        if (configuration.ComponentName is null)
+        {
+            validationErrors.Add("Component name is not defined.");
+        }
+        if (configuration.Version is null)
+        {
+            validationErrors.Add("Component version is not defined.");
+        }
 
-        var componentName = configuration.ComponentName ??
-            throw new InvalidOperationException("Component name is required.");
-
-        var version = configuration.Version;
+        if (validationErrors.Any())
+        {
+            throw new ValidationException("Invalid component reference configuration")
+            {
+                Errors = validationErrors
+            };
+        }
 
         var mountingPoints = configuration.MountingPoints ?? Array.Empty<string>();
         if (mountingPoints.Count == 0)
         {
-            mountingPoints = new[] { componentName };
+            mountingPoints = new[] { configuration.ComponentName! };
         }
 
         return new ComponentReferenceDefinition(
-            provider,
-            componentName,
-            version,
+            configuration.Provider!,
+            configuration.ComponentName!,
+            configuration.Version!,
             configuration.IsEnabled,
             mountingPoints);
     }

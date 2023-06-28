@@ -7,7 +7,7 @@ namespace ConfiX.Variables;
 
 public sealed class GitVariableProvider : IVariableProvider
 {
-    private readonly GitVariableProviderConfiguration _configuration;
+    private readonly GitVariableProviderDefinition _definition;
     private readonly LocalVariableProvider _localVariableProvider;
     private readonly string _cloneDirectory;
 
@@ -17,11 +17,15 @@ public sealed class GitVariableProvider : IVariableProvider
     }
 
     public GitVariableProvider(GitVariableProviderConfiguration configuration)
+        : this(GitVariableProviderDefinition.From(configuration))
+    { }
+
+    public GitVariableProvider(GitVariableProviderDefinition definition)
     {
-        _configuration = configuration;
-        _cloneDirectory = GetCloneDirectory(configuration);
-        _localVariableProvider = new LocalVariableProvider(new LocalVariableProviderConfiguration(
-            Path.Combine(_cloneDirectory, configuration.FilePath)
+        _definition = definition;
+        _cloneDirectory = GetCloneDirectory(_definition);
+        _localVariableProvider = new LocalVariableProvider(new LocalVariableProviderDefinition(
+            Path.Combine(_cloneDirectory, _definition.FilePath)
         ));
     }
 
@@ -57,14 +61,14 @@ public sealed class GitVariableProvider : IVariableProvider
         return ValueTask.CompletedTask;
     }
 
-    private static string GetCloneDirectory(GitVariableProviderConfiguration providerConfiguration)
+    private static string GetCloneDirectory(GitVariableProviderDefinition providerDefinition)
         => Path.Combine(
             Environment.GetFolderPath(
                 Environment.SpecialFolder.ApplicationData,
                 Environment.SpecialFolderOption.Create),
             ".confix",
-            "git", 
-            providerConfiguration.GetMd5Hash());
+            "git",
+            providerDefinition.GetMd5Hash());
 
     private async Task EnsureClonedAsync(bool forcePull, CancellationToken cancellationToken)
     {
@@ -74,10 +78,10 @@ public sealed class GitVariableProvider : IVariableProvider
             {
                 return;
             }
-            
+
             GitPullConfiguration configuration = new(
                 _cloneDirectory,
-                _configuration.Arguments
+                _definition.Arguments
             );
 
             await GitHelpers.PullAsync(configuration, cancellationToken);
@@ -85,9 +89,9 @@ public sealed class GitVariableProvider : IVariableProvider
         else
         {
             GitCloneConfiguration configuration = new(
-                _configuration.RepositoryUrl,
+                _definition.RepositoryUrl,
                 _cloneDirectory,
-                _configuration.Arguments
+                _definition.Arguments
             );
 
             await GitHelpers.CloneAsync(configuration, cancellationToken);

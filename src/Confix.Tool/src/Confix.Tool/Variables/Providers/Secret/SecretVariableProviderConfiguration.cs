@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using ConfiX.Extensions;
@@ -6,10 +5,8 @@ using ConfiX.Extensions;
 namespace ConfiX.Variables;
 
 public record SecretVariableProviderConfiguration(
-    [property:DefaultValue(SecretVariableProviderAlgorithm.RSA)]
-    SecretVariableProviderAlgorithm Algorithm,
-    [property:DefaultValue(EncryptionPadding.OaepSHA256)]
-    EncryptionPadding Padding,
+    SecretVariableProviderAlgorithm? Algorithm,
+    EncryptionPadding? Padding,
     string? PublicKey,
     string? PublicKeyPath,
     string? PrivateKey,
@@ -17,14 +14,5 @@ public record SecretVariableProviderConfiguration(
 )
 {
     public static SecretVariableProviderConfiguration Parse(JsonNode node)
-    {
-        try
-        {
-            return node.Deserialize(JsonSerialization.Instance.SecretVariableProviderConfiguration)!;
-        }
-        catch (JsonException ex)
-        {
-            throw new ArgumentException("Configuration of SecretVariableProvider is invalid", ex);
-        }
-    }
+        => node.Deserialize(JsonSerialization.Instance.SecretVariableProviderConfiguration)!;
 }

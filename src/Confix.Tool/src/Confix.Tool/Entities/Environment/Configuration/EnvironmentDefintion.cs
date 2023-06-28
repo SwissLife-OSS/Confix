@@ -1,37 +1,22 @@
 namespace Confix.Tool.Abstractions;
 
-public sealed class EnvironmentDefinition
+public sealed record EnvironmentDefinition(
+    string Name,
+    bool Enabled
+)
 {
-    public EnvironmentDefinition(
-        string name,
-        IReadOnlyList<string> excludeFiles,
-        IReadOnlyList<string> includeFiles,
-        bool enabled)
-    {
-        Name = name;
-        ExcludeFiles = excludeFiles;
-        IncludeFiles = includeFiles;
-        Enabled = enabled;
-    }
-
-    public string Name { get; }
-
-    public IReadOnlyList<string> ExcludeFiles { get; }
-    public IReadOnlyList<string> IncludeFiles { get; }
-    public bool Enabled { get; }
-
     public static EnvironmentDefinition From(EnvironmentConfiguration configuration)
     {
-        var name = configuration.Name;
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(configuration.Name))
         {
-            throw new InvalidOperationException("Environment name is required.");
+            throw new ValidationException("EnvironmentDefinition is invalid")
+            {
+                Errors = new[] { "Name is null or empty" }
+            };
         }
 
-        var excludeFiles = configuration.ExcludeFiles?.ToArray() ?? Array.Empty<string>();
-        var includeFiles = configuration.IncludeFiles?.ToArray() ?? Array.Empty<string>();
-        var enabled = configuration.Enabled ?? false;
-
-        return new EnvironmentDefinition(name, excludeFiles, includeFiles, enabled);
+        return new EnvironmentDefinition(
+            configuration.Name,
+            configuration.Enabled ?? false);
     }
 }

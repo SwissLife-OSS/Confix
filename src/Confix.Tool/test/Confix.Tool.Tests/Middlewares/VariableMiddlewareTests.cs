@@ -44,7 +44,7 @@ public class VariableMiddlewareTests
             null
         );
         featureCollection.Set(configurationFeature);
-        EnvironmentFeature environmentFeature = new(new EnvironmentDefinition("test", Array.Empty<string>(), Array.Empty<string>(), true));
+        EnvironmentFeature environmentFeature = new(new EnvironmentDefinition("test", true));
         featureCollection.Set(environmentFeature);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
 

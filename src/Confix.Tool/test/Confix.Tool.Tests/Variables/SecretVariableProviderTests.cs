@@ -38,7 +38,7 @@ public class SecretVariableProviderTests
     public async Task ListAsync_IsNonSense_ReturnsEmptyArrayAsync()
     {
         // arrange
-        SecretVariableProvider provider = new(new SecretVariableProviderConfiguration(
+        SecretVariableProvider provider = new(new SecretVariableProviderDefinition(
             SecretVariableProviderAlgorithm.RSA,
             EncryptionPadding.OaepSHA256,
             null,
@@ -60,7 +60,7 @@ public class SecretVariableProviderTests
     public async Task ResolveAsync_Should_Decrypt(object value)
     {
         // arrange
-        SecretVariableProvider provider = new(new SecretVariableProviderConfiguration(
+        SecretVariableProvider provider = new(new SecretVariableProviderDefinition(
             SecretVariableProviderAlgorithm.RSA,
             EncryptionPadding.OaepSHA256,
             PUBLIC_KEY,

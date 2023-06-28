@@ -22,8 +22,7 @@ public sealed class GraphQlComponentInput : IComponentInput
         if (configuration.Scope is not ConfigurationScope.Component ||
             configuration.ConfigurationFiles.Component is null)
         {
-            throw new InvalidOperationException(
-                "Component input has to be executed in a component directory");
+            throw new ExitException("Component input has to be executed in a component directory");
         }
 
         var configurationFile = configuration.ConfigurationFiles.Component.SourceFiles

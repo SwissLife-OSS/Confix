@@ -17,7 +17,11 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     { }
 
     public AzureKeyVaultProvider(AzureKeyVaultProviderConfiguration configuration)
-        : this(new SecretClient(new Uri(configuration.Uri), new DefaultAzureCredential()))
+        : this(AzureKeyVaultProviderDefinition.From(configuration))
+    { }
+
+    public AzureKeyVaultProvider(AzureKeyVaultProviderDefinition definition)
+        : this(new SecretClient(new Uri(definition.Uri), new DefaultAzureCredential()))
     { }
 
     public AzureKeyVaultProvider(SecretClient client)
@@ -40,7 +44,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     => await HandleKeyVaultException(async () =>
     {
         KeyVaultSecret result = await _client.GetSecretAsync(path.ToKeyVaultCompatiblePath(), cancellationToken: cancellationToken);
-        return JsonValue.Create(result.Value);
+        return JsonValue.Create(result.Value)!;
     });
 
     public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(

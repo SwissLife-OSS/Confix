@@ -19,12 +19,27 @@ public sealed class ComponentProviderDefinition
 
     public static ComponentProviderDefinition From(ComponentProviderConfiguration configuration)
     {
-        var name = configuration.Name ??
-            throw new InvalidOperationException("Name is not defined.");
-        var type = configuration.Type ??
-            throw new InvalidOperationException("Type is not defined.");
-        var values = configuration.Values;
+        List<string> validationErrors = new();
+        if (configuration.Name is null)
+        {
+            validationErrors.Add("Name is not defined.");
+        }
+        if (configuration.Type is null)
+        {
+            validationErrors.Add("Type is not defined.");
+        }
 
-        return new ComponentProviderDefinition(name, type, values);
+        if (validationErrors.Any())
+        {
+            throw new ValidationException("Invalid component provider configuration")
+            {
+                Errors = validationErrors
+            };
+        }
+
+        return new ComponentProviderDefinition(
+            configuration.Name!,
+            configuration.Type!,
+            configuration.Values);
     }
 }

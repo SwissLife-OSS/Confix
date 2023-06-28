@@ -264,7 +264,7 @@ public class ComponentReferenceConfigurationTests
         Assert.Throws<JsonParseException>(()
             => ComponentReferenceConfiguration.Parse("/component", node!["/component"]!));
     }
-    
+
     [Fact]
     public void Parse_Should_ThrowJsonParseException_When_KeyWithoutProviderName()
     {
