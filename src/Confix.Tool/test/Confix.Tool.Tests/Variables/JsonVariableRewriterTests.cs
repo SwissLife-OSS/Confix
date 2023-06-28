@@ -42,4 +42,24 @@ public class JsonVariableRewriterTests
         // assert
         result?.ToString().MatchSnapshot();
     }
+
+    [Fact]
+    public void Rewrite_ShouldReplaceAllVarsWithSuffix()
+    {
+        // arrange
+        JsonNode node = JsonNode.Parse("""
+            {
+                "test": "$test:variable.string:/someSuffix"
+            }
+        """)!;
+        var variableLookup = new Dictionary<VariablePath, JsonNode> {
+            { VariablePath.Parse("$test:variable.string"), JsonValue.Create("someReplacedValue")!},
+        };
+
+        // act
+        var result = new JsonVariableRewriter().Rewrite(node, new(variableLookup));
+
+        // assert
+        result?.ToString().MatchSnapshot();
+    }
 }
