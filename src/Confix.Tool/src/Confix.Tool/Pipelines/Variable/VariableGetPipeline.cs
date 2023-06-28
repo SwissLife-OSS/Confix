@@ -2,7 +2,7 @@ using System.CommandLine;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
-using ConfiX.Variables;
+using Confix.Variables;
 
 namespace Confix.Tool.Commands.Variable;
 
@@ -43,6 +43,7 @@ file static class Log
         VariablePath variablePath,
         string value)
     {
-        console.Information($"[green]{variablePath}[/] -> [yellow]{value}[/]");
+        console.Information(
+            $"{variablePath.ToString().AsVariableName()} -> {value.AsVariableValue()}");
     }
 }

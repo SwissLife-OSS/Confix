@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using ConfiX.Extensions;
+using Confix.Extensions;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public record SecretVariableProviderConfiguration(
     [property:DefaultValue(SecretVariableProviderAlgorithm.RSA)]

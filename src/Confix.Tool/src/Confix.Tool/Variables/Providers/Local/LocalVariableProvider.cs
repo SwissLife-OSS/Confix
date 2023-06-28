@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class LocalVariableProvider : IVariableProvider
 {

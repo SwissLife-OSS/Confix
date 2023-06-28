@@ -2,7 +2,8 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
-using ConfiX.Variables;
+using Confix.Variables;
+using Spectre.Console;
 
 namespace Confix.Tool.Commands.Variable;
 
@@ -50,14 +51,16 @@ file static class Log
         this IConsoleLogger console,
         string variableName)
     {
-        console.Error($"Invalid variable name: [red]{variableName}[/]");
-        console.Information("Variable name must be like: [blue]$provider:some.path[/]");
+        console.Error($"Invalid variable name: {variableName.WithColor(Color.Red)}");
+        console
+            .Information("Variable name must be like: " + "$provider:some.path[/]".AsHighlighted());
     }
 
     public static void VariableSet(
         this IConsoleLogger console,
         VariablePath variablePath)
     {
-        console.Success($"Variable [green]{variablePath}[/] set successfully.");
+        console.Success(
+            $"Variable {variablePath.ToString().WithColor(Color.Green)} set successfully.");
     }
 }

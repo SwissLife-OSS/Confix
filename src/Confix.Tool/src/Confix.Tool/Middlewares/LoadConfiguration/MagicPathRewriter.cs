@@ -9,8 +9,7 @@ public record MagicPathContext(
     DirectoryInfo HomeDirectory,
     DirectoryInfo? SolutionDirectory,
     DirectoryInfo? ProjectDirectory,
-    DirectoryInfo FileDirectory
-);
+    DirectoryInfo FileDirectory);
 
 /// <summary>
 ///     Rewrites the magic paths in the configuration files.
@@ -25,6 +24,7 @@ public sealed class MagicPathRewriter : JsonDocumentRewriter<MagicPathContext>
                 string replacedValue = magicPath.Replace(context);
                 App.Log.ReplacedMagicPath(magicPath, replacedValue);
                 return JsonValue.Create(replacedValue);
+
             default:
                 return base.Rewrite(value!, context);
         }
@@ -64,7 +64,7 @@ file class MagicPath
 
     public static MagicPath? From(JsonValue value)
     {
-        if ((string?)value is { } stringValue)
+        if ((string?) value is { } stringValue)
         {
             return stringValue switch
             {
@@ -101,6 +101,7 @@ file class MagicPath
                 _ => null
             };
         }
+
         return null;
     }
 
@@ -110,12 +111,16 @@ file class MagicPath
         {
             case MagicPathType.Home:
                 return Path.Combine(context.HomeDirectory.FullName, _path);
+
             case MagicPathType.Solution when context.SolutionDirectory is not null:
                 return Path.Combine(context.SolutionDirectory.FullName, _path);
+
             case MagicPathType.Project when context.ProjectDirectory is not null:
                 return Path.Combine(context.ProjectDirectory.FullName, _path);
+
             case MagicPathType.File:
                 return Path.Combine(context.FileDirectory.FullName, _path);
+
             default:
                 App.Log.NotSupportedInContext(_type);
                 return _original;
@@ -128,6 +133,9 @@ file static class LogExtensions
     public static void NotSupportedInContext(this IConsoleLogger log, MagicPathType type)
         => log.Debug($"Magic path type {0} is not supported in this context.", type.ToString());
 
-    public static void ReplacedMagicPath(this IConsoleLogger log, MagicPath magicPath, string replacedValue)
+    public static void ReplacedMagicPath(
+        this IConsoleLogger log,
+        MagicPath magicPath,
+        string replacedValue)
         => log.Debug($"Replaced magic path {0} with {1}.", magicPath, replacedValue);
 }

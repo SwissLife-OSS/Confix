@@ -1,4 +1,4 @@
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class VariablePathParseException: Exception{
     public VariablePathParseException(string variableName)

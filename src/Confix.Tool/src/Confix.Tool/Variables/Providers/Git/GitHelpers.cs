@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Confix.Tool.Commands.Logging;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public static class GitHelpers
 {

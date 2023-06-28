@@ -1,5 +1,5 @@
 using System.Text.Json.Nodes;
-using ConfiX.Variables;
+using Confix.Variables;
 using FluentAssertions;
 using Json.More;
 

@@ -1,5 +1,5 @@
 using System.Collections;
-using ConfiX.Extensions;
+using Confix.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;
 using Confix.Tool.Commands.Logging;
@@ -13,17 +13,20 @@ namespace Confix.Tool.Middlewares;
 public sealed class LoadConfigurationMiddleware : IMiddleware
 {
     /// <inheritdoc />
-    public  Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
+    public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         if (context.Features.TryGet(out ConfigurationFeature _))
         {
-            return next(context);
+            await next(context);
         }
 
         context.SetStatus("Loading configuration...");
 
-        var configurationFiles = context.LoadConfigurationFiles(context.CancellationToken).ToBlockingEnumerable();
-        var configurationFilesWithReplacedMagicStrings = ReplaceMagicStrings(context, configurationFiles);
+        var configurationFiles = context
+            .LoadConfigurationFiles(context.CancellationToken)
+            .ToBlockingEnumerable();
+        var configurationFilesWithReplacedMagicStrings =
+            ReplaceMagicStrings(context, configurationFiles);
         var fileCollection = CreateFileCollection(configurationFilesWithReplacedMagicStrings);
 
         var scope = fileCollection.LastOrDefault()?.File.Name switch
@@ -59,10 +62,11 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
 
         context.Logger.ConfigurationLoaded();
 
-        return next(context);
+        await next(context);
     }
 
-    private static IConfigurationFileCollection CreateFileCollection(IEnumerable<JsonFile> configurationFiles)
+    private static IConfigurationFileCollection CreateFileCollection(
+        IEnumerable<JsonFile> configurationFiles)
     {
         var files = new List<JsonFile>(configurationFiles);
 
@@ -109,16 +113,18 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         IMiddlewareContext middlewareContext,
         IEnumerable<JsonFile> configurationFiles)
     {
-        var solutionFile = configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixSolution);
-        var projectFile = configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixProject);
+        var solutionFile =
+            configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixSolution);
+        var projectFile =
+            configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixProject);
 
         foreach (var file in configurationFiles)
         {
             MagicPathContext context = new(
-                    middlewareContext.Execution.CurrentDirectory,
-                    solutionFile?.File.Directory,
-                    projectFile?.File.Directory,
-                    file.File.Directory!);
+                middlewareContext.Execution.CurrentDirectory,
+                solutionFile?.File.Directory,
+                projectFile?.File.Directory,
+                file.File.Directory!);
 
             var rewritten = new MagicPathRewriter().Rewrite(file.Content, context);
 
@@ -127,7 +133,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
     }
 }
 
-file sealed class ConfigurationFileCollection
+public sealed class ConfigurationFileCollection
     : IConfigurationFileCollection
 {
     private readonly IReadOnlyList<JsonFile> _collection;
@@ -146,13 +152,13 @@ file sealed class ConfigurationFileCollection
         _collection = collection;
     }
 
-    public RuntimeConfiguration? RuntimeConfiguration { get; }
+    public RuntimeConfiguration? RuntimeConfiguration { get; init; }
 
-    public SolutionConfiguration? Solution { get; }
+    public SolutionConfiguration? Solution { get; init; }
 
-    public ProjectConfiguration? Project { get; }
+    public ProjectConfiguration? Project { get; init; }
 
-    public ComponentConfiguration? Component { get; }
+    public ComponentConfiguration? Component { get; init; }
 
     /// <inheritdoc />
     public IEnumerator<JsonFile> GetEnumerator()
@@ -266,4 +272,3 @@ file static class Log
     public static void ConfigurationLoaded(this IConsoleLogger logger)
         => logger.Success("Configuration loaded");
 }
-

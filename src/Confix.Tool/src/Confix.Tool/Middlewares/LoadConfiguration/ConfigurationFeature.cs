@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Confix.Tool.Abstractions;
 
 namespace Confix.Tool.Middlewares;
@@ -20,6 +21,7 @@ public class ConfigurationFeature
 
     public ConfigurationScope Scope { get; }
 
+    [JsonIgnore]
     public IConfigurationFileCollection ConfigurationFiles { get; }
 
     public ProjectDefinition? Project { get; }

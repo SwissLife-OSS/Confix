@@ -1,8 +1,8 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Common.Pipelines;
 using Confix.Utilities.Json;
-using ConfiX.Variables;
-using VariableProviderConfiguration = ConfiX.Variables.VariableProviderConfiguration;
+using Confix.Variables;
+using VariableProviderConfiguration = Confix.Variables.VariableProviderConfiguration;
 
 namespace Confix.Tool.Middlewares;
 

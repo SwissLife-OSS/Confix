@@ -5,7 +5,7 @@ using Confix.Tool.Schema;
 using Moq;
 using Snapshooter.Xunit;
 
-namespace ConfiX.Entities.Component.Configuration.Middlewares;
+namespace Confix.Entities.Component.Configuration.Middlewares;
 
 public class LoadConfigurationMiddlewareTest
 {

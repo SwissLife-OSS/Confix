@@ -1,4 +1,4 @@
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public interface IVariableProviderFactory
 {

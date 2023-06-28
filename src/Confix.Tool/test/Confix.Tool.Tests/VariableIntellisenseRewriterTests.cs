@@ -3,7 +3,7 @@ using Confix.Tool.Schema;
 using Json.More;
 using Snapshooter.Xunit;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public class VariableIntellisenseRewriterTests
 {

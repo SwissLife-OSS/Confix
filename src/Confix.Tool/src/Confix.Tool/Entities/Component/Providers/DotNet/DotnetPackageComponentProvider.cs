@@ -3,6 +3,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Json.Schema;
 using Spectre.Console;

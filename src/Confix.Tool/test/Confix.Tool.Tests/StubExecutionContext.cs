@@ -1,6 +1,6 @@
 using Confix.Tool.Common.Pipelines;
 
-namespace ConfiX.Entities.Component.Configuration.Middlewares;
+namespace Confix.Entities.Component.Configuration.Middlewares;
 
 public class StubExecutionContext : IExecutionContext
 {

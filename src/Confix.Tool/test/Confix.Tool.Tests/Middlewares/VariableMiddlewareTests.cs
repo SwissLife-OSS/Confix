@@ -2,11 +2,11 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
-using ConfiX.Variables;
+using Confix.Variables;
 using FluentAssertions;
 using Moq;
 
-namespace ConfiX.Entities.Component.Configuration.Middlewares;
+namespace Confix.Entities.Component.Configuration.Middlewares;
 
 public class VariableMiddlewareTests
 {

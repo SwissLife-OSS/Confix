@@ -1,6 +1,6 @@
 using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
-using ConfiX.Variables;
+using Confix.Variables;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Middlewares;

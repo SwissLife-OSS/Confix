@@ -2,7 +2,7 @@ using System.CommandLine.Builder;
 using Confix.Tool;
 using Confix.Tool.Entities.Components.DotNet;
 
-namespace ConfiX.Entities.Project.Extensions;
+namespace Confix.Entities.Project.Extensions;
 
 public static class ProjectCommandLineBuilderExtensions
 {

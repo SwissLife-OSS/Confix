@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Entities.Project.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
@@ -29,7 +30,7 @@ public sealed class ValidationMiddleware : IMiddleware
         var solution = configuration.EnsureSolution();
         var project = configuration.EnsureProject();
 
-        var loadSchema = _schemaStore.GetSchema(solution, project);
+        var loadSchema = project.GetJsonSchema() ?? _schemaStore.GetSchema(solution, project);
 
         var evaluationOptions = new EvaluationOptions
         {
@@ -99,8 +100,7 @@ file static class Extensions
             {
                 foreach (var (_, error) in result.Errors!)
                 {
-                    node.AddNode(
-                        $"{Glyph.Cross.ToMarkup()} {error.EscapeMarkup()}");
+                    node.AddNode($"{Glyph.Cross.ToMarkup()} {error.EscapeMarkup()}");
                 }
             }
         }
@@ -115,8 +115,7 @@ file static class Extensions
             var pathString = string.Join('/', path);
             if (!lookup.TryGetValue(pathString, out var node))
             {
-                node = Resolve(path.Take(path.Length - 1).ToArray())
-                    .AddNode("[yellow]" + path.Last().EscapeMarkup() + "[/]");
+                node = Resolve(path.Take(path.Length - 1).ToArray()).AddNode(path.Last().AsPath());
                 lookup.Add(pathString, node);
             }
 
@@ -132,7 +131,7 @@ file static class Extensions
         {
             foreach (var (_, error) in results.Errors!)
             {
-                node.AddNode($"[red bold]{Glyph.Cross.ToMarkup()}[/] {error.EscapeMarkup()}");
+                node.AddNode(error.AsError());
             }
         }
         else

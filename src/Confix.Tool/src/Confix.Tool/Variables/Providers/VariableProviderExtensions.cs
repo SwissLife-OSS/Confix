@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 internal static class VariableProviderExtensions
 {

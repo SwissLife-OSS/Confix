@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public readonly record struct VariablePath(string ProviderName, string Path)
 {

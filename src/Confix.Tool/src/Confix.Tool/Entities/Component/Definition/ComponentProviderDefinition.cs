@@ -10,11 +10,11 @@ public sealed class ComponentProviderDefinition
 
     public JsonObject Value { get; }
 
-    public ComponentProviderDefinition(string name, string type, JsonObject values)
+    public ComponentProviderDefinition(string name, string type, JsonObject value)
     {
         Name = name;
         Type = type;
-        Value = values;
+        Value = value;
     }
 
     public static ComponentProviderDefinition From(ComponentProviderConfiguration configuration)

@@ -1,4 +1,5 @@
-using ConfiX.Extensions;
+using System.Text.Json.Serialization;
+using Confix.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;
 using Confix.Tool.Schema;

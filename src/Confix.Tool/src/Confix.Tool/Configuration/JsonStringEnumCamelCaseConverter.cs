@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ConfiX.Extensions;
+namespace Confix.Extensions;
 
 public class JsonStringEnumCamelCaseConverter : JsonStringEnumConverter
 {

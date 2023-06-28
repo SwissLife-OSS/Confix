@@ -4,7 +4,7 @@ using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Snapshooter.Xunit;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public class ProjectConfigurationTests : ParserTestBase
 {

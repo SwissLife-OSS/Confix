@@ -71,7 +71,7 @@ file static class Log
         string directory)
     {
         console.Error(
-            $"No confix context was found in the executing directory: [yellow]{directory}[/]");
+            $"No confix context was found in the executing directory: {directory.AsPath()}");
     }
 
     public static void ComponentsDoNotSupportReload(this IConsoleLogger console)

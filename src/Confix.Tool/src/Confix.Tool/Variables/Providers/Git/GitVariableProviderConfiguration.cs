@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using ConfiX.Extensions;
+using Confix.Extensions;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed record GitVariableProviderConfiguration(
     [property: JsonRequired]string RepositoryUrl,

@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public static class TestExtensions
 {

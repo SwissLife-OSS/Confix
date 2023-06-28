@@ -7,7 +7,7 @@ using Confix.Tool.Middlewares;
 using FluentAssertions;
 using Moq;
 
-namespace ConfiX.Entities.Component.Configuration.Middlewares;
+namespace Confix.Entities.Component.Configuration.Middlewares;
 
 public class EnvironmentMiddlewareTests
 {

@@ -3,7 +3,6 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Schema;
-using Spectre.Console;
 
 namespace Confix.Tool.Middlewares;
 
@@ -62,7 +61,6 @@ file static class Extensions
     {
         var solution =
             feature.ConfigurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixSolution);
-
         solutionFile = solution?.File;
 
         return solution is not null;

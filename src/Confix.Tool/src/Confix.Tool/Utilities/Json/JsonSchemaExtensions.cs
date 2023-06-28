@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using ConfiX.Variables;
+using Confix.Variables;
 using Json.Schema;
 
 namespace Confix.Tool.Schema;

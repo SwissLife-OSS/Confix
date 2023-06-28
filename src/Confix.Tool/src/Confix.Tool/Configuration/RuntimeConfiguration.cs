@@ -5,7 +5,7 @@ using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 using Microsoft.Extensions.Logging;
 
-namespace ConfiX.Extensions;
+namespace Confix.Extensions;
 
 public sealed class RuntimeConfiguration
 {
