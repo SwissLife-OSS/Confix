@@ -18,6 +18,7 @@ public class JsonVariableRewriterTests
                 },
                 "bar": ["$test:variable.string"],
                 "number": 42,
+                "stringWithMultiple": "asterix-{{$test:variable.bool}}-oberlix-midefix-{{$test:variable.string}}-confix",
                 "bool": "$test:variable.bool",
                 "array": "$test:variable.array",
                 "arrayElement": [
@@ -34,26 +35,6 @@ public class JsonVariableRewriterTests
             { VariablePath.Parse("$test:variable.number"), JsonValue.Create(420)},
             { VariablePath.Parse("$test:variable.bool"), JsonValue.Create(true)},
             { VariablePath.Parse("$test:variable.array"), JsonNode.Parse("""["a", "b", "c"]""")!},
-        };
-
-        // act
-        var result = new JsonVariableRewriter().Rewrite(node, new(variableLookup));
-
-        // assert
-        result?.ToString().MatchSnapshot();
-    }
-
-    [Fact]
-    public void Rewrite_ShouldReplaceAllVarsWithSuffix()
-    {
-        // arrange
-        JsonNode node = JsonNode.Parse("""
-            {
-                "test": "$test:variable.string:/someSuffix"
-            }
-        """)!;
-        var variableLookup = new Dictionary<VariablePath, JsonNode> {
-            { VariablePath.Parse("$test:variable.string"), JsonValue.Create("someReplacedValue")!},
         };
 
         // act

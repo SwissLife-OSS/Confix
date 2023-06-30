@@ -5,12 +5,10 @@ namespace Confix.Tool.Tests;
 public class VariablePathTests
 {
     [Theory]
-    [InlineData("$foo:bar", "foo", "bar", null)]
-    [InlineData("$foo:bar:baz", "foo", "bar", "baz")]
-    [InlineData("$foo.bar:baz.x", "foo.bar", "baz.x", null)]
-    [InlineData("$foo.bar:baz.x:suffix", "foo.bar", "baz.x", "suffix")]
-    [InlineData("$foo.bar:baz.x:suffix:with:colon", "foo.bar", "baz.x", "suffix:with:colon")]
-    public void Parse_ValidVariableName_CorrectResult(string variableName, string providerName, string path, string? suffix)
+    [InlineData("$foo:bar", "foo", "bar")]
+    [InlineData("$foo.bar:baz.x", "foo.bar", "baz.x")]
+    [InlineData("$foo_bar:baz_x", "foo_bar", "baz_x")]
+    public void Parse_ValidVariableName_CorrectResult(string variableName, string providerName, string path)
     {
         // arrange & act
         VariablePath result = VariablePath.Parse(variableName);
@@ -18,12 +16,12 @@ public class VariablePathTests
         // assert
         result.ProviderName.Should().Be(providerName);
         result.Path.Should().Be(path);
-        result.Suffix.Should().Be(suffix);
     }
 
     [Theory]
     [InlineData("bar")]
     [InlineData("$foo.bar")]
+    [InlineData("$$foo:bar")]
     [InlineData("foo:bar")]
     public void Parse_Invalid_Throws(string variableName)
     {
@@ -42,7 +40,6 @@ public class VariablePathTests
         path.HasValue.Should().BeTrue();
         path!.Value.ProviderName.Should().Be("foo.bar");
         path!.Value.Path.Should().Be("baz.x");
-        path!.Value.Suffix.Should().BeNull();
     }
 
     [Theory]

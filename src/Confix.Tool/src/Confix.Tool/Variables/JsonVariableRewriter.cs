@@ -20,21 +20,12 @@ public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewr
     {
         if (VariablePath.TryParse(key, out VariablePath? parsed))
         {
-            var resolved = context.VariableLookup[parsed.Value with { Suffix = null }];
-            if (parsed.Value.Suffix is null)
-            {
-                return resolved.Copy()!;
-            }
-            else if (resolved.GetSchemaValueType() == SchemaValueType.String)
-            {
-                return JsonValue.Create(((string)resolved!) + parsed.Value.Suffix)!;
-            }
-            else
-            {
-                throw new ExitException("Cannot append suffix to non-string variable");
-            }
+            return context.VariableLookup[parsed.Value].Copy()!;
         }
 
-        return JsonValue.Create(key)!;
+        var replacedString = key.ReplaceVariables(v => context.VariableLookup[v].ToString());
+        return JsonValue.Create(replacedString)!;
     }
+
+  
 }
