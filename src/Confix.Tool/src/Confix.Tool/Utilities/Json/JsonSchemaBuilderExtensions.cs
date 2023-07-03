@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using Json.Schema;
 
 namespace Confix.Tool.Schema;
@@ -25,6 +26,18 @@ public static class JsonSchemaBuilderExtensions
         if (description is not null)
         {
             builder.Description(description);
+        }
+
+        return builder;
+    }
+
+    public static JsonSchemaBuilder WithDefault(
+        this JsonSchemaBuilder builder,
+        JsonNode? defaultValue)
+    {
+        if (defaultValue is not null)
+        {
+            builder.Default(defaultValue);
         }
 
         return builder;

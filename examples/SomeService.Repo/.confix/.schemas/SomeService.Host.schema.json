@@ -86,9 +86,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Authority"
-      ],
+      "required": ["Authority"],
       "additionalProperties": false
     },
     "Security_OpenIdConnectClient": {
@@ -103,10 +101,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "ClientId",
-        "Secret"
-      ],
+      "required": ["ClientId", "Secret"],
       "additionalProperties": false
     },
     "Security_Authorization": {
@@ -117,9 +112,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "PathPolicy"
-      ],
+      "required": ["PathPolicy"],
       "additionalProperties": false
     },
     "Security_PathPolicy": {
@@ -215,9 +208,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Path"
-      ],
+      "required": ["Path"],
       "additionalProperties": false
     },
     "Security_Requirement": {
@@ -391,9 +382,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Name"
-      ],
+      "required": ["Name"],
       "additionalProperties": false
     },
     "Security_HttpClient": {
@@ -451,17 +440,21 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Name",
-        "Url"
-      ],
+      "required": ["Name", "Url"],
       "additionalProperties": false
     },
     "Security_HttpClientAuthentication": {
       "type": "object",
       "properties": {
         "Mode": {
-          "$ref": "#/$defs/Security_String",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Security_String"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "deprecated": false
         },
         "TokenClientName": {
@@ -537,9 +530,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Mode"
-      ],
+      "required": ["Mode"],
       "additionalProperties": false
     },
     "Security_CustomHeader": {
@@ -554,10 +545,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Name",
-        "Value"
-      ],
+      "required": ["Name", "Value"],
       "additionalProperties": false
     },
     "Security_String": {
@@ -669,9 +657,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Authority"
-      ],
+      "required": ["Authority"],
       "additionalProperties": false,
       "examples": [],
       "title": ""
@@ -699,10 +685,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Mode",
-        "Storage"
-      ],
+      "required": ["Mode", "Storage"],
       "additionalProperties": false
     },
     "DataProtection_DpStorageConfiguration": {
@@ -717,10 +700,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "ConnectionString",
-        "Path"
-      ],
+      "required": ["ConnectionString", "Path"],
       "additionalProperties": false
     },
     "DataProtection_DpKeyVaultConfiguration": {
@@ -739,11 +719,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "ClientId",
-        "Secret",
-        "KeyUrl"
-      ],
+      "required": ["ClientId", "Secret", "KeyUrl"],
       "additionalProperties": false
     },
     "DataProtection_String": {
@@ -792,10 +768,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Mode",
-        "Storage"
-      ],
+      "required": ["Mode", "Storage"],
       "additionalProperties": false,
       "examples": [],
       "title": ""
@@ -826,9 +799,7 @@
           "deprecated": false
         }
       },
-      "required": [
-        "Foo"
-      ],
+      "required": ["Foo"],
       "additionalProperties": false
     },
     "Other_String": {
@@ -876,10 +847,7 @@
     },
     "Confix_Variables": {
       "type": "string",
-      "enum": [
-        "$local:foo.bar",
-        "$local:test"
-      ]
+      "enum": ["$local:foo.bar", "$local:test"]
     }
   },
   "properties": {
@@ -893,9 +861,5 @@
       "$ref": "#/$defs/Other"
     }
   },
-  "required": [
-    "Security",
-    "DataProtection",
-    "Other"
-  ]
+  "required": ["Security", "DataProtection", "Other"]
 }

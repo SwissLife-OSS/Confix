@@ -28,7 +28,7 @@ public static class SchemaHelpers
         return schema;
     }
 
-    private static ISchema BuildSchema(string schema)
+    public static ISchema BuildSchema(string schema)
     {
         var schemaDoc = Utf8GraphQLParser.Parse(schema);
         var rootTypeName = schemaDoc.Definitions
@@ -39,6 +39,7 @@ public static class SchemaHelpers
         return SchemaBuilder.New()
             .AddDocument(schemaDoc)
             .Use(next => next)
+            .AddType<DefaultValue>()
             .ModifyOptions(c =>
             {
                 c.PreserveSyntaxNodes = true;

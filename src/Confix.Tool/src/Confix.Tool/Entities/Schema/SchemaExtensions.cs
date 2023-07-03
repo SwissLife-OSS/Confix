@@ -1,5 +1,7 @@
+using System.Text.Json.Nodes;
 using HotChocolate;
 using HotChocolate.Types;
+using Json.More;
 using Json.Schema;
 using static Json.Schema.SchemaValueType;
 
@@ -59,7 +61,17 @@ public static class SchemaExtensions
         => field.Type
             .ToTypeReferenceBuilder()
             .Deprecated(field.IsDeprecated)
+            .WithDefault(field.DefaultValueNode())
             .WithDescription(field.Description);
+
+    private static JsonNode? DefaultValueNode(this IOutputField field)
+    {
+        var defaultValue = field.Directives.Where(x => x.Type.Name == DefaultValue.Name)
+            .Select(x => x.AsValue<DefaultValue>())
+            .FirstOrDefault();
+
+        return defaultValue?.Value.AsNode();
+    }
 
     private static JsonSchemaBuilder ToTypeReference(this IType type, bool required = false)
         => type.ToTypeReferenceBuilder(required);
@@ -82,56 +94,56 @@ public static class SchemaExtensions
         };
 
     private static JsonSchemaBuilder ToTypeDefinition(this ScalarType type) => (type.Name switch
-    {
-        "Int" or "Long" => new JsonSchemaBuilder().Type(Integer),
-        "Float" or "Double" => new JsonSchemaBuilder().Type(Number),
-        "Boolean" => new JsonSchemaBuilder().Type(SchemaValueType.Boolean),
-        "String" => new JsonSchemaBuilder().Type(SchemaValueType.String),
-        "Uuid" or "UUID" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uuid"),
-        "Guid" or "GUID" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uuid"),
+        {
+            "Int" or "Long" => new JsonSchemaBuilder().Type(Integer),
+            "Float" or "Double" => new JsonSchemaBuilder().Type(Number),
+            "Boolean" => new JsonSchemaBuilder().Type(SchemaValueType.Boolean),
+            "String" => new JsonSchemaBuilder().Type(SchemaValueType.String),
+            "Uuid" or "UUID" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uuid"),
+            "Guid" or "GUID" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uuid"),
 
-        "Date" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("date"),
-        "DateTime" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("date-time"),
-        "TimeSpan" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("time-span"),
-        "Duration" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("duration"),
+            "Date" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("date"),
+            "DateTime" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("date-time"),
+            "TimeSpan" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("time-span"),
+            "Duration" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("duration"),
 
-        "EmailAddress" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("email"),
-        "IdnEmailAddress" => new JsonSchemaBuilder()
-            .Type(SchemaValueType.String)
-            .Format("idn-email"),
+            "EmailAddress" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("email"),
+            "IdnEmailAddress" => new JsonSchemaBuilder()
+                .Type(SchemaValueType.String)
+                .Format("idn-email"),
 
-        "HostName" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("hostname"),
-        "IdnHostName" => new JsonSchemaBuilder()
-            .Type(SchemaValueType.String)
-            .Format("idn-hostname"),
+            "HostName" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("hostname"),
+            "IdnHostName" => new JsonSchemaBuilder()
+                .Type(SchemaValueType.String)
+                .Format("idn-hostname"),
 
-        "IpAddress" or "Ip" or "Ipv4" => new JsonSchemaBuilder()
-            .Type(SchemaValueType.String)
-            .Format("ipv4"),
+            "IpAddress" or "Ip" or "Ipv4" => new JsonSchemaBuilder()
+                .Type(SchemaValueType.String)
+                .Format("ipv4"),
 
-        "Ipv6" => new JsonSchemaBuilder()
-            .Type(SchemaValueType.String)
-            .Format("ipv6"),
+            "Ipv6" => new JsonSchemaBuilder()
+                .Type(SchemaValueType.String)
+                .Format("ipv6"),
 
-        "Uri" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uri"),
-        "Url" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uri"),
+            "Uri" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uri"),
+            "Url" => new JsonSchemaBuilder().Type(SchemaValueType.String).Format("uri"),
 
-        "JsonPointer" => new JsonSchemaBuilder()
-            .Type(SchemaValueType.String)
-            .Format("json-pointer"),
+            "JsonPointer" => new JsonSchemaBuilder()
+                .Type(SchemaValueType.String)
+                .Format("json-pointer"),
 
-        "RegEx" or "Regex" => new JsonSchemaBuilder()
-            .Type(SchemaValueType.String)
-            .Format("regex"),
+            "RegEx" or "Regex" => new JsonSchemaBuilder()
+                .Type(SchemaValueType.String)
+                .Format("regex"),
 
-        "Json" or "Any" => new JsonSchemaBuilder()
-            .Type(SchemaValueType.Object)
-            .AdditionalProperties(true)
-            .Format("json"),
+            "Json" or "Any" => new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .AdditionalProperties(true)
+                .Format("json"),
 
-        // default to string
-        _ => new JsonSchemaBuilder().Type(SchemaValueType.String),
-    })
+            // default to string
+            _ => new JsonSchemaBuilder().Type(SchemaValueType.String),
+        })
         .HasVariables()
         .WithDescription(type.Description);
 
