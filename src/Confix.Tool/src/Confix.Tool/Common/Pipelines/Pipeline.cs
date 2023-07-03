@@ -33,9 +33,9 @@ public abstract class Pipeline
         return new PipelineExecutor(BuildDelegate(services), services);
     }
 
-    public async Task ExecuteAsync(IServiceProvider services, IMiddlewareContext context)
+    public async Task ExecuteAsync(IMiddlewareContext context)
     {
-        await BuildDelegate(services)(context);
+        await BuildDelegate(context.Services)(context);
     }
 
     /// <summary>

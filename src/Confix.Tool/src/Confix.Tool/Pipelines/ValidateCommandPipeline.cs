@@ -14,10 +14,10 @@ public sealed class ValidateCommandPipeline : Pipeline
         builder
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
-            .UseHandler<IServiceProvider>(InvokeAsync);
+            .UseHandler(InvokeAsync);
     }
 
-    private static async Task InvokeAsync(IMiddlewareContext context, IServiceProvider services)
+    private static async Task InvokeAsync(IMiddlewareContext context)
     {
         context.SetStatus("Validating...");
 
@@ -35,28 +35,28 @@ public sealed class ValidateCommandPipeline : Pipeline
                 throw new ExitException();
 
             case ConfigurationScope.Project:
-                {
-                    var projectDirectory = configuration.Project!.Directory!;
-                    var pipeline = new ProjectValidatePipeline();
-                    var projectContext = context
-                        .WithExecutingDirectory(projectDirectory)
-                        .WithFeatureCollection();
+            {
+                var projectDirectory = configuration.Project!.Directory!;
+                var pipeline = new ProjectValidatePipeline();
+                var projectContext = context
+                    .WithExecutingDirectory(projectDirectory)
+                    .WithFeatureCollection();
 
-                    await pipeline.ExecuteAsync(services, projectContext);
-                    return;
-                }
+                await pipeline.ExecuteAsync(projectContext);
+                return;
+            }
 
             case ConfigurationScope.Solution:
-                {
-                    var solutionDirectory = configuration.Solution!.Directory!;
-                    var pipeline = new SolutionValidatePipeline();
-                    var solutionContext = context
-                        .WithExecutingDirectory(solutionDirectory)
-                        .WithFeatureCollection();
+            {
+                var solutionDirectory = configuration.Solution!.Directory!;
+                var pipeline = new SolutionValidatePipeline();
+                var solutionContext = context
+                    .WithExecutingDirectory(solutionDirectory)
+                    .WithFeatureCollection();
 
-                    await pipeline.ExecuteAsync(services, solutionContext);
-                    return;
-                }
+                await pipeline.ExecuteAsync(solutionContext);
+                return;
+            }
 
             default:
                 throw new ArgumentOutOfRangeException();

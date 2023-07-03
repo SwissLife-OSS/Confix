@@ -8,13 +8,6 @@ namespace Confix.Tool.Middlewares.Project;
 
 public sealed class BuildComponentsOfProjectMiddleware : IMiddleware
 {
-    private readonly IServiceProvider _services;
-
-    public BuildComponentsOfProjectMiddleware(IServiceProvider services)
-    {
-        _services = services;
-    }
-
     /// <inheritdoc />
     public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
@@ -36,7 +29,7 @@ public sealed class BuildComponentsOfProjectMiddleware : IMiddleware
                 .WithExecutingDirectory(componentDirectory)
                 .WithFeatureCollection();
 
-            await pipeline.ExecuteAsync(_services, componentContext);
+            await pipeline.ExecuteAsync(componentContext);
         }
 
         await next(context);

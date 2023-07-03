@@ -1,10 +1,7 @@
 using System.CommandLine.Builder;
 using Confix.Tool.Entities.Components;
-using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares.JsonSchemas;
-using Confix.Tool.Middlewares.Project;
-using ConfiX.Variables;
-using Microsoft.Extensions.DependencyInjection;
+using Confix.Tool.Middlewares.Project.Extensions;
 
 namespace Confix.Tool.Middlewares;
 
@@ -13,11 +10,9 @@ public static class MiddlewareCommandLineBuilderExtensions
     public static CommandLineBuilder RegisterMiddlewares(this CommandLineBuilder builder)
     {
         builder
-            .AddTransient(sp => new BuildComponentsOfProjectMiddleware(sp))
-            .AddTransient(sp => new ValidationMiddleware(sp.GetRequiredService<ISchemaStore>()))
             .AddTransient<LoadConfigurationMiddleware>()
             .AddTransient<EnvironmentMiddleware>()
-            .AddTransient<BuildProjectMiddleware>()
+            .RegisterProjectMiddlewares()
             .RegisterComponentInputs()
             .RegisterConfigurationFiles()
             .RegisterComponentProviders()

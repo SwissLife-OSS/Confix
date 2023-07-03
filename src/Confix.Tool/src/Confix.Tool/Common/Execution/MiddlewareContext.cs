@@ -29,5 +29,8 @@ public sealed record MiddlewareContext : IMiddlewareContext
     public required IStatus Status { get; init; }
 
     /// <inheritdoc />
+    public required IServiceProvider Services { get; init; }
+
+    /// <inheritdoc />
     public int ExitCode { get; set; } = ExitCodes.Success;
 }
