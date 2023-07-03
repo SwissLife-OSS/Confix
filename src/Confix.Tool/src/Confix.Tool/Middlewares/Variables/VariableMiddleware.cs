@@ -1,7 +1,5 @@
-using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Common.Pipelines;
-using Confix.Utilities.Json;
 using ConfiX.Variables;
 using VariableProviderConfiguration = ConfiX.Variables.VariableProviderConfiguration;
 
