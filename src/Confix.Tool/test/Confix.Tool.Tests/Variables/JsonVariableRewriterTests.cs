@@ -18,6 +18,7 @@ public class JsonVariableRewriterTests
                 },
                 "bar": ["$test:variable.string"],
                 "number": 42,
+                "stringWithMultiple": "asterix-{{$test:variable.bool}}-oberlix-midefix-{{$test:variable.string}}-confix",
                 "bool": "$test:variable.bool",
                 "array": "$test:variable.array",
                 "arrayElement": [

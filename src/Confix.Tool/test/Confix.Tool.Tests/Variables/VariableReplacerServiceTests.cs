@@ -15,7 +15,9 @@ public class VariableReplacerServiceTests
             {
                 "foo": {
                     "bar": "baz",
-                    "test": "$test:variable.number"
+                    "test": "$test:variable.number",
+                    "interpolated": "prefix-{{$test:variable.string1}}-suffix",
+                    "interpolatedMultiple": "asterix-{{$test:variable.string2}}-midefix-{{$test:variable.string3}}-suffix"
                 }
             }
         """)!;
