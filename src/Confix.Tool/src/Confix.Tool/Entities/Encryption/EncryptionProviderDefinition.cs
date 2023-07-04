@@ -24,17 +24,11 @@ public sealed class EncryptionProviderDefinition
 
     public static EncryptionProviderDefinition From(EncryptionProviderConfiguration configuration)
     {
-        List<string> validationErrors = new();
-
         if (configuration.Type is null)
-        {
-            validationErrors.Add("Provider type is required.");
-        }
-        if (validationErrors.Any())
         {
             throw new ValidationException("Encryption provider configuration is invalid.")
             {
-                Errors = validationErrors
+                Errors = new[] { "Provider type is required." }
             };
         }
 

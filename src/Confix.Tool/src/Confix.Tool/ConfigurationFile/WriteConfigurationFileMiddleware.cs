@@ -35,7 +35,7 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
             await using var stream = file.OutputFile.OpenReplacementStream();
             if (encryptFile)
             {
-                await using var memoryStream = new MemoryStream();
+                await using MemoryStream memoryStream = new();
                 await file.Content.SerializeToStreamAsync(memoryStream, context.CancellationToken);
                 var encrypted = await encryptionFeature.EncryptionProvider.EncryptAsync(
                     memoryStream.ToArray(),
