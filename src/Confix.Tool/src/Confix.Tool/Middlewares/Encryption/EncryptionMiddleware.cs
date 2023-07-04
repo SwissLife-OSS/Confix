@@ -2,44 +2,21 @@ using Confix.Tool.Common.Pipelines;
 
 namespace Confix.Tool.Middlewares.Encryption;
 
-public sealed class EncryptionMiddleware : IMiddleware
+public sealed class EncryptionMiddleware : OptionalEncryptionMiddleware
 {
-    private readonly IEncryptionProviderFactory _encryptionProviderFactory;
-
     public EncryptionMiddleware(IEncryptionProviderFactory encryptionProviderFactory)
+        : base(encryptionProviderFactory)
     {
-        _encryptionProviderFactory = encryptionProviderFactory;
     }
 
-    public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
+    public override async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
-        ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
-        EnvironmentFeature environmentFeature = context.Features.Get<EnvironmentFeature>();
-        string environmentName = environmentFeature.ActiveEnvironment.Name;
+        await base.InvokeAsync(context, next);
 
-        var configuration = GetProviderConfiguration(configurationFeature, environmentName);
-        var provider = _encryptionProviderFactory.CreateProvider(configuration);
-
-        EncryptionFeature feature = new(provider);
-        context.Features.Set(feature);
-
-        return next(context);
-    }
-
-    private static EncryptionProviderConfiguration GetProviderConfiguration(
-        ConfigurationFeature configurationFeature,
-        string environmentName)
-    {
-        if (configurationFeature.Encryption is null)
+        if (!context.Features.TryGet<EncryptionFeature>(out var _))
         {
-            throw new ExitException("Encryption Provider not set");
+            throw new ExitException("Encryption not properly configured");
         }
-
-        var providerDefinition = configurationFeature.Encryption.Provider;
-        return new EncryptionProviderConfiguration
-        {
-            Type = providerDefinition.Type,
-            Configuration = providerDefinition.ValueWithOverrides(environmentName)
-        };
     }
+
 }

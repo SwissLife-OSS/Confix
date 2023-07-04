@@ -1,5 +1,6 @@
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
+using Confix.Tool.Middlewares.Encryption;
 
 namespace Confix.Tool.Middlewares;
 
@@ -7,6 +8,8 @@ public static class ConfigurationFilesCommandPipelineBuilderExtensions
 {
     public static IPipelineDescriptor UseWriteConfigurationFiles(this IPipelineDescriptor builder)
     {
+        builder.AddOption(EncryptionOption.Instance);
+        builder.Use<OptionalEncryptionMiddleware>();
         builder.Use<WriteConfigurationFileMiddleware>();
 
         return builder;

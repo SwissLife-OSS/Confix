@@ -1,8 +1,9 @@
+using System.Text.Json;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
+using Confix.Tool.Middlewares.Encryption;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
-using Spectre.Console;
 
 namespace Confix.Tool.Middlewares;
 
@@ -13,9 +14,16 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
     {
         context.SetStatus("Persisting configuration changes");
 
-        var feature = context.Features.Get<ConfigurationFileFeature>();
+        var configurationFeature = context.Features.Get<ConfigurationFileFeature>();
+        var encryptionConfigured = context.Features.TryGet<EncryptionFeature>(out var encryptionFeature);
+        bool encryptFile = context.Parameter.Get(EncryptionOption.Instance);
 
-        foreach (var file in feature.Files)
+        if (encryptFile && !encryptionConfigured)
+        {
+            throw new ExitException("Encryption must be configured to encrypt configuration files");
+        }
+
+        foreach (var file in configurationFeature.Files)
         {
             if (!file.HasContentChanged)
             {
@@ -25,9 +33,21 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
             context.Logger.PersistingConfigurationFile(file);
 
             await using var stream = file.OutputFile.OpenReplacementStream();
-            await file.Content.SerializeToStreamAsync(stream, context.CancellationToken);
+            if (encryptFile)
+            {
+                await using var memoryStream = new MemoryStream();
+                await file.Content.SerializeToStreamAsync(memoryStream, context.CancellationToken);
+                var encrypted = await encryptionFeature.EncryptionProvider.EncryptAsync(
+                    memoryStream.ToArray(),
+                    context.CancellationToken);
+                await stream.WriteAsync(encrypted, context.CancellationToken);
+            }
+            else
+            {
+                await file.Content.SerializeToStreamAsync(stream, context.CancellationToken);
+            }
         }
-        
+
         await next(context);
     }
 }
