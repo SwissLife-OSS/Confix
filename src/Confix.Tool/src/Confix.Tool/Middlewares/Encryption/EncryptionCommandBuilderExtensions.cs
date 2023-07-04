@@ -1,5 +1,6 @@
 using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
+using Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
 using Confix.Tool.Middlewares.Encryption.Providers.Test;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,8 +22,8 @@ public static class EncryptionCommandBuilderExtensions
     private static CommandLineBuilder AddDefaultVariableProviders(this CommandLineBuilder builder)
     {
         builder.AddEncryptionProvider(
-            TestEncryptionProvider.Type,
-            (_) => new TestEncryptionProvider());
+            AzureKeyVaultEncryptionProvider.Type,
+            (config) => new AzureKeyVaultEncryptionProvider(config));
 
         return builder;
     }
