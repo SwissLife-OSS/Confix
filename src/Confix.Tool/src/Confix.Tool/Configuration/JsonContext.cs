@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Confix.ConfigurationFiles;
+using Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
 using ConfiX.Variables;
 
 namespace ConfiX.Extensions;
@@ -12,6 +13,7 @@ namespace ConfiX.Extensions;
 [JsonSerializable(typeof(SecretVariableProviderConfiguration))]
 [JsonSerializable(typeof(GitVariableProviderConfiguration))]
 [JsonSerializable(typeof(AppSettingsConfigurationFileProviderConfiguration))]
+[JsonSerializable(typeof(AzureKeyVaultEncryptionProviderConfiguration))]
 public partial class JsonSerialization : JsonSerializerContext
 {
     private static readonly JsonSerializerOptions options = new()

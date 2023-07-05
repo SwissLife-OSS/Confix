@@ -2,29 +2,10 @@ using Confix.Tool.Abstractions;
 
 namespace Confix.Tool.Middlewares;
 
-public class ConfigurationFeature
-{
-    public ConfigurationFeature(
-        ConfigurationScope scope,
-        IConfigurationFileCollection configurationFiles,
-        ProjectDefinition? project,
-        ComponentDefinition? component,
-        SolutionDefinition? solution)
-    {
-        Scope = scope;
-        ConfigurationFiles = configurationFiles;
-        Project = project;
-        Component = component;
-        Solution = solution;
-    }
-
-    public ConfigurationScope Scope { get; }
-
-    public IConfigurationFileCollection ConfigurationFiles { get; }
-
-    public ProjectDefinition? Project { get; }
-
-    public ComponentDefinition? Component { get; }
-
-    public SolutionDefinition? Solution { get; }
-}
+public sealed record ConfigurationFeature(
+    ConfigurationScope Scope,
+    IConfigurationFileCollection ConfigurationFiles,
+    ProjectDefinition? Project,
+    ComponentDefinition? Component,
+    SolutionDefinition? Solution,
+    EncryptionDefinition? Encryption);
