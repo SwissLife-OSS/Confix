@@ -41,6 +41,7 @@ public class VariableMiddlewareTests
                 null
             ),
             null,
+            null,
             null
         );
         featureCollection.Set(configurationFeature);

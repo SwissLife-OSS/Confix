@@ -1,7 +1,6 @@
 using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
 using Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
-using Confix.Tool.Middlewares.Encryption.Providers.Test;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Middlewares.Encryption;

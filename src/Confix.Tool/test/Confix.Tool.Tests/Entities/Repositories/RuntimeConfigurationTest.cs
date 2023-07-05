@@ -68,8 +68,10 @@ public class RuntimeConfigurationTest : ParserTestBase
     public void Merge_Should_ReturnOriginalConfiguration_When_OtherConfigurationIsNull()
     {
         // Arrange
-        var original = new RuntimeConfiguration(true,
+        var original = new RuntimeConfiguration(
+            true,
             ProjectConfiguration.Empty,
+            null,
             null,
             Array.Empty<JsonFile>());
 
@@ -92,6 +94,11 @@ public class RuntimeConfigurationTest : ParserTestBase
                 new List<ComponentInputConfiguration>(),
                 new List<ComponentOutputConfiguration>(),
                 Array.Empty<JsonFile>()),
+            new EncryptionConfiguration(
+                new EncryptionProviderConfiguration(
+                    "test",
+                    new Dictionary<string, JsonObject>(), 
+                    JsonNode.Parse("""{}""")!.AsObject())),
             Array.Empty<JsonFile>());
         var other = new RuntimeConfiguration(
             false,
@@ -108,6 +115,7 @@ public class RuntimeConfigurationTest : ParserTestBase
                 new List<ComponentInputConfiguration>(),
                 new List<ComponentOutputConfiguration>(),
                 Array.Empty<JsonFile>()),
+            null,
             Array.Empty<JsonFile>());
 
         // Act
@@ -118,6 +126,7 @@ public class RuntimeConfigurationTest : ParserTestBase
         Assert.True(merged.IsRoot);
         Assert.Equal("MergedProject", merged.Project?.Name);
         Assert.Equal("MergedComponent", merged.Component?.Name);
+        Assert.Equal("test", merged.Encryption?.Provider?.Type);
     }
 
     [Fact]
