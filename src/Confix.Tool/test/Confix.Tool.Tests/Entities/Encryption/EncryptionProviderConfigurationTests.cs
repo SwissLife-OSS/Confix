@@ -4,7 +4,7 @@ using ConfiX.Entities.Component.Configuration;
 
 namespace Confix.Tool.Tests.Entities.Encryption;
 
-public class EncryptionConfigurationTests : ParserTestBase
+public class EncryptionProviderConfigurationTests : ParserTestBase
 {
     [Fact]
     public void Parse_Should_BeValid()
@@ -12,9 +12,7 @@ public class EncryptionConfigurationTests : ParserTestBase
         ExpectValid(
             """
             {
-                "provider": {
-                    "type": "test"
-                }
+                "type": "test"
             }
             """);
     }
@@ -26,17 +24,21 @@ public class EncryptionConfigurationTests : ParserTestBase
     }
 
     [Fact]
-    public void Parse_Should_BeInvalid_When_ProviderIsNotAnObject()
+    public void Parse_Should_BeValid_WithEnvironmentOverrides()
     {
-        ExpectInvalid(
+        ExpectValid(
             """
             {
-                "provider": "test"
+                "type": "test",
+                "environmentOverride": {
+                    "test": {
+                        "type": "test"
+                    }
+                }
             }
             """);
     }
 
-
     public override object Parse(JsonNode json)
-       => EncryptionConfiguration.Parse(json);
+        => EncryptionProviderConfiguration.Parse(json);
 }
