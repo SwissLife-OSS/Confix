@@ -17,6 +17,14 @@
     "Subprojects": null,
     "SourceFiles": []
   },
-  "Encryption": null,
+  "Encryption": {
+    "Provider": {
+      "Type": "TestProvider",
+      "EnvironmentOverrides": null,
+      "Values": {
+        "type": "TestProvider"
+      }
+    }
+  },
   "SourceFiles": []
 }
