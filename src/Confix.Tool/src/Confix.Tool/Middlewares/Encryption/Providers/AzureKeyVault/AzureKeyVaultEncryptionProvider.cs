@@ -2,6 +2,7 @@ using System.Text.Json.Nodes;
 using Azure.Identity;
 using Azure.Security.KeyVault.Keys;
 using Azure.Security.KeyVault.Keys.Cryptography;
+using Confix.Utilities.Azure;
 
 namespace Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
 
@@ -29,21 +30,23 @@ public sealed class AzureKeyVaultEncryptionProvider : IEncryptionProvider
 
     public const string Type = "AzureKeyVault";
 
-    public async Task<byte[]> DecryptAsync(byte[] data, CancellationToken cancellationToken)
+    public Task<byte[]> DecryptAsync(byte[] data, CancellationToken cancellationToken)
+    => KeyVaultExtension.HandleKeyVaultException(async () =>
     {
         DecryptResult decrypted = await _client.DecryptAsync(
             EncryptionAlgorithm.RsaOaep256,
             data,
             cancellationToken);
         return decrypted.Plaintext;
-    }
+    });
 
-    public async Task<byte[]> EncryptAsync(byte[] data, CancellationToken cancellationToken)
+    public Task<byte[]> EncryptAsync(byte[] data, CancellationToken cancellationToken)
+    => KeyVaultExtension.HandleKeyVaultException(async () =>
     {
         EncryptResult encrypted = await _client.EncryptAsync(
             EncryptionAlgorithm.RsaOaep256,
             data,
             cancellationToken);
         return encrypted.Ciphertext;
-    }
+    });
 }

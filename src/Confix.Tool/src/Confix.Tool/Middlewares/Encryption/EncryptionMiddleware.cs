@@ -9,14 +9,20 @@ public sealed class EncryptionMiddleware : OptionalEncryptionMiddleware
     {
     }
 
-    public override async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
-    {
-        await base.InvokeAsync(context, next);
+    public override Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
+    => base.InvokeAsync(
+        context,
+        (c) =>
+        {
+            ValidateEncryptionFeature(c);
+            return next(c);
+        });
 
+    private static void ValidateEncryptionFeature(IMiddlewareContext context)
+    {
         if (!context.Features.TryGet<EncryptionFeature>(out var _))
         {
             throw new ExitException("Encryption not properly configured");
         }
     }
-
 }

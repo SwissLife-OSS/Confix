@@ -13,6 +13,8 @@ public static class EncryptionCommandBuilderExtensions
     {
         builder.AddDefaultVariableProviders();
         builder.AddTransient(sp
+            => new OptionalEncryptionMiddleware(sp.GetRequiredService<IEncryptionProviderFactory>()));      
+        builder.AddTransient(sp
             => new EncryptionMiddleware(sp.GetRequiredService<IEncryptionProviderFactory>()));
 
         return builder;
