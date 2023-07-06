@@ -14,6 +14,7 @@ namespace ConfiX.Extensions;
 [JsonSerializable(typeof(GitVariableProviderConfiguration))]
 [JsonSerializable(typeof(AppSettingsConfigurationFileProviderConfiguration))]
 [JsonSerializable(typeof(AzureKeyVaultEncryptionProviderConfiguration))]
+[JsonSerializable(typeof(AesEncryptionProviderConfiguration))]
 public partial class JsonSerialization : JsonSerializerContext
 {
     private static readonly JsonSerializerOptions options = new()
