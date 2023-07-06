@@ -2,7 +2,7 @@
 
 It is common practice to deploy applications across various environments such as development, staging, or production. Each environment may require a unique set of configurations and variable providers. To accommodate this, Confix enables you to define the environments where your application will be deployed.
 
-The `environments` field allows you to define the various environments for your application in `.confixrc`, `.confix.repository`, or `.confix.project` files. These environments are inherited in the order: `.confixrc` -> `.confix.repository` -> `.confix.project`. Hence, settings defined in `.confixrc` can be overridden in `.confix.repository`, and in turn, these can be overridden in `.confix.project`.
+The `environments` field allows you to define the various environments for your application in `.confixrc`, `.confix.solution`, or `.confix.project` files. These environments are inherited in the order: `.confixrc` -> `.confix.solution` -> `.confix.project`. Hence, settings defined in `.confixrc` can be overridden in `.confix.solution`, and in turn, these can be overridden in `.confix.project`.
 
 In certain scenarios, you might want to selectively enable or disable environments at a subfolder level. For example, if you wish to disable the 'staging' environment in a specific subfolder, you can do so by simply listing the active environments like `["dev", "prod"]` in the `environments` field for that specific configuration level. This will exclude 'staging' from the active environments for the respective configuration scope.
 

@@ -48,7 +48,7 @@
 - [Configuration Files](#configuration-files-1)
 - [`.confix` Files](#confix-files)
   - [1. `.confixrc`](#1-confixrc)
-  - [2. `.confix.repository`](#2-confixrepository)
+  - [2. `.confix.solution`](#2-confixrepository)
   - [3. `.confix.project`](#3-confixproject)
   - [4. `.confix.component`](#4-confixcomponent)
   - [5. `.confix.lock`](#5-confixlock)
@@ -301,7 +301,7 @@ The `components` property is an object where the key is either `@providerName/co
 
 ## Override Configuration
 ### Environments 
-By default, the environment config is taken from the `.confixrc` or the `.confix.repository`. 
+By default, the environment config is taken from the `.confixrc` or the `.confix.solution`. 
 To override environments, on a project level, you'll need to use the `environments` property in the `.confix.project` file. This property is an array of strings, with each string representing an environment. 
 
 The environment that you specify in this list, will be enabled for this project. If you leave the property away, all environments are active.
@@ -335,7 +335,7 @@ Confix provides several commands to manage your project:
 
 Here is an example of a `.confix.project` file:
 
-> Note: Unless you use component repositories everything in this file is optiona. If you do not specify any environments, configuration files, configuration providers or repositories, Confix will use the defaultx that are defined in the `.confixrc` or in `.confix.repository` file. So dont worry your `.confix.project` **file will most probably be empty**, as you configure everything on the .confixrc level or in the .confix.repository files.
+> Note: Unless you use component repositories everything in this file is optiona. If you do not specify any environments, configuration files, configuration providers or repositories, Confix will use the defaultx that are defined in the `.confixrc` or in `.confix.solution` file. So dont worry your `.confix.project` **file will most probably be empty**, as you configure everything on the .confixrc level or in the .confix.solution files.
 
 ```json
 {
@@ -353,7 +353,7 @@ Here is an example of a `.confix.project` file:
         },
         "@oss-components/CustomComponent": "1.0.0"
     },
-    "configurationFiles": [ // Optional when in .confixrc or .confix.repository
+    "configurationFiles": [ // Optional when in .confixrc or .confix.solution
         "./appsettings*.json",
         "./**/some-config/appsettings*.json",
         {
@@ -368,11 +368,11 @@ Here is an example of a `.confix.project` file:
 
 Confix repositories closely align with the "scope" of a Git repository. Meaning that usually you have one repository per git repository. In a typical repository, you might find various projects, modules, or packages. These can be backend services, workers, shared libraries, frontend applications, etc., each with could have separate configuration.
 
-Every project, module, or package that has configuration files, should contain a `.confix.project` file at its root, which serves as the project's main configuration. The repository's root folder should contain a `.confix.repository` file, providing an overarching configuration for the entire repository.
+Every project, module, or package that has configuration files, should contain a `.confix.project` file at its root, which serves as the project's main configuration. The repository's root folder should contain a `.confix.solution` file, providing an overarching configuration for the entire repository.
 
 Confix generates a configuration for Visual Studio Code in the `.vscode` folder at the repository level. This means that when you need to configure your services' config files, you have open the repository root in Visual Studio Code. Otherwise you do not have the intellisense and validation (as the correct json schema is not loaded)
 
-For larger structures, such as mono-repos, you may find multiple `.confix.repository` files. In this case, the repository should be opened in Visual Studio Code from the folder containing the relevant `.confix.repository` file.
+For larger structures, such as mono-repos, you may find multiple `.confix.solution` files. In this case, the repository should be opened in Visual Studio Code from the folder containing the relevant `.confix.solution` file.
 
 To share the setup across repositories in a monorepo, you can create a `.confixrc` file at the root. When doing so, remember to set `"isRoot": false` in the configuration, prompting Confix to continue looking for the root `.confixrc` file. 
 
@@ -405,7 +405,7 @@ You can also override or specify the variable providers and environments on a re
 ### Repository Root
 ```
 repo_root/
-├── .confix.repository
+├── .confix.solution
 ├── .vscode
 ├── backend
 │   ├── .confix.project
@@ -421,7 +421,7 @@ repo_root/
 monorepo_root/
 ├── .confixrc
 ├── repo_1/
-│   ├── .confix.repository
+│   ├── .confix.solution
 │   ├── .vscode
 │   ├── backend
 │   │   ├── .confix.project
@@ -430,7 +430,7 @@ monorepo_root/
 │       ├── .confix.project
 │       └── appsettings.json
 └── repo_2/
-    ├── .confix.repository
+    ├── .confix.solution
     ├── .vscode
     ├── shared_lib
     └── frontend
@@ -509,7 +509,7 @@ Component repositories come into play when you're unable to bundle a schema with
 
 It is common practice to deploy applications across various environments such as development, staging, or production. Each environment may require a unique set of configurations and variable providers. To accommodate this, Confix enables you to define the environments where your application will be deployed.
 
-The `environments` field allows you to define the various environments for your application in `.confixrc`, `.confix.repository`, or `.confix.project` files. These environments are inherited in the order: `.confixrc` -> `.confix.repository` -> `.confix.project`. Hence, settings defined in `.confixrc` can be overridden in `.confix.repository`, and in turn, these can be overridden in `.confix.project`.
+The `environments` field allows you to define the various environments for your application in `.confixrc`, `.confix.solution`, or `.confix.project` files. These environments are inherited in the order: `.confixrc` -> `.confix.solution` -> `.confix.project`. Hence, settings defined in `.confixrc` can be overridden in `.confix.solution`, and in turn, these can be overridden in `.confix.project`.
 
 In certain scenarios, you might want to selectively enable or disable environments at a subfolder level. For example, if you wish to disable the 'staging' environment in a specific subfolder, you can do so by simply listing the active environments like `["dev", "prod"]` in the `environments` field for that specific configuration level. This will exclude 'staging' from the active environments for the respective configuration scope.
 
@@ -546,7 +546,7 @@ Here's an example of how you could define these settings in a `.confix.project` 
 # Variable Providers
 >  ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix/discussions/9) about this section.
 
-Variable providers are typically defined in the `.confixrc` or `.confix.repository` files but can also be defined in `.confix.project` if only have a simple setup without a `.confix.repository`
+Variable providers are typically defined in the `.confixrc` or `.confix.solution` files but can also be defined in `.confix.project` if only have a simple setup without a `.confix.solution`
 
 The `variableProviders` property determines the variable providers that are available for your project. These providers assist in resolving variables present in your configuration files.
 
@@ -625,7 +625,7 @@ A project can contain different active schemas for various configuration files. 
 
 Subprojects define unique project configurations, including their custom components, repositories, and component providers. By default, a subproject inherits the configuration from the parent project, hence any unwanted inherited features should be specifically disabled. It's essential to always specify the complete configuration, with the `name` property being a mandatory requirement.
 
-Moreover, subprojects can be configured in the `.confixrc` or `.confix.repository` files, allowing global definition of subprojects that are then inherited into the `.confix.project` file.
+Moreover, subprojects can be configured in the `.confixrc` or `.confix.solution` files, allowing global definition of subprojects that are then inherited into the `.confix.project` file.
 
 One practical application of this feature could be in scenarios where a common configuration pattern for Helm charts exists. A subproject can be defined for this purpose, and then applied across all your projects.
 
@@ -672,7 +672,7 @@ Confix allows you to specify the configuration files used by your project setup 
 
 One key feature of Confix is its capability to automatically modify the `settings.json` of Visual Studio Code in the repository root, mapping a JSON schema to the specified files. For instance, in ASP.NET core projects, these configuration files would typically be the `appsettings.json` files. In Node.js projects, it might be the `config.json` file.
 
-Confix simplifies the configuration process by providing several configuration file conventions. You can define these conventions in the `configurationFiles` property of the `.confixrc`, `.confix.repository`, or `.confix.project` files.
+Confix simplifies the configuration process by providing several configuration file conventions. You can define these conventions in the `configurationFiles` property of the `.confixrc`, `.confix.solution`, or `.confix.project` files.
 
 Below is an example of defining these settings in a `.confix.project` JSON file:
 
@@ -709,13 +709,13 @@ Generally, configuration file globs are defined at the repository level, since t
 # `.confix` Files 
 >  ℹ️ This section is still in development. You can leave your feedback in the [Discussions](https://github.com/SwissLife-OSS/Confix/discussions/12) about this section.
 
-Confix provides a set of configuration files that allow you to manage settings on global, repository, project, component, and deployment levels. These files include: `.confixrc`, `.confix.repository`, `.confix.project`, `.confix.component`, and `.confix.lock`. 
+Confix provides a set of configuration files that allow you to manage settings on global, repository, project, component, and deployment levels. These files include: `.confixrc`, `.confix.solution`, `.confix.project`, `.confix.component`, and `.confix.lock`. 
 
 Each configuration file serves a unique purpose in the overall Confix configuration process:
 
 ## 1. `.confixrc` 
 
-This global configuration file is located in the user's home directory. It is used to define global settings that are applied across all repositories and projects. Settings defined here are inherited by the `.confix.repository`, `.confix.component`, and `.confix.project` files. 
+This global configuration file is located in the user's home directory. It is used to define global settings that are applied across all repositories and projects. Settings defined here are inherited by the `.confix.solution`, `.confix.component`, and `.confix.project` files. 
 
 You can override project-specific settings by using the `project` field in the `.confixrc` file. In case of multiple `.confixrc` files, settings can be overridden in the parent folder's `.confixrc` files. To signal Confix to look for further `.confixrc` files in parent folders and the home directory, you need to specify `isRoot: false`.
 ```json
@@ -733,11 +733,11 @@ You can override project-specific settings by using the `project` field in the `
 }
 ```
 
-## 2. `.confix.repository`
+## 2. `.confix.solution`
 
 This configuration file is defined at the root of the repository. It is used to specify repository-specific settings applicable across all projects within the repository. Settings defined here are inherited by the `.confix.component` and `.confix.project` files. 
 
-Project-specific settings can be overridden by using the `project` field in the `.confix.repository` file. For more information, refer to the `Repositories` section.
+Project-specific settings can be overridden by using the `project` field in the `.confix.solution` file. For more information, refer to the `Repositories` section.
 ```json
 {
     "project": {
@@ -797,7 +797,7 @@ The `.confix.component` file is used for configuring individual components. More
 ## 5. `.confix.lock`
 
 The `.confix.lock` file is generated during the `build` operation and contains all necessary information for deploying the application. The file is used during the `build` operation to replace the variables in the configuration files with their actual values. 
-It contains the complete configuration that was composed out of all .confixrc and .confix.repository files, except the secrets. The confix lock file is safe to commit to your repository and you have to include it in your container image. 
+It contains the complete configuration that was composed out of all .confixrc and .confix.solution files, except the secrets. The confix lock file is safe to commit to your repository and you have to include it in your container image. 
 
 
 # Deploying your App
