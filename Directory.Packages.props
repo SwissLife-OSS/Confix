@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="Azure.Identity" Version="1.9.0" />
     <PackageVersion Include="Azure.Security.KeyVault.Secrets" Version="4.5.0" />
-    <PackageVersion Include="BouncyCastle.NetCore" Version="1.9.0" />
+    <PackageVersion Include="Azure.Security.KeyVault.Keys" Version="4.5.0" />
     <PackageVersion Include="HotChocolate" Version="13.1.0" />
     <PackageVersion Include="JsonSchema.Net" Version="4.1.1" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
