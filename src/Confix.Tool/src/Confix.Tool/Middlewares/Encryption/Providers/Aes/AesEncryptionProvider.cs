@@ -1,5 +1,6 @@
-using System.Security.Cryptography;
+using AES = System.Security.Cryptography.Aes;
 using System.Text.Json.Nodes;
+using System.Security.Cryptography;
 
 namespace Confix.Tool.Middlewares.Encryption.Providers.Aes;
 
@@ -22,19 +23,29 @@ public sealed class AesEncryptionProvider : IEncryptionProvider
 
     public const string Type = "Aes";
 
-    public Task<byte[]> DecryptAsync(byte[] data, CancellationToken cancellationToken)
+    public async Task<byte[]> DecryptAsync(byte[] data, CancellationToken cancellationToken)
     {
-        using Aes aes = Aes.Create();
+        using var aes = AES.Create();
         aes.Key = _client.Key;
         aes.IV = _client.IV;
-        return Task.FromResult(aes.EncryptCbc(data, _client.IV));
+        using var ms = new MemoryStream();
+        using var cs = new CryptoStream(ms, aes.CreateDecryptor(aes.Key, aes.IV), CryptoStreamMode.Write);
+        await cs.WriteAsync(data, cancellationToken);
+        cs.Close();
+        return ms.ToArray();
     }
 
-    public Task<byte[]> EncryptAsync(byte[] data, CancellationToken cancellationToken)
+    public async Task<byte[]> EncryptAsync(byte[] data, CancellationToken cancellationToken)
     {
-        using Aes aes = Aes.Create();
+        using var aes = AES.Create();
         aes.Key = _client.Key;
         aes.IV = _client.IV;
-        return Task.FromResult(aes.DecryptCbc(data, _client.IV));
+        aes.Padding = PaddingMode.PKCS7;
+        aes.Mode = CipherMode.CBC;
+        using var ms = new MemoryStream();
+        using var cs = new CryptoStream(ms, aes.CreateEncryptor(aes.Key, aes.IV), CryptoStreamMode.Write);
+        await cs.WriteAsync(data, cancellationToken);
+        cs.Close();
+        return ms.ToArray();
     }
 }

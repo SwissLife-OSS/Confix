@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+using AES = System.Security.Cryptography.Aes;
 using System.Text;
 using System.Text.Json.Nodes;
 using Azure.Identity;
@@ -6,6 +6,7 @@ using Azure.Security.KeyVault.Keys;
 using Azure.Security.KeyVault.Keys.Cryptography;
 using Confix.Tool.Middlewares.Encryption.Providers.Aes;
 using Confix.Utilities.Azure;
+using System.Security.Cryptography;
 
 namespace Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
 
@@ -150,7 +151,7 @@ public sealed class AzureKeyVaultEncryptionProvider : IEncryptionProvider
 
     private static AesEncryptionProviderDefinition CreateAesEncryptionProviderDefinition()
     {
-        using Aes aes = Aes.Create();
+        using AES aes = AES.Create();
         aes.GenerateKey();
         aes.GenerateIV();
         return new(aes.Key, aes.IV);
