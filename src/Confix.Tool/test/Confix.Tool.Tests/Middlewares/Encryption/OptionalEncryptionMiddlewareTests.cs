@@ -45,7 +45,7 @@ public class OptionalEncryptionMiddlewareTests
     }
 
     [Fact]
-    public void InvokeAsync_EncryptionConfigurationNotNull_SetsEncryptionFeature()
+    public void InvokeAsync_EncryptionConfigurationSet_SetsEncryptionFeature()
     {
         // Arrange
         var featureCollection = new FeatureCollection();
