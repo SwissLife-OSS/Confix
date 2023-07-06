@@ -21,7 +21,7 @@ public static class JsonSchemaExtensions
     public static JsonSchema AddVariableIntellisense(this JsonSchema schema, JsonObject variableRef)
     {
         var context = new VariableIntellisenseContext(
-             variableRef
+            variableRef
         );
 
         var jsonSchemaAsNode = JsonSerializer.SerializeToNode(schema)!;
@@ -29,4 +29,8 @@ public static class JsonSchemaExtensions
 
         return rewritten.Deserialize<JsonSchema>()!;
     }
+
+    public static bool IsArray(this JsonSchema schema)
+        => schema.GetJsonType() is SchemaValueType.Array ||
+            (schema.GetAnyOf()?.Any(x => x.IsArray()) ?? false);
 }

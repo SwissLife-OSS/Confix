@@ -1,0 +1,8 @@
+﻿{
+  "Foo": {
+    "deep": {
+      "required": [],
+      "deeper": []
+    }
+  }
+}

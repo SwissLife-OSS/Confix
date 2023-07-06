@@ -33,4 +33,20 @@ public static class LinqExtensions
                 .ToArray()
         };
     }
+
+    public static T? SingleOrNone<T>(this IEnumerable<T> enumerable) where T : class?
+    {
+        T? result = null;
+        foreach (var item in enumerable)
+        {
+            if (result is not null)
+            {
+                return null;
+            }
+
+            result = item;
+        }
+
+        return result;
+    }
 }

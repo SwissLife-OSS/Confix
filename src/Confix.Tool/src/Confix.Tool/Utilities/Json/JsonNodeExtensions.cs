@@ -77,7 +77,14 @@ public static class JsonNodeExtensions
 
         foreach (var (key, value) in node)
         {
-            obj[key] = value.Copy();
+            if (obj.TryGetPropertyValue(key, out var existingValue))
+            {
+                obj[key] = existingValue.Merge(value.Copy());
+            }
+            else
+            {
+                obj[key] = value.Copy();
+            }
         }
 
         return obj;

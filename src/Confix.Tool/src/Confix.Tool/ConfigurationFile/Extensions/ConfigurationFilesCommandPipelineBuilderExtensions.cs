@@ -34,6 +34,7 @@ public static class ConfigurationFilesCommandPipelineBuilderExtensions
 
         if (files.Count == 0)
         {
+            context.Logger.SkippedProjectBuildBecauseNoConfigurationFilesWereFound();
             return Task.CompletedTask;
         }
 

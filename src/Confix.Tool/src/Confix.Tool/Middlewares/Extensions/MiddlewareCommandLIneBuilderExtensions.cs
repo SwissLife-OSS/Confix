@@ -1,7 +1,7 @@
 using System.CommandLine.Builder;
 using Confix.Tool.Entities.Components;
 using Confix.Tool.Middlewares.JsonSchemas;
-using Confix.Tool.Middlewares.Project.Extensions;
+using Confix.Tool.Middlewares.Project;
 
 namespace Confix.Tool.Middlewares;
 
