@@ -2,7 +2,7 @@
 
 Confix has the concept of variables. These variables are typically used to reference secrets, or any configuration data that should not be directly entered into the configuration files. They can be used for values are not known at development time.
 
-In Confix, variables have a distinct structure: `$providerName:path.to.resource`, where `providerName` refers to the source or provider of the variable value, and `path.to.resource` indicates the specific resource or secret in the provider's repository.
+In Confix, variables have a distinct structure: `$providerName:path.to.resource`, where `providerName` refers to the source or provider of the variable value, and `path.to.resource` indicates the specific resource or secret in the provider's repository. Variables may be nested in strings. in that case the variable must be placed within double curly braces like `{{$provider:path.to.resource}}`.
 
 Variables are resolved during the `build` operation of the configuration. This operation can take place at various stages of your development lifecycle. You can also `validate` your configuration against a specific environment to ensure that all variables can be resolved before deployment. For more on this, see the `Deploying your App` section.
 
@@ -96,6 +96,9 @@ Here's an example JSON configuration file that uses Confix variables:
   "appSecrets": {
     "apiKey": "$secret:aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1hM1o3ekVjN0FYUQ==",
     "jwtSecret": "$vault:jwt.secret"
+  },
+  "clients": {
+    "baseUrl": "{{$keyvault:api.baseUrl}}/my-endpoint"
   }
 }
 ```

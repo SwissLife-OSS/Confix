@@ -263,7 +263,7 @@ public class LoadConfigurationMiddlewareTest
             { 
                 "project": { 
                     "environments": [ 
-                        "dev", "prod", { "name": "uat" , "excludeFiles": ["a"]}
+                        "dev", "prod", { "name": "uat"}
                     ] 
                 } 
             }
@@ -278,7 +278,7 @@ public class LoadConfigurationMiddlewareTest
                 "isRoot":false, 
                 "project": { 
                     "environments": [ 
-                        "dev", { "name": "prod" , "excludeFiles": ["a"]}
+                        "dev", { "name": "prod"}
                     ] 
                 } 
             }
@@ -292,7 +292,7 @@ public class LoadConfigurationMiddlewareTest
             { 
                 "project": { 
                     "environments": [ 
-                        { "name": "dev" , "excludeFiles": ["a"]}
+                        { "name": "dev"}
                     ] 
                 } 
             }

@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Text.Json.Nodes;
+using Confix.Utilities.Json;
 
 namespace Confix.Tool.Abstractions;
 
@@ -27,17 +28,36 @@ public sealed class VariableProviderDefinition
 
     public static VariableProviderDefinition From(VariableProviderConfiguration configuration)
     {
-        var name = configuration.Name ??
-            throw new InvalidOperationException("Variable provider name is required.");
+        List<string> validationErrors = new();
+        if(configuration.Name is null)
+        {
+            validationErrors.Add("Provider name is required.");
+        }
+        if(configuration.Type is null)
+        {
+            validationErrors.Add("Provider type is required.");
+        }
+        if(validationErrors.Any())
+        {
+            throw new ValidationException("Variable provider configuration is invalid.")
+            {
+                Errors = validationErrors
+            };
+        }
 
-        var type = configuration.Type ??
-            throw new InvalidOperationException("Variable provider type is required.");
+        return new VariableProviderDefinition(
+            configuration.Name!,
+            configuration.Type!,
+            configuration.EnvironmentOverrides ?? ImmutableDictionary<string, JsonObject>.Empty,
+            configuration.Values);
+    }
 
-        var environmentOverrides = configuration.EnvironmentOverrides
-            ?? ImmutableDictionary<string, JsonObject>.Empty;
-
-        var value = configuration.Values;
-
-        return new VariableProviderDefinition(name, type, environmentOverrides, value);
+    public JsonNode ValueWithOverrides(string environmentName)
+    {
+        if (EnvironmentOverrides.GetValueOrDefault(environmentName) is { } envOverride)
+        {
+            return Value.Merge(envOverride)!;
+        }
+        return Value;
     }
 }

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Confix.Tool;
 using Confix.Tool.Schema;
 using Json.More;
 using Json.Schema;
@@ -22,6 +23,9 @@ public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewr
             return context.VariableLookup[parsed.Value].Copy()!;
         }
 
-        return key;
+        var replacedString = key.ReplaceVariables(v => context.VariableLookup[v].ToString());
+        return JsonValue.Create(replacedString)!;
     }
+
+  
 }

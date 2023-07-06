@@ -15,8 +15,8 @@ export const Logo: React.FC<SVGProps<SVGSVGElement>> = (props) => (
         y2="132.32"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset="0" stop-color="#7dcdee"></stop>
-        <stop offset="1" stop-color="#189cd9"></stop>
+        <stop offset="0" stopColor="#7dcdee"></stop>
+        <stop offset="1" stopColor="#189cd9"></stop>
       </linearGradient>
     </defs>
     <path fill="#189cd9" d="m93.15 121.03-10.86 6v12l10.86 6v-24z"></path>
@@ -25,8 +25,8 @@ export const Logo: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     <path
       fill="none"
       stroke="currentColor"
-      stroke-miterlimit="10"
-      stroke-width="5"
+      strokeMiterlimit="10"
+      strokeWidth="5"
       d="m104.01 138.43-10.86 6-10.86-6v-12l10.86-6 10.86 6v12z"
     ></path>
     <path

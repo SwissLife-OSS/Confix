@@ -4,21 +4,24 @@ namespace Confix.Tool.Tests;
 
 public class VariablePathTests
 {
-    [Fact]
-    public void Parse_ValidVariableName_CorrectResult()
+    [Theory]
+    [InlineData("$foo:bar", "foo", "bar")]
+    [InlineData("$foo.bar:baz.x", "foo.bar", "baz.x")]
+    [InlineData("$foo_bar:baz_x", "foo_bar", "baz_x")]
+    public void Parse_ValidVariableName_CorrectResult(string variableName, string providerName, string path)
     {
         // arrange & act
-        VariablePath result = VariablePath.Parse("$foo.bar:baz.x");
+        VariablePath result = VariablePath.Parse(variableName);
 
         // assert
-        result.ProviderName.Should().Be("foo.bar");
-        result.Path.Should().Be("baz.x");
+        result.ProviderName.Should().Be(providerName);
+        result.Path.Should().Be(path);
     }
 
     [Theory]
-    [InlineData("$foo:bar:baz")]
     [InlineData("bar")]
     [InlineData("$foo.bar")]
+    [InlineData("$$foo:bar")]
     [InlineData("foo:bar")]
     public void Parse_Invalid_Throws(string variableName)
     {
@@ -40,7 +43,6 @@ public class VariablePathTests
     }
 
     [Theory]
-    [InlineData("$foo:bar:baz")]
     [InlineData("bar")]
     [InlineData("$foo.bar")]
     [InlineData("foo:bar")]

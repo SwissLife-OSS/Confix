@@ -14,17 +14,20 @@ public sealed class RuntimeConfiguration
         public const string IsRoot = "isRoot";
         public const string Component = "component";
         public const string Project = "project";
+        public const string Encryption = "encryption";
     }
 
     public RuntimeConfiguration(
         bool isRoot,
         ProjectConfiguration? project,
         ComponentConfiguration? component,
+        EncryptionConfiguration? encryption,
         IReadOnlyList<JsonFile> sourceFiles)
     {
         IsRoot = isRoot;
         Project = project;
         Component = component;
+        Encryption = encryption;
         SourceFiles = sourceFiles;
     }
 
@@ -33,6 +36,8 @@ public sealed class RuntimeConfiguration
     public ComponentConfiguration? Component { get; }
 
     public ProjectConfiguration? Project { get; }
+
+    public EncryptionConfiguration? Encryption { get; }
 
     public IReadOnlyList<JsonFile> SourceFiles { get; }
 
@@ -45,7 +50,7 @@ public sealed class RuntimeConfiguration
     {
         var obj = node.ExpectObject();
 
-        var isRoot = !obj.TryGetNonNullPropertyValue(FieldNames.IsRoot, out var isRootNode) ||
+        var isRoot = obj.TryGetNonNullPropertyValue(FieldNames.IsRoot, out var isRootNode) &&
             isRootNode.ExpectValue<bool>();
 
         var component = obj.TryGetNonNullPropertyValue(FieldNames.Component, out var componentNode)
@@ -56,7 +61,16 @@ public sealed class RuntimeConfiguration
             ? ProjectConfiguration.Parse(projectNode.ExpectObject())
             : null;
 
-        return new RuntimeConfiguration(isRoot, project, component, sourceFiles);
+        var encryption = obj.TryGetNonNullPropertyValue(FieldNames.Encryption, out var encryptionNode)
+            ? EncryptionConfiguration.Parse(encryptionNode.ExpectObject())
+            : null;
+
+        return new RuntimeConfiguration(
+            isRoot,
+            project,
+            component,
+            encryption,
+            sourceFiles);
     }
 
     public RuntimeConfiguration Merge(RuntimeConfiguration? other)
@@ -72,14 +86,16 @@ public sealed class RuntimeConfiguration
 
         var component = Component?.Merge(other.Component) ?? other.Component;
 
+        var encryption = Encryption?.Merge(other.Encryption) ?? other.Encryption;
+
         var sourceFiles = SourceFiles.Concat(other.SourceFiles).ToArray();
 
-        return new RuntimeConfiguration(isRoot, project, component, sourceFiles);
+        return new RuntimeConfiguration(isRoot, project, component, encryption, sourceFiles);
     }
 
     public static RuntimeConfiguration LoadFromFiles(IEnumerable<JsonFile> files)
     {
-        var config = new RuntimeConfiguration(true, null, null, Array.Empty<JsonFile>());
+        var config = new RuntimeConfiguration(true, null, null, null, Array.Empty<JsonFile>());
 
         foreach (var file in files.Where(x => x.File.Name == FileNames.ConfixRc))
         {

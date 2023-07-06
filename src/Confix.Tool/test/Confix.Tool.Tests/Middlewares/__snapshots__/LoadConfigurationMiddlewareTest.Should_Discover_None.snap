@@ -5,18 +5,10 @@
     "Environments": [
       {
         "Name": "dev",
-        "ExcludeFiles": [
-          "a"
-        ],
-        "IncludeFiles": [],
         "Enabled": false
       },
       {
         "Name": "prod",
-        "ExcludeFiles": [
-          "a"
-        ],
-        "IncludeFiles": [],
         "Enabled": false
       }
     ],

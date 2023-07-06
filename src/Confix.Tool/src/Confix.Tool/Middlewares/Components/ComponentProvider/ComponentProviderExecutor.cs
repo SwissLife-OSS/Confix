@@ -40,6 +40,8 @@ public sealed class ComponentProviderExecutor
             App.Log.LoadedComponentProvider();
         }
 
+        providers.Add(new MergeComponentProvider());
+
         return new ComponentProviderExecutor(providers);
     }
 }

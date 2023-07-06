@@ -1,4 +1,6 @@
 using System.Text.Json.Nodes;
+using Confix.Tool;
+using Confix.Tool.Commands.Logging;
 
 namespace ConfiX.Variables;
 
@@ -12,9 +14,18 @@ public sealed class VariableProviderFactory : IVariableProviderFactory
         _providers = providers;
     }
 
-    public IVariableProvider CreateProvider(VariableProviderConfiguration providerConfiguration) 
-        => (_providers.GetValueOrDefault(providerConfiguration.Type)
-                ?? throw new InvalidOperationException($"Provider {providerConfiguration.Type} not known"))
-                (providerConfiguration.Configuration);
+    public IVariableProvider CreateProvider(VariableProviderConfiguration providerConfiguration)
+    {
+        var providerFactory = _providers.GetValueOrDefault(providerConfiguration.Type);
+        if (providerFactory is null)
+        {
+            throw new ExitException(
+                $"No VariableProvider of type {providerConfiguration.Type.AsHighlighted()} known")
+            {
+                Help = "Check the documentation for a list of supported VariableProviders"
+            };
+        }
+        return providerFactory(providerConfiguration.Configuration);
+    }
 
 }

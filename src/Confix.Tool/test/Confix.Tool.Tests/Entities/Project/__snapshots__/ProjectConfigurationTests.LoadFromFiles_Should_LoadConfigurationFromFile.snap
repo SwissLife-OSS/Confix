@@ -43,26 +43,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -74,26 +61,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -260,26 +234,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -291,26 +252,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -477,26 +425,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -508,26 +443,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -702,26 +624,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -733,26 +642,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -919,26 +815,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -950,26 +833,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -1136,26 +1006,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -1167,26 +1024,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -1369,26 +1213,13 @@
                 },
                 "environments": [
                   {
-                    "name": {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
+                    "_value": {
+                      "ValueKind": "String"
                     },
-                    "excludeFiles": [
-                      {
-                        "_value": {
-                          "ValueKind": "String"
-                        },
-                        "Value": {
-                          "ValueKind": "String"
-                        },
-                        "Options": null
-                      }
-                    ]
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
                   },
                   {
                     "_value": {
@@ -1400,26 +1231,13 @@
                     "Options": null
                   },
                   {
-                    "name": {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
+                    "_value": {
+                      "ValueKind": "String"
                     },
-                    "excludeFiles": [
-                      {
-                        "_value": {
-                          "ValueKind": "String"
-                        },
-                        "Value": {
-                          "ValueKind": "String"
-                        },
-                        "Options": null
-                      }
-                    ]
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
                   }
                 ],
                 "components": {
@@ -1585,26 +1403,13 @@
                 },
                 "environments": [
                   {
-                    "name": {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
+                    "_value": {
+                      "ValueKind": "String"
                     },
-                    "excludeFiles": [
-                      {
-                        "_value": {
-                          "ValueKind": "String"
-                        },
-                        "Value": {
-                          "ValueKind": "String"
-                        },
-                        "Options": null
-                      }
-                    ]
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
                   },
                   {
                     "_value": {
@@ -1616,26 +1421,13 @@
                     "Options": null
                   },
                   {
-                    "name": {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
+                    "_value": {
+                      "ValueKind": "String"
                     },
-                    "excludeFiles": [
-                      {
-                        "_value": {
-                          "ValueKind": "String"
-                        },
-                        "Value": {
-                          "ValueKind": "String"
-                        },
-                        "Options": null
-                      }
-                    ]
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
                   }
                 ],
                 "components": {
@@ -1795,26 +1587,13 @@
           },
           "environments": [
             {
-              "name": {
-                "_value": {
-                  "ValueKind": "String"
-                },
-                "Value": {
-                  "ValueKind": "String"
-                },
-                "Options": null
+              "_value": {
+                "ValueKind": "String"
               },
-              "excludeFiles": [
-                {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
-                }
-              ]
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
             },
             {
               "_value": {
@@ -1826,26 +1605,13 @@
               "Options": null
             },
             {
-              "name": {
-                "_value": {
-                  "ValueKind": "String"
-                },
-                "Value": {
-                  "ValueKind": "String"
-                },
-                "Options": null
+              "_value": {
+                "ValueKind": "String"
               },
-              "excludeFiles": [
-                {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
-                }
-              ]
+              "Value": {
+                "ValueKind": "String"
+              },
+              "Options": null
             }
           ],
           "components": {
@@ -2037,26 +1803,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -2068,26 +1821,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -2264,26 +2004,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -2295,26 +2022,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -2476,25 +2190,15 @@
   ],
   "Environments": [
     {
-      "Name": "development",
-      "ExcludeFiles": [
-        "appsettings.staging.json"
-      ],
-      "IncludeFiles": null,
+      "Name": "develonment",
       "Enabled": null
     },
     {
       "Name": "staging",
-      "ExcludeFiles": null,
-      "IncludeFiles": null,
       "Enabled": null
     },
     {
       "Name": "production",
-      "ExcludeFiles": [
-        "appsettings.staging.json"
-      ],
-      "IncludeFiles": null,
       "Enabled": null
     }
   ],
@@ -2524,26 +2228,13 @@
               },
               "environments": [
                 {
-                  "name": {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
+                  "_value": {
+                    "ValueKind": "String"
                   },
-                  "excludeFiles": [
-                    {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
-                    }
-                  ]
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
                 },
                 {
                   "_value": {
@@ -2555,26 +2246,13 @@
                   "Options": null
                 },
                 {
-                  "name": {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
+                  "_value": {
+                    "ValueKind": "String"
                   },
-                  "excludeFiles": [
-                    {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
-                    }
-                  ]
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
                 }
               ],
               "components": {
@@ -2762,26 +2440,13 @@
               },
               "environments": [
                 {
-                  "name": {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
+                  "_value": {
+                    "ValueKind": "String"
                   },
-                  "excludeFiles": [
-                    {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
-                    }
-                  ]
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
                 },
                 {
                   "_value": {
@@ -2793,26 +2458,13 @@
                   "Options": null
                 },
                 {
-                  "name": {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
+                  "_value": {
+                    "ValueKind": "String"
                   },
-                  "excludeFiles": [
-                    {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
-                    }
-                  ]
+                  "Value": {
+                    "ValueKind": "String"
+                  },
+                  "Options": null
                 }
               ],
               "components": {
@@ -3001,26 +2653,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -3032,26 +2671,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -3203,26 +2829,13 @@
             },
             "environments": [
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               },
               {
                 "_value": {
@@ -3234,26 +2847,13 @@
                 "Options": null
               },
               {
-                "name": {
-                  "_value": {
-                    "ValueKind": "String"
-                  },
-                  "Value": {
-                    "ValueKind": "String"
-                  },
-                  "Options": null
+                "_value": {
+                  "ValueKind": "String"
                 },
-                "excludeFiles": [
-                  {
-                    "_value": {
-                      "ValueKind": "String"
-                    },
-                    "Value": {
-                      "ValueKind": "String"
-                    },
-                    "Options": null
-                  }
-                ]
+                "Value": {
+                  "ValueKind": "String"
+                },
+                "Options": null
               }
             ],
             "components": {
@@ -3407,26 +3007,13 @@
                 },
                 "environments": [
                   {
-                    "name": {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
+                    "_value": {
+                      "ValueKind": "String"
                     },
-                    "excludeFiles": [
-                      {
-                        "_value": {
-                          "ValueKind": "String"
-                        },
-                        "Value": {
-                          "ValueKind": "String"
-                        },
-                        "Options": null
-                      }
-                    ]
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
                   },
                   {
                     "_value": {
@@ -3438,26 +3025,13 @@
                     "Options": null
                   },
                   {
-                    "name": {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
+                    "_value": {
+                      "ValueKind": "String"
                     },
-                    "excludeFiles": [
-                      {
-                        "_value": {
-                          "ValueKind": "String"
-                        },
-                        "Value": {
-                          "ValueKind": "String"
-                        },
-                        "Options": null
-                      }
-                    ]
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
                   }
                 ],
                 "components": {
@@ -3611,26 +3185,13 @@
                 },
                 "environments": [
                   {
-                    "name": {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
+                    "_value": {
+                      "ValueKind": "String"
                     },
-                    "excludeFiles": [
-                      {
-                        "_value": {
-                          "ValueKind": "String"
-                        },
-                        "Value": {
-                          "ValueKind": "String"
-                        },
-                        "Options": null
-                      }
-                    ]
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
                   },
                   {
                     "_value": {
@@ -3642,26 +3203,13 @@
                     "Options": null
                   },
                   {
-                    "name": {
-                      "_value": {
-                        "ValueKind": "String"
-                      },
-                      "Value": {
-                        "ValueKind": "String"
-                      },
-                      "Options": null
+                    "_value": {
+                      "ValueKind": "String"
                     },
-                    "excludeFiles": [
-                      {
-                        "_value": {
-                          "ValueKind": "String"
-                        },
-                        "Value": {
-                          "ValueKind": "String"
-                        },
-                        "Options": null
-                      }
-                    ]
+                    "Value": {
+                      "ValueKind": "String"
+                    },
+                    "Options": null
                   }
                 ],
                 "components": {
@@ -3801,6 +3349,6 @@
   "Name": "TestProject",
   "Subprojects": null,
   "SourceFiles": [
-    "/var/folders/rq/d9dy7_vd2998bvbx7rljjvt40000gn/T/u3zrqib1.d3y/.confix.project"
+    "/var/folders/rq/d9dy7_vd2998bvbx7rljjvt40000gn/T/yrctznsc.3ha/.confix.project"
   ]
 }

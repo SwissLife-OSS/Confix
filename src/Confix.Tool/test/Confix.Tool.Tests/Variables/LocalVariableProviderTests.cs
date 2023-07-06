@@ -20,7 +20,7 @@ public class LocalVariableProviderTests : IDisposable
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderConfiguration(tmpFilePath));
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
         // act
         var result = await provider.ListAsync(default);
@@ -42,7 +42,7 @@ public class LocalVariableProviderTests : IDisposable
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderConfiguration(tmpFilePath));
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
         // act
         var result = await provider.ResolveAsync("foo", default);
@@ -61,7 +61,7 @@ public class LocalVariableProviderTests : IDisposable
                 "someArray": ["a", "b", "c"]
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderConfiguration(tmpFilePath));
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
         // act
         var result = await provider.ResolveAsync("someArray", default);
@@ -81,7 +81,7 @@ public class LocalVariableProviderTests : IDisposable
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderConfiguration(tmpFilePath));
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
         // act & assert
         await Assert.ThrowsAsync<VariableNotFoundException>(() => provider.ResolveAsync("nonexistent", default));
@@ -98,7 +98,7 @@ public class LocalVariableProviderTests : IDisposable
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderConfiguration(tmpFilePath));
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
         var paths = new List<string> { "foo", "bar" };
 
         // act
@@ -120,7 +120,7 @@ public class LocalVariableProviderTests : IDisposable
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderConfiguration(tmpFilePath));
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
         var paths = new List<string> { "foo", "nonexistent" };
 
         // act & assert

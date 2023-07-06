@@ -13,8 +13,9 @@ public class ComponentBuildPipeline : Pipeline
     {
         builder
             .Use<LoadConfigurationMiddleware>()
-            .UseEnvironment()
-            .UseReadConfigurationFiles()
+            .AddOption(ActiveEnvironmentOption.Instance)
+            .AddOption(OutputFileOption.Instance)
+            .AddOption(EncryptionOption.Instance)
             .UseHandler<IServiceProvider>(InvokeAsync);
     }
 

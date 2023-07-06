@@ -1,9 +1,7 @@
 using System.Text.Json.Nodes;
-using Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-using Confix.Tool;
-using Confix.Tool.Commands.Logging;
+using Confix.Utilities.Azure;
 using Json.Schema;
 
 namespace ConfiX.Variables;
@@ -17,7 +15,11 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     { }
 
     public AzureKeyVaultProvider(AzureKeyVaultProviderConfiguration configuration)
-        : this(new SecretClient(new Uri(configuration.Uri), new DefaultAzureCredential()))
+        : this(AzureKeyVaultProviderDefinition.From(configuration))
+    { }
+
+    public AzureKeyVaultProvider(AzureKeyVaultProviderDefinition definition)
+        : this(new SecretClient(new Uri(definition.Uri), new DefaultAzureCredential()))
     { }
 
     public AzureKeyVaultProvider(SecretClient client)
@@ -25,8 +27,8 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         _client = client;
     }
 
-    public async Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
-    => await HandleKeyVaultException(async () =>
+    public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
+    => KeyVaultExtension.HandleKeyVaultException<IReadOnlyList<string>>(async () =>
     {
         var secrets = new List<string>();
         await foreach (SecretProperties secret in _client.GetPropertiesOfSecretsAsync(cancellationToken))
@@ -36,11 +38,11 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         return secrets;
     });
 
-    public async Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
-    => await HandleKeyVaultException(async () =>
+    public Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
+    => KeyVaultExtension.HandleKeyVaultException<JsonNode>(async () =>
     {
         KeyVaultSecret result = await _client.GetSecretAsync(path.ToKeyVaultCompatiblePath(), cancellationToken: cancellationToken);
-        return JsonValue.Create(result.Value);
+        return JsonValue.Create(result.Value)!;
     });
 
     public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
@@ -48,8 +50,8 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         CancellationToken cancellationToken)
         => paths.ResolveMany(ResolveAsync, cancellationToken);
 
-    public async Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
-    => await HandleKeyVaultException(async () =>
+    public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
+    => KeyVaultExtension.HandleKeyVaultException(async () =>
     {
         if (value.GetSchemaValueType() != SchemaValueType.String)
         {
@@ -58,28 +60,6 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         KeyVaultSecret result = await _client.SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, cancellationToken);
         return result.Name.ToConfixPath();
     });
-
-    public static async Task<T> HandleKeyVaultException<T>(Func<Task<T>> action)
-    {
-        try
-        {
-            return await action();
-        }
-        catch (RequestFailedException ex)
-        {
-            throw new ExitException("Access to Key Vault failed", ex)
-            {
-                Help = "check if you have the required permissions to access the Key Vault"
-            };
-        }
-        catch (AuthenticationFailedException ex)
-        {
-            throw new ExitException("Authentication for Key Vault failed", ex)
-            {
-                Help = $"try running {"az login".AsHighlighted()} to authenticate with Azure"
-            };
-        }
-    }
 
     public ValueTask DisposeAsync()
     {
