@@ -27,7 +27,7 @@ public sealed class AesEncryptionProvider : IEncryptionProvider
         using Aes aes = Aes.Create();
         aes.Key = _client.Key;
         aes.IV = _client.IV;
-        return aes.EncryptCbc(data, _client.IV);
+        return Task.FromResult(aes.EncryptCbc(data, _client.IV));
     }
 
     public Task<byte[]> EncryptAsync(byte[] data, CancellationToken cancellationToken)
@@ -35,6 +35,6 @@ public sealed class AesEncryptionProvider : IEncryptionProvider
         using Aes aes = Aes.Create();
         aes.Key = _client.Key;
         aes.IV = _client.IV;
-        return aes.DecryptCbc(data, _client.IV);
+        return Task.FromResult(aes.DecryptCbc(data, _client.IV));
     }
 }
