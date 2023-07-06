@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text.Json.Nodes;
 
-namespace Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
+namespace Confix.Tool.Middlewares.Encryption.Providers.Aes;
 
 public sealed class AesEncryptionProvider : IEncryptionProvider
 {

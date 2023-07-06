@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using Azure.Identity;
 using Azure.Security.KeyVault.Keys;
 using Azure.Security.KeyVault.Keys.Cryptography;
+using Confix.Tool.Middlewares.Encryption.Providers.Aes;
 using Confix.Utilities.Azure;
 
 namespace Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;

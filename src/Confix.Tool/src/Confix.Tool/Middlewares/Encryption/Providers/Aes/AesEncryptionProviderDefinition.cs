@@ -1,4 +1,4 @@
-namespace Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
+namespace Confix.Tool.Middlewares.Encryption.Providers.Aes;
 
 public sealed record AesEncryptionProviderDefinition(
     byte[] Key,
