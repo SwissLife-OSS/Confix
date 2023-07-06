@@ -8,7 +8,8 @@ public sealed record SecretVariableProviderDefinition(
     string? PublicKey,
     string? PublicKeyPath,
     string? PrivateKey,
-    string? PrivateKeyPath
+    string? PrivateKeyPath,
+    string? Password
 )
 {
     public static SecretVariableProviderDefinition From(SecretVariableProviderConfiguration configuration)
@@ -48,7 +49,8 @@ public sealed record SecretVariableProviderDefinition(
             configuration.PublicKey,
             configuration.PublicKeyPath,
             configuration.PrivateKey,
-            configuration.PrivateKeyPath
+            configuration.PrivateKeyPath,
+            configuration.Password
         );
     }
 }

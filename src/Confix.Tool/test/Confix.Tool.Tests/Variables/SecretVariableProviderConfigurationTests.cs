@@ -77,6 +77,7 @@ public class SecretVariableProviderDefinitionTests
             "PublicKey",
             null,
             "PrivateKey",
+            null,
             null);
 
         // Act
@@ -96,6 +97,7 @@ public class SecretVariableProviderDefinitionTests
             "PublicKey",
             null,
             "PrivateKey",
+            null,
             null);
 
         // Act
@@ -116,6 +118,7 @@ public class SecretVariableProviderDefinitionTests
             "PublicKey",
             null,
             "PrivateKey",
+            null,
             null);
 
         // Act
@@ -136,6 +139,7 @@ public class SecretVariableProviderDefinitionTests
             "PublicKey",
             "PublicKeyPath",
             "PrivateKey",
+            null,
             null);
 
         // Act
@@ -156,7 +160,8 @@ public class SecretVariableProviderDefinitionTests
             "PublicKey",
             null,
             "PrivateKey",
-            "PrivateKeyPath");
+            "PrivateKeyPath",
+            null);
 
         // Act
         var exception = Assert.Throws<ValidationException>(() => SecretVariableProviderDefinition.From(configuration));
