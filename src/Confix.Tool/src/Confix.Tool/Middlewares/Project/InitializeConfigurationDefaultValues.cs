@@ -27,7 +27,7 @@ public sealed class InitializeConfigurationDefaultValues : IMiddleware
 
         var configuration = context.Features.Get<ConfigurationFeature>();
 
-        configuration.EnsureProjectScope(); 
+        configuration.EnsureProjectScope();
 
         var project = configuration.EnsureProject();
         var solution = configuration.EnsureSolution();
@@ -44,11 +44,7 @@ public sealed class InitializeConfigurationDefaultValues : IMiddleware
                 continue;
             }
 
-
-            foreach (var e in jsonSchema.GetProperties())
-            {
-            //    e.Value.Def
-            }
+            file.Content = DefaultValueVisitor.ApplyDefaults(jsonSchema, content);
         }
     }
 
