@@ -28,6 +28,9 @@ public sealed class AesEncryptionProvider : IEncryptionProvider
         using var aes = AES.Create();
         aes.Key = _client.Key;
         aes.IV = _client.IV;
+        aes.Padding = PaddingMode.PKCS7;
+        aes.Mode = CipherMode.CBC;
+        
         using var ms = new MemoryStream();
         using var cs = new CryptoStream(ms, aes.CreateDecryptor(aes.Key, aes.IV), CryptoStreamMode.Write);
         await cs.WriteAsync(data, cancellationToken);
@@ -42,6 +45,7 @@ public sealed class AesEncryptionProvider : IEncryptionProvider
         aes.IV = _client.IV;
         aes.Padding = PaddingMode.PKCS7;
         aes.Mode = CipherMode.CBC;
+
         using var ms = new MemoryStream();
         using var cs = new CryptoStream(ms, aes.CreateEncryptor(aes.Key, aes.IV), CryptoStreamMode.Write);
         await cs.WriteAsync(data, cancellationToken);
