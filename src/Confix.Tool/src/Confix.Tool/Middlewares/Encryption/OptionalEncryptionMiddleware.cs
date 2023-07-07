@@ -16,10 +16,7 @@ public class OptionalEncryptionMiddleware : IMiddleware
         ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
         if (configurationFeature.Encryption is not null)
         {
-            EnvironmentFeature environmentFeature = context.Features.Get<EnvironmentFeature>();
-            string environmentName = environmentFeature.ActiveEnvironment.Name;
-
-            var configuration = GetProviderConfiguration(configurationFeature, environmentName);
+            var configuration = GetProviderConfiguration(configurationFeature);
             var provider = _encryptionProviderFactory.CreateProvider(configuration);
 
             EncryptionFeature feature = new(provider);
@@ -29,8 +26,7 @@ public class OptionalEncryptionMiddleware : IMiddleware
     }
 
     private static EncryptionProviderConfiguration GetProviderConfiguration(
-        ConfigurationFeature configurationFeature,
-        string environmentName)
+        ConfigurationFeature configurationFeature)
     {
         if (configurationFeature.Encryption is null)
         {
@@ -41,7 +37,7 @@ public class OptionalEncryptionMiddleware : IMiddleware
         return new EncryptionProviderConfiguration
         {
             Type = providerDefinition.Type,
-            Configuration = providerDefinition.ValueWithOverrides(environmentName)
+            Configuration = providerDefinition.Value
         };
     }
 }

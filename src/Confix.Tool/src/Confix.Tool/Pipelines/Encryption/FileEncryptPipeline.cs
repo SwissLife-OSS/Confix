@@ -13,7 +13,6 @@ public sealed class FileEncryptPipeline : Pipeline
     {
         builder
             .Use<LoadConfigurationMiddleware>()
-            .UseEnvironment()
             .Use<EncryptionMiddleware>()
             .AddArgument(InputFileArgument.Instance)
             .AddArgument(OutputFileArgument.Instance)
