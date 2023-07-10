@@ -15,6 +15,7 @@ public class ComponentBuildPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .AddOption(ActiveEnvironmentOption.Instance)
             .AddOption(OutputFileOption.Instance)
+            .AddOption(EncryptionOption.Instance)
             .UseHandler(InvokeAsync);
     }
 

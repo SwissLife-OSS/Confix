@@ -60,12 +60,23 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
             ? SolutionDefinition.From(fileCollection.Solution)
             : null;
 
-        return new ConfigurationFeature(
+        var encryptionDefinition = fileCollection.RuntimeConfiguration?.Encryption is not null
+            ? EncryptionDefinition.From(fileCollection.RuntimeConfiguration.Encryption)
+            : null;
+
+        var feature = new ConfigurationFeature(
             scope,
             fileCollection,
             projectDefinition,
             componentDefinition,
-            solutionDefinition);
+            solutionDefinition,
+            encryptionDefinition);
+
+        context.Features.Set(feature);
+
+        context.Logger.ConfigurationLoaded();
+
+        return next(context);
     }
 
     private static IConfigurationFileCollection CreateFileCollection(

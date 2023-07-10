@@ -32,7 +32,7 @@ public sealed class VariableSetPipeline : Pipeline
                 .SetVariable(
                     parsed.Value.ProviderName,
                     parsed.Value.Path,
-                    JsonValue.Create(variableValue),
+                    JsonValue.Create(variableValue)!,
                     context.CancellationToken);
 
             context.Logger.VariableSet(result);

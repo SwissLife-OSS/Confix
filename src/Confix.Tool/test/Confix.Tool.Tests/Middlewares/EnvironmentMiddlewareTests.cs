@@ -34,6 +34,7 @@ public class EnvironmentMiddlewareTests
                 null
             ),
             null,
+            null,
             null
         );
         featureCollection.Set(configurationFeature);
@@ -81,6 +82,7 @@ public class EnvironmentMiddlewareTests
                 null
             ),
             null,
+            null,
             null
         );
         featureCollection.Set(configurationFeature);
@@ -126,6 +128,7 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<ProjectDefinition>(),
                 null
             ),
+            null,
             null,
             null
         );
@@ -176,6 +179,7 @@ public class EnvironmentMiddlewareTests
                 null
             ),
             null,
+            null,
             null
         );
         featureCollection.Set(configurationFeature);
@@ -224,6 +228,7 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<ProjectDefinition>(),
                 null
             ),
+            null,
             null,
             null
         );

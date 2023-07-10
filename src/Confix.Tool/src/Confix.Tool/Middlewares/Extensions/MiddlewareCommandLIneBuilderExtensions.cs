@@ -1,7 +1,10 @@
 using System.CommandLine.Builder;
 using Confix.Tool.Entities.Components;
+using Confix.Tool.Entities.Components.DotNet;
+using Confix.Tool.Middlewares.Encryption;
 using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Middlewares.Project;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Middlewares;
 
@@ -18,7 +21,8 @@ public static class MiddlewareCommandLineBuilderExtensions
             .RegisterComponentProviders()
             .RegisterConfigurationAdapters()
             .RegisterJsonSchemaCollectionMiddleware()
-            .RegisterVariableMiddleware();
+            .RegisterVariableMiddleware()
+            .RegisterEncryptionMiddleware();
 
         return builder;
     }

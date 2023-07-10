@@ -43,6 +43,13 @@ public static class FileInfoExtensions
         return File.ReadAllTextAsync(fileInfo.FullName, cancellationToken);
     }
 
+    public static Task<byte[]> ReadAllBytes(
+        this FileInfo fileInfo,
+        CancellationToken cancellationToken)
+    {
+        return File.ReadAllBytesAsync(fileInfo.FullName, cancellationToken);
+    }
+
     public static string RelativeTo(this FileInfo fileInfo, DirectoryInfo directoryInfo)
     {
         return Path.GetRelativePath(directoryInfo.FullName, fileInfo.FullName);

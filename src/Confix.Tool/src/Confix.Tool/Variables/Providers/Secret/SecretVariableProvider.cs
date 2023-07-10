@@ -61,13 +61,31 @@ public sealed class SecretVariableProvider : IVariableProvider
     {
         using RSA rsa = RSA.Create();
         rsa.ImportFromPem(publicKey);
+
         return rsa.Encrypt(valueToEncrypt, Padding);
     }
 
     private byte[] Decrypt(ReadOnlySpan<byte> encryptedValue, ReadOnlySpan<char> privateKey)
     {
         using RSA rsa = RSA.Create();
-        rsa.ImportFromPem(privateKey);
+        if (_definition.Password is not null)
+        {
+            try
+            {
+                rsa.ImportFromEncryptedPem(privateKey, _definition.Password);
+            }
+            catch (CryptographicException)
+            {
+                throw new ExitException("Invalid password for private key")
+                {
+                    Help = "Make sure the password is correct and the private key is encrypted"
+                };
+            }
+        }
+        else
+        {
+            rsa.ImportFromPem(privateKey);
+        }
         return rsa.Decrypt(encryptedValue, Padding);
     }
 

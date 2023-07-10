@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.CommandLine.Parsing;
 
 namespace Confix.Tool.Common.Pipelines;
 
@@ -44,9 +45,17 @@ public static class ParameterCollectionExtensions
         Argument<T> argument,
         out T value)
     {
-        if (collection.TryGet(argument, out object? val) && val is T valueOfT)
+        collection.TryGet(argument, out object? val);
+        
+        if (val is T valueOfT)
         {
             value = valueOfT;
+            return true;
+        }
+        
+        if (val is Token { Type: TokenType.Argument } token)
+        {
+            value = (T)Activator.CreateInstance(typeof(T), token.Value)!;
             return true;
         }
 
