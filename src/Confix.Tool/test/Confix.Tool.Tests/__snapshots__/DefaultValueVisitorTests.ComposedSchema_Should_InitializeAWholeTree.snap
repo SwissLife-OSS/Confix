@@ -1,0 +1,10 @@
+﻿{
+  "Foo": {
+    "deep": {
+      "required": null,
+      "deeper": {
+        "required": null
+      }
+    }
+  }
+}

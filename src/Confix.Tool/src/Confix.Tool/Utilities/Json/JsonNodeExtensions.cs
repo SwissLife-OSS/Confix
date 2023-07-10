@@ -36,12 +36,7 @@ public static class JsonNodeExtensions
 
             (JsonArray sourceArray, JsonArray nodeArray) => Merge(sourceArray, nodeArray),
 
-            (JsonValue sourceValue, JsonValue nodeValue) =>
-                throw new InvalidOperationException($"""
-                    Cannot merge values:
-                    Source: {sourceValue.ToJsonString()}
-                    Node: {nodeValue.ToJsonString()}
-                """),
+            (_, JsonValue nodeValue) => nodeValue,
             _ => throw new InvalidOperationException($"""
                     Cannot merge nodes of different types:
                     Source: {source.GetSchemaValueType()}
@@ -77,7 +72,14 @@ public static class JsonNodeExtensions
 
         foreach (var (key, value) in node)
         {
-            obj[key] = value.Copy();
+            if (obj.TryGetPropertyValue(key, out var existingValue))
+            {
+                obj[key] = existingValue.Merge(value.Copy());
+            }
+            else
+            {
+                obj[key] = value.Copy();
+            }
         }
 
         return obj;

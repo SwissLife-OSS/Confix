@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildProjectDirectory)/Components/**/*.*"/>
+    <EmbeddedResource Include="$(MSBuildProjectDirectory)/Components/**/*.*" />
   </ItemGroup>
 
   <ItemGroup>

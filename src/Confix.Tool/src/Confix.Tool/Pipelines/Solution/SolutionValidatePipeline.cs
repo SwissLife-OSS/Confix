@@ -14,10 +14,10 @@ public sealed class SolutionValidatePipeline : Pipeline
     {
         builder
             .Use<LoadConfigurationMiddleware>()
-            .UseHandler<IServiceProvider>(InvokeAsync);
+            .UseHandler(InvokeAsync);
     }
 
-    private static async Task InvokeAsync(IMiddlewareContext context, IServiceProvider services)
+    private static async Task InvokeAsync(IMiddlewareContext context)
     {
         context.SetStatus("Validating all projects in the solution...");
 
@@ -36,7 +36,7 @@ public sealed class SolutionValidatePipeline : Pipeline
                 .WithExecutingDirectory(projectDirectory)
                 .WithFeatureCollection();
 
-            await pipeline.ExecuteAsync(services, projectContext);
+            await pipeline.ExecuteAsync(projectContext);
         }
     }
 }

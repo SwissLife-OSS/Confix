@@ -16,10 +16,10 @@ public class ComponentBuildPipeline : Pipeline
             .AddOption(ActiveEnvironmentOption.Instance)
             .AddOption(OutputFileOption.Instance)
             .AddOption(EncryptionOption.Instance)
-            .UseHandler<IServiceProvider>(InvokeAsync);
+            .UseHandler(InvokeAsync);
     }
 
-    private static async Task InvokeAsync(IMiddlewareContext context, IServiceProvider services)
+    private static async Task InvokeAsync(IMiddlewareContext context)
     {
         context.SetStatus("Building the schema of the project...");
 
@@ -39,7 +39,7 @@ public class ComponentBuildPipeline : Pipeline
                 var projectContext = context
                     .WithExecutingDirectory(projectDirectory);
 
-                await pipeline.ExecuteAsync(services, projectContext);
+                await pipeline.ExecuteAsync(projectContext);
                 return;
             }
 
@@ -50,7 +50,7 @@ public class ComponentBuildPipeline : Pipeline
                 var projectContext = context
                     .WithExecutingDirectory(projectDirectory);
 
-                await pipeline.ExecuteAsync(services, projectContext);
+                await pipeline.ExecuteAsync(projectContext);
                 return;
             }
 
@@ -61,7 +61,7 @@ public class ComponentBuildPipeline : Pipeline
                 var solutionContext = context
                     .WithExecutingDirectory(solutionDirectory);
 
-                await pipeline.ExecuteAsync(services, solutionContext);
+                await pipeline.ExecuteAsync(solutionContext);
                 return;
             }
 

@@ -3,7 +3,8 @@
   "properties": {
     "Mode": {
       "$ref": "#/$defs/String",
-      "deprecated": false
+      "deprecated": false,
+      "default": "Secure"
     },
     "Storage": {
       "$ref": "#/$defs/DpStorageConfiguration",
@@ -33,7 +34,8 @@
       "properties": {
         "Mode": {
           "$ref": "#/$defs/String",
-          "deprecated": false
+          "deprecated": false,
+          "default": "Secure"
         },
         "Storage": {
           "$ref": "#/$defs/DpStorageConfiguration",
@@ -107,6 +109,10 @@
       "type": "boolean",
       "hasVariable": true,
       "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
+    },
+    "JSON": {
+      "type": "string",
+      "hasVariable": true
     }
   }
 }

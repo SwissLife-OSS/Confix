@@ -83,6 +83,22 @@ public static class ConsoleLoggerExtensions
 
         logger.Log(ref loggerMessage);
     }
+    
+    public static void Inform(
+        this IConsoleLogger logger,
+        [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message,
+        params object[] arguments)
+    {
+        ILoggerMessage loggerMessage = new DefaultLoggerMessage
+        {
+            Template = message,
+            Arguments = arguments,
+            Verbosity = Verbosity.Normal,
+            Glyph = Glyph.Information
+        };
+
+        logger.Log(ref loggerMessage);
+    }
 
     public static void Error(
         this IConsoleLogger logger,

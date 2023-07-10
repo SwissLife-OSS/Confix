@@ -64,4 +64,9 @@ public interface IMiddlewareContext
     /// The context of the spinner. This can be used to update the spinner message.
     /// </summary>
     IStatus Status { get; }
+
+    /// <summary>
+    /// The service provider for the current pipeline execution.
+    /// </summary>
+    IServiceProvider Services { get; }
 }

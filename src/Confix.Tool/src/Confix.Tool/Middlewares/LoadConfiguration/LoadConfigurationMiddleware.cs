@@ -22,8 +22,20 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
 
         context.SetStatus("Loading configuration...");
 
-        var configurationFiles = context.LoadConfigurationFiles(context.CancellationToken).ToBlockingEnumerable();
-        var configurationFilesWithReplacedMagicStrings = ReplaceMagicStrings(context, configurationFiles);
+        var configurationFeature = LoadConfiguration(context);
+        context.Features.Set(configurationFeature);
+
+        context.Logger.ConfigurationLoaded();
+
+        return next(context);
+    }
+
+    private static ConfigurationFeature LoadConfiguration(IMiddlewareContext context)
+    {
+        var configurationFiles = context.LoadConfigurationFiles(context.CancellationToken)
+            .ToBlockingEnumerable();
+        var configurationFilesWithReplacedMagicStrings =
+            ReplaceMagicStrings(context, configurationFiles);
         var fileCollection = CreateFileCollection(configurationFilesWithReplacedMagicStrings);
 
         var scope = fileCollection.LastOrDefault()?.File.Name switch
@@ -52,22 +64,17 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
             ? EncryptionDefinition.From(fileCollection.RuntimeConfiguration.Encryption)
             : null;
 
-        var feature = new ConfigurationFeature(
+        return new ConfigurationFeature(
             scope,
             fileCollection,
             projectDefinition,
             componentDefinition,
             solutionDefinition,
             encryptionDefinition);
-
-        context.Features.Set(feature);
-
-        context.Logger.ConfigurationLoaded();
-
-        return next(context);
     }
 
-    private static IConfigurationFileCollection CreateFileCollection(IEnumerable<JsonFile> configurationFiles)
+    private static IConfigurationFileCollection CreateFileCollection(
+        IEnumerable<JsonFile> configurationFiles)
     {
         var files = new List<JsonFile>(configurationFiles);
 
@@ -114,16 +121,18 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         IMiddlewareContext middlewareContext,
         IEnumerable<JsonFile> configurationFiles)
     {
-        var solutionFile = configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixSolution);
-        var projectFile = configurationFiles.FirstOrDefault(x => x.File.Name == FileNames.ConfixProject);
+        var solutionFile = configurationFiles
+            .FirstOrDefault(x => x.File.Name == FileNames.ConfixSolution);
+        var projectFile = configurationFiles
+            .FirstOrDefault(x => x.File.Name == FileNames.ConfixProject);
 
         foreach (var file in configurationFiles)
         {
             MagicPathContext context = new(
-                    middlewareContext.Execution.CurrentDirectory,
-                    solutionFile?.File.Directory,
-                    projectFile?.File.Directory,
-                    file.File.Directory!);
+                middlewareContext.Execution.CurrentDirectory,
+                solutionFile?.File.Directory,
+                projectFile?.File.Directory,
+                file.File.Directory!);
 
             var rewritten = new MagicPathRewriter().Rewrite(file.Content, context);
 
@@ -271,4 +280,3 @@ file static class Log
     public static void ConfigurationLoaded(this IConsoleLogger logger)
         => logger.Success("Configuration loaded");
 }
-
