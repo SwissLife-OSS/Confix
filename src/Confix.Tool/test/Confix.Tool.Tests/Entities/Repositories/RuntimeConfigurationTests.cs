@@ -6,7 +6,7 @@ using Confix.Tool.Middlewares;
 
 namespace ConfiX.Entities.Component.Configuration;
 
-public class RuntimeConfigurationTest : ParserTestBase
+public class RuntimeConfigurationTests : ParserTestBase
 {
     [Fact]
     public void Parse_Should_BeValid()
@@ -20,7 +20,12 @@ public class RuntimeConfigurationTest : ParserTestBase
                 "component": {
                    "name": "TestComponent"
                 },
-                "isRoot": true
+                "isRoot": true,
+                "encryption": {
+                    "provider": {
+                        "type": "TestProvider"
+                    }
+                }
             }
             """);
     }

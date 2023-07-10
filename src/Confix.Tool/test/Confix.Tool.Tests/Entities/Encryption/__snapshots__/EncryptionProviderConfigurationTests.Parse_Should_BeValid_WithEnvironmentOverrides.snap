@@ -1,0 +1,16 @@
+﻿{
+  "Type": "test",
+  "EnvironmentOverrides": {
+    "test": {
+      "type": "test"
+    }
+  },
+  "Values": {
+    "type": "test",
+    "environmentOverride": {
+      "test": {
+        "type": "test"
+      }
+    }
+  }
+}

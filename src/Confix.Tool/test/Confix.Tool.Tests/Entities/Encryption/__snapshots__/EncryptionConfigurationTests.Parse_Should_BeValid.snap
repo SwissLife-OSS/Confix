@@ -1,0 +1,9 @@
+﻿{
+  "Provider": {
+    "Type": "test",
+    "EnvironmentOverrides": null,
+    "Values": {
+      "type": "test"
+    }
+  }
+}

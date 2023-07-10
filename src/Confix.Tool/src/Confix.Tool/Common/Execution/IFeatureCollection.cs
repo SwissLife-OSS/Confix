@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Confix.Tool.Common.Pipelines;
 
 /// <summary>
@@ -33,5 +35,5 @@ public interface IFeatureCollection
     /// <typeparam name="TFeature">The type of the feature to retrieve.</typeparam>
     /// <param name="instance">An out parameter to hold the retrieved feature instance if it exists.</param>
     /// <returns>True if the feature exists in the collection, false otherwise.</returns>
-    public bool TryGet<TFeature>(out TFeature instance);
+    public bool TryGet<TFeature>([NotNullWhen(true)] out TFeature? instance);
 }
