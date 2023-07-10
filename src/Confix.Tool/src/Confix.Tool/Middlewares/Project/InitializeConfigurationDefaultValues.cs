@@ -5,6 +5,7 @@ using Confix.Tool.Commands.Solution;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Schema;
+using Confix.Utilities.Json;
 using Json.Schema;
 
 namespace Confix.Tool.Middlewares.Project;
@@ -44,8 +45,16 @@ public sealed class InitializeConfigurationDefaultValues : IMiddleware
                 continue;
             }
 
-            file.Content = DefaultValueVisitor.ApplyDefaults(jsonSchema, content);
+            content = DefaultValueVisitor.ApplyDefaults(jsonSchema, content);
+
+            context.Logger.PersistingConfigurationFile(file);
+
+            // we ensure to replace the input file as we want to add the properties
+            await using var stream = file.InputFile.OpenReplacementStream();
+            await content.SerializeToStreamAsync(stream, context.CancellationToken);
         }
+
+        await next(context);
     }
 
     private async Task<JsonSchema> GetJsonSchema(
@@ -87,7 +96,15 @@ file static class Log
         this IConsoleLogger console,
         ProjectDefinition project)
     {
-        console.Debug(
-            $"Loaded schema from cache for project:{project.Name.ToLink(project.Directory!)}");
+        console.Inform(
+            $"Loaded schema from [bold]cache[/] for project {project.Name.ToLink(project.Directory!)}");
+    }
+
+    public static void PersistingConfigurationFile(
+        this IConsoleLogger console,
+        ConfigurationFile file)
+    {
+        console.Information($"Persisting configuration file {file.OutputFile.ToLink()}");
+        console.Debug($" -> {file.OutputFile.FullName}");
     }
 }

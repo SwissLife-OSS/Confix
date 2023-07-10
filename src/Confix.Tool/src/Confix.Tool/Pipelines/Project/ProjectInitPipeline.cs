@@ -12,9 +12,8 @@ public sealed class ProjectInitPipeline : Pipeline
         builder
             .Use<LoadConfigurationMiddleware>()
             .Use<InitProjectMiddleware>()
-            .UseCompleteWhenNoConfigurationFiles()
             .UseReadConfigurationFiles()
-            .Use<InitializeConfigurationDefaultValues>()
-            .UseWriteConfigurationFiles();
+            .UseCompleteWhenNoConfigurationFiles()
+            .Use<InitializeConfigurationDefaultValues>();
     }
 }

@@ -27,7 +27,7 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
             await using var stream = file.OutputFile.OpenReplacementStream();
             await file.Content.SerializeToStreamAsync(stream, context.CancellationToken);
         }
-        
+
         await next(context);
     }
 }

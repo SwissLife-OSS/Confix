@@ -5,7 +5,8 @@
       "properties": {
         "Authority": {
           "$ref": "#/$defs/Security_String",
-          "deprecated": false
+          "deprecated": false,
+          "default": "$shared:shared.authority"
         },
         "OpenIdConnectClient": {
           "anyOf": [
@@ -86,7 +87,9 @@
           "deprecated": false
         }
       },
-      "required": ["Authority"],
+      "required": [
+        "Authority"
+      ],
       "additionalProperties": false
     },
     "Security_OpenIdConnectClient": {
@@ -101,7 +104,10 @@
           "deprecated": false
         }
       },
-      "required": ["ClientId", "Secret"],
+      "required": [
+        "ClientId",
+        "Secret"
+      ],
       "additionalProperties": false
     },
     "Security_Authorization": {
@@ -112,7 +118,9 @@
           "deprecated": false
         }
       },
-      "required": ["PathPolicy"],
+      "required": [
+        "PathPolicy"
+      ],
       "additionalProperties": false
     },
     "Security_PathPolicy": {
@@ -208,7 +216,9 @@
           "deprecated": false
         }
       },
-      "required": ["Path"],
+      "required": [
+        "Path"
+      ],
       "additionalProperties": false
     },
     "Security_Requirement": {
@@ -382,7 +392,9 @@
           "deprecated": false
         }
       },
-      "required": ["Name"],
+      "required": [
+        "Name"
+      ],
       "additionalProperties": false
     },
     "Security_HttpClient": {
@@ -440,21 +452,17 @@
           "deprecated": false
         }
       },
-      "required": ["Name", "Url"],
+      "required": [
+        "Name",
+        "Url"
+      ],
       "additionalProperties": false
     },
     "Security_HttpClientAuthentication": {
       "type": "object",
       "properties": {
         "Mode": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Security_String"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/Security_String",
           "deprecated": false
         },
         "TokenClientName": {
@@ -530,7 +538,9 @@
           "deprecated": false
         }
       },
-      "required": ["Mode"],
+      "required": [
+        "Mode"
+      ],
       "additionalProperties": false
     },
     "Security_CustomHeader": {
@@ -545,7 +555,10 @@
           "deprecated": false
         }
       },
-      "required": ["Name", "Value"],
+      "required": [
+        "Name",
+        "Value"
+      ],
       "additionalProperties": false
     },
     "Security_String": {
@@ -572,11 +585,23 @@
         }
       ]
     },
+    "Security_JSON": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true
+        }
+      ]
+    },
     "Security": {
       "properties": {
         "Authority": {
           "$ref": "#/$defs/Security_String",
-          "deprecated": false
+          "deprecated": false,
+          "default": "$shared:shared.authority"
         },
         "OpenIdConnectClient": {
           "anyOf": [
@@ -657,7 +682,9 @@
           "deprecated": false
         }
       },
-      "required": ["Authority"],
+      "required": [
+        "Authority"
+      ],
       "additionalProperties": false,
       "examples": [],
       "title": ""
@@ -667,7 +694,8 @@
       "properties": {
         "Mode": {
           "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
+          "deprecated": false,
+          "default": "Secure"
         },
         "Storage": {
           "$ref": "#/$defs/DataProtection_DpStorageConfiguration",
@@ -685,7 +713,10 @@
           "deprecated": false
         }
       },
-      "required": ["Mode", "Storage"],
+      "required": [
+        "Mode",
+        "Storage"
+      ],
       "additionalProperties": false
     },
     "DataProtection_DpStorageConfiguration": {
@@ -700,7 +731,10 @@
           "deprecated": false
         }
       },
-      "required": ["ConnectionString", "Path"],
+      "required": [
+        "ConnectionString",
+        "Path"
+      ],
       "additionalProperties": false
     },
     "DataProtection_DpKeyVaultConfiguration": {
@@ -719,7 +753,11 @@
           "deprecated": false
         }
       },
-      "required": ["ClientId", "Secret", "KeyUrl"],
+      "required": [
+        "ClientId",
+        "Secret",
+        "KeyUrl"
+      ],
       "additionalProperties": false
     },
     "DataProtection_String": {
@@ -746,11 +784,23 @@
         }
       ]
     },
+    "DataProtection_JSON": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true
+        }
+      ]
+    },
     "DataProtection": {
       "properties": {
         "Mode": {
           "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
+          "deprecated": false,
+          "default": "Secure"
         },
         "Storage": {
           "$ref": "#/$defs/DataProtection_DpStorageConfiguration",
@@ -768,7 +818,10 @@
           "deprecated": false
         }
       },
-      "required": ["Mode", "Storage"],
+      "required": [
+        "Mode",
+        "Storage"
+      ],
       "additionalProperties": false,
       "examples": [],
       "title": ""
@@ -785,7 +838,10 @@
               "type": "null"
             }
           ],
-          "deprecated": false
+          "deprecated": false,
+          "default": {
+            "Foo": "bar"
+          }
         }
       },
       "required": [],
@@ -799,7 +855,9 @@
           "deprecated": false
         }
       },
-      "required": ["Foo"],
+      "required": [
+        "Foo"
+      ],
       "additionalProperties": false
     },
     "Other_String": {
@@ -826,6 +884,17 @@
         }
       ]
     },
+    "Other_JSON": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true
+        }
+      ]
+    },
     "Other": {
       "properties": {
         "Other": {
@@ -837,7 +906,10 @@
               "type": "null"
             }
           ],
-          "deprecated": false
+          "deprecated": false,
+          "default": {
+            "Foo": "bar"
+          }
         }
       },
       "required": [],
@@ -847,7 +919,10 @@
     },
     "Confix_Variables": {
       "type": "string",
-      "enum": ["$local:foo.bar", "$local:test"]
+      "enum": [
+        "$local:foo.bar",
+        "$local:test"
+      ]
     }
   },
   "properties": {
@@ -861,5 +936,9 @@
       "$ref": "#/$defs/Other"
     }
   },
-  "required": ["Security", "DataProtection", "Other"]
+  "required": [
+    "Security",
+    "DataProtection",
+    "Other"
+  ]
 }

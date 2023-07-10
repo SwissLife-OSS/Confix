@@ -36,12 +36,7 @@ public static class JsonNodeExtensions
 
             (JsonArray sourceArray, JsonArray nodeArray) => Merge(sourceArray, nodeArray),
 
-            (JsonValue sourceValue, JsonValue nodeValue) =>
-                throw new InvalidOperationException($"""
-                    Cannot merge values:
-                    Source: {sourceValue.ToJsonString()}
-                    Node: {nodeValue.ToJsonString()}
-                """),
+            (_, JsonValue nodeValue) => nodeValue,
             _ => throw new InvalidOperationException($"""
                     Cannot merge nodes of different types:
                     Source: {source.GetSchemaValueType()}
