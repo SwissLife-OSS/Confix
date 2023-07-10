@@ -154,7 +154,11 @@ public class ComponentConfigurationTests : ParserTestBase
     public async Task LoadFromFiles_Should_LoadFromFileAsync()
     {
         // Arrange
-        var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixComponent);
+        var confixRcPath = Path
+            .Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixComponent);
+        
+        new FileInfo(confixRcPath).Directory!.Create();
+        
         await File.WriteAllTextAsync(
             confixRcPath,
             """
@@ -186,7 +190,11 @@ public class ComponentConfigurationTests : ParserTestBase
     public async Task LoadFromFiles_Should_OnlyLoadComponentAsync()
     {
         // Arrange
-        var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixProject);
+        var confixRcPath = Path
+            .Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixProject);
+        
+        new FileInfo(confixRcPath).Directory!.Create();
+        
         await File.WriteAllTextAsync(
             confixRcPath,
             """
@@ -199,7 +207,7 @@ public class ComponentConfigurationTests : ParserTestBase
 
         var configuration = new List<JsonFile>
         {
-           await JsonFile.FromFile(new(confixRcPath), default)
+            await JsonFile.FromFile(new(confixRcPath), default)
         };
 
         // Act
