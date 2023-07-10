@@ -73,7 +73,8 @@ public sealed class PipelineExecutor
                 Console = _services.GetRequiredService<IAnsiConsole>(),
                 Logger = _services.GetRequiredService<IConsoleLogger>(),
                 Execution = ExecutionContext.Create(),
-                Status = new SpectreStatusContext(ctx)
+                Status = new SpectreStatusContext(ctx),
+                Services = _services
             };
 
             await _pipeline(context);

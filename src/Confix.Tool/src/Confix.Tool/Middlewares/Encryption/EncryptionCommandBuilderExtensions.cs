@@ -1,5 +1,6 @@
 using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
+using Confix.Tool.Middlewares.Encryption.Providers.Aes;
 using Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,7 @@ public static class EncryptionCommandBuilderExtensions
     {
         builder.AddDefaultVariableProviders();
         builder.AddTransient(sp
-            => new OptionalEncryptionMiddleware(sp.GetRequiredService<IEncryptionProviderFactory>()));      
+            => new OptionalEncryptionMiddleware(sp.GetRequiredService<IEncryptionProviderFactory>()));
         builder.AddTransient(sp
             => new EncryptionMiddleware(sp.GetRequiredService<IEncryptionProviderFactory>()));
 
@@ -25,6 +26,9 @@ public static class EncryptionCommandBuilderExtensions
         builder.AddEncryptionProvider(
             AzureKeyVaultEncryptionProvider.Type,
             (config) => new AzureKeyVaultEncryptionProvider(config));
+        builder.AddEncryptionProvider(
+            AesEncryptionProvider.Type,
+            (config) => new AesEncryptionProvider(config));
 
         return builder;
     }

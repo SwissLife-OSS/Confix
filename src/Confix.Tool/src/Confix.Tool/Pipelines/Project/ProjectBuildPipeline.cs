@@ -1,4 +1,3 @@
-using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Middlewares.Project;

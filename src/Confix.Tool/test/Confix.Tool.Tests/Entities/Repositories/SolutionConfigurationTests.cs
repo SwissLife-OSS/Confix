@@ -132,7 +132,11 @@ public class SolutionConfigurationTests : ParserTestBase
     public async Task LoadFromFiles_Should_LoadSolutionConfigurationFromFileAsync()
     {
         // Arrange
-        var confixRcPath = Path.Combine(Path.GetTempPath(), FileNames.ConfixSolution);
+        var confixRcPath = Path
+            .Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixSolution);
+        
+        new FileInfo(confixRcPath).Directory!.Create();
+        
         await File.WriteAllTextAsync(confixRcPath,
             """
                 {

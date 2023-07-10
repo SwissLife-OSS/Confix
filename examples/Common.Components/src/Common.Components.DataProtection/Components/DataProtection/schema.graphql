@@ -1,5 +1,5 @@
 type Configuration {
-  Mode: String!
+  Mode: String! @defaultValue(value: "Secure")
   Storage: DpStorageConfiguration!
   KeyVault: DpKeyVaultConfiguration
 }

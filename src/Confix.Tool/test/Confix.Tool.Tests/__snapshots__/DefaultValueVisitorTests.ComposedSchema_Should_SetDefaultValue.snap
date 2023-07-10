@@ -1,0 +1,8 @@
+﻿{
+  "Foo": {
+    "required": "bar"
+  },
+  "Bar": {
+    "nonRequired": "bar"
+  }
+}

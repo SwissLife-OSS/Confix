@@ -5,7 +5,8 @@
       "properties": {
         "Authority": {
           "$ref": "#/$defs/Security_String",
-          "deprecated": false
+          "deprecated": false,
+          "default": "$shared:shared.authority"
         },
         "OpenIdConnectClient": {
           "anyOf": [
@@ -584,11 +585,23 @@
         }
       ]
     },
+    "Security_JSON": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true
+        }
+      ]
+    },
     "Security": {
       "properties": {
         "Authority": {
           "$ref": "#/$defs/Security_String",
-          "deprecated": false
+          "deprecated": false,
+          "default": "$shared:shared.authority"
         },
         "OpenIdConnectClient": {
           "anyOf": [
@@ -681,7 +694,8 @@
       "properties": {
         "Mode": {
           "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
+          "deprecated": false,
+          "default": "Secure"
         },
         "Storage": {
           "$ref": "#/$defs/DataProtection_DpStorageConfiguration",
@@ -770,11 +784,23 @@
         }
       ]
     },
+    "DataProtection_JSON": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true
+        }
+      ]
+    },
     "DataProtection": {
       "properties": {
         "Mode": {
           "$ref": "#/$defs/DataProtection_String",
-          "deprecated": false
+          "deprecated": false,
+          "default": "Secure"
         },
         "Storage": {
           "$ref": "#/$defs/DataProtection_DpStorageConfiguration",
@@ -812,7 +838,10 @@
               "type": "null"
             }
           ],
-          "deprecated": false
+          "deprecated": false,
+          "default": {
+            "Foo": "bar"
+          }
         }
       },
       "required": [],
@@ -855,6 +884,17 @@
         }
       ]
     },
+    "Other_JSON": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true
+        }
+      ]
+    },
     "Other": {
       "properties": {
         "Other": {
@@ -866,7 +906,10 @@
               "type": "null"
             }
           ],
-          "deprecated": false
+          "deprecated": false,
+          "default": {
+            "Foo": "bar"
+          }
         }
       },
       "required": [],

@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Schema;
+using Confix.Utilities.Json;
 using ConfiX.Variables;
 using Json.Schema;
 
@@ -9,9 +10,14 @@ namespace Confix.Tool.Entities.Components.DotNet;
 public sealed class ProjectComposer
     : IProjectComposer
 {
-    private static class WellKnown
+    public static class References
     {
         public const string ConfixVariables = "Confix_Variables";
+
+        public static class Urls
+        {
+            public const string ConfixVariables = $"#/$defs/{References.ConfixVariables}";
+        }
     }
 
     public JsonSchema Compose(
@@ -24,7 +30,7 @@ public sealed class ProjectComposer
 
         var variableType = GetVariableType(variables);
 
-        defs.Add(WellKnown.ConfixVariables, variableType);
+        defs.Add(References.ConfixVariables, variableType);
 
         return new JsonSchemaBuilder()
             .Defs(defs)
@@ -44,7 +50,7 @@ public sealed class ProjectComposer
                     .PrefixTypes($"{componentDefinition.ComponentName}_")
                     .AddVariableIntellisense(new JsonObject()
                     {
-                        [RefKeyword.Name] = $"#/$defs/{WellKnown.ConfixVariables}"
+                        [RefKeyword.Name] = References.Urls.ConfixVariables
                     });
 
             if (prefixedJsonSchema.GetDefs() is { } prefixedDefs)

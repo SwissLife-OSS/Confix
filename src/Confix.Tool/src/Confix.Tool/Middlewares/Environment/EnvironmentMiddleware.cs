@@ -13,10 +13,14 @@ public sealed class EnvironmentMiddleware : IMiddleware
             return next(context);
         }
 
-        var activeEnvironment = ResolveFromArgument(context) ?? ResolveFromConfiguration(context);
+        EnvironmentDefinition? activeEnvironment = 
+            ResolveFromArgument(context) ?? ResolveFromConfiguration(context);
 
-        context.Logger.EnvironmentResolved(activeEnvironment.Name);
-        context.Features.Set(new EnvironmentFeature(activeEnvironment));
+        if (activeEnvironment is not null)
+        {
+            context.Logger.EnvironmentResolved(activeEnvironment.Name);
+            context.Features.Set(new EnvironmentFeature(activeEnvironment));
+        }
 
         return next(context);
     }
@@ -40,7 +44,7 @@ public sealed class EnvironmentMiddleware : IMiddleware
         return null;
     }
 
-    private static EnvironmentDefinition ResolveFromConfiguration(IMiddlewareContext context)
+    private static EnvironmentDefinition? ResolveFromConfiguration(IMiddlewareContext context)
     {
         ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
         var enabledEnvironments =
@@ -50,7 +54,8 @@ public sealed class EnvironmentMiddleware : IMiddleware
         if (enabledEnvironments.Length == 0)
         {
             context.Logger.EnvironmentNotSet();
-            throw InvalidEnvironmentConfiguration();
+
+            return null;
         }
 
         if (enabledEnvironments.Length == 1)

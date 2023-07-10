@@ -13,11 +13,9 @@ public static class MiddlewareCommandLineBuilderExtensions
     public static CommandLineBuilder RegisterMiddlewares(this CommandLineBuilder builder)
     {
         builder
-            .AddTransient(sp => new BuildComponentsOfProjectMiddleware(sp))
-            .AddTransient(sp => new ValidationMiddleware(sp.GetRequiredService<ISchemaStore>()))
             .AddTransient<LoadConfigurationMiddleware>()
             .AddTransient<EnvironmentMiddleware>()
-            .AddTransient<BuildProjectMiddleware>()
+            .RegisterProjectMiddlewares()
             .RegisterComponentInputs()
             .RegisterConfigurationFiles()
             .RegisterComponentProviders()

@@ -16,13 +16,15 @@ public class OptionalEncryptionMiddleware : IMiddleware
         var configurationFeature = context.Features.Get<ConfigurationFeature>();
         if (configurationFeature.Encryption is { } encryptionConfiguration)
         {
-            var environmentFeature = context.Features.Get<EnvironmentFeature>();
-            var environmentName = environmentFeature.ActiveEnvironment.Name;
+            context.Features.TryGet<EnvironmentFeature>(out EnvironmentFeature? environmentFeature);
+            string? environmentName = environmentFeature?.ActiveEnvironment.Name;
 
             var configuration = new EncryptionProviderConfiguration
             {
                 Type = encryptionConfiguration.Provider.Type,
-                Configuration = encryptionConfiguration.Provider.ValueWithOverrides(environmentName)
+                Configuration = environmentName != null
+                    ? providerDefinition.ValueWithOverrides(environmentName)
+                    : providerDefinition.Value
             };
             var provider = _encryptionProviderFactory.CreateProvider(configuration);
 

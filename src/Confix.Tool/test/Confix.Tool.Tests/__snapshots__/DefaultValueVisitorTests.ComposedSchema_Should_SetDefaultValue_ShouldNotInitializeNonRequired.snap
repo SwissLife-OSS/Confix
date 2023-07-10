@@ -1,0 +1,11 @@
+﻿{
+  "Foo": {},
+  "Bar": {
+    "deep": {
+      "required": null
+    }
+  },
+  "Baz": {
+    "deep": {}
+  }
+}

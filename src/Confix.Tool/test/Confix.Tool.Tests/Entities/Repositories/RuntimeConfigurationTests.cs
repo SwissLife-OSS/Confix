@@ -139,9 +139,9 @@ public class RuntimeConfigurationTests : ParserTestBase
     {
         // Arrange
         var confixRcPath1 =
-            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixRc);
         var confixRcPath2 =
-            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixRc);
 
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath1)!);
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath2)!);
@@ -199,11 +199,11 @@ public class RuntimeConfigurationTests : ParserTestBase
     {
         // Arrange
         var confixRcPath1 =
-            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixRc);
         var confixRcPath2 =
-            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixRc);
         var confixRcPath3 =
-            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixRc);
 
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath1)!);
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath2)!);
@@ -277,11 +277,11 @@ public class RuntimeConfigurationTests : ParserTestBase
     {
         // Arrange
         var confixRcPath1 =
-            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixRc);
         var confixRcPath2 =
-            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixRc);
         var confixRcPath3 =
-            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), FileNames.ConfixRc);
+            Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), FileNames.ConfixRc);
 
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath1)!);
         Directory.CreateDirectory(Path.GetDirectoryName(confixRcPath2)!);

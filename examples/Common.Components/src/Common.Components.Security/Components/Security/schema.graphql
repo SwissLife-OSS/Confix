@@ -1,5 +1,5 @@
 type Configuration {
-  Authority: String!
+  Authority: String! @defaultValue(value: "$shared:shared.authority")
   OpenIdConnectClient: OpenIdConnectClient
   Cors: Cors
   TokenClients: [TokenClient]

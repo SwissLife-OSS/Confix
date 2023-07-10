@@ -61,7 +61,7 @@ public class EnvironmentMiddlewareTests
     }
 
     [Fact]
-    public async Task InvokeAsync_NoEnvironment_Throws()
+    public async Task InvokeAsync_NoEnvironment_NotThrowsInvokeNext()
     {
         // arrange
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
@@ -98,14 +98,17 @@ public class EnvironmentMiddlewareTests
             return Task.CompletedTask;
         };
 
-        // act && assert
-        await Assert.ThrowsAsync<ExitException>(
-            () => middleware.InvokeAsync(middelwareContext.Object, next));
-        isNextInvoked.Should().BeFalse();
+        // act
+        await middleware.InvokeAsync(middelwareContext.Object, next);
+        
+        // assert
+        isNextInvoked.Should().BeTrue();
+        featureCollection.TryGet(out EnvironmentFeature? environmentFeature);
+        environmentFeature.Should().BeNull();
     }
 
     [Fact]
-    public async Task InvokeAsync_NoEnabledEnvironment_Throws()
+    public async Task InvokeAsync_NoEnabledEnvironment_NotThrowsInvokeNext()
     {
         // arrange
         var testEnvironment = new EnvironmentDefinition(
@@ -144,11 +147,14 @@ public class EnvironmentMiddlewareTests
             isNextInvoked = true;
             return Task.CompletedTask;
         };
-
-        // act && assert
-        await Assert.ThrowsAsync<ExitException>(
-            () => middleware.InvokeAsync(middelwareContext.Object, next));
-        isNextInvoked.Should().BeFalse();
+        
+        // act
+        await middleware.InvokeAsync(middelwareContext.Object, next);
+        
+        // assert
+        isNextInvoked.Should().BeTrue();
+        featureCollection.TryGet(out EnvironmentFeature? environmentFeature);
+        environmentFeature.Should().BeNull();
     }
 
     [Fact]
