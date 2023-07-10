@@ -83,6 +83,6 @@ file static class Log
         => console.Error("Multiple Environments are marked as active");
 
     public static void EnvironmentNotSet(this IConsoleLogger console)
-        => console.Error(
+        => console.Inform(
             $"No active environment set. Use --environment or set one environment in .confixrc as active");
 }
