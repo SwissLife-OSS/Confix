@@ -14,14 +14,14 @@ public class OptionalEncryptionMiddleware : IMiddleware
     public virtual Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         var configurationFeature = context.Features.Get<ConfigurationFeature>();
-        if (configurationFeature.Encryption is { } encryptionConfiguration)
+        if (configurationFeature.Encryption is { Provider: var providerDefinition })
         {
-            context.Features.TryGet<EnvironmentFeature>(out EnvironmentFeature? environmentFeature);
-            string? environmentName = environmentFeature?.ActiveEnvironment.Name;
+            context.Features.TryGet<EnvironmentFeature>(out var environmentFeature);
+            var environmentName = environmentFeature?.ActiveEnvironment.Name;
 
             var configuration = new EncryptionProviderConfiguration
             {
-                Type = encryptionConfiguration.Provider.Type,
+                Type = providerDefinition.Type,
                 Configuration = environmentName != null
                     ? providerDefinition.ValueWithOverrides(environmentName)
                     : providerDefinition.Value
@@ -31,6 +31,7 @@ public class OptionalEncryptionMiddleware : IMiddleware
             EncryptionFeature feature = new(provider);
             context.Features.Set(feature);
         }
+
         return next(context);
     }
 }
