@@ -587,7 +587,7 @@ public class DefaultValueVisitorTests
         var result = DefaultValueVisitor.ApplyDefaults(schema, value!);
 
         // assert
-            result.MatchInline("""
+        result.MatchInline("""
             {
               "nested": "should-still-exists"
             }
@@ -866,6 +866,62 @@ public class DefaultValueVisitorTests
 
         // assert
         Match(result);
+    }
+
+    [Fact]
+    public void Should_InitializeComplexObjectArrays_When_InComponent()
+    {
+        // arrange
+
+        var jsonSchema = Create(
+            new Definition("HealthChecks",
+                """
+                type Configuration {
+                  Endpoints: [Endpoint!]! @defaultValue(value: [
+                    {
+                      Path: "/_health/live",
+                      TagsPredicate: [
+                        "liveness"
+                      ]
+                    },
+                    {
+                      Path: "/_health/ready",
+                      TagsPredicate: [
+                        "readyness"
+                      ]
+                    }
+                  ])
+                }
+
+                type Endpoint {
+                  Path: String!
+                  TagsPredicate: [String]!
+                }
+                """));
+        // act
+        var result = DefaultValueVisitor.ApplyDefaults(jsonSchema, JsonNode.Parse("{}")!);
+
+        // assert
+        result.MatchInline("""
+            {
+              "HealthChecks": {
+                "Endpoints": [
+                  {
+                    "Path": "/_health/live",
+                    "TagsPredicate": [
+                      "liveness"
+                    ]
+                  },
+                  {
+                    "Path": "/_health/ready",
+                    "TagsPredicate": [
+                      "readyness"
+                    ]
+                  }
+                ]
+              }
+            }
+            """);
     }
 
     private static void Match(JsonNode result)
