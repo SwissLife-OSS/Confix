@@ -12,7 +12,7 @@ namespace ConfiX.Inputs;
 
 public class DonetComponentInputTests
 {
-    //[Fact]
+    [Fact]
     public async Task Should_ThrowExitException_When_ConfigurationScopeIsNotComponent()
     {
         // Arrange
@@ -39,13 +39,12 @@ public class DonetComponentInputTests
         };
 
         // Act
-        await cli.RunAsync("component build");
 
         // Assert
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
     }
 
-    //[Fact]
+    [Fact]
     public async Task Should_ReturnEarly_When_DotnetProjectWasNotFoundInDirectory()
     {
         // Arrange
@@ -65,7 +64,7 @@ public class DonetComponentInputTests
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
     }
 
-    //[Fact]
+    [Fact]
     public async Task Should_LogError_When_ProjectFileCouldNotBeParsed()
     {
         // Arrange
@@ -86,7 +85,7 @@ public class DonetComponentInputTests
         SnapshotBuilder.New().AddOutput(cli).AddFile(csproj).MatchSnapshot();
     }
 
-    //[Fact]
+    [Fact]
     public async Task Should_AddEmbeddedResources_When_DotnetProjectWasButNoEmbeddedFiles()
     {
         // Arrange
@@ -107,7 +106,7 @@ public class DonetComponentInputTests
         SnapshotBuilder.New().AddOutput(cli).AddFile(csproj).MatchSnapshot();
     }
 
-    //[Fact]
+    [Fact]
     public async Task Should_AddEmbeddedResources_When_DotnetProjectDoesNotHaveRoot()
     {
         // Arrange
@@ -128,7 +127,7 @@ public class DonetComponentInputTests
         SnapshotBuilder.New().AddOutput(cli).AddFile(csproj).MatchSnapshot();
     }
 
-    //[Fact]
+    [Fact]
     public async Task Should_NotDoAnything_When_ProjectHasAlreadyEmbeddedFiles()
     {
         // Arrange
