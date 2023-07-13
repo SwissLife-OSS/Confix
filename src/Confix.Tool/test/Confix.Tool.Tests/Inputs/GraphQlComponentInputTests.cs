@@ -4,7 +4,7 @@ namespace ConfiX.Inputs;
 
 public class GraphQlComponentInputTests
 {
-    //[Fact]
+    [Fact]
     public async Task Should_Fail_When_NotExecuted_In_ComponentDirectory()
     {
         // Arrange
@@ -20,7 +20,7 @@ public class GraphQlComponentInputTests
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
     }
 
-    //[Fact]
+    [Fact]
     public async Task Should_ReturnEarly_When_SchemaGraphQlNotFoundInDirectory()
     {
         // Arrange
@@ -39,7 +39,7 @@ public class GraphQlComponentInputTests
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
     }
 
-    //[Fact]
+    [Fact]
     public async Task Should_GenerateSchemaJson_When_SchemaGraphQlFoundInDirectory()
     {
         // Arrange
@@ -63,7 +63,7 @@ public class GraphQlComponentInputTests
             .MatchSnapshot();
     }
 
-    //[Fact]
+    [Fact]
     public async Task Should_Should_ReplaceExistingSchemaFile_When_ItAlreadyExists()
     {
         // Arrange
