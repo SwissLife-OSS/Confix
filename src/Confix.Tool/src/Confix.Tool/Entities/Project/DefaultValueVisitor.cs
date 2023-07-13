@@ -42,12 +42,16 @@ public sealed class DefaultValueVisitor : JsonDocumentRewriter<DefaultValueVisit
                 continue;
             }
 
+            var possiblePropertySchemas = propertySchema
+                .GetPossibleSchemas(context.ReferenceResolver)
+                .ToArray();
+
             context.Schemas.Push(propertySchema);
 
             // when the field is null and we have a default value, set it
             if (!obj.ContainsKey(field))
             {
-                if (propertySchema.GetDefault() is { } defaultValue)
+                if (possiblePropertySchemas.GetDefaultValue() is { } defaultValue)
                 {
                     obj[field] = defaultValue;
                 }
@@ -55,8 +59,7 @@ public sealed class DefaultValueVisitor : JsonDocumentRewriter<DefaultValueVisit
                 {
                     obj[field] = propertySchema.IsArray()
                         ? new JsonArray()
-                        : propertySchema
-                            .GetPossibleSchemas(context.ReferenceResolver)
+                        : possiblePropertySchemas
                             .Where(x => x.GetProperties() is { Count: > 0 })
                             .SingleOrNone() is not null
                             ? new JsonObject()
@@ -67,8 +70,7 @@ public sealed class DefaultValueVisitor : JsonDocumentRewriter<DefaultValueVisit
             // when the field is null and we have a required field, initialize it
             if (obj.ContainsKey(field) && obj[field] is null)
             {
-                var hasSchemaOrDefaults = propertySchema
-                    .GetPossibleSchemas(context.ReferenceResolver)
+                var hasSchemaOrDefaults = possiblePropertySchemas
                     .Where(x => x.GetRequired() is { Count: > 0 })
                     .SingleOrNone() is not null;
 
@@ -162,6 +164,12 @@ file static class Extensions
             yield return currentSchema;
         }
     }
+
+    public static JsonNode? GetDefaultValue(this IEnumerable<JsonSchema> schemas)
+        => schemas
+            .Select(x => x.GetDefault())
+            .OfType<JsonNode>()
+            .SingleOrNone();
 
     public static JsonObject AddRequiredFields(this JsonObject value, JsonSchema schema)
     {
