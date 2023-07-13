@@ -13,28 +13,31 @@ namespace Confix.Tool.Middlewares;
 public sealed class LoadConfigurationMiddleware : IMiddleware
 {
     /// <inheritdoc />
-    public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
+    public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         if (context.Features.TryGet(out ConfigurationFeature _))
         {
-            return next(context);
+            await next(context);
         }
 
         context.SetStatus("Loading configuration...");
 
-        var configurationFeature = LoadConfiguration(context);
-        return Task.CompletedTask;
+        var configurationFeature = await LoadConfiguration(context);
+        return;
+        
         context.Features.Set(configurationFeature);
 
         context.Logger.ConfigurationLoaded();
 
-        return next(context);
+        await next(context);
     }
 
-    private static ConfigurationFeature LoadConfiguration(IMiddlewareContext context)
+    private static async Task<ConfigurationFeature> LoadConfiguration(IMiddlewareContext context)
     {
-        var configurationFiles = context.LoadConfigurationFiles(context.CancellationToken)
-            .ToBlockingEnumerable();
+        var configurationFiles = await context
+            .LoadConfigurationFiles(context.CancellationToken)
+            .ToListAsync(context.CancellationToken);
+
         var configurationFilesWithReplacedMagicStrings =
             ReplaceMagicStrings(context, configurationFiles);
         var fileCollection = CreateFileCollection(configurationFilesWithReplacedMagicStrings);
