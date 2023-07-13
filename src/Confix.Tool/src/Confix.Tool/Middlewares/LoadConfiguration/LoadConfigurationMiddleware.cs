@@ -15,7 +15,6 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
     /// <inheritdoc />
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
-        return Task.CompletedTask;
         if (context.Features.TryGet(out ConfigurationFeature _))
         {
             return next(context);
@@ -23,6 +22,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
 
         context.SetStatus("Loading configuration...");
 
+        return Task.CompletedTask;
         var configurationFeature = LoadConfiguration(context);
         context.Features.Set(configurationFeature);
 
