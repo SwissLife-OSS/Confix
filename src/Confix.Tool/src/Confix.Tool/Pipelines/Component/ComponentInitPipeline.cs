@@ -3,16 +3,12 @@ using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
+using Confix.Utilities.FileSystem;
 
 namespace Confix.Tool.Commands.Solution;
 
 public sealed class ComponentInitPipeline : Pipeline
 {
-    private class Folder
-    {
-        public const string Components = "Components";
-    }
-
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
     {
@@ -31,7 +27,8 @@ public sealed class ComponentInitPipeline : Pipeline
         var project = configuration.EnsureProject();
 
         var componentName = context.Parameter.Get(ComponentNameArgument.Instance);
-        var componentFolder = project.Directory!.Append(Folder.Components).Append(componentName);
+        var componentFolder =
+            project.Directory!.Append(FolderNames.Components).Append(componentName);
         componentFolder.EnsureFolder();
 
         var componentFile = componentFolder.AppendFile(FileNames.ConfixComponent);

@@ -1,0 +1,12 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Merged .confix.component from .confix.solution
+! Could not determine configuration scope. This means that no .confix.project, .confix.component or .confix.solution file was found.
+✓ Configuration loaded
+  Component input 'graphql' loaded
+✓ Component inputs loaded
+  Building component...
+✕ confix component build has to be executed in a component directory, but was executed in None
+

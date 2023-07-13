@@ -8,18 +8,19 @@ public static class VerbosityCommandLineBuilderExtensions
 {
     public static CommandLineBuilder UseVerbosity(this CommandLineBuilder builder)
     {
+        var verbosity = Verbosity.Normal;
+        builder.AddSingleton<IConsoleLogger>(sp =>
+        {
+            var console = sp.GetRequiredService<IAnsiConsole>();
+
+            return new ConsoleLogger(console, verbosity);
+        });
         builder.AddMiddleware((context, next) =>
         {
-            var verbosity =
+            verbosity =
                 context.ParseResult.GetValueForOption(VerbosityOption.Instance);
 
-            var console = context.BindingContext.GetRequiredService<IAnsiConsole>();
-
-            var logger = new ConsoleLogger(console, verbosity);
-
-            context.BindingContext.AddService(typeof(IConsoleLogger), _ => logger);
-
-            App.Log = logger;
+            App.Log = context.BindingContext.GetRequiredService<IConsoleLogger>();
 
             return next(context);
         });

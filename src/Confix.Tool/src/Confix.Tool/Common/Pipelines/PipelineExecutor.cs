@@ -72,7 +72,7 @@ public sealed class PipelineExecutor
                 Parameter = ParameterCollection.From(_parameter),
                 Console = _services.GetRequiredService<IAnsiConsole>(),
                 Logger = _services.GetRequiredService<IConsoleLogger>(),
-                Execution = ExecutionContext.Create(),
+                Execution = _services.GetRequiredService<IExecutionContext>(),
                 Status = new SpectreStatusContext(ctx),
                 Services = _services
             };

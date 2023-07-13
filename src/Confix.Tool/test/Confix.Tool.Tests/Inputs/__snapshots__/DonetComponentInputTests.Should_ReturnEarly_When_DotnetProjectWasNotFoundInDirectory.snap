@@ -1,0 +1,16 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.project
+  Configuration files of type .confix.component located at <</tmp>>/content/Components/test/.confix.component
+  Merged .confix.component from .confix.solution
+✓ Running in scope Component
+✓ Configuration loaded
+  Component input 'dotnet' loaded
+✓ Component inputs loaded
+  Building component...
+  Could not find project in directory: <</tmp>>/content
+  Dotnet project was not detected. Skipping dotnet component input
+  Building component completed
+

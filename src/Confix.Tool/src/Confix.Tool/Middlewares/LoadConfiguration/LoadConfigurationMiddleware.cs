@@ -1,5 +1,4 @@
 using System.Collections;
-using ConfiX.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;
 using Confix.Tool.Commands.Logging;
@@ -7,33 +6,37 @@ using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
 using System.Runtime.CompilerServices;
+using Confix.Extensions;
 
 namespace Confix.Tool.Middlewares;
 
 public sealed class LoadConfigurationMiddleware : IMiddleware
 {
     /// <inheritdoc />
-    public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
+    public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
         if (context.Features.TryGet(out ConfigurationFeature _))
         {
-            return next(context);
+            await next(context);
         }
 
         context.SetStatus("Loading configuration...");
 
-        var configurationFeature = LoadConfiguration(context);
+        var configurationFeature = await LoadConfiguration(context);
+        
         context.Features.Set(configurationFeature);
 
         context.Logger.ConfigurationLoaded();
 
-        return next(context);
+        await next(context);
     }
 
-    private static ConfigurationFeature LoadConfiguration(IMiddlewareContext context)
+    private static async Task<ConfigurationFeature> LoadConfiguration(IMiddlewareContext context)
     {
-        var configurationFiles = context.LoadConfigurationFiles(context.CancellationToken)
-            .ToBlockingEnumerable();
+        var configurationFiles = await context
+            .LoadConfigurationFiles(context.CancellationToken)
+            .ToListAsync(context.CancellationToken);
+
         var configurationFilesWithReplacedMagicStrings =
             ReplaceMagicStrings(context, configurationFiles);
         var fileCollection = CreateFileCollection(configurationFilesWithReplacedMagicStrings);
@@ -139,48 +142,6 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
             yield return file with { Content = rewritten };
         }
     }
-}
-
-file sealed class ConfigurationFileCollection
-    : IConfigurationFileCollection
-{
-    private readonly IReadOnlyList<JsonFile> _collection;
-
-    public ConfigurationFileCollection(
-        RuntimeConfiguration? configuration,
-        SolutionConfiguration? solutionConfiguration,
-        ProjectConfiguration? projectConfiguration,
-        ComponentConfiguration? componentConfiguration,
-        IReadOnlyList<JsonFile> collection)
-    {
-        RuntimeConfiguration = configuration;
-        Solution = solutionConfiguration;
-        Project = projectConfiguration;
-        Component = componentConfiguration;
-        _collection = collection;
-    }
-
-    public RuntimeConfiguration? RuntimeConfiguration { get; }
-
-    public SolutionConfiguration? Solution { get; }
-
-    public ProjectConfiguration? Project { get; }
-
-    public ComponentConfiguration? Component { get; }
-
-    /// <inheritdoc />
-    public IEnumerator<JsonFile> GetEnumerator()
-        => _collection.GetEnumerator();
-
-    /// <inheritdoc />
-    IEnumerator IEnumerable.GetEnumerator()
-        => GetEnumerator();
-
-    /// <inheritdoc />
-    public int Count => _collection.Count;
-
-    /// <inheritdoc />
-    public JsonFile this[int index] => _collection[index];
 }
 
 file static class Extensions

@@ -21,7 +21,7 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
             AppSettingsConfigurationFileProviderConfiguration.Parse(context.Definition.Value);
 
         var input = context.Project.Directory!.FindInPath(FileNames.AppSettings, false);
-        
+
         if (input is null)
         {
             return Array.Empty<ConfigurationFile>();
@@ -31,18 +31,18 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
 
         if (configuration.UseUserSecrets is true)
         {
-            App.Log.UseUserSecrets();
+            context.Logger.UseUserSecrets();
             var csproj = DotnetHelpers.FindProjectFileInPath(context.Project.Directory!);
             if (csproj is not null)
             {
                 var userSecretsId = DotnetHelpers.EnsureUserSecretsId(csproj);
                 var userSecretsFolder = GetUserSecretPath(userSecretsId);
                 output = new FileInfo(Path.Combine(userSecretsFolder.FullName, FileNames.Secrets));
-                App.Log.UseUserSecretsConfigurationFile(output);
+                context.Logger.UseUserSecretsConfigurationFile(output);
             }
         }
 
-        App.Log.FoundAAppSettingsConfigurationFile(input);
+        context.Logger.FoundAAppSettingsConfigurationFile(input);
 
         files.Add(new ConfigurationFile { InputFile = input, OutputFile = output });
 

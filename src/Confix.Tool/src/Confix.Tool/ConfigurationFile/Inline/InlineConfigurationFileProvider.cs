@@ -16,7 +16,7 @@ public sealed class InlineConfigurationFileProvider : IConfigurationFileProvider
 
         foreach (var file in context.Project.Directory!.FindAllInPath(path, false))
         {
-            App.Log.FoundAInlineConfigurationFile(file);
+            context.Logger.FoundAInlineConfigurationFile(file);
 
             files.Add(new ConfigurationFile { InputFile = file, OutputFile = file });
         }
