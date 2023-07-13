@@ -51,6 +51,7 @@ public sealed class GraphQlComponentInput : IComponentInput
 
         if (schemaJsonFile.Exists)
         {
+            context.Logger.ReplacingExistingSchemaJsonFile(schemaJsonFile);
             schemaJsonFile.Delete();
         }
 
@@ -96,6 +97,15 @@ file static class Log
         FileSystemInfo schemaFile)
     {
         console.Information("Generated schema based on GraphQL Schema:{0} [dim]{1}[/]",
+            schemaFile.ToLink(),
+            schemaFile.FullName);
+    }
+
+    public static void ReplacingExistingSchemaJsonFile(
+        this IConsoleLogger console,
+        FileSystemInfo schemaFile)
+    {
+        console.Debug("Replacing existing schema.json file: {0} [dim]{1}[/]",
             schemaFile.ToLink(),
             schemaFile.FullName);
     }

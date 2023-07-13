@@ -2,5 +2,11 @@ namespace Confix.Tool.Commands.Logging;
 
 public static class App
 {
-    public static IConsoleLogger Log { get; internal set; } = ConsoleLogger.NullLogger;
+    private static readonly AsyncLocal<IConsoleLogger> _log = new();
+
+    public static IConsoleLogger Log
+    {
+        get => _log.Value ?? ConsoleLogger.NullLogger;
+        set => _log.Value = value;
+    }
 }

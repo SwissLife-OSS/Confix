@@ -1,8 +1,6 @@
 namespace Confix.Tool.Abstractions;
 
-public record EncryptionDefinition(
-    EncryptionProviderDefinition Provider
-)
+public record EncryptionDefinition(EncryptionProviderDefinition Provider)
 {
     public static EncryptionDefinition From(EncryptionConfiguration configuration)
     {
@@ -10,7 +8,7 @@ public record EncryptionDefinition(
         {
             throw new ValidationException("Encryption configuration is invalid.")
             {
-                Errors = new[]{"Provider is required."}
+                Errors = new[] { "Provider is required." }
             };
         }
 

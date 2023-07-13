@@ -1,3 +1,4 @@
+using Confix.Extensions;
 using ConfiX.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;

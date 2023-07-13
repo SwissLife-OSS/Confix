@@ -41,6 +41,7 @@ public static class ComponentInputCommandLineBuilderExtensions
                 sp.GetRequiredService<IComponentInputFactory>()));
 
         builder.AddComponentInput<GraphQlComponentInput>();
+        builder.AddComponentInput<DotnetComponentInput>();
 
         return builder;
     }

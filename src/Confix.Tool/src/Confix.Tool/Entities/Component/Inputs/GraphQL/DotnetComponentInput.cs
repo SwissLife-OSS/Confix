@@ -1,22 +1,22 @@
-using System.Text.Json;
 using Confix.Tool.Commands.Logging;
+using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
+using Confix.Utilities.FileSystem;
 
 namespace Confix.Tool.Entities.Components;
 
-public sealed class GraphQlComponentInput : IComponentInput
+public sealed class DotnetComponentInput : IComponentInput
 {
-    public static string Type => "graphql";
+    private const string _embeddedResourcePath =
+        $"$(MSBuildProjectDirectory)/{FolderNames.Components}/**/*.*";
 
-    private const string SchemaGraphQl = "schema.graphql";
+    public static string Type => "dotnet";
 
     /// <inheritdoc />
     public async Task ExecuteAsync(IMiddlewareContext context)
     {
-        var cancellationToken = context.CancellationToken;
-
         var configuration = context.Features.Get<ConfigurationFeature>();
 
         if (configuration.Scope is not ConfigurationScope.Component ||
@@ -25,78 +25,62 @@ public sealed class GraphQlComponentInput : IComponentInput
             throw new ExitException("Component input has to be executed in a component directory");
         }
 
-        var configurationFile = configuration.ConfigurationFiles.Component.SourceFiles
-            .First(x => x.File.Name == FileNames.ConfixComponent);
-
-        var schemaGraphQlFile =
-            new FileInfo(Path.Combine(configurationFile.File.DirectoryName!, SchemaGraphQl));
-
-        context.Logger.SearchingForSchemaGraphQl(schemaGraphQlFile);
-
-        if (!schemaGraphQlFile.Exists)
+        if (configuration.Project?.Directory is not { } projectDirectory)
         {
-            context.Logger.SchemaGraphQlNotFound();
+            context.Logger.DotnetComponentProviderNeedsToBeRunInsideAConfixProject();
             return;
         }
 
-        context.Logger.SchemaGraphQlFound(schemaGraphQlFile);
+        var csproj = DotnetHelpers.FindProjectFileInPath(projectDirectory);
 
-        var schemaJsonFile =
-            new FileInfo(Path.Combine(configurationFile.File.DirectoryName!, FileNames.Schema));
-
-        var schema =
-            await SchemaHelpers.LoadSchemaAsync(schemaGraphQlFile.FullName, cancellationToken);
-
-        var jsonSchema = schema.ToJsonSchema().Build();
-
-        if (schemaJsonFile.Exists)
+        if (csproj is null)
         {
-            schemaJsonFile.Delete();
+            context.Logger.ProjectNotFoundInDirectory(projectDirectory);
+            context.Logger.DotnetProjectWasNotDetected();
+            return;
         }
 
-        await using var fileStream = File.OpenWrite(schemaJsonFile.FullName);
+        context.Logger.FoundDotnetProject(csproj);
 
-        var options = new JsonSerializerOptions
+        try
         {
-            WriteIndented = true
-        };
-
-        await JsonSerializer.SerializeAsync(fileStream, jsonSchema, options, cancellationToken);
-
-        context.Logger.GeneratedSchemaBasedOnGraphQL(schemaJsonFile);
+            DotnetHelpers.EnsureEmbeddedResource(csproj, _embeddedResourcePath);
+        }
+        catch
+        {
+            context.Logger.CouldNotParseProjectFile(csproj);
+        }
     }
 }
 
 file static class Log
 {
-    public static void SchemaGraphQlFound(
-        this IConsoleLogger console,
-        FileSystemInfo schemaFile)
+    public static void DotnetComponentProviderNeedsToBeRunInsideAConfixProject(
+        this IConsoleLogger console)
     {
-        console.Information("GraphQL Schema was found: {0} [dim]{1}[/]",
-            schemaFile.ToLink(),
-            schemaFile.FullName);
+        console.Error(
+            "Dotnet component provider needs to be run inside a confix project. No project was found");
     }
 
-    public static void SchemaGraphQlNotFound(this IConsoleLogger console)
+    public static void ProjectNotFoundInDirectory(
+        this IConsoleLogger logger,
+        DirectoryInfo directory)
     {
-        console.Information("GraphQL Schema was not found. Skipping GraphQL provider");
+        logger.Debug($"Could not find project in directory: {directory}");
     }
 
-    public static void SearchingForSchemaGraphQl(
-        this IConsoleLogger console,
-        FileSystemInfo schemaFile)
+    public static void DotnetProjectWasNotDetected(this IConsoleLogger logger)
     {
-        console.Debug("Searching in {0} for GraphQL Schema", schemaFile.ToLink());
-        console.Trace($" -> {schemaFile.FullName}");
+        logger.Information("Dotnet project was not detected. Skipping dotnet component input");
     }
 
-    public static void GeneratedSchemaBasedOnGraphQL(
-        this IConsoleLogger console,
-        FileSystemInfo schemaFile)
+    public static void FoundDotnetProject(this IConsoleLogger logger, FileSystemInfo csproj)
     {
-        console.Information("Generated schema based on GraphQL Schema:{0} [dim]{1}[/]",
-            schemaFile.ToLink(),
-            schemaFile.FullName);
+        logger.Information($"Found .NET project:{csproj.ToLink()} [dim]{csproj.FullName}[/]");
+    }
+
+    public static void CouldNotParseProjectFile(this IConsoleLogger logger, FileSystemInfo csproj)
+    {
+        logger.Error($"Could not parse project file: {csproj.ToLink()} [dim]{csproj.FullName}[/]");
     }
 }

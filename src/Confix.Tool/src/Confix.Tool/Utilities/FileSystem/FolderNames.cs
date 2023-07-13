@@ -1,6 +1,6 @@
 namespace Confix.Utilities.FileSystem;
 
-public class FolderNames
+internal class FolderNames
 {
-    
+    public const string Components = "Components";
 }

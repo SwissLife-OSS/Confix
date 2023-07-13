@@ -4,7 +4,7 @@ using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 
-namespace ConfiX.Extensions;
+namespace Confix.Extensions;
 
 public sealed class RuntimeConfiguration
 {
@@ -60,9 +60,10 @@ public sealed class RuntimeConfiguration
             ? ProjectConfiguration.Parse(projectNode.ExpectObject())
             : null;
 
-        var encryption = obj.TryGetNonNullPropertyValue(FieldNames.Encryption, out var encryptionNode)
-            ? EncryptionConfiguration.Parse(encryptionNode.ExpectObject())
-            : null;
+        var encryption =
+            obj.TryGetNonNullPropertyValue(FieldNames.Encryption, out var encryptionNode)
+                ? EncryptionConfiguration.Parse(encryptionNode.ExpectObject())
+                : null;
 
         return new RuntimeConfiguration(
             isRoot,

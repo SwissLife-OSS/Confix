@@ -75,7 +75,7 @@ public static class DotnetHelpers
             .OfType<XElement>()
             .FirstOrDefault()
             ?.Value;
-        
+
         if (userSecretsId == null)
         {
             var propertyGroup = propertyGroups.First();
@@ -94,6 +94,48 @@ public static class DotnetHelpers
         }
 
         return userSecretsId;
+    }
+
+    public static void EnsureEmbeddedResource(FileInfo csprojFile, string path)
+    {
+        App.Log.EnsureEmbeddedResourceExists(csprojFile.FullName);
+
+        var csprojDoc = XDocument.Load(csprojFile.FullName, LoadOptions.PreserveWhitespace);
+
+        var project = csprojDoc.Element(Xml.Project);
+        if (project == null)
+        {
+            App.Log.CsprojFileDoesNotContainAProjectElement(csprojFile.FullName);
+            throw new XmlException(
+                $"The .csproj file '{csprojFile.FullName}' does not contain a <Project> element.");
+        }
+
+        var propertyGroups = project.Elements(Xml.ItemGroup).ToArray();
+
+        var embeddedResources = propertyGroups
+            .Select(x => x.Element(Xml.EmbeddedResource))
+            .OfType<XElement>()
+            .FirstOrDefault(x => x.Attribute("Include")?.Value == path)
+            ?.Value;
+
+        if (embeddedResources == null)
+        {
+            var itemGroup = new XElement(Xml.ItemGroup);
+            project.Add(itemGroup);
+
+            var embeddedResource = new XElement(Xml.EmbeddedResource);
+            itemGroup.Add(embeddedResource);
+
+            embeddedResource.Add(new XAttribute("Include", path));
+
+            App.Log.AddedEmbeddedResourceToTheCsprojFile(path);
+
+            csprojDoc.Save(csprojFile.FullName);
+        }
+        else
+        {
+            App.Log.EmbeddedResourceAlreadyExistsInTheCsprojFile(path);
+        }
     }
 
     public static FileInfo? GetAssemblyInPathByName(
@@ -124,9 +166,11 @@ public static class DotnetHelpers
 file static class Xml
 {
     public const string Project = "Project";
+    public const string ItemGroup = "ItemGroup";
     public const string PropertyGroup = "PropertyGroup";
     public const string AssemblyName = "AssemblyName";
     public const string UserSecretsId = "UserSecretsId";
+    public const string EmbeddedResource = "EmbeddedResource";
 }
 
 file static class Log
@@ -156,8 +200,7 @@ file static class Log
         this IConsoleLogger console,
         string csprojFile)
     {
-        console.Warning(
-            $"The csproj file '{csprojFile}' does not contain a Project element. Adding one.");
+        console.Error($"The csproj file '{csprojFile}' does not contain a Project element.");
     }
 
     public static void CsprojFileDoesNotContainAPropertyGroupElement(
@@ -166,5 +209,26 @@ file static class Log
     {
         console.Warning(
             $"The csproj file '{csprojFile}' does not contain a PropertyGroup element. Adding one.");
+    }
+
+    public static void EnsureEmbeddedResourceExists(
+        this IConsoleLogger console,
+        string csprojFile)
+    {
+        console.Debug($"Ensuring embedded is in the csproj file '{csprojFile}'");
+    }
+
+    public static void AddedEmbeddedResourceToTheCsprojFile(
+        this IConsoleLogger console,
+        string path)
+    {
+        console.Debug($"Added EmbeddedResource '{path}' to the csproj file");
+    }
+
+    public static void EmbeddedResourceAlreadyExistsInTheCsprojFile(
+        this IConsoleLogger console,
+        string path)
+    {
+        console.Debug($"EmbeddedResource '{path}' already exists in the csproj file");
     }
 }
