@@ -33,6 +33,7 @@ public class DonetComponentInputTests
         await Test();
         await Test();
     }
+
     [Fact]
     public async Task A1()
     {
@@ -40,6 +41,7 @@ public class DonetComponentInputTests
         await Test();
         await Test();
     }
+
     [Fact]
     public async Task A2()
     {
@@ -47,6 +49,7 @@ public class DonetComponentInputTests
         await Test();
         await Test();
     }
+
     [Fact]
     public async Task A3()
     {
@@ -54,6 +57,7 @@ public class DonetComponentInputTests
         await Test();
         await Test();
     }
+
     [Fact]
     public async Task A4()
     {
@@ -61,6 +65,7 @@ public class DonetComponentInputTests
         await Test();
         await Test();
     }
+
     [Fact]
     public async Task A5()
     {
@@ -68,6 +73,7 @@ public class DonetComponentInputTests
         await Test();
         await Test();
     }
+
     [Fact]
     public async Task A6()
     {
@@ -89,7 +95,6 @@ public class DonetComponentInputTests
 
         // Act
         await cli.RunAsync("component build");
-
     }
 
     public async Task Should_ReturnEarly_When_ProjectFileNotFoundInDirectory()

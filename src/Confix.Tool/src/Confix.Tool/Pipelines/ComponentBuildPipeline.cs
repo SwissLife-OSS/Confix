@@ -21,6 +21,7 @@ public class ComponentBuildPipeline : Pipeline
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
+        return;
         context.SetStatus("Building the schema of the project...");
 
         var configuration = context.Features.Get<ConfigurationFeature>();
