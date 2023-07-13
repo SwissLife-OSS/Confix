@@ -27,63 +27,59 @@ public class DonetComponentInputTests
     }
 
     [Fact]
-    public void A0()
+    public async Task A0()
     {
-        Test();
-        Test();
-        Test();
+        await Test();
+        await Test();
+        await Test();
     }
     [Fact]
-    public void A1()
+    public async Task A1()
     {
-        Test();
-        Test();
-        Test();
+        await Test();
+        await Test();
+        await Test();
     }
     [Fact]
-    public void A2()
+    public async Task A2()
     {
-        Test();
-        Test();
-        Test();
+        await Test();
+        await Test();
+        await Test();
     }
     [Fact]
-    public void A3()
+    public async Task A3()
     {
-        Test();
-        Test();
-        Test();
+        await Test();
+        await Test();
+        await Test();
     }
     [Fact]
-    public void A4()
+    public async Task A4()
     {
-        Test();
-        Test();
-        Test();
+        await Test();
+        await Test();
+        await Test();
     }
     [Fact]
-    public void A5()
+    public async Task A5()
     {
-        Test();
-        Test();
-        Test();
+        await Test();
+        await Test();
+        await Test();
     }
     [Fact]
-    public void A6()
+    public async Task A6()
     {
-        Test();
-        Test();
-        Test();
+        await Test();
+        await Test();
+        await Test();
     }
 
-    public void Test()
+    public async Task Test()
     {
-        using var tmp = new TempDirectory();
-        tmp.Directory.CreateConfixRc("hello");
-        tmp.Directory.CreateConfixSolution("hello");
-
-        Assert.True(true);
-        
+        using var cli = new TestConfixCommandline();
+        await cli.RunAsync("component build");
     }
 
     public async Task Should_ReturnEarly_When_ProjectFileNotFoundInDirectory()
