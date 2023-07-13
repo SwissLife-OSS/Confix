@@ -22,8 +22,8 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
 
         context.SetStatus("Loading configuration...");
 
-        return Task.CompletedTask;
         var configurationFeature = LoadConfiguration(context);
+        return Task.CompletedTask;
         context.Features.Set(configurationFeature);
 
         context.Logger.ConfigurationLoaded();
