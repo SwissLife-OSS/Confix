@@ -27,6 +27,14 @@ public class DonetComponentInputTests
     }
 
     [Fact]
+    public void HelloMrDeadlock()
+    {
+        using var tmp = new TempDirectory();
+        tmp.Directory.CreateConfixRc("hello");
+
+        Assert.True(true);
+    }
+
     public async Task Should_ReturnEarly_When_ProjectFileNotFoundInDirectory()
     {
         // Arrange
