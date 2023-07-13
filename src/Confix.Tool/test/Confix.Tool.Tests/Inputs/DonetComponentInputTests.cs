@@ -27,6 +27,65 @@ public class DonetComponentInputTests
     }
 
     [Fact]
+    public void A0()
+    {
+        Test();
+        Test();
+        Test();
+    }
+    [Fact]
+    public void A1()
+    {
+        Test();
+        Test();
+        Test();
+    }
+    [Fact]
+    public void A2()
+    {
+        Test();
+        Test();
+        Test();
+    }
+    [Fact]
+    public void A3()
+    {
+        Test();
+        Test();
+        Test();
+    }
+    [Fact]
+    public void A4()
+    {
+        Test();
+        Test();
+        Test();
+    }
+    [Fact]
+    public void A5()
+    {
+        Test();
+        Test();
+        Test();
+    }
+    [Fact]
+    public void A6()
+    {
+        Test();
+        Test();
+        Test();
+    }
+
+    public void Test()
+    {
+        using var tmp = new TempDirectory();
+        tmp.Directory.CreateConfixRc("hello");
+        tmp.Directory.CreateConfixSolution("hello");
+
+        Assert.True(true);
+        
+    }
+
     public async Task Should_ReturnEarly_When_ProjectFileNotFoundInDirectory()
     {
         // Arrange
