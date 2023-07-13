@@ -39,7 +39,7 @@ public class DonetComponentInputTests
         };
 
         // Act
-        //await cli.RunAsync("component build");
+        await cli.RunAsync("component build");
 
         // Assert
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
