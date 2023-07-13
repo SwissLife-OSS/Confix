@@ -78,8 +78,18 @@ public class DonetComponentInputTests
 
     public async Task Test()
     {
+        // Arrange
         using var cli = new TestConfixCommandline();
+        cli.Directories.Home.CreateConfixRc(_confixRc);
+        cli.Directories.Content.CreateConfixComponent("test");
+        cli.ExecutionContext = cli.ExecutionContext with
+        {
+            CurrentDirectory = cli.Directories.Content.Append("Components").Append("test")
+        };
+
+        // Act
         await cli.RunAsync("component build");
+
     }
 
     public async Task Should_ReturnEarly_When_ProjectFileNotFoundInDirectory()
