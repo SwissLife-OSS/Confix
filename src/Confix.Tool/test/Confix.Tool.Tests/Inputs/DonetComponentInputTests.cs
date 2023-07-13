@@ -26,7 +26,7 @@ public class DonetComponentInputTests
             => componentInput.ExecuteAsync(context));
     }
 
-    //[Fact]
+    [Fact]
     public async Task Should_ReturnEarly_When_ProjectFileNotFoundInDirectory()
     {
         // Arrange
