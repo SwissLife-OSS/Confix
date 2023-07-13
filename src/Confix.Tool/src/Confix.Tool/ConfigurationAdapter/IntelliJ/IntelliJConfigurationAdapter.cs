@@ -67,7 +67,12 @@ file static class FolderExtensions
     public static DirectoryInfo GetIdeaFolder(this FileSystemInfo fileInfo)
     {
         var directoryInfo = new DirectoryInfo(Path.Combine(fileInfo.FullName, ".idea"));
-        return directoryInfo.FindInPath("workspace.xml")?.Directory ?? directoryInfo;
+        if (directoryInfo.Exists)
+        {
+            return directoryInfo.FindInPath("workspace.xml")?.Directory ?? directoryInfo;
+        }
+
+        return directoryInfo;
     }
 
     public static FileInfo GetJsonSchemasXml(this FileSystemInfo fileInfo)
