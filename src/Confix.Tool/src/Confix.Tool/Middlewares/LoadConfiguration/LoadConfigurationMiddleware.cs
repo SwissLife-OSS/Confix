@@ -23,7 +23,6 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         context.SetStatus("Loading configuration...");
 
         var configurationFeature = await LoadConfiguration(context);
-        return;
         
         context.Features.Set(configurationFeature);
 
