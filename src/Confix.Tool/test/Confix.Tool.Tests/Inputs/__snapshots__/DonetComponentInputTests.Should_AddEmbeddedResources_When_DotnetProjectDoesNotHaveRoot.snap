@@ -1,0 +1,26 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.project
+  Configuration files of type .confix.component located at <</tmp>>/content/Components/test/.confix.component
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.project
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.project
+  Configuration files of type .confix.component located at <</tmp>>/content/Components/test/.confix.component
+  Merged .confix.component from .confix.solution
+✓ Running in scope Component
+✓ Configuration loaded
+  Component input 'dotnet' loaded
+✓ Component inputs loaded
+  Building component...
+  Found .NET project:'test.csproj' <</tmp>>/content/test.csproj
+  Ensuring embedded is in the csproj file '<</tmp>>/content/test.csproj'
+✕ Could not parse project file: 'test.csproj' <</tmp>>/content/test.csproj
+  Building component completed
+
+--------------------------------------------------
+### File: <<root>>/content/test.csproj
+--------------------------------------------------
+

@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Extensions;
 using ConfiX.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Schema;

@@ -1,0 +1,20 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.component located at <</tmp>>/content/Components/test/.confix.component
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.component located at <</tmp>>/content/Components/test/.confix.component
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.component located at <</tmp>>/content/Components/test/.confix.component
+  Merged .confix.component from .confix.solution
+✓ Running in scope Component
+✓ Configuration loaded
+  Component input 'graphql' loaded
+✓ Component inputs loaded
+  Building component...
+  Searching in 'schema.graphql' for GraphQL Schema
+   -> <</tmp>>/content/Components/test/schema.graphql
+  GraphQL Schema was not found. Skipping GraphQL provider
+  Building component completed
+
