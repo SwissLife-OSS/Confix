@@ -36,7 +36,6 @@ public sealed class VariableCopyPipeline : Pipeline
         var toVariable = context.Parameter.Get(ToVariableNameArgument.Instance);
 
         var fromVariablePath = Parse(providers, fromVariable);
-
         var toVariablePath = Parse(providers, toVariable);
 
         var fromValue = await fromResolver.ResolveOrThrowAsync(fromVariablePath, cancellationToken);
