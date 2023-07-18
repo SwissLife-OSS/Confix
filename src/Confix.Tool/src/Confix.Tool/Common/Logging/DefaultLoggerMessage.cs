@@ -2,7 +2,7 @@ using Spectre.Console;
 
 namespace Confix.Tool.Commands.Logging;
 
-public readonly struct DefaultLoggerMessage : ILoggerMessage
+public readonly record struct DefaultLoggerMessage : ILoggerMessage
 {
     public required string Template { get; init; }
 

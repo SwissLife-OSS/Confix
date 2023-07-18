@@ -1,4 +1,5 @@
 using Confix.Tool.Commands.Temp;
+using Confix.Tool.Schema;
 
 namespace ConfiX.Inputs;
 
@@ -11,6 +12,8 @@ public class ExecutionDirectories : IDisposable
         _directory = new TempDirectory();
         Home = _directory.Directory.Append("home");
         Content = _directory.Directory.Append("content");
+        Home.EnsureFolder();
+        Content.EnsureFolder();
     }
 
     public DirectoryInfo Content { get; set; }

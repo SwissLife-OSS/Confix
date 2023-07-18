@@ -20,7 +20,8 @@ public static class VariableCommandBuilderExtensions
 
     private static CommandLineBuilder AddDefaultVariableProviders(this CommandLineBuilder builder)
     {
-        builder.AddVariableProvider("azure-keyvault", (config) => new AzureKeyVaultProvider(config));
+        builder.AddVariableProvider("azure-keyvault",
+            (config) => new AzureKeyVaultProvider(config));
         builder.AddVariableProvider("git", (config) => new GitVariableProvider(config));
         builder.AddVariableProvider("local", (config) => new LocalVariableProvider(config));
         builder.AddVariableProvider("secret", (config) => new SecretVariableProvider(config));
@@ -28,7 +29,7 @@ public static class VariableCommandBuilderExtensions
         return builder;
     }
 
-    private static CommandLineBuilder AddVariableProvider(
+    public static CommandLineBuilder AddVariableProvider(
         this CommandLineBuilder builder,
         string name,
         Func<JsonNode, IVariableProvider> factory)

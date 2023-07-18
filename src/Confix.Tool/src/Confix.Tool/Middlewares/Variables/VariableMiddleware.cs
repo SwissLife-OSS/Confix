@@ -16,28 +16,40 @@ public sealed class VariableMiddleware : IMiddleware
 
     public Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
-        ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
-        EnvironmentFeature environmentFeature = context.Features.Get<EnvironmentFeature>();
-        string environmentName = environmentFeature.ActiveEnvironment.Name;
-        var providers = GetProviderConfiguration(configurationFeature, environmentName).ToArray();
-        var variableResolver = new VariableResolver(_variableProviderFactory, providers);
+        var configurationFeature = context.Features.Get<ConfigurationFeature>();
+        var environmentFeature = context.Features.Get<EnvironmentFeature>();
 
-        VariableResolverFeature feature = new(
-            variableResolver,
-            new VariableReplacerService(variableResolver));
+        var environmentName = environmentFeature.ActiveEnvironment.Name;
+        var variableResolver = CreateResolver(environmentName);
+
+        var replacerService = new VariableReplacerService(variableResolver);
+
+        var feature =
+            new VariableResolverFeature(CreateResolver, variableResolver, replacerService);
 
         context.Features.Set(feature);
 
         return next(context);
+
+        IVariableResolver CreateResolver(string environment)
+        {
+            var configurations =
+                GetProviderConfiguration(configurationFeature, environment).ToArray();
+
+            return new VariableResolver(_variableProviderFactory, configurations);
+        }
     }
 
     private static IEnumerable<VariableProviderConfiguration> GetProviderConfiguration(
         ConfigurationFeature configurationFeature,
         string environmentName)
     {
-        if (configurationFeature.Project is null) { yield break; }
+        if (configurationFeature.Project is null)
+        {
+            yield break;
+        }
 
-        foreach (VariableProviderDefinition provider in configurationFeature.Project.VariableProviders)
+        foreach (var provider in configurationFeature.Project.VariableProviders)
         {
             yield return new VariableProviderConfiguration
             {

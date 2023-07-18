@@ -30,7 +30,7 @@ public sealed class VariableGetPipeline : Pipeline
             : new VariablePath(variableProviderName, variableName);
 
         var result = await resolver
-            .ResolveVariable(variablePath, context.CancellationToken);
+            .ResolveOrThrowAsync(variablePath, context.CancellationToken);
 
         context.Logger.PrintVariableResolved(variablePath, result.ToJsonString());
     }

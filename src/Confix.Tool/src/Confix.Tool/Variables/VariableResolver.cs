@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Reactive.Linq;
 using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
@@ -20,25 +21,31 @@ public sealed class VariableResolver : IVariableResolver
     }
 
     public async Task<VariablePath> SetVariable(
-        string providerName,
-        string key,
+        VariablePath path,
         JsonNode value,
         CancellationToken cancellationToken)
     {
-        var configuration = GetProviderConfiguration(providerName);
+        var configuration = GetProviderConfiguration(path.ProviderName);
+
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
-        var providerPath = await provider.SetAsync(key, value, cancellationToken);
 
-        return new VariablePath(providerName, providerPath);
+        await provider.SetAsync(path.Path, value, cancellationToken);
+
+        return path;
     }
 
-    public Task<IEnumerable<VariablePath>> ListVariables(CancellationToken cancellationToken)
+    public async Task<IEnumerable<VariablePath>> ListVariables(CancellationToken cancellationToken)
     {
-        var tasks = _configurations.Select(c => ListVariables(c.Name, cancellationToken));
-        return Task.WhenAll(tasks).ContinueWith(t => t.Result.SelectMany(x => x));
+        var variables = await _configurations
+            .Select(c => ListVariables(c.Name, cancellationToken))
+            .ToListAsync(cancellationToken);
+
+        return variables.SelectMany(v => v);
     }
 
-    public async Task<IEnumerable<VariablePath>> ListVariables(string providerName, CancellationToken cancellationToken)
+    public async Task<IEnumerable<VariablePath>> ListVariables(
+        string providerName,
+        CancellationToken cancellationToken)
     {
         var configuration = GetProviderConfiguration(providerName);
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
@@ -47,7 +54,13 @@ public sealed class VariableResolver : IVariableResolver
         return variableKey.Select(k => new VariablePath(providerName, k));
     }
 
-    public async Task<JsonNode> ResolveVariable(VariablePath key, CancellationToken cancellationToken)
+    /// <inheritdoc />
+    public IEnumerable<string> ListProviders()
+        => _configurations.Select(c => c.Name);
+
+    public async Task<JsonNode> ResolveVariable(
+        VariablePath key,
+        CancellationToken cancellationToken)
     {
         App.Log.ResolvingVariable(key);
         var configuration = GetProviderConfiguration(key.ProviderName);
@@ -58,6 +71,7 @@ public sealed class VariableResolver : IVariableResolver
         {
             return await ResolveVariable(variablePath.Value, cancellationToken);
         }
+
         return resolvedValue;
     }
 
@@ -67,12 +81,11 @@ public sealed class VariableResolver : IVariableResolver
     {
         List<KeyValuePair<VariablePath, JsonNode>> resolvedVariables = new(keys.Count);
 
-        foreach (IGrouping<string, VariablePath> group in keys.GroupBy(k => k.ProviderName))
+        foreach (var group in keys.GroupBy(k => k.ProviderName))
         {
-            var providerResults = await ResolveVariables(
-                group.Key,
-                group.Select(k => k.Path).Distinct().ToList(),
-                cancellationToken);
+            var paths = group.Select(k => k.Path).Distinct().ToList();
+
+            var providerResults = await ResolveVariables(group.Key, paths, cancellationToken);
 
             resolvedVariables.AddRange(providerResults);
         }
@@ -86,41 +99,40 @@ public sealed class VariableResolver : IVariableResolver
         CancellationToken cancellationToken)
     {
         App.Log.ResolvingVariables(providerName, paths.Count);
-        Dictionary<VariablePath, JsonNode> resolvedVariables = new();
-        Dictionary<VariablePath, string> nestedVariables = new();
+        var resolvedVariables = new Dictionary<VariablePath, JsonNode>();
+        var nestedVariables = new Dictionary<VariablePath, string>();
 
         var providerConfiguration = GetProviderConfiguration(providerName);
-        await using IVariableProvider provider = _variableProviderFactory.CreateProvider(providerConfiguration);
+        await using var provider = _variableProviderFactory.CreateProvider(providerConfiguration);
 
-        var resolved = await provider.ResolveManyAsync(paths, cancellationToken);
-        foreach (KeyValuePair<string, JsonNode> r in resolved)
+        var resolvedValues = await provider.ResolveManyAsync(paths, cancellationToken);
+        foreach (var (key, value) in resolvedValues)
         {
-            if (r.Value.IsVariable(out VariablePath? variablePath))
+            if (value.IsVariable(out var variablePath))
             {
-                nestedVariables.Add(variablePath.Value, r.Key);
+                nestedVariables.Add(variablePath.Value, key);
             }
             else
             {
-                resolvedVariables.Add(
-                    new(providerName, r.Key),
-                    r.Value);
+                resolvedVariables.Add(new(providerName, key), value);
             }
         }
 
-        var resolvedNestedVariables = await ResolveVariables(nestedVariables.Keys.ToList(), cancellationToken);
-        foreach (KeyValuePair<VariablePath, JsonNode> r in resolvedNestedVariables)
+        var resolvedNestedVariables =
+            await ResolveVariables(nestedVariables.Keys.ToList(), cancellationToken);
+
+        foreach (var (key, value) in resolvedNestedVariables)
         {
-            resolvedVariables.Add(
-                new(providerName, nestedVariables[r.Key]),
-                r.Value);
+            resolvedVariables.Add(new(providerName, nestedVariables[key]), value);
         }
 
         return resolvedVariables;
     }
 
     private VariableProviderConfiguration GetProviderConfiguration(string providerName)
-      => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
-          ?? throw new ExitException($"No VariableProvider with name '{providerName.AsHighlighted()}' configured.");
+        => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
+            ?? throw new ExitException(
+                $"No VariableProvider with name '{providerName.AsHighlighted()}' configured.");
 }
 
 public static class Extension
@@ -130,7 +142,7 @@ public static class Extension
         [NotNullWhen(true)] out VariablePath? variablePath)
     {
         if (node.GetSchemaValueType() == SchemaValueType.String
-            && VariablePath.TryParse((string)node!, out VariablePath? parsed))
+            && VariablePath.TryParse((string) node!, out VariablePath? parsed))
         {
             variablePath = parsed;
             return true;
@@ -141,7 +153,7 @@ public static class Extension
     }
 }
 
-file static class LogExtensionts
+file static class Log
 {
     public static void ResolvingVariable(this IConsoleLogger log, VariablePath key)
     {
