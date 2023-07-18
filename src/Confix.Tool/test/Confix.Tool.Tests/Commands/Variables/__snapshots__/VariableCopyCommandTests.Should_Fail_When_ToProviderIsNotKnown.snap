@@ -1,0 +1,13 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Merged .confix.project from .confix.solution
+! Could not determine configuration scope. This means that no .confix.project, .confix.component or .confix.solution file was found.
+✓ Configuration loaded
+✓ Active Environment is dev
+✕ Confix failed.
+  Invalid provider name: unknown
+Exception of type ExitException was thrown.
+  
+

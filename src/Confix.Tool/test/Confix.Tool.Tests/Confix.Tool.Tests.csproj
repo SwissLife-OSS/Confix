@@ -7,6 +7,7 @@
     <PackageReference Include="Spectre.Console.Testing" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Commands\Variables\__snapshots__\" />
     <Folder Include="GraphQL\__snapshots__\__mismatch__\" />
     <Folder Include="Inputs\__snapshots__\" />
     <Folder Include="Inputs\__snapshots__\__mismatch__\" />

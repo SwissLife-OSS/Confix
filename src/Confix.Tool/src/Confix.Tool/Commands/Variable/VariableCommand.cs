@@ -10,5 +10,6 @@ public sealed class VariableCommand : Command
         AddCommand(new VariableGetCommand());
         AddCommand(new VariableSetCommand());
         AddCommand(new VariableListCommand());
+        AddCommand(new VariableCopyCommand());
     }
 }

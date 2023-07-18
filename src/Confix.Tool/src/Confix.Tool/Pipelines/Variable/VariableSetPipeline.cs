@@ -28,12 +28,10 @@ public sealed class VariableSetPipeline : Pipeline
 
         if (VariablePath.TryParse(variableName, out var parsed))
         {
+            var value = JsonValue.Create(variableValue)!;
+
             var result = await resolver
-                .SetVariable(
-                    parsed.Value.ProviderName,
-                    parsed.Value.Path,
-                    JsonValue.Create(variableValue)!,
-                    context.CancellationToken);
+                .SetVariable(parsed.Value, value, context.CancellationToken);
 
             context.Logger.VariableSet(result);
         }

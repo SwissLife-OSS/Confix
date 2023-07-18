@@ -13,8 +13,7 @@ public sealed class EnvironmentMiddleware : IMiddleware
             return next(context);
         }
 
-        EnvironmentDefinition? activeEnvironment = 
-            ResolveFromArgument(context) ?? ResolveFromConfiguration(context);
+        var activeEnvironment = ResolveFromArgument(context) ?? ResolveFromConfiguration(context);
 
         if (activeEnvironment is not null)
         {
@@ -27,26 +26,25 @@ public sealed class EnvironmentMiddleware : IMiddleware
 
     private static EnvironmentDefinition? ResolveFromArgument(IMiddlewareContext context)
     {
-        if (context.Parameter.TryGet(ActiveEnvironmentOption.Instance, out string environmentName))
+        if (!context.Parameter.TryGet(ActiveEnvironmentOption.Instance, out string environmentName))
         {
-            if (context.Features.Get<ConfigurationFeature>()
-                    .Project?
-                    .Environments
-                    .FirstOrDefault(e => e.Name.Equals(environmentName)) is { } env)
-            {
-                return env;
-            }
-
-            context.Logger.EnvironmentNotFound(environmentName);
-            throw InvalidEnvironmentConfiguration();
+            return null;
         }
 
-        return null;
+        var feature = context.Features.Get<ConfigurationFeature>();
+        if (feature.Project?.Environments
+                .FirstOrDefault(e => e.Name.Equals(environmentName)) is { } env)
+        {
+            return env;
+        }
+
+        context.Logger.EnvironmentNotFound(environmentName);
+        throw InvalidEnvironmentConfiguration();
     }
 
     private static EnvironmentDefinition? ResolveFromConfiguration(IMiddlewareContext context)
     {
-        ConfigurationFeature configurationFeature = context.Features.Get<ConfigurationFeature>();
+        var configurationFeature = context.Features.Get<ConfigurationFeature>();
         var enabledEnvironments =
             configurationFeature.Project?.Environments.Where(e => e.Enabled).ToArray()
             ?? Array.Empty<EnvironmentDefinition>();
@@ -68,7 +66,7 @@ public sealed class EnvironmentMiddleware : IMiddleware
     }
 
     private static ExitException InvalidEnvironmentConfiguration()
-        => new ExitException("Environmentconfiguration invalid");
+        => new("Environment configuration invalid");
 }
 
 file static class Log

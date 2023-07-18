@@ -62,4 +62,19 @@ public static class LinqExtensions
 
         return list;
     }
+
+    public static async Task<List<T>> ToListAsync<T>(
+        this IEnumerable<Task<T>> sources,
+        CancellationToken cancellationToken = default)
+    {
+        var list = new List<T>();
+        var tasks = sources.ToList();
+        while (!cancellationToken.IsCancellationRequested && await Task.WhenAny(tasks) is { } task)
+        {
+            list.Add(await task);
+            tasks.Remove(task);
+        }
+
+        return list;
+    }
 }
