@@ -84,7 +84,8 @@ public class LocalVariableProviderTests : IDisposable
         LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
         // act & assert
-        await Assert.ThrowsAsync<VariableNotFoundException>(() => provider.ResolveAsync("nonexistent", default));
+        await Assert.ThrowsAsync<VariableNotFoundException>(()
+            => provider.ResolveAsync("nonexistent", default));
     }
 
     [Fact]
@@ -112,7 +113,8 @@ public class LocalVariableProviderTests : IDisposable
 
     [Fact]
     public async Task ResolveManyAsync_MixedPaths_AggregateException()
-    {        // arrange
+    {
+        // arrange
         await PrepareFile(
             """
             {
@@ -124,9 +126,52 @@ public class LocalVariableProviderTests : IDisposable
         var paths = new List<string> { "foo", "nonexistent" };
 
         // act & assert
-        var exception = await Assert.ThrowsAsync<AggregateException>(() => provider.ResolveManyAsync(paths, default));
+        var exception =
+            await Assert.ThrowsAsync<AggregateException>(()
+                => provider.ResolveManyAsync(paths, default));
         exception.InnerExceptions.Should().HaveCount(1);
         exception.InnerExceptions[0].Should().BeOfType<VariableNotFoundException>();
+    }
+
+    [Fact]
+    public async Task ListAsync_Should_NotFail_When_NoFile()
+    {
+        // arrange
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act
+        var result = await provider.ListAsync(default);
+
+        // assert
+        result.Should().HaveCount(0);
+    }
+
+    [Fact]
+    public async Task ListAsync_Should_NotCreateFile_When_FileDoesNotExists()
+    {
+        // arrange
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act
+        await provider.ListAsync(default);
+
+        // assert
+        Assert.False(File.Exists(tmpFilePath));
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_CreateFile_When_FileDoesNotExist()
+    {
+        // arrange
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act
+        var exception =
+            await Record.ExceptionAsync(async () => await provider.ResolveAsync("foo", default));
+
+        // assert
+        Assert.IsType<VariableNotFoundException>(exception);
+        Assert.True(File.Exists(tmpFilePath));
     }
 
     private Task PrepareFile(string content) => File.WriteAllTextAsync(tmpFilePath, content);
