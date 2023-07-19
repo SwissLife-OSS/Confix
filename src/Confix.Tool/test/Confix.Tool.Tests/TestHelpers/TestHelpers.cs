@@ -101,9 +101,9 @@ public sealed class TestHelpers
         return new ConfigurationFeature(
             scope,
             configurationFiles ?? CreateConfigurationFileCollection(),
-            project ?? CreateProjectDefinition(),
-            component ?? CreateComponentDefinition(),
-            solution ?? CreateSolutionDefinition(),
-            encryption ?? CreateEncryptionDefinition());
+            project,
+            component,
+            solution,
+            encryption);
     }
 }

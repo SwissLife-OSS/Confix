@@ -1,4 +1,5 @@
 using System.CommandLine.Builder;
+using System.Text.Json.Nodes;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,8 +15,14 @@ public static class ComponentProviderCommandLineBuilderExtensions
 
     public static CommandLineBuilder AddComponentProvider<T>(this CommandLineBuilder builder)
         where T : IComponentProvider, new()
+        => builder.AddComponentProvider(T.Type, _ => new T());
+
+    public static CommandLineBuilder AddComponentProvider(
+        this CommandLineBuilder builder,
+        string name,
+        Func<JsonNode, IComponentProvider> factory)
     {
-        builder.GetComponentProviderLookup().Add(T.Type, _ => new T());
+        builder.GetComponentProviderLookup().Add(name, factory);
 
         return builder;
     }

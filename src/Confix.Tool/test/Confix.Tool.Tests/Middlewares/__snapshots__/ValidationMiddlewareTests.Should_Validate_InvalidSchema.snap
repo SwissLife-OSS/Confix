@@ -1,0 +1,33 @@
+﻿  Registering subschemas.
+  Beginning evaluation.
+  Processing $schema...
+  $schema complete: valid
+  Processing $defs...
+  $defs complete: valid
+  Processing type...
+  type complete: valid
+  Processing properties...
+  Evaluating property 'schema'.
+  Processing $ref...
+  Processing type...
+  type complete: invalid
+  Processing description...
+  description complete: valid
+  $ref complete: invalid
+  Processing deprecated...
+  deprecated complete: valid
+  Property 'schema' invalid.
+  properties complete: invalid
+  Processing required...
+  Checking for property 'schema'
+  required complete: invalid
+  Processing additionalProperties...
+  Annotation from properties: ["schema"]
+  No annotation from patternProperties.
+  additionalProperties complete: invalid
+  Transforming output.
+  Evaluation complete: invalid
+✕ The configuration file 'configuration.json' is invalid.
+
+└── schema
+    └── ✕ Value is "string" but should be "integer"
