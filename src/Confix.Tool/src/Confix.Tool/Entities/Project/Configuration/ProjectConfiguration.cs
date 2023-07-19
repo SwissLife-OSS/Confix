@@ -17,6 +17,7 @@ public sealed class ProjectConfiguration
         public const string ComponentProviders = "componentProviders";
         public const string ConfigurationFiles = "configurationFiles";
         public const string Subprojects = "subprojects";
+        public const string ProjectType = "type";
     }
 
     public ProjectConfiguration(
@@ -28,6 +29,7 @@ public sealed class ProjectConfiguration
         IReadOnlyList<ComponentProviderConfiguration>? componentProviders,
         IReadOnlyList<ConfigurationFileConfiguration>? configurationFiles,
         IReadOnlyList<ProjectConfiguration>? subprojects,
+        string? projectType,
         IReadOnlyList<JsonFile> sourceFiles)
     {
         Name = name;
@@ -38,6 +40,7 @@ public sealed class ProjectConfiguration
         ComponentProviders = componentProviders;
         ConfigurationFiles = configurationFiles;
         Subprojects = subprojects;
+        ProjectType = projectType;
         SourceFiles = sourceFiles;
     }
 
@@ -58,6 +61,8 @@ public sealed class ProjectConfiguration
     public IReadOnlyList<ProjectConfiguration>? Subprojects { get; }
 
     public IReadOnlyList<JsonFile> SourceFiles { get; }
+
+    public string? ProjectType { get; }
 
     public static ProjectConfiguration Parse(JsonNode? node)
         => Parse(node, Array.Empty<JsonFile>());
@@ -118,6 +123,10 @@ public sealed class ProjectConfiguration
             .Select(Parse)
             .ToArray();
 
+        var projectType = obj
+            .MaybeProperty(FieldNames.ProjectType)
+            ?.ExpectValue<string>();
+
         return new ProjectConfiguration(
             name,
             environments,
@@ -127,6 +136,7 @@ public sealed class ProjectConfiguration
             componentProviders,
             configurationFiles,
             subprojects,
+            projectType,
             sourceFiles);
     }
 
@@ -163,6 +173,8 @@ public sealed class ProjectConfiguration
 
         var sourceFiles = SourceFiles.Concat(other.SourceFiles).ToArray();
 
+        var projectType = other.ProjectType ?? ProjectType;
+
         return new ProjectConfiguration(
             name,
             environments,
@@ -172,6 +184,7 @@ public sealed class ProjectConfiguration
             componentProviders,
             configurationFiles,
             subprojects,
+            projectType,
             sourceFiles);
     }
 
@@ -188,5 +201,5 @@ public sealed class ProjectConfiguration
     }
 
     public static ProjectConfiguration Empty { get; } =
-        new(null, null, null, null, null, null, null, null, Array.Empty<JsonFile>());
+        new(null, null, null, null, null, null, null, null, null, Array.Empty<JsonFile>());
 }

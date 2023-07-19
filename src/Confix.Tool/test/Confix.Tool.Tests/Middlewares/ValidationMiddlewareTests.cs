@@ -1,17 +1,12 @@
 using ConfiX.Inputs;
 using Confix.Tool;
 using Confix.Tool.Abstractions;
-using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
-using Confix.Tool.Entities.Components;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Middlewares.Project;
 using Confix.Tool.Schema;
-using Json.Schema;
-using Moq;
-using Confix.Tool.Common.Pipelines;
 using Snapshooter.Xunit;
 using static Confix.Tool.Middlewares.ConfigurationScope;
 using Comp = Confix.Tool.Abstractions.Component;

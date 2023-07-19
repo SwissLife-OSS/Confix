@@ -1,3 +1,4 @@
+using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Component;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
@@ -32,8 +33,21 @@ public sealed class BuildComponentsOfProjectMiddleware : IMiddleware
             await pipeline.ExecuteAsync(componentContext);
         }
 
-        await next(context);
+        if (!project.IsOnlyComponents() && !context.IsOnlyComponents())
+        {
+            await next(context);
+        }
     }
+}
+
+file static class Extensions
+{
+    public static bool IsOnlyComponents(this IMiddlewareContext context)
+        => context.Parameter.TryGet(OnlyComponentsOption.Instance, out bool onlyComponents) &&
+            onlyComponents;
+
+    public static bool IsOnlyComponents(this ProjectDefinition project)
+        => project.ProjectType == ProjectType.Component;
 }
 
 file static class Log

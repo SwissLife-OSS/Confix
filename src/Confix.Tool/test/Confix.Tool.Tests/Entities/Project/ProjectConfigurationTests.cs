@@ -162,6 +162,7 @@ public class ProjectConfigurationTests : ParserTestBase
             new List<ComponentProviderConfiguration>(),
             new List<ConfigurationFileConfiguration>(),
             new List<ProjectConfiguration>(),
+            null,
             Array.Empty<JsonFile>()
         );
 
@@ -215,8 +216,10 @@ public class ProjectConfigurationTests : ParserTestBase
                     null,
                     null,
                     null,
+                    null,
                     Array.Empty<JsonFile>())
             },
+            null,
             Array.Empty<JsonFile>());
         var other = new ProjectConfiguration(
             "MergedProject",
@@ -257,8 +260,10 @@ public class ProjectConfigurationTests : ParserTestBase
                     null,
                     null,
                     null,
+                    null,
                     Array.Empty<JsonFile>()),
             },
+            null,
             Array.Empty<JsonFile>()
         );
 
@@ -366,7 +371,7 @@ public class ProjectConfigurationTests : ParserTestBase
 
         var files = new List<JsonFile>
         {
-           await JsonFile.FromFile(new(confixRcPath), default)
+            await JsonFile.FromFile(new(confixRcPath), default)
         };
         // Act
         var result = ProjectConfiguration.LoadFromFiles(files);
