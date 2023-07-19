@@ -17,7 +17,8 @@
     "VariableProviders": [],
     "ComponentProviders": [],
     "ConfigurationFiles": [],
-    "Subprojects": []
+    "Subprojects": [],
+    "ProjectType": 0
   },
   "Solution": null
 }

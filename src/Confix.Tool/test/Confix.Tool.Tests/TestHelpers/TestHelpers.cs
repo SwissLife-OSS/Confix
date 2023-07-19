@@ -19,6 +19,7 @@ public sealed class TestHelpers
         IReadOnlyList<ComponentProviderDefinition>? componentProviders = null,
         IReadOnlyList<ConfigurationFileDefinition>? configurationFiles = null,
         IReadOnlyList<ProjectDefinition>? subprojects = null,
+        ProjectType? projectType = null,
         DirectoryInfo? directory = null)
 
     {
@@ -31,6 +32,7 @@ public sealed class TestHelpers
             componentProviders ?? Array.Empty<ComponentProviderDefinition>(),
             configurationFiles ?? Array.Empty<ConfigurationFileDefinition>(),
             subprojects ?? Array.Empty<ProjectDefinition>(),
+            projectType ?? ProjectType.Default,
             directory);
     }
 

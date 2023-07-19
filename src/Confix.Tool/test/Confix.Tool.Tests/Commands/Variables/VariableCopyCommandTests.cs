@@ -104,7 +104,8 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
         const string beforeValue = "test";
-        await _first.SetAsync("a.b", beforeValue, CancellationToken.None);
+        var node = (JsonNode?)beforeValue;
+        await _first.SetAsync("a.b", node!, CancellationToken.None);
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
@@ -123,7 +124,8 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
         const string beforeValue = "test";
-        await _first.SetAsync("a.b", beforeValue, CancellationToken.None);
+        var node = (JsonNode?)beforeValue;
+        await _first.SetAsync("a.b", node!, CancellationToken.None);
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
@@ -143,7 +145,8 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
         const string beforeValue = "test";
-        await _first.SetAsync("a.b", beforeValue, CancellationToken.None);
+        var node = (JsonNode?)beforeValue;
+        await _first.SetAsync("a.b", node!, CancellationToken.None);
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
 

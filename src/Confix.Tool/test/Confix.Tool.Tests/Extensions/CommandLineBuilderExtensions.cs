@@ -12,7 +12,7 @@ public static class CommandLineBuilderExtensions
     {
         builder.AddMiddleware(x =>
             {
-                T cache = default(T);
+                var cache = default(T);
                 x.BindingContext.AddService(sp => cache ??= factory(sp));
             },
             MiddlewareOrder.Configuration + 10);

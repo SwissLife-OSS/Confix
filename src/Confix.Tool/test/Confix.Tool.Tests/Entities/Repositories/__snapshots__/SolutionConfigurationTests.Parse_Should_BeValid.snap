@@ -23,7 +23,8 @@
     "ComponentProviders": null,
     "ConfigurationFiles": null,
     "Subprojects": null,
-    "SourceFiles": []
+    "SourceFiles": [],
+    "ProjectType": null
   },
   "SourceFiles": []
 }

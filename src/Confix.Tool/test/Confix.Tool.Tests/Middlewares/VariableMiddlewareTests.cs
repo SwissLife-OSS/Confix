@@ -38,6 +38,7 @@ public class VariableMiddlewareTests
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
                 Array.Empty<ProjectDefinition>(),
+                ProjectType.Default,
                 null
             ),
             null,
