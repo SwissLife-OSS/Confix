@@ -116,6 +116,7 @@ public class RuntimeConfigurationTests : ParserTestBase
                 null,
                 null,
                 null,
+                null,
                 Array.Empty<JsonFile>()),
             new ComponentConfiguration("MergedComponent",
                 new List<ComponentInputConfiguration>(),

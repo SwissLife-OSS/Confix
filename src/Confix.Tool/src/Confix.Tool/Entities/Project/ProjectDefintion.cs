@@ -16,6 +16,7 @@ public sealed class ProjectDefinition
         IReadOnlyList<ComponentProviderDefinition> componentProviders,
         IReadOnlyList<ConfigurationFileDefinition> configurationFiles,
         IReadOnlyList<ProjectDefinition> subprojects,
+        ProjectType projectType,
         DirectoryInfo? directory)
     {
         Name = name;
@@ -26,6 +27,7 @@ public sealed class ProjectDefinition
         ComponentProviders = componentProviders;
         ConfigurationFiles = configurationFiles;
         Subprojects = subprojects;
+        ProjectType = projectType;
         Directory = directory;
     }
 
@@ -44,6 +46,8 @@ public sealed class ProjectDefinition
     public IReadOnlyList<ConfigurationFileDefinition> ConfigurationFiles { get; }
 
     public IReadOnlyList<ProjectDefinition> Subprojects { get; }
+
+    public ProjectType ProjectType { get; }
 
     [JsonIgnore]
     public DirectoryInfo? Directory { get; }
@@ -84,6 +88,12 @@ public sealed class ProjectDefinition
         var subprojects = configuration.Subprojects?.Select(From).ToArray() ??
             Array.Empty<ProjectDefinition>();
 
+        var projectType = configuration.ProjectType switch
+        {
+            "component" => ProjectType.Component,
+            _ => ProjectType.Default
+        };
+
         return new ProjectDefinition(
             name,
             environments,
@@ -93,6 +103,7 @@ public sealed class ProjectDefinition
             componentProviders,
             configurationFiles,
             subprojects,
+            projectType,
             lastConfigurationFile?.File.Directory);
     }
 
@@ -105,5 +116,6 @@ public sealed class ProjectDefinition
         Array.Empty<ComponentProviderDefinition>(),
         Array.Empty<ConfigurationFileDefinition>(),
         Array.Empty<ProjectDefinition>(),
+        ProjectType.Default,
         null);
 }

@@ -31,6 +31,7 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
                 Array.Empty<ProjectDefinition>(),
+                ProjectType.Default,
                 null
             ),
             null,
@@ -79,6 +80,7 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
                 Array.Empty<ProjectDefinition>(),
+                ProjectType.Default,
                 null
             ),
             null,
@@ -100,7 +102,7 @@ public class EnvironmentMiddlewareTests
 
         // act
         await middleware.InvokeAsync(middelwareContext.Object, next);
-        
+
         // assert
         isNextInvoked.Should().BeTrue();
         featureCollection.TryGet(out EnvironmentFeature? environmentFeature);
@@ -129,6 +131,7 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
                 Array.Empty<ProjectDefinition>(),
+                ProjectType.Default,
                 null
             ),
             null,
@@ -147,10 +150,10 @@ public class EnvironmentMiddlewareTests
             isNextInvoked = true;
             return Task.CompletedTask;
         };
-        
+
         // act
         await middleware.InvokeAsync(middelwareContext.Object, next);
-        
+
         // assert
         isNextInvoked.Should().BeTrue();
         featureCollection.TryGet(out EnvironmentFeature? environmentFeature);
@@ -182,6 +185,7 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
                 Array.Empty<ProjectDefinition>(),
+                ProjectType.Default,
                 null
             ),
             null,
@@ -232,6 +236,7 @@ public class EnvironmentMiddlewareTests
                 Array.Empty<ComponentProviderDefinition>(),
                 Array.Empty<ConfigurationFileDefinition>(),
                 Array.Empty<ProjectDefinition>(),
+                ProjectType.Default,
                 null
             ),
             null,
@@ -240,7 +245,8 @@ public class EnvironmentMiddlewareTests
         );
         featureCollection.Set(configurationFeature);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
-        var parameters = ParameterCollection.From(new Dictionary<Symbol, object?>() {
+        var parameters = ParameterCollection.From(new Dictionary<Symbol, object?>()
+        {
             { ActiveEnvironmentOption.Instance, "test1" }
         });
 
