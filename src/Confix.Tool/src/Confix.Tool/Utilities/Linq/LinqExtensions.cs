@@ -69,6 +69,12 @@ public static class LinqExtensions
     {
         var list = new List<T>();
         var tasks = sources.ToList();
+        
+        if (tasks.Count == 0)
+        {
+            return list;
+        }
+
         while (!cancellationToken.IsCancellationRequested && await Task.WhenAny(tasks) is { } task)
         {
             list.Add(await task);
