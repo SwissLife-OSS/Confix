@@ -4,6 +4,7 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Schema;
+using Json.Pointer;
 using Json.Schema;
 using Spectre.Console;
 
@@ -26,6 +27,7 @@ public sealed class ValidationMiddleware : IMiddleware
         var cancellationToken = context.CancellationToken;
 
         var configuration = context.Features.Get<ConfigurationFeature>();
+        configuration.EnsureProjectScope();
         var solution = configuration.EnsureSolution();
         var project = configuration.EnsureProject();
 
@@ -33,8 +35,8 @@ public sealed class ValidationMiddleware : IMiddleware
 
         var evaluationOptions = new EvaluationOptions
         {
-            OutputFormat = OutputFormat.List,
-            Log = context.Logger.CreateLog()
+            OutputFormat = OutputFormat.Hierarchical,
+            Log = context.Logger.CreateLog(),
         };
 
         var failed = false;
@@ -91,16 +93,34 @@ file static class Extensions
         var tree = new Tree(Text.Empty);
         var lookup = new Dictionary<string, IHasTreeNodes>();
 
-        foreach (var result in results.Details)
+        ProcessResult(results);
+
+        void ProcessResult(EvaluationResults root)
         {
-            var path = result.InstanceLocation.Segments.Select(x => x.Value).ToArray();
-            var node = Resolve(path);
-            if (result.HasErrors)
+            var path = root.InstanceLocation.Segments.Select(x => x.Value).ToArray();
+            if (!root.IsValid)
             {
-                foreach (var (_, error) in result.Errors!)
+                if (root.HasErrors)
                 {
-                    node.AddNode(
-                        $"{Glyph.Cross.ToMarkup()} {error.EscapeMarkup()}");
+                    var node = Resolve(path);
+                    foreach (var (_, error) in root.Errors!)
+                    {
+                        node.AddNode(
+                            $"{Glyph.Cross.ToMarkup()} {error.EscapeMarkup()}");
+                    }
+                }
+
+                var details = root.Details;
+                if (details.Any(x => x.EvaluationPath.IsAnyOf() && x.Details.Count > 0))
+                {
+                    details = details
+                        .Where(x => !x.EvaluationPath.IsAnyOf() || x.Details.Count > 0)
+                        .ToArray();
+                }
+
+                foreach (var result in details)
+                {
+                    ProcessResult(result);
                 }
             }
         }
@@ -126,26 +146,14 @@ file static class Extensions
         return tree;
     }
 
-    private static T AddResult<T>(this T node, EvaluationResults results) where T : IHasTreeNodes
+    public static bool IsAnyOf(this JsonPointer pointer)
     {
-        if (results.HasErrors)
+        if (pointer.Segments.Length < 2)
         {
-            foreach (var (_, error) in results.Errors!)
-            {
-                node.AddNode($"[red bold]{Glyph.Cross.ToMarkup()}[/] {error.EscapeMarkup()}");
-            }
-        }
-        else
-        {
-            foreach (var result in results.Details)
-            {
-                var lastSegment = result.InstanceLocation.Segments.LastOrDefault()
-                    ?.Value.EscapeMarkup() ?? "";
-                node.AddNode(lastSegment).AddResult(result);
-            }
+            return false;
         }
 
-        return node;
+        return pointer.Segments[^2] == "anyOf";
     }
 
     public static JsonSchema GetSchema(
