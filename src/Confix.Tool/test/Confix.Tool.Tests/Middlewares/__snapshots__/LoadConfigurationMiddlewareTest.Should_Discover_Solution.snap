@@ -21,7 +21,8 @@
     "VariableProviders": [],
     "ComponentProviders": [],
     "ConfigurationFiles": [],
-    "Subprojects": []
+    "Subprojects": [],
+    "ProjectType": 0
   },
   "Solution": {
     "Component": null,
@@ -46,7 +47,8 @@
       "VariableProviders": [],
       "ComponentProviders": [],
       "ConfigurationFiles": [],
-      "Subprojects": []
+      "Subprojects": [],
+      "ProjectType": 0
     }
   }
 }
