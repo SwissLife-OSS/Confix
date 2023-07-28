@@ -60,26 +60,22 @@ public sealed class PipelineExecutor
     {
         var console = _services.GetRequiredService<IAnsiConsole>();
 
-        return await console
-            .Status()
-            .StartAsync("...", Execute);
+        await using var status = new SpectreStatusContext(console);
+        await status.StartAsync(cancellationToken);
 
-        async Task<int> Execute(StatusContext ctx)
+        var context = new MiddlewareContext
         {
-            var context = new MiddlewareContext
-            {
-                CancellationToken = cancellationToken,
-                Parameter = ParameterCollection.From(_parameter),
-                Console = _services.GetRequiredService<IAnsiConsole>(),
-                Logger = _services.GetRequiredService<IConsoleLogger>(),
-                Execution = _services.GetRequiredService<IExecutionContext>(),
-                Status = new SpectreStatusContext(ctx),
-                Services = _services
-            };
+            CancellationToken = cancellationToken,
+            Parameter = ParameterCollection.From(_parameter),
+            Console = _services.GetRequiredService<IAnsiConsole>(),
+            Logger = _services.GetRequiredService<IConsoleLogger>(),
+            Execution = _services.GetRequiredService<IExecutionContext>(),
+            Status = status,
+            Services = _services
+        };
 
-            await _pipeline(context);
+        await _pipeline(context);
 
-            return context.ExitCode;
-        }
+        return context.ExitCode;
     }
 }

@@ -1,4 +1,3 @@
-using System.CommandLine;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
@@ -14,20 +13,22 @@ public sealed class VariableGetPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .Use<VariableMiddleware>()
-            .AddArgument(VariableNameArgument.Instance)
-            .AddOption(VariableProviderNameOption.Instance)
+            .AddOption(VariableNameOption.Instance)
             .UseHandler(InvokeAsync);
     }
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
         var resolver = context.Features.Get<VariableResolverFeature>().Resolver;
-        var variableName = context.Parameter.Get(VariableNameArgument.Instance);
-        context.Parameter.TryGet(VariableProviderNameOption.Instance,
-            out string variableProviderName);
-        var variablePath = variableProviderName is null
-            ? VariablePath.Parse(variableName)
-            : new VariablePath(variableProviderName, variableName);
+
+        if (!context.Parameter.TryGet(VariableNameOption.Instance, out string variableName))
+        {
+            variableName = await context.AskAsync<string>("Variable name: ");
+        }
+
+        var variablePath = VariablePath.Parse(variableName);
+
+        context.Status.Message = $"Resolving variable {variablePath.ToString().AsHighlighted()}...";
 
         var result = await resolver
             .ResolveOrThrowAsync(variablePath, context.CancellationToken);

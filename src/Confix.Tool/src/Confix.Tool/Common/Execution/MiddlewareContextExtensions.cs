@@ -1,10 +1,13 @@
+using Confix.Tool.Commands.Logging;
+using Spectre.Console;
+
 namespace Confix.Tool.Common.Pipelines;
 
 public static class MiddlewareContextExtensions
 {
     public static void SetStatus(this IMiddlewareContext context, string message)
     {
-        context.Status.Status = message;
+        context.Status.Message = message;
     }
 
     public static MiddlewareContext WithExecutingDirectory(
@@ -41,5 +44,23 @@ public static class MiddlewareContextExtensions
         {
             ContextData = featureCollection
         };
+    }
+
+    public static async Task<T> AskAsync<T>(
+        this IMiddlewareContext context,
+        string prompt)
+    {
+        var ct = context.CancellationToken;
+        await using var _ = await context.Status.PauseAsync(ct);
+        return await context.Console.AskAsync<T>(prompt.AsQuestion(), ct);
+    }
+
+    public static async Task<string> AskPasswordAsync(
+        this IMiddlewareContext context,
+        string prompt)
+    {
+        var ct = context.CancellationToken;
+        await using var _ = await context.Status.PauseAsync(ct);
+        return await context.Console.AskPasswordAsync(prompt.AsQuestion(), ct);
     }
 }

@@ -3,6 +3,7 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using ConfiX.Variables;
+using Spectre.Console;
 
 namespace Confix.Tool.Commands.Variable;
 
@@ -15,20 +16,30 @@ public sealed class VariableSetPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .Use<VariableMiddleware>()
-            .AddArgument(VariableNameArgument.Instance)
-            .AddArgument(VariableValueArgument.Instance)
+            .AddOption(VariableNameOption.Instance)
+            .AddOption(VariableValueOption.Instance)
             .UseHandler(InvokeAsync);
     }
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
         var resolver = context.Features.Get<VariableResolverFeature>().Resolver;
-        var variableName = context.Parameter.Get(VariableNameArgument.Instance);
-        var variableValue = context.Parameter.Get(VariableValueArgument.Instance);
+        if (!context.Parameter.TryGet(VariableNameOption.Instance, out string variableName))
+        {
+            variableName = await context.AskAsync<string>("Variable name: ");
+        }
 
         if (VariablePath.TryParse(variableName, out var parsed))
         {
+            if (!context.Parameter.TryGet(VariableValueOption.Instance, out string variableValue))
+            {
+                variableValue = await context.AskPasswordAsync("Variable value: ");
+            }
+
             var value = JsonValue.Create(variableValue)!;
+
+            context.Status.Message =
+                $"Setting variable {parsed.Value.ToString().AsHighlighted()}...";
 
             var result = await resolver
                 .SetVariable(parsed.Value, value, context.CancellationToken);

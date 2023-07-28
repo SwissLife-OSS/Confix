@@ -21,14 +21,14 @@ public static class CommandExtensions
 
             command.Arguments.ForEach(argument =>
             {
-                executor.AddParameter(argument,
-                    context.ParseResult.GetValueForArgument(argument));
+                var value = context.ParseResult.GetValueForArgument(argument);
+                executor.AddParameter(argument, value);
             });
 
             command.Options.ForEach(option =>
             {
-                executor.AddParameter(option,
-                    context.ParseResult.GetValueForOption(option));
+                var value = context.ParseResult.GetValueForOption(option);
+                executor.AddParameter(option, value);
             });
 
             // execute the pipeline

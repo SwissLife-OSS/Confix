@@ -24,8 +24,11 @@ public sealed class VariableListPipeline : Pipeline
         var resolver = context.Features.Get<VariableResolverFeature>().Resolver;
 
         IEnumerable<VariablePath> variables;
-        if (context.Parameter.TryGet(VariableProviderNameOption.Instance,
-                out string? variableProviderName))
+
+        context.Status.Message = "Fetching Variables...";
+
+        if (context.Parameter
+            .TryGet(VariableProviderNameOption.Instance, out string? variableProviderName))
         {
             variables =
                 await resolver.ListVariables(variableProviderName, context.CancellationToken);

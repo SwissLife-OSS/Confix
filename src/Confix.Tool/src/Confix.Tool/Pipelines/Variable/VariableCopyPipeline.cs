@@ -1,4 +1,3 @@
-using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
@@ -15,8 +14,8 @@ public sealed class VariableCopyPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .Use<VariableMiddleware>()
-            .AddArgument(FromVariableNameArgument.Instance)
-            .AddArgument(ToVariableNameArgument.Instance)
+            .AddOption(FromVariableNameOption.Instance)
+            .AddOption(ToVariableNameOption.Instance)
             .AddOption(ToEnvironmentOption.Instance)
             .UseHandler(InvokeAsync);
     }
@@ -32,11 +31,21 @@ public sealed class VariableCopyPipeline : Pipeline
 
         var toResolver = ResolveToVariableResolver(context) ?? fromResolver;
 
-        var fromVariable = context.Parameter.Get(FromVariableNameArgument.Instance);
-        var toVariable = context.Parameter.Get(ToVariableNameArgument.Instance);
+        if (!context.Parameter.TryGet(FromVariableNameOption.Instance, out string fromVariable))
+        {
+            fromVariable = await context.AskAsync<string>("From variable name: ");
+        }
+
+        if (!context.Parameter.TryGet(ToVariableNameOption.Instance, out string toVariable))
+        {
+            toVariable = await context.AskAsync<string>("To variable name: ");
+        }
 
         var fromVariablePath = Parse(providers, fromVariable);
         var toVariablePath = Parse(providers, toVariable);
+
+        context.Status.Message =
+            $"Copy variable {fromVariablePath.ToString().AsHighlighted()} to {toVariablePath.ToString().AsHighlighted()}...";
 
         var fromValue = await fromResolver.ResolveOrThrowAsync(fromVariablePath, cancellationToken);
 

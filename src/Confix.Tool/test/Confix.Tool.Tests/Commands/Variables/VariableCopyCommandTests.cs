@@ -32,7 +32,7 @@ public class VariableCopyCommandTests
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
-        await cli.RunAsync("variables copy $firsta.b $second:a.b");
+        await cli.RunAsync("variables copy --from $firsta.b --to $second:a.b");
 
         // Assert
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
@@ -47,7 +47,7 @@ public class VariableCopyCommandTests
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
-        await cli.RunAsync("variables copy $first:a.b $seconda.b");
+        await cli.RunAsync("variables copy --from $first:a.b --to $seconda.b");
 
         // Assert
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
@@ -62,7 +62,7 @@ public class VariableCopyCommandTests
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
-        await cli.RunAsync("variables copy $unknown:a.b $second:a.b");
+        await cli.RunAsync("variables copy --from $unknown:a.b --to $second:a.b");
 
         // Assert
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
@@ -77,7 +77,7 @@ public class VariableCopyCommandTests
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
-        await cli.RunAsync("variables copy $first:a.b $unknown:a.b");
+        await cli.RunAsync("variables copy --from $first:a.b --to $unknown:a.b");
 
         // Assert
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
@@ -92,7 +92,7 @@ public class VariableCopyCommandTests
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
-        await cli.RunAsync("variables copy $first:a.b $second:a.b");
+        await cli.RunAsync("variables copy --from $first:a.b --to $second:a.b");
 
         // Assert
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
@@ -104,13 +104,13 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
         const string beforeValue = "test";
-        var node = (JsonNode?)beforeValue;
+        var node = (JsonNode?) beforeValue;
         await _first.SetAsync("a.b", node!, CancellationToken.None);
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
-        await cli.RunAsync("variables copy $first:a.b $second:a.b");
+        await cli.RunAsync("variables copy --from $first:a.b --to $second:a.b");
 
         // Assert
         var afterValue = await _second.ResolveAsync("a.b", CancellationToken.None);
@@ -124,14 +124,14 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
         const string beforeValue = "test";
-        var node = (JsonNode?)beforeValue;
+        var node = (JsonNode?) beforeValue;
         await _first.SetAsync("a.b", node!, CancellationToken.None);
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
         await cli.RunAsync(
-            "variables copy $first:a.b $second:a.b --to-environment prod --environment dev");
+            "variables copy --from $first:a.b --to $second:a.b --to-environment prod --environment dev");
 
         // Assert
         var afterValue = await _second.ResolveAsync("a.b", CancellationToken.None);
@@ -145,14 +145,14 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
         const string beforeValue = "test";
-        var node = (JsonNode?)beforeValue;
+        var node = (JsonNode?) beforeValue;
         await _first.SetAsync("a.b", node!, CancellationToken.None);
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
         await cli.RunAsync(
-            "variables copy $first:a.b $second:a.b --to-environment nope --environment dev");
+            "variables copy --from $first:a.b --to $second:a.b --to-environment nope --environment dev");
 
         // Assert
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();

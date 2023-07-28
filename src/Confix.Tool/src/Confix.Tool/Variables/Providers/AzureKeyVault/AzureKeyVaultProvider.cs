@@ -31,7 +31,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     => KeyVaultExtension.HandleKeyVaultException<IReadOnlyList<string>>(async () =>
     {
         var secrets = new List<string>();
-        await foreach (SecretProperties secret in _client.GetPropertiesOfSecretsAsync(cancellationToken))
+        await foreach (var secret in _client.GetPropertiesOfSecretsAsync(cancellationToken))
         {
             secrets.Add(secret.Name.ToConfixPath());
         }
@@ -57,7 +57,8 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         {
             throw new NotSupportedException("KeyVault only supports String secrets");
         }
-        KeyVaultSecret result = await _client.SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, cancellationToken);
+        KeyVaultSecret result = await _client
+            .SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, cancellationToken);
         return result.Name.ToConfixPath();
     });
 
