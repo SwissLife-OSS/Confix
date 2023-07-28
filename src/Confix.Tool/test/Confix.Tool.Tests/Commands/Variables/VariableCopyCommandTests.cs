@@ -74,7 +74,7 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
 
-         cli.Directories.Home.CreateConfixRc(_confixRc);
+        cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
         await cli.RunAsync("variables copy --from $first:a.b --to $unknown:a.b");
@@ -104,7 +104,7 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
         const string beforeValue = "test";
-        var node = (JsonNode?)beforeValue;
+        var node = (JsonNode?) beforeValue;
         await _first.SetAsync("a.b", node!, CancellationToken.None);
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
@@ -124,7 +124,7 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
         const string beforeValue = "test";
-        var node = (JsonNode?)beforeValue;
+        var node = (JsonNode?) beforeValue;
         await _first.SetAsync("a.b", node!, CancellationToken.None);
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
@@ -145,7 +145,7 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
         const string beforeValue = "test";
-        var node = (JsonNode?)beforeValue;
+        var node = (JsonNode?) beforeValue;
         await _first.SetAsync("a.b", node!, CancellationToken.None);
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
