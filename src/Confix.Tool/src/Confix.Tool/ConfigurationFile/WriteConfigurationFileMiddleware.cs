@@ -15,7 +15,8 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
         context.SetStatus("Persisting configuration changes");
 
         var configurationFeature = context.Features.Get<ConfigurationFileFeature>();
-        var encryptionConfigured = context.Features.TryGet<EncryptionFeature>(out var encryptionFeature);
+        var encryptionConfigured =
+            context.Features.TryGet<EncryptionFeature>(out var encryptionFeature);
         bool encryptFile = context.Parameter.Get(EncryptionOption.Instance);
 
         if (encryptFile && !encryptionConfigured)
@@ -36,11 +37,13 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
             if (encryptFile)
             {
                 context.SetStatus("Encrypting configuration file");
+
                 await using MemoryStream memoryStream = new();
                 await file.Content.SerializeToStreamAsync(memoryStream, context.CancellationToken);
-                var encrypted = await encryptionFeature.EncryptionProvider.EncryptAsync(
-                    memoryStream.ToArray(),
-                    context.CancellationToken);
+
+                var encrypted = await encryptionFeature!.EncryptionProvider
+                    .EncryptAsync(memoryStream.ToArray(), context.CancellationToken);
+
                 await stream.WriteAsync(encrypted, context.CancellationToken);
             }
             else

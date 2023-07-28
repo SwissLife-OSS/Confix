@@ -48,7 +48,7 @@ public sealed class VariableSetPipeline : Pipeline
         }
         else
         {
-            context.Logger.InvalidVariableName(variableName);
+            throw ThrowHelper.InvalidVariableName(variableName);
         }
     }
 }

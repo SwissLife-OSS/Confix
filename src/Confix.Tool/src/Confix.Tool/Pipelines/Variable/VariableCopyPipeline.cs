@@ -66,10 +66,7 @@ public sealed class VariableCopyPipeline : Pipeline
         var environments = configFeature.Project?.Environments;
         if (environments?.FirstOrDefault(x => x.Name == toEnvironment) is null)
         {
-            throw new ExitException($"Environment '{toEnvironment}' does not exists.")
-            {
-                Help = $"Use [blue]confix environment set {toEnvironment}[/] to change it."
-            };
+            throw ThrowHelper.EnvironmentDoesNotExist(toEnvironment);
         }
 
         return variableFeature.CreateResolver(toEnvironment);
@@ -81,18 +78,12 @@ public sealed class VariableCopyPipeline : Pipeline
     {
         if (!VariablePath.TryParse(argumentValue, out var parsed))
         {
-            throw new ExitException($"Invalid variable name: {argumentValue}")
-            {
-                Help = "Variable name must be like: [blue]$provider:some.path[/]"
-            };
+            throw ThrowHelper.InvalidVariableName(argumentValue);
         }
 
         if (!providers.Contains(parsed.Value.ProviderName))
         {
-            throw new ExitException($"Invalid provider name: {parsed.Value.ProviderName}")
-            {
-                Help = $"Available providers: {string.Join(", ", providers)}"
-            };
+            throw ThrowHelper.InvalidProviderName(providers, parsed.Value.ProviderName);
         }
 
         return parsed.Value;

@@ -16,10 +16,7 @@ public static class VariableResolverExtensions
         }
         catch (VariableNotFoundException)
         {
-            throw new ExitException($"Variable not found: {path}")
-            {
-                Help = "Run [blue]confix variable list[/] to see all available variables."
-            };
+            throw ThrowHelper.VariableNotFound(path.ToString());
         }
     }
 }

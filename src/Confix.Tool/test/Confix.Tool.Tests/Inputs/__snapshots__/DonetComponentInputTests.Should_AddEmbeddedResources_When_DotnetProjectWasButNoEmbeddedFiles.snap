@@ -10,7 +10,7 @@
   Component input 'dotnet' loaded
 ✓ Component inputs loaded
   Building component...
-  Found .NET project:'test.csproj' <</tmp>>/content/test.csproj
+  Found .NET project:'<</tmp>>/content/test.csproj' <</tmp>>/content/test.csproj
   Ensuring embedded is in the csproj file '<</tmp>>/content/test.csproj'
   Added EmbeddedResource '$(MSBuildProjectDirectory)/Components/**/*.*' to the csproj file
   Building component completed

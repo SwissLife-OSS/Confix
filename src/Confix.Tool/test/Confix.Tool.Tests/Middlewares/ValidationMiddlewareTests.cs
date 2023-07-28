@@ -220,7 +220,7 @@ public class ValidationMiddlewareTests : IDisposable
 
         // 
         Assert.Equal("The configuration files are invalid.", ex.Message);
-        context.ConsoleLogger.Console.Output.MatchSnapshot();
+        SnapshotBuilder.New().AddOutput(context).MatchSnapshot();
     }
     
     [Fact]
@@ -255,7 +255,7 @@ public class ValidationMiddlewareTests : IDisposable
 
         // 
         Assert.Equal("The configuration files are invalid.", ex.Message);
-        context.ConsoleLogger.Console.Output.MatchSnapshot();
+        SnapshotBuilder.New().AddOutput(context).MatchSnapshot();
     }
     
     [Fact]
@@ -300,7 +300,7 @@ public class ValidationMiddlewareTests : IDisposable
 
         // 
         Assert.Equal("The configuration files are invalid.", ex.Message);
-        context.ConsoleLogger.Console.Output.MatchSnapshot();
+        SnapshotBuilder.New().AddOutput(context).MatchSnapshot();
     }
 
     private async Task SetupSchema(string graphQL)
