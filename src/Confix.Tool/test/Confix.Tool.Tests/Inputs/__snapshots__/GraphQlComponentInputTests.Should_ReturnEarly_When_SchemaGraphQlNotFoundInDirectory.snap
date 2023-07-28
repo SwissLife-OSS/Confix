@@ -9,7 +9,7 @@
   Component input 'graphql' loaded
 ✓ Component inputs loaded
   Building component...
-  Searching in 'schema.graphql' for GraphQL Schema
+  Searching in '<</tmp>>/content/Components/test/schema.graphql' for GraphQL Schema
    -> <</tmp>>/content/Components/test/schema.graphql
   GraphQL Schema was not found. Skipping GraphQL provider
   Building component completed

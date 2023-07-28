@@ -9,11 +9,11 @@
   Component input 'graphql' loaded
 ✓ Component inputs loaded
   Building component...
-  Searching in 'schema.graphql' for GraphQL Schema
+  Searching in '<</tmp>>/content/Components/test/schema.graphql' for GraphQL Schema
    -> <</tmp>>/content/Components/test/schema.graphql
-  GraphQL Schema was found: 'schema.graphql' <</tmp>>/content/Components/test/schema.graphql
-  Replacing existing schema.json file: 'schema.json' <</tmp>>/content/Components/test/schema.json
-  Generated schema based on GraphQL Schema:'schema.json' <</tmp>>/content/Components/test/schema.json
+  GraphQL Schema was found: '<</tmp>>/content/Components/test/schema.graphql' <</tmp>>/content/Components/test/schema.graphql
+  Replacing existing schema.json file: '<</tmp>>/content/Components/test/schema.json' <</tmp>>/content/Components/test/schema.json
+  Generated schema based on GraphQL Schema:'<</tmp>>/content/Components/test/schema.json' <</tmp>>/content/Components/test/schema.json
   Building component completed
 
 --------------------------------------------------

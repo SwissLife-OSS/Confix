@@ -1,4 +1,7 @@
-﻿  Registering subschemas.
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Registering subschemas.
   Beginning evaluation.
   Processing $schema...
   $schema complete: valid
@@ -38,6 +41,7 @@
   additionalProperties complete: invalid
   Transforming output.
   Evaluation complete: invalid
-✕ The configuration file 'configuration.json' is invalid.
+✕ The configuration file '<</tmp>>/content/solution/project/configuration.json' is invalid.
 
 └── ✕ Required properties ["schema"] were not present
+

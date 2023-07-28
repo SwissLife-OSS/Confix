@@ -10,9 +10,9 @@
   Component input 'dotnet' loaded
 ✓ Component inputs loaded
   Building component...
-  Found .NET project:'test.csproj' <</tmp>>/content/test.csproj
+  Found .NET project:'<</tmp>>/content/test.csproj' <</tmp>>/content/test.csproj
   Ensuring embedded is in the csproj file '<</tmp>>/content/test.csproj'
-✕ Could not parse project file: 'test.csproj' <</tmp>>/content/test.csproj
+✕ Could not parse project file: '<</tmp>>/content/test.csproj' <</tmp>>/content/test.csproj
   Building component completed
 
 --------------------------------------------------
