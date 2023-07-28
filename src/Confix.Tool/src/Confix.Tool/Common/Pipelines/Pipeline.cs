@@ -52,11 +52,11 @@ public abstract class Pipeline
             var current = next;
             next = async context =>
             {
-                var status = context.Status.Status;
+                var status = context.Status.Message;
 
                 await middleware.InvokeAsync(context, current);
 
-                context.Status.Status = status;
+                context.Status.Message = status;
             };
         }
 

@@ -11,4 +11,9 @@ public static class StringExtensions
     {
         return $"[bold blue]{value}[/]";
     }
+
+    public static string AsQuestion(this string value)
+    {
+        return $"{Glyph.QuestionMark.ToMarkup()} {value}";
+    }
 }

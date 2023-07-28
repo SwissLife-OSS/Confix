@@ -16,7 +16,7 @@ public partial record struct VariablePath(string ProviderName, string Path)
 
     public static bool TryParse(string variable, [NotNullWhen(true)] out VariablePath? parsed)
     {
-        Match x = VariableNameRegex().Match(variable);
+        var x = VariableNameRegex().Match(variable);
         if (!x.Success)
         {
             parsed = null;

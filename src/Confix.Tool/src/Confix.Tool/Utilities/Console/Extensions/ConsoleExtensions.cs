@@ -15,7 +15,22 @@ public static class ConsoleExtensions
     {
         console.MarkupLine($"[green]{message.EscapeMarkup()}[/]");
     }
-    
+
+    public static Task<string> AskPasswordAsync(
+        this IAnsiConsole console,
+        string message,
+        CancellationToken cancellationToken)
+        => new TextPrompt<string>(message)
+            .PromptStyle("red")
+            .Secret()
+            .ShowAsync(console, cancellationToken);
+
+    public static Task<T> AskAsync<T>(
+        this IAnsiConsole console,
+        string message,
+        CancellationToken cancellationToken)
+        => new TextPrompt<T>(message).ShowAsync(console, cancellationToken);
+
     /// <summary>
     /// Writes a json object to the console
     /// </summary>
