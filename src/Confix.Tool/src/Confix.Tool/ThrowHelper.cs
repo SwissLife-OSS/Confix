@@ -1,3 +1,5 @@
+using Confix.Tool.Commands.Logging;
+
 namespace Confix.Tool;
 
 public static class ThrowHelper
@@ -30,4 +32,23 @@ public static class ThrowHelper
 
     public static Exception CouldNotParseJsonFile(FileInfo file)
         => throw new ExitException($"File {file.FullName} has invalid content.");
+
+    public static Exception SecretNotFound(Exception innerException) =>
+        new ExitException("Secret does not exist in this provider.", innerException)
+        {
+            Help =
+                $"try running {"confix variables list".AsHighlighted()} to list all available variables"
+        };
+
+    public static Exception AccessToKeyVaultFailed(Exception innerException) =>
+        new ExitException("Access to Key Vault failed", innerException)
+        {
+            Help = "check if you have the required permissions to access the Key Vault"
+        };
+
+    public static Exception AuthenticationFailedForVault(Exception innerException) =>
+        new ExitException("Authentication for Key Vault failed", innerException)
+        {
+            Help = $"try running {"az login".AsHighlighted()} to authenticate with Azure"
+        };
 }
