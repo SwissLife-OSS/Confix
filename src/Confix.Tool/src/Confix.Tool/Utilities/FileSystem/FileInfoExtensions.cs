@@ -56,7 +56,7 @@ public static class FileInfoExtensions
     }
 
     public static string ToLink(this FileSystemInfo fileInfo)
-        => $"'{fileInfo.Name.EscapeMarkup().ToLink(fileInfo)}'";
+        => $"'{fileInfo.FullName.EscapeMarkup().ToLink(fileInfo)}'";
 
     public static string ToLink(this string str, FileSystemInfo fileInfo)
         => $"[link='{Uri.EscapeDataString(fileInfo.FullName)}']{str}[/]";

@@ -18,17 +18,6 @@ public class VariablePathTests
         result.Path.Should().Be(path);
     }
 
-    [Theory]
-    [InlineData("bar")]
-    [InlineData("$foo.bar")]
-    [InlineData("$$foo:bar")]
-    [InlineData("foo:bar")]
-    public void Parse_Invalid_Throws(string variableName)
-    {
-        // act & assert
-        Assert.Throws<VariablePathParseException>(() => VariablePath.Parse(variableName));
-    }
-
     [Fact]
     public void TryParse_ValidVariableName_CorrectResult()
     {

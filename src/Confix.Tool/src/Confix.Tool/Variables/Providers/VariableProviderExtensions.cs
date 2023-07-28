@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Text.Json.Nodes;
 
 namespace ConfiX.Variables;
@@ -11,30 +10,31 @@ internal static class VariableProviderExtensions
         Func<string, CancellationToken, Task<JsonNode>> resolveAsync,
         CancellationToken cancellationToken)
     {
-        ConcurrentQueue<VariableNotFoundException> errors = new();
-        ConcurrentQueue<KeyValuePair<string, JsonNode>> resolvedVariables = new();
+        var errors = new ConcurrentQueue<VariableNotFoundException>();
+        var resolvedVariables = new ConcurrentDictionary<string, JsonNode>();
 
-        await Parallel.ForEachAsync(
-            paths,
-            new ParallelOptions { CancellationToken = cancellationToken },
-            async (path, ctx) =>
+        var parallelOptions = new ParallelOptions { CancellationToken = cancellationToken };
+
+        async ValueTask ForEachAsync(string path, CancellationToken ctx)
+        {
+            try
             {
-                try
-                {
-                    JsonNode resolvedValue = await resolveAsync(path, ctx);
-                    resolvedVariables.Enqueue(new(path, resolvedValue));
-                }
-                catch (VariableNotFoundException ex)
-                {
-                    errors.Enqueue(ex);
-                }
-            });
+                var resolvedValue = await resolveAsync(path, ctx);
+                resolvedVariables[path] = resolvedValue;
+            }
+            catch (VariableNotFoundException ex)
+            {
+                errors.Enqueue(ex);
+            }
+        }
+
+        await Parallel.ForEachAsync(paths, parallelOptions, ForEachAsync);
 
         if (!errors.IsEmpty)
         {
             throw new AggregateException(errors);
         }
 
-        return new Dictionary<string, JsonNode>(resolvedVariables);
+        return resolvedVariables;
     }
 }

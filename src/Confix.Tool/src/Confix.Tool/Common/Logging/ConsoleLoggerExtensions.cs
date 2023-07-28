@@ -127,7 +127,7 @@ public static class ConsoleLoggerExtensions
         {
             Template = message,
             Arguments = arguments,
-            Verbosity = Verbosity.Quiet,
+            Verbosity = Verbosity.Detailed,
             Style = Styles.Error,
             Glyph = Glyph.Cross,
             Exception = exception

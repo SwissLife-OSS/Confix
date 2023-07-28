@@ -33,14 +33,7 @@ public sealed class LocalVariableProvider : IVariableProvider
 
     public Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
     {
-        if (!_localFile.Exists)
-        {
-            // The resolving of the variable will fail, but the file will be created. The user can
-            // then edit the file. This is just a convenience for the user. Otherwise they have to
-            // create the file themselves.
-            App.Log.CreatingFile(_localFile);
-            File.WriteAllText(_localFile.FullName, "{}");
-        }
+        EnsureConfigFile();
 
         if (_parsedLocalFile.Value.TryGetValue(path, out var value) && value is not null)
         {
@@ -57,7 +50,21 @@ public sealed class LocalVariableProvider : IVariableProvider
 
     public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
     {
+        EnsureConfigFile();
+        
         throw new NotImplementedException();
+    }
+
+    private void EnsureConfigFile()
+    {
+        if (!_localFile.Exists)
+        {
+            // The resolving of the variable will fail, but the file will be created. The user can
+            // then edit the file. This is just a convenience for the user. Otherwise they have to
+            // create the file themselves.
+            App.Log.CreatingFile(_localFile);
+            File.WriteAllText(_localFile.FullName, "{}");
+        }
     }
 
     private Dictionary<string, JsonNode?> ParseConfiguration()

@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using Confix.Tool;
 
 namespace ConfiX.Variables;
 
@@ -11,7 +12,8 @@ public partial record struct VariablePath(string ProviderName, string Path)
         {
             return parsed.Value;
         }
-        throw new VariablePathParseException(variable);
+
+        throw ThrowHelper.InvalidVariableName(variable);
     }
 
     public static bool TryParse(string variable, [NotNullWhen(true)] out VariablePath? parsed)
@@ -34,23 +36,26 @@ public partial record struct VariablePath(string ProviderName, string Path)
     private const string VariableProviderCaptureGroup = "VariableProvider";
     private const string VariableNameCaptureGroup = "VariableName";
 
-    [GeneratedRegex($$"""^\$(?<{{VariableProviderCaptureGroup}}>[\w\.]+):(?<{{VariableNameCaptureGroup}}>[\w\.]+)$""")]
+    [GeneratedRegex(
+        $$"""^\$(?<{{VariableProviderCaptureGroup}}>[\w\.]+):(?<{{VariableNameCaptureGroup}}>[\w\.]+)$""")]
     private static partial Regex VariableNameRegex();
 }
 
 public static partial class VariablePathExtensions
 {
     public static IEnumerable<VariablePath> GetVariables(this string value)
-    => MultipleInterpolatedVariablesRegex()
-        .Matches(value)
-        .Select(match => VariablePath.Parse(match.Groups[VariableCaptureGroup].Value));
+        => MultipleInterpolatedVariablesRegex()
+            .Matches(value)
+            .Select(match => VariablePath.Parse(match.Groups[VariableCaptureGroup].Value));
 
     public static string ReplaceVariables(this string value, Func<VariablePath, string> replacer)
-    => MultipleInterpolatedVariablesRegex().Replace(value, match =>
-        {
-            var parsed = VariablePath.Parse(match.Groups[VariableCaptureGroup].Value);
-            return replacer(parsed);
-        });
+        => MultipleInterpolatedVariablesRegex()
+            .Replace(value,
+                match =>
+                {
+                    var parsed = VariablePath.Parse(match.Groups[VariableCaptureGroup].Value);
+                    return replacer(parsed);
+                });
 
     private const string VariableCaptureGroup = "variable";
 
