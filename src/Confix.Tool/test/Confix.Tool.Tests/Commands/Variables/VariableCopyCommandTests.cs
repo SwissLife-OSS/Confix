@@ -74,7 +74,7 @@ public class VariableCopyCommandTests
         // Arrange
         using var cli = _cli;
 
-        cli.Directories.Home.CreateConfixRc(_confixRc);
+         cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
         await cli.RunAsync("variables copy --from $first:a.b --to $unknown:a.b");
