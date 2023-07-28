@@ -24,9 +24,8 @@ public static class ExceptionHandlerCommandLineBuilderExtensions
         {
             await next(context);
         }
-        catch (AggregateException exception) when (exception.InnerExceptions.Any(e
-                                                       => e is ExitException
-                                                           or ValidationException))
+        catch (AggregateException exception) when (
+            exception.InnerExceptions.Any(e => e is ExitException or ValidationException))
         {
             foreach (var innerException in exception.InnerExceptions)
             {
