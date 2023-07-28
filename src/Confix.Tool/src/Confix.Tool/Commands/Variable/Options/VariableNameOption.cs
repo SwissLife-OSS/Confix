@@ -2,7 +2,7 @@ using System.CommandLine;
 
 namespace Confix.Tool.Commands.Variable;
 
-internal sealed class VariableNameOption : Option<string>
+public sealed class VariableNameOption : Option<string>
 {
     public static VariableNameOption Instance { get; } = new();
 
