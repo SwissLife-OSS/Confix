@@ -142,7 +142,7 @@ public static class Extension
         [NotNullWhen(true)] out VariablePath? variablePath)
     {
         if (node.GetSchemaValueType() == SchemaValueType.String
-            && VariablePath.TryParse((string) node!, out VariablePath? parsed))
+            && VariablePath.TryParse((string) node!, out var parsed))
         {
             variablePath = parsed;
             return true;
