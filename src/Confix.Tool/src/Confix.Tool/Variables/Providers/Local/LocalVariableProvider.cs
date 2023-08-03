@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Confix.Tool;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Schema;
 using HotChocolate.Types;
@@ -9,6 +10,11 @@ namespace ConfiX.Variables;
 
 public sealed class LocalVariableProvider : IVariableProvider
 {
+    private static readonly JsonSerializerOptions _options = new()
+    {
+        WriteIndented = true
+    };
+
     private readonly Lazy<Dictionary<string, JsonNode?>> _parsedLocalFile;
     private readonly FileInfo _localFile;
 
@@ -48,11 +54,46 @@ public sealed class LocalVariableProvider : IVariableProvider
         CancellationToken cancellationToken)
         => paths.ResolveMany(ResolveAsync, cancellationToken);
 
-    public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
+    public Task<string> SetAsync(string path, JsonNode value, CancellationToken ct)
     {
         EnsureConfigFile();
-        
-        throw new NotImplementedException();
+
+        var node = LoadFile() ?? new JsonObject();
+        var segments = path.Split('.');
+        var current = node;
+        var currentPath = "/";
+
+        for (var i = 0; i < segments.Length - 1; i++)
+        {
+            var segment = segments[i];
+
+            if (current is not JsonObject)
+            {
+                throw new ExitException(
+                    $"Could not set value in file {_localFile.FullName} because the path {path} is not an object");
+            }
+
+            current[segment] ??= new JsonObject();
+
+            current = current[segment];
+            currentPath = Path.Join(currentPath, segment);
+        }
+
+        if (current is not JsonObject)
+        {
+            throw new ExitException(
+                $"Could not set value in file {_localFile.FullName} because the path {path} is not an object");
+        }
+
+        current[segments[^1]] = value;
+
+        var serialized = JsonSerializer.Serialize(node, _options);
+
+        App.Log.SavingFile(_localFile);
+
+        File.WriteAllText(_localFile.FullName, serialized);
+
+        return Task.FromResult(path);
     }
 
     private void EnsureConfigFile()
@@ -69,17 +110,27 @@ public sealed class LocalVariableProvider : IVariableProvider
 
     private Dictionary<string, JsonNode?> ParseConfiguration()
     {
+        var node = LoadFile();
+        if (node is null)
+        {
+            return new Dictionary<string, JsonNode?>();
+        }
+
+        return JsonParser.ParseNode(node);
+    }
+
+    private JsonNode? LoadFile()
+    {
         if (!_localFile.Exists)
         {
             // If the file does not exist we just return an empty dictionary. This is needed
             // for the case when the user does not have a local configuration file. 
             App.Log.ConfigFileNotFound(_localFile);
-            return new Dictionary<string, JsonNode?>();
+            return null;
         }
 
         using var fileStream = _localFile.OpenRead();
-        var node = JsonNode.Parse(fileStream) ?? throw new JsonException("Invalid Json Node");
-        return JsonParser.ParseNode(node);
+        return JsonNode.Parse(fileStream) ?? throw new JsonException("Invalid Json Node");
     }
 
     public ValueTask DisposeAsync()
@@ -99,5 +150,10 @@ file static class Log
     public static void ConfigFileNotFound(this IConsoleLogger logger, FileSystemInfo info)
     {
         logger.Debug($"Local variable file was not found at expected location: {info.ToLink()}");
+    }
+
+    public static void SavingFile(this IConsoleLogger logger, FileSystemInfo info)
+    {
+        logger.Debug($"Saving local variable file: {info.ToLink()}");
     }
 }

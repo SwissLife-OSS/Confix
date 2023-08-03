@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using static System.Environment.SpecialFolder;
 using static System.Environment.SpecialFolderOption;
+using static ConfiX.Variables.GitHelpers;
 
 namespace ConfiX.Variables;
 
@@ -27,9 +28,10 @@ public sealed class GitVariableProvider : IVariableProvider
     {
         _definition = definition;
         _cloneDirectory = GetCloneDirectory(_definition);
-        _localVariableProvider = new LocalVariableProvider(new LocalVariableProviderDefinition(
-            Path.Combine(_cloneDirectory, _definition.FilePath)
-        ));
+
+        var tempPath = Path.Combine(_cloneDirectory, _definition.FilePath);
+        var localDefinition = new LocalVariableProviderDefinition(tempPath);
+        _localVariableProvider = new LocalVariableProvider(localDefinition);
     }
 
     public async Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
@@ -55,10 +57,21 @@ public sealed class GitVariableProvider : IVariableProvider
     public async Task<string> SetAsync(
         string path,
         JsonNode value,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        await EnsureClonedAsync(true, cancellationToken);
-        return await _localVariableProvider.SetAsync(path, value, cancellationToken);
+        await EnsureClonedAsync(true, ct);
+        var result = await _localVariableProvider.SetAsync(path, value, ct);
+
+        await AddAsync(new GitAddConfiguration(_cloneDirectory, _definition.Arguments), ct);
+
+        var commitMessage = $"Update {path} in {_definition.FilePath}";
+        await CommitAsync(
+            new GitCommitConfiguration(_cloneDirectory, commitMessage, _definition.Arguments),
+            ct);
+
+        await PushAsync(new GitPushConfiguration(_cloneDirectory, _definition.Arguments), ct);
+
+        return result;
     }
 
     public ValueTask DisposeAsync()
@@ -71,7 +84,7 @@ public sealed class GitVariableProvider : IVariableProvider
         return ValueTask.CompletedTask;
     }
 
-    private async Task EnsureClonedAsync(bool forcePull, CancellationToken cancellationToken)
+    private async Task EnsureClonedAsync(bool forcePull, CancellationToken ct)
     {
         if (Directory.Exists(_cloneDirectory))
         {
@@ -80,17 +93,14 @@ public sealed class GitVariableProvider : IVariableProvider
                 return;
             }
 
-            GitPullConfiguration configuration =
-                new(_cloneDirectory, _definition.Arguments);
-
-            await GitHelpers.PullAsync(configuration, cancellationToken);
+            await PullAsync(new GitPullConfiguration(_cloneDirectory, _definition.Arguments), ct);
         }
         else
         {
             GitCloneConfiguration configuration =
                 new(_definition.RepositoryUrl, _cloneDirectory, _definition.Arguments);
 
-            await GitHelpers.CloneAsync(configuration, cancellationToken);
+            await CloneAsync(configuration, ct);
         }
     }
 
@@ -99,7 +109,7 @@ public sealed class GitVariableProvider : IVariableProvider
             Environment.GetFolderPath(ApplicationData, Create),
             ".confix",
             "git",
-            providerDefinition.GetMd5Hash());
+            Guid.NewGuid().ToString());
 }
 
 file static class Extensions
