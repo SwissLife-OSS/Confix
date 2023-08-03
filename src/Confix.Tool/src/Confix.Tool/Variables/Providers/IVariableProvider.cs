@@ -28,7 +28,7 @@ public interface IVariableProvider: IAsyncDisposable
     /// </summary>
     /// <param name="path">The path to the variable.</param>
     /// <param name="value">The value to set.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="ct">The cancellation token.</param>
     /// <returns>The path of the variable.</returns>
-    Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken);
+    Task<string> SetAsync(string path, JsonNode value, CancellationToken ct);
 }

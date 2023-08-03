@@ -50,7 +50,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         CancellationToken cancellationToken)
         => paths.ResolveMany(ResolveAsync, cancellationToken);
 
-    public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
+    public Task<string> SetAsync(string path, JsonNode value, CancellationToken ct)
     => KeyVaultExtension.HandleKeyVaultException(async () =>
     {
         if (value.GetSchemaValueType() != SchemaValueType.String)
@@ -58,7 +58,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
             throw new NotSupportedException("KeyVault only supports String secrets");
         }
         KeyVaultSecret result = await _client
-            .SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, cancellationToken);
+            .SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, ct);
         return result.Name.ToConfixPath();
     });
 

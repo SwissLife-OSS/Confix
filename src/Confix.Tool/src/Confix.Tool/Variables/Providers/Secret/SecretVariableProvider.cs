@@ -43,7 +43,7 @@ public sealed class SecretVariableProvider : IVariableProvider
         CancellationToken cancellationToken)
         => paths.ResolveMany(ResolveAsync, cancellationToken);
 
-    public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
+    public Task<string> SetAsync(string path, JsonNode value, CancellationToken ct)
     {
         string valueToEncrypt = value.ToJsonString();
         byte[] bytesToEncrypt = Encoding.UTF8.GetBytes(valueToEncrypt);
