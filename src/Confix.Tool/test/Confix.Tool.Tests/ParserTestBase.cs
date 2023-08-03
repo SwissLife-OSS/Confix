@@ -2,7 +2,7 @@ using System.Text.Json.Nodes;
 using Confix.Utilities.Parsing;
 using Snapshooter.Xunit;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public abstract class ParserTestBase
 {

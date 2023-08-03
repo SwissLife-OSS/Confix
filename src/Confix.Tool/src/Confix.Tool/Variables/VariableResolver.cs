@@ -5,7 +5,7 @@ using Confix.Tool;
 using Confix.Tool.Commands.Logging;
 using Json.Schema;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class VariableResolver : IVariableResolver
 {

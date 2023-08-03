@@ -1,7 +1,7 @@
 using System.CommandLine;
 using Confix.Tool.Common.Pipelines;
 
-namespace ConfiX.Entities.Component.Configuration.Middlewares;
+namespace Confix.Entities.Component.Configuration.Middlewares;
 
 public class MutableParameterCollection : IParameterCollection
 {

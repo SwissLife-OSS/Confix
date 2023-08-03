@@ -1,8 +1,8 @@
 using System.Text.Json;
-using ConfiX.Entities.Component.Configuration.Middlewares;
-using ConfiX.Inputs;
+using Confix.Entities.Component.Configuration.Middlewares;
+using Confix.Inputs;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public static class TestExtensions
 {

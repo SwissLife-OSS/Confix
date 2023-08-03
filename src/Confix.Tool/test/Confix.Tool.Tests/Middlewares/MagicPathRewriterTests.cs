@@ -3,7 +3,7 @@ using Confix.Tool.Middlewares;
 using Json.More;
 using Snapshooter.Xunit;
 
-namespace ConfiX.Entities.Component.Configuration.Middlewares;
+namespace Confix.Entities.Component.Configuration.Middlewares;
 
 public class MagicPathRewriterTests
 {

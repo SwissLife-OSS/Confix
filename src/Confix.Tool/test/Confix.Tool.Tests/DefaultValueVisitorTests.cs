@@ -3,11 +3,11 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Schema;
-using ConfiX.Variables;
+using Confix.Variables;
 using Json.Schema;
 using Snapshooter.Xunit;
 
-namespace ConfiX;
+namespace Confix;
 
 public class DefaultValueVisitorTests
 {

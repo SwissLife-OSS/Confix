@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
-using ConfiX.Entities.Component.Configuration;
+using Confix.Entities.Component.Configuration;
 
 namespace Confix.Tool.Tests.Entities.Encryption;
 

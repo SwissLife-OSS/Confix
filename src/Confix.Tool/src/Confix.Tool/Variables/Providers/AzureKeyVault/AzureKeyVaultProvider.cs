@@ -4,7 +4,7 @@ using Azure.Security.KeyVault.Secrets;
 using Confix.Utilities.Azure;
 using Json.Schema;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class AzureKeyVaultProvider : IVariableProvider
 {

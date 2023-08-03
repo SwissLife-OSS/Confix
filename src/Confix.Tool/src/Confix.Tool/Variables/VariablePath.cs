@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using Confix.Tool;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public partial record struct VariablePath(string ProviderName, string Path)
 {

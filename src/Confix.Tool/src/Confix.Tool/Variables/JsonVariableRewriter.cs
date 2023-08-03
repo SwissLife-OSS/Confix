@@ -5,7 +5,7 @@ using Confix.Tool.Schema;
 using Json.More;
 using Json.Schema;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewriterContext>
 {

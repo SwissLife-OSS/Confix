@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
-using ConfiX.Variables;
+using Confix.Inputs;
+using Confix.Variables;
 using FluentAssertions;
 using Json.More;
 
@@ -172,6 +173,131 @@ public class LocalVariableProviderTests : IDisposable
         // assert
         Assert.IsType<VariableNotFoundException>(exception);
         Assert.True(File.Exists(tmpFilePath));
+    }
+
+    [Fact]
+    public async Task SetAsync_Should_SetAndReturn()
+    {
+        // arrange
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act
+        var result = await provider.SetAsync("foo", JsonValue.Create("bar")!, default);
+
+        // assert
+        result.Should().Be("foo");
+        Assert.Equal(
+            """
+            {
+              "foo": "bar"
+            }
+            """,
+            await File.ReadAllTextAsync(tmpFilePath));
+    }
+
+    [Fact]
+    public async Task SetAsync_Should_SetAndReturn_Deep()
+    {
+        // arrange
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act
+        var result = await provider.SetAsync("foo.bar.baz", JsonValue.Create("bar")!, default);
+
+        // assert
+        result.Should().Be("foo.bar.baz");
+        Assert.Equal(
+            """
+            {
+              "foo": {
+                "bar": {
+                  "baz": "bar"
+                }
+              }
+            }
+            """,
+            await File.ReadAllTextAsync(tmpFilePath));
+    }
+
+    [Fact]
+    public async Task SetAsync_Should_SetAndReturn_When_FileHasContent()
+    {
+        // arrange
+        await PrepareFile(
+            """
+            {
+              "foo": "bar"
+            }
+            """);
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act
+        var result = await provider.SetAsync("foo", JsonValue.Create("baz")!, default);
+
+        // assert
+        result.Should().Be("foo");
+        Assert.Equal(
+            """
+            {
+              "foo": "baz"
+            }
+            """,
+            await File.ReadAllTextAsync(tmpFilePath));
+    }
+
+    [Fact]
+    public async Task SetAsync_Should_SetAndReturn_When_FileHasContentDeep()
+    {
+        // arrange
+        await PrepareFile(
+            """
+            {
+              "foo": {
+                "bar": {
+                  "baz": "bar"
+                }
+              }
+            }
+            """);
+
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act
+        var result = await provider.SetAsync("foo.bar.baz", JsonValue.Create("baz")!, default);
+
+        // assert
+        result.Should().Be("foo.bar.baz");
+        Assert.Equal(
+            """
+            {
+              "foo": {
+                "bar": {
+                  "baz": "baz"
+                }
+              }
+            }
+            """,
+            await File.ReadAllTextAsync(tmpFilePath));
+    }
+
+    [Fact]
+    public async Task SetAsync_Should_ThrowExitException_When_FileHasArray()
+    {
+        // arrange
+        await PrepareFile(
+            """
+            {
+              "foo": [
+                { "bar": "baz"}
+              ]
+            }
+            """);
+
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act & assert
+        await Assert.ThrowsAsync<ExitException>(()
+            => provider.SetAsync("foo.bar", JsonValue.Create("baz")!, default));
     }
 
     private Task PrepareFile(string content) => File.WriteAllTextAsync(tmpFilePath, content);

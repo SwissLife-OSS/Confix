@@ -1,11 +1,11 @@
-using ConfiX.Inputs;
+using Confix.Inputs;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using ExecutionContext = Confix.Tool.Common.Pipelines.ExecutionContext;
 
-namespace ConfiX.Entities.Component.Configuration.Middlewares;
+namespace Confix.Entities.Component.Configuration.Middlewares;
 
 public class TestMiddlewareContext : IMiddlewareContext, IDisposable
 {

@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using ConfiX.Extensions;
+using Confix.Extensions;
 
 namespace Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
 

@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 using Confix.ConfigurationFiles;
 using Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
 using Confix.Tool.Middlewares.Encryption.Providers.Aes;
-using ConfiX.Variables;
+using Confix.Variables;
 
-namespace ConfiX.Extensions;
+namespace Confix.Extensions;
 
 [JsonSourceGenerationOptions(WriteIndented = true)]
 [JsonSerializable(typeof(LocalVariableProviderConfiguration))]

@@ -1,7 +1,7 @@
 using Confix.Tool.Schema;
 using Confix.Utilities.FileSystem;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public static class DirectoryTestExtensions
 {

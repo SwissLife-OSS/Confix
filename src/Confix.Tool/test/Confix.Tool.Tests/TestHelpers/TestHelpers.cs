@@ -6,7 +6,7 @@ using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;
 using Confix.Tool.Middlewares;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public sealed class TestHelpers
 {

@@ -1,5 +1,5 @@
 using Confix.Tool.Abstractions;
-using ConfiX.Variables;
+using Confix.Variables;
 using Json.Schema;
 
 namespace Confix.Tool.Entities.Components.DotNet;

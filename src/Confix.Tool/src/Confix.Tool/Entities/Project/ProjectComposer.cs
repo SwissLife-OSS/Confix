@@ -2,7 +2,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
-using ConfiX.Variables;
+using Confix.Variables;
 using Json.Schema;
 
 namespace Confix.Tool.Entities.Components.DotNet;

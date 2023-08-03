@@ -1,11 +1,11 @@
 using System.Text.Json.Nodes;
 using Confix.Extensions;
-using ConfiX.Extensions;
+using Confix.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Schema;
 using Confix.Tool.Middlewares;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public class RuntimeConfigurationTests : ParserTestBase
 {
@@ -16,7 +16,7 @@ public class RuntimeConfigurationTests : ParserTestBase
             """
             {
                 "project": {
-                    "name": "ConfiX"
+                    "name": "Confix"
                 },
                 "component": {
                    "name": "TestComponent"

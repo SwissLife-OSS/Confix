@@ -1,7 +1,7 @@
-using ConfiX.Entities.Component.Configuration;
-using ConfiX.Entities.Component.Configuration.Middlewares;
+using Confix.Entities.Component.Configuration;
+using Confix.Entities.Component.Configuration.Middlewares;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public static class SnapshotBuilderExtensions
 {

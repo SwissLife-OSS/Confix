@@ -1,4 +1,4 @@
-using ConfiX.Entities.Component.Configuration;
+using Confix.Entities.Component.Configuration;
 using Confix.Tool;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Temp;
@@ -8,7 +8,7 @@ using Confix.Tool.Middlewares;
 using Moq;
 using Snapshooter.Xunit;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public class DonetComponentInputTests
 {
