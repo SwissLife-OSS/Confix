@@ -1,4 +1,4 @@
-using ConfiX.Variables;
+using Confix.Variables;
 
 namespace Confix.Tool.Middlewares;
 

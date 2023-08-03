@@ -1,7 +1,7 @@
 using System.Text;
 using Snapshooter.Xunit;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public sealed class SnapshotBuilder
 {

@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public static class JsonParser
 {

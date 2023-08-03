@@ -2,7 +2,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
-using ConfiX.Variables;
+using Confix.Variables;
 using Spectre.Console;
 
 namespace Confix.Tool.Commands.Variable;

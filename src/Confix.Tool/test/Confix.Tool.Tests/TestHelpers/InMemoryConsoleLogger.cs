@@ -2,7 +2,7 @@ using Confix.Tool.Commands.Logging;
 using Spectre.Console;
 using Spectre.Console.Testing;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public sealed class InMemoryConsoleLogger : IConsoleLogger
 {

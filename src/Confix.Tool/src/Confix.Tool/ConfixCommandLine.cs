@@ -1,6 +1,6 @@
 using System.CommandLine.Builder;
-using ConfiX.Entities.Project.Extensions;
-using ConfiX.Entities.Schema.Extensions;
+using Confix.Entities.Project.Extensions;
+using Confix.Entities.Schema.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;

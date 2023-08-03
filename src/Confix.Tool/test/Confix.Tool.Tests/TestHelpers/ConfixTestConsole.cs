@@ -5,7 +5,7 @@ using Spectre.Console;
 using Spectre.Console.Rendering;
 using Spectre.Console.Testing;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public sealed class ConfixTestConsole : IAnsiConsole, IDisposable, IConsole
 {

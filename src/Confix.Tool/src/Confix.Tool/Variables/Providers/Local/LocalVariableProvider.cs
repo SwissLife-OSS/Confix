@@ -6,7 +6,7 @@ using Confix.Tool.Schema;
 using HotChocolate.Types;
 using Json.More;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class LocalVariableProvider : IVariableProvider
 {

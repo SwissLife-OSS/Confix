@@ -1,6 +1,6 @@
 using Moq;
 using Azure.Security.KeyVault.Secrets;
-using ConfiX.Variables;
+using Confix.Variables;
 using FluentAssertions;
 using Azure;
 using System.Text.Json.Nodes;

@@ -1,4 +1,4 @@
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public class TempDirectory : IDisposable
 {

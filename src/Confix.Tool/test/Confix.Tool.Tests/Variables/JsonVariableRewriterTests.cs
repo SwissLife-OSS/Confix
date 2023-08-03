@@ -1,5 +1,5 @@
 using System.Text.Json.Nodes;
-using ConfiX.Variables;
+using Confix.Variables;
 using Snapshooter.Xunit;
 
 namespace Confix.Tool.Tests;

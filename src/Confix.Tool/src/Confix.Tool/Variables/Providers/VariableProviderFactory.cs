@@ -2,7 +2,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class VariableProviderFactory : IVariableProviderFactory
 {

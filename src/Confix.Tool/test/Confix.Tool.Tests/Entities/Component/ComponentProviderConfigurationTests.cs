@@ -1,7 +1,7 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public class ComponentProviderConfigurationTests : ParserTestBase
 {

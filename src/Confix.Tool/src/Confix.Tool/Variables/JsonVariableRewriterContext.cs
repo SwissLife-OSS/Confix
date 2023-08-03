@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed record JsonVariableRewriterContext(
     IReadOnlyDictionary<VariablePath, JsonNode> VariableLookup

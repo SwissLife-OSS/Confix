@@ -1,7 +1,7 @@
 using Confix.Tool.Abstractions;
 using Confix.Tool.Common.Pipelines;
-using ConfiX.Variables;
-using VariableProviderConfiguration = ConfiX.Variables.VariableProviderConfiguration;
+using Confix.Variables;
+using VariableProviderConfiguration = Confix.Variables.VariableProviderConfiguration;
 
 namespace Confix.Tool.Middlewares;
 

@@ -1,6 +1,6 @@
 using Confix.Tool.Commands.Temp;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public class GraphQlComponentInputTests
 {

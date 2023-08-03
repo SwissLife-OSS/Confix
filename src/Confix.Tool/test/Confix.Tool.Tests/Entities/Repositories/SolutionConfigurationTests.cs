@@ -5,7 +5,7 @@ using Confix.Tool.Abstractions.Configuration;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public class SolutionConfigurationTests : ParserTestBase
 {

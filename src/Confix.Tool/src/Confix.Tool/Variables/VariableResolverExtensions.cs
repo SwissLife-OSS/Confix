@@ -1,7 +1,7 @@
 using System.Text.Json.Nodes;
 using Confix.Tool;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public static class VariableResolverExtensions
 {

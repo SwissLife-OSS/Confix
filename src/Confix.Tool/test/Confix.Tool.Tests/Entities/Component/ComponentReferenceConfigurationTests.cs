@@ -2,7 +2,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Utilities.Parsing;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public class ComponentReferenceConfigurationTests
 {

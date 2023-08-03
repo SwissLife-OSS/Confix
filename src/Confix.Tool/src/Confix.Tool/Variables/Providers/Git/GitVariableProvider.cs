@@ -6,7 +6,7 @@ using static System.Environment.SpecialFolder;
 using static System.Environment.SpecialFolderOption;
 using static ConfiX.Variables.GitHelpers;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class GitVariableProvider : IVariableProvider
 {

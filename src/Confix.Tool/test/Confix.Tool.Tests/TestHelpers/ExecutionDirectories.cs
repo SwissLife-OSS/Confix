@@ -1,7 +1,7 @@
 using Confix.Tool.Commands.Temp;
 using Confix.Tool.Schema;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public class ExecutionDirectories : IDisposable
 {

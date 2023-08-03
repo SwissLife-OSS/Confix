@@ -1,4 +1,4 @@
-using ConfiX.Variables;
+using Confix.Variables;
 using FluentAssertions;
 
 namespace Confix.Tool.Tests;

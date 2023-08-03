@@ -3,7 +3,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Json.Schema;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class VariableReplacerService : IVariableReplacerService
 {

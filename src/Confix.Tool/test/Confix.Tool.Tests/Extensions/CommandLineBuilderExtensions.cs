@@ -2,7 +2,7 @@ using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
 using Confix.Tool;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public static class CommandLineBuilderExtensions
 {

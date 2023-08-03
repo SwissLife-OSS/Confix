@@ -3,7 +3,7 @@ using Confix.Tool.Schema;
 using Json.Schema;
 using Snapshooter.Xunit;
 
-namespace ConfiX.GraphQL;
+namespace Confix.GraphQL;
 
 public sealed class SchemaTranslatorTests
 {

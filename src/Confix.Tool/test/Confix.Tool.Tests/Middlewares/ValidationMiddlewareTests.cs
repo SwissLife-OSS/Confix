@@ -1,4 +1,4 @@
-using ConfiX.Inputs;
+using Confix.Inputs;
 using Confix.Tool;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Temp;
@@ -11,7 +11,7 @@ using Snapshooter.Xunit;
 using static Confix.Tool.Middlewares.ConfigurationScope;
 using Comp = Confix.Tool.Abstractions.Component;
 
-namespace ConfiX.Entities.Component.Configuration.Middlewares;
+namespace Confix.Entities.Component.Configuration.Middlewares;
 
 public class ValidationMiddlewareTests : IDisposable
 {

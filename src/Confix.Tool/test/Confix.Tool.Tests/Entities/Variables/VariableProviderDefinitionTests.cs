@@ -4,7 +4,7 @@ using Confix.Tool.Abstractions;
 using FluentAssertions;
 using Json.More;
 
-namespace ConfiX.Entities.Component.Configuration;
+namespace Confix.Entities.Component.Configuration;
 
 public class VariableProviderDefinitionTests
 {

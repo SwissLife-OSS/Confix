@@ -1,10 +1,10 @@
 using System.CommandLine.Completions;
 using System.Text.Json.Nodes;
-using ConfiX.Inputs;
+using Confix.Inputs;
 using Confix.Tool.Middlewares;
-using ConfiX.Variables;
+using Confix.Variables;
 
-namespace ConfiX.Commands.Variables;
+namespace Confix.Commands.Variables;
 
 public class VariableCopyCommandTests
 {
@@ -223,7 +223,7 @@ file class InMemoryVariableProvider : IVariableProvider
     }
 
     /// <inheritdoc />
-    public Task<string> SetAsync(string path, JsonNode value, CancellationToken cancellationToken)
+    public Task<string> SetAsync(string path, JsonNode value, CancellationToken ct)
     {
         _variables[path] = value;
         return Task.FromResult(path);

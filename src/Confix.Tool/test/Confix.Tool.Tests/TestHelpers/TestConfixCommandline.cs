@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using ExecutionContext = Confix.Tool.Common.Pipelines.ExecutionContext;
 
-namespace ConfiX.Inputs;
+namespace Confix.Inputs;
 
 public class TestConfixCommandline : IDisposable
 {

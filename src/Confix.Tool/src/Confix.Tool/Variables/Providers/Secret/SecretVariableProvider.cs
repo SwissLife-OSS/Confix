@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using Confix.Tool;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed class SecretVariableProvider : IVariableProvider
 {

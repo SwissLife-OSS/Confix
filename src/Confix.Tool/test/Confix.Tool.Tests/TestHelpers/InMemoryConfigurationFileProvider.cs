@@ -1,6 +1,6 @@
 using Confix.Tool.Middlewares;
 
-namespace ConfiX.Entities.Component.Configuration.Middlewares;
+namespace Confix.Entities.Component.Configuration.Middlewares;
 
 public class InMemoryConfigurationFileProvider : IConfigurationFileProvider
 {

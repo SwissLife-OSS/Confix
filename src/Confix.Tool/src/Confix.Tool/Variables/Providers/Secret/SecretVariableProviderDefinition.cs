@@ -1,6 +1,6 @@
 using Confix.Tool;
 
-namespace ConfiX.Variables;
+namespace Confix.Variables;
 
 public sealed record SecretVariableProviderDefinition(
     SecretVariableProviderAlgorithm Algorithm,
