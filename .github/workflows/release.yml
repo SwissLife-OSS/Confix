@@ -18,7 +18,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: | 
+          dotnet-version: |
             7.0.x
             8.0.x
       - name: Restore dependencies
@@ -27,5 +27,7 @@ jobs:
         run: dotnet build --configuration Release /p:Version=${VERSION}
       - name: Pack
         run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
-      - name: Push
+      - name: Push Library
+        run: dotnet nuget push Confix.Library.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
+      - name: Push Tool
         run: dotnet nuget push Confix.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}

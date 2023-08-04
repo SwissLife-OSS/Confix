@@ -46,4 +46,8 @@
         <Folder Include="Utilities\Parsing\" />
         <Folder Include="Utilities\Project\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Confix.Library\Confix.Library.csproj" />
+    </ItemGroup>
 </Project>
