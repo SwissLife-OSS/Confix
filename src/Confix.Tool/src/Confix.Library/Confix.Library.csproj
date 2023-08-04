@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <AssemblyName>Confix.Library</AssemblyName>
+        <RootNamespace>Confix</RootNamespace>
+        <IsPublishable>true</IsPublishable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Product>Confix</Product>
+        <PackageId>Confix.Library</PackageId>
+        <IsPackable>true</IsPackable>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseUrl>https://github.com/SwissLife-OSS/Confix/blob/main/LICENSE</PackageLicenseUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryUrl>https://github.com/SwissLife-OSS/Confix.git</RepositoryUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/SwissLife-OSS/Confix/main/images/logo_small.png</PackageIconUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="../../../../README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Azure.Identity" />
+        <PackageReference Include="Azure.Security.KeyVault.Secrets" />
+        <PackageReference Include="Azure.Security.KeyVault.Keys" />
+        <PackageReference Include="JsonSchema.Net" />
+        <PackageReference Include="System.CommandLine" />
+        <PackageReference Include="Spectre.Console" />
+        <PackageReference Include="Spectre.Console.Json" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+        <PackageReference Include="HotChocolate" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.Http" />
+        <PackageReference Include="System.Reactive" />
+    </ItemGroup>
+</Project>

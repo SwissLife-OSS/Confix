@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{58D81F3B-7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Confix.Tool.Tests", "test\Confix.Tool.Tests\Confix.Tool.Tests.csproj", "{11C96922-F22B-46D1-8090-08A022169F7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Confix.Library", "src\Confix.Library\Confix.Library.csproj", "{3604CF97-F250-4AF3-81D2-6D238AA69F16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +30,14 @@ Global
 		{11C96922-F22B-46D1-8090-08A022169F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11C96922-F22B-46D1-8090-08A022169F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11C96922-F22B-46D1-8090-08A022169F7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3604CF97-F250-4AF3-81D2-6D238AA69F16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3604CF97-F250-4AF3-81D2-6D238AA69F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3604CF97-F250-4AF3-81D2-6D238AA69F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3604CF97-F250-4AF3-81D2-6D238AA69F16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A26678D4-4943-442C-AE3F-64369F4E5CDE} = {A55D0D39-89AA-49B0-A3D0-6C94B9D8168C}
 		{11C96922-F22B-46D1-8090-08A022169F7E} = {58D81F3B-7704-43EA-B4E0-7E094F7B1010}
+		{3604CF97-F250-4AF3-81D2-6D238AA69F16} = {A55D0D39-89AA-49B0-A3D0-6C94B9D8168C}
 	EndGlobalSection
 EndGlobal
