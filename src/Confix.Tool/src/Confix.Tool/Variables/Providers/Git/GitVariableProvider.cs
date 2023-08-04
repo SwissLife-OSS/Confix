@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using static System.Environment.SpecialFolder;
 using static System.Environment.SpecialFolderOption;
-using static ConfiX.Variables.GitHelpers;
+using static Confix.Variables.GitHelpers;
 
 namespace Confix.Variables;
 
