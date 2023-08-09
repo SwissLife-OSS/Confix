@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Confix.Tool.Commands.Temp;
 using Confix.Tool.Schema;
 using static Confix.Tool.Abstractions.ProjectConfiguration;
 
@@ -131,12 +132,10 @@ public sealed class ProjectDefinition
 
     public static ProjectDefinition From(ProjectConfiguration configuration)
     {
-        var lastConfigurationFile =
-            configuration.SourceFiles.LastOrDefault(x => x.File.Name == FileNames.ConfixProject);
+        var lastConfigurationFile = configuration.SourceFiles
+            .LastOrDefault(x => x.File.Name == FileNames.ConfixProject);
 
-        var name = configuration.Name
-            ?? lastConfigurationFile?.File.Directory?.Name
-            ?? DefaultName;
+        var name = GetProjectName(configuration);
 
         var environments =
             configuration.Environments?.Select(EnvironmentDefinition.From).ToArray() ??
@@ -182,6 +181,40 @@ public sealed class ProjectDefinition
             subprojects,
             projectType,
             lastConfigurationFile?.File.Directory);
+    }
+
+    private static string GetProjectName(ProjectConfiguration configuration)
+    {
+        if (configuration.Name is not null)
+        {
+            return configuration.Name;
+        }
+
+        var lastProjectFile = configuration.SourceFiles
+            .LastOrDefault(x => x.File.Name == FileNames.ConfixProject)
+            ?.File;
+
+        if (lastProjectFile is { Directory: { } lastProject })
+        {
+            var solution = lastProject.FindInTree(FileNames.ConfixSolution);
+
+            if (solution is not null &&
+                new FileInfo(solution) is { Directory: { } solutionDirectory })
+            {
+                var relative = Path
+                    .GetRelativePath(solutionDirectory.FullName, lastProject.FullName)
+                    .Replace(Path.DirectorySeparatorChar, '.');
+
+                if (!string.IsNullOrWhiteSpace(relative))
+                {
+                    return relative;
+                }
+            }
+
+            return lastProjectFile.Directory?.Name ?? DefaultName;
+        }
+
+        return DefaultName;
     }
 
     public static ProjectDefinition Instance { get; } = new(
