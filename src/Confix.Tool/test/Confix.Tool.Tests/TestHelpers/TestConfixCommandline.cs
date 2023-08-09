@@ -46,6 +46,8 @@ public class TestConfixCommandline : IDisposable
 
     public async Task RunAsync(string args) => await Parser.InvokeAsync(args.Split(" "), Console);
 
+    public async Task RunAsync(params string[] args) => await Parser.InvokeAsync(args, Console);
+
     /// <inheritdoc />
     public void Dispose()
     {

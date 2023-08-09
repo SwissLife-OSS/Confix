@@ -8,5 +8,7 @@ public sealed class ConfigCommand : Command
     {
         Description = "This command is used to manage config.";
         AddCommand(new ConfigShowCommand());
+        AddCommand(new ConfigSetCommand());
+        AddCommand(new ConfigListCommand());
     }
 }

@@ -1,4 +1,7 @@
-﻿{
+﻿--------------------------------------------------
+### parsed
+--------------------------------------------------
+{
   "scope": "None",
   "project": {
     "name": "TestProject",
@@ -60,7 +63,7 @@
       }
     ],
     "configurationFiles": [
-      "/var/folders/x6/fxrfc2xd6sq2lsh9k8b61d2w0000gn/T/333e3a89-4967-40d8-a828-bed2218712fc/home/**/some-config/appsettings*.json",
+      "HOME/**/some-config/appsettings*.json",
       {
         "type": "dotnet-appsettings",
         "additional": "property"
@@ -90,3 +93,4 @@
     }
   }
 }
+

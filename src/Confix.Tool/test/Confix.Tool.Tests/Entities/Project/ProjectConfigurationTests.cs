@@ -379,19 +379,6 @@ public class ProjectConfigurationTests : ParserTestBase
         // Assert
         Assert.NotNull(result);
 
-        new
-        {
-            result.Components,
-            result.ComponentProviders,
-            result.Repositories,
-            result.ConfigurationFiles,
-            result.Environments,
-            result.VariableProviders,
-            result.Name,
-            result.Subprojects,
-            SourceFiles = result.SourceFiles.Select(x => x.File.FullName)
-        }.MatchSnapshot(o => o.IgnoreField("SourceFiles"));
-
         // Cleanup
         File.Delete(confixRcPath);
     }

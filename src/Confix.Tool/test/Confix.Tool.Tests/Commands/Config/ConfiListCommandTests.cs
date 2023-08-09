@@ -1,60 +1,52 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Nodes;
-using Confix.Entities.Component.Configuration;
-using Confix.Extensions;
 using Confix.Inputs;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Snapshooter.Xunit;
+using Confix.Tool.Schema;
 
 namespace ConfiX.Commands.Config;
 
-public class ConfigShowCommandTests
+public class ConfigListCommandTests
 {
-    private readonly TestConfixCommandline _cli;
-
-    public ConfigShowCommandTests()
-    {
-        _cli = new TestConfixCommandline();
-    }
+    private readonly TestConfixCommandline _cli = new();
 
     [Fact]
-    public async Task Should_PrintConfig()
+    public async Task Should_ListFiles_Project()
     {
         // Arrange
         using var cli = _cli;
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
+        cli.Directories.Content.CreateConfixProject();
 
         // Act
-        await cli.RunAsync("config show");
+        await cli.RunAsync("config list");
 
         // Assert
         SnapshotBuilder
             .New()
-            .Append("parsed", cli.Console.Output)
+            .AddOutput(_cli)
             .AddReplacement(_cli.Directories.Home.FullName, "HOME")
+            .AddReplacement(_cli.Directories.Content.FullName, "CONTENT")
             .MatchSnapshot();
     }
 
     [Fact]
-    public async Task Should_Output_Should_Be_Parsable()
+    public async Task Should_ListFiles_Component()
     {
         // Arrange
         using var cli = _cli;
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
+        cli.Directories.Home.CreateFileInPath(
+            Path.Combine(cli.Directories.Content.FullName, FileNames.ConfixComponent),
+            """ { "name": "foo" } """);
 
         // Act
-        await cli.RunAsync("config show");
+        await cli.RunAsync("config list");
 
         // Assert
-        var output = cli.Console.Output;
-        var outputConfig = RuntimeConfiguration.Parse(JsonNode.Parse(output));
         SnapshotBuilder
             .New()
-            .Append("parsed", outputConfig.ToJsonString())
-            .AddReplacement(_cli.Directories.Home.FullName, "HOME")
+            .AddOutput(_cli)
             .MatchSnapshot();
     }
 
