@@ -12,6 +12,9 @@ public class TestStatus : IStatus
     {
         return new ValueTask<IAsyncDisposable>(new Unpause());
     }
+
+    /// <inheritdoc />
+    public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 }
 
 file sealed class Unpause : IAsyncDisposable

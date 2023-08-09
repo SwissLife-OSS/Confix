@@ -3,12 +3,9 @@ using Confix.Utilities.Json;
 
 namespace Confix.Tool.Abstractions;
 
-public sealed record EncryptionConfiguration
-(
-    EncryptionProviderConfiguration? Provider
-)
+public sealed record EncryptionConfiguration(EncryptionProviderConfiguration? Provider)
 {
-    private static class FieldNames
+    public static class FieldNames
     {
         public const string Provider = "provider";
     }

@@ -6,7 +6,7 @@ namespace Confix.Tool.Abstractions;
 
 public sealed class EnvironmentConfiguration
 {
-    private static class FieldNames
+    public static class FieldNames
     {
         public const string Name = "name";
         public const string Enabled = "enabled";

@@ -1,10 +1,11 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Confix.Tool.Abstractions;
 
 public sealed class ComponentOutputDefinition
 {
-    public ComponentOutputDefinition(string type, JsonNode value)
+    public ComponentOutputDefinition(string type, JsonObject value)
     {
         Type = type;
         Value = value;
@@ -12,5 +13,7 @@ public sealed class ComponentOutputDefinition
 
     public string Type { get; }
 
-    public JsonNode Value { get; }
+    public JsonObject Value { get; }
+
+    public void WriteTo(Utf8JsonWriter writer) => Value.WriteTo(writer);
 }

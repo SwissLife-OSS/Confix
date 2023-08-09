@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Utilities.Json;
 
@@ -10,7 +11,7 @@ public sealed class ComponentInputConfiguration
         public const string Type = "type";
     }
 
-    public ComponentInputConfiguration(string? type, JsonNode value)
+    public ComponentInputConfiguration(string? type, JsonObject value)
     {
         Type = type;
         Value = value;
@@ -18,7 +19,7 @@ public sealed class ComponentInputConfiguration
 
     public string? Type { get; }
 
-    public JsonNode Value { get; }
+    public JsonObject Value { get; }
 
     public static ComponentInputConfiguration Parse(JsonNode element)
     {
@@ -36,7 +37,7 @@ public sealed class ComponentInputConfiguration
         }
 
         var type = other.Type ?? Type;
-        var value = Value.Merge(other.Value) ?? new JsonObject();
+        var value = Value.Merge(other.Value) as JsonObject ?? new JsonObject();
 
         return new ComponentInputConfiguration(type, value);
     }

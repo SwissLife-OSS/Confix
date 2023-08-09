@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Confix.Tool.Abstractions;
@@ -17,6 +18,8 @@ public sealed class ComponentRepositoryDefinition
 
     public JsonObject Values { get; }
 
+    public void WriteTo(Utf8JsonWriter writer) => Values.WriteTo(writer);
+
     public static ComponentRepositoryDefinition From(ComponentRepositoryConfiguration configuration)
     {
         List<string> validationErrors = new();
@@ -24,10 +27,12 @@ public sealed class ComponentRepositoryDefinition
         {
             validationErrors.Add("Name is not defined.");
         }
+
         if (configuration.Type is null)
         {
             validationErrors.Add("Type is not defined.");
         }
+
         if (validationErrors.Any())
         {
             throw new ValidationException("Invalid component repository configuration.")
@@ -35,7 +40,6 @@ public sealed class ComponentRepositoryDefinition
                 Errors = validationErrors
             };
         }
-
 
         return new ComponentRepositoryDefinition(
             configuration.Name!,

@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Utilities.Json;
 
@@ -22,6 +23,8 @@ public sealed class EncryptionProviderDefinition
 
     public JsonObject Value { get; }
 
+    public void WriteTo(Utf8JsonWriter writer) => Value.WriteTo(writer);
+
     public static EncryptionProviderDefinition From(EncryptionProviderConfiguration configuration)
     {
         if (configuration.Type is null)
@@ -44,6 +47,7 @@ public sealed class EncryptionProviderDefinition
         {
             return Value.Merge(envOverride)!;
         }
+
         return Value;
     }
 }

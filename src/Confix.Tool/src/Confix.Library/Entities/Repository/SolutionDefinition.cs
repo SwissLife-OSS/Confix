@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Confix.Tool.Abstractions.Configuration;
 using Confix.Tool.Schema;
@@ -22,6 +23,24 @@ public sealed class SolutionDefinition
 
     [JsonIgnore]
     public DirectoryInfo? Directory { get; }
+
+    public void WriteTo(Utf8JsonWriter writer)
+    {
+        writer.WriteStartObject();
+        if (Project is not null)
+        {
+            writer.WritePropertyName(SolutionConfiguration.FieldNames.Project);
+            Project.WriteTo(writer);
+        }
+
+        if (Component is not null)
+        {
+            writer.WritePropertyName(SolutionConfiguration.FieldNames.Component);
+            Component.WriteTo(writer);
+        }
+
+        writer.WriteEndObject();
+    }
 
     public static SolutionDefinition From(SolutionConfiguration configuration)
     {

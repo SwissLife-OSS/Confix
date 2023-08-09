@@ -1,9 +1,11 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace Confix.Tool.Abstractions;
 
 public sealed record EnvironmentDefinition(
     string Name,
-    bool Enabled
-)
+    bool Enabled)
 {
     public static EnvironmentDefinition From(EnvironmentConfiguration configuration)
     {
@@ -18,5 +20,13 @@ public sealed record EnvironmentDefinition(
         return new EnvironmentDefinition(
             configuration.Name,
             configuration.Enabled ?? false);
+    }
+
+    public void WriteTo(Utf8JsonWriter writer)
+    {
+        writer.WriteStartObject();
+        writer.WriteString(EnvironmentConfiguration.FieldNames.Name, Name);
+        writer.WriteBoolean(EnvironmentConfiguration.FieldNames.Enabled, Enabled);
+        writer.WriteEndObject();
     }
 }

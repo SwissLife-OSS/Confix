@@ -5,7 +5,7 @@ namespace Confix.Tool.Abstractions;
 
 public sealed class ComponentRepositoryConfiguration
 {
-    private static class FieldNames
+    public static class FieldNames
     {
         public const string Name = "name";
         public const string Type = "type";

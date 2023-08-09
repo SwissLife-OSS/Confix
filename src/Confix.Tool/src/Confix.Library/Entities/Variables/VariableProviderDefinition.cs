@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Utilities.Json;
 
@@ -26,18 +27,22 @@ public sealed class VariableProviderDefinition
 
     public JsonObject Value { get; }
 
+    public void WriteTo(Utf8JsonWriter writer) => Value.WriteTo(writer);
+
     public static VariableProviderDefinition From(VariableProviderConfiguration configuration)
     {
         List<string> validationErrors = new();
-        if(configuration.Name is null)
+        if (configuration.Name is null)
         {
             validationErrors.Add("Provider name is required.");
         }
-        if(configuration.Type is null)
+
+        if (configuration.Type is null)
         {
             validationErrors.Add("Provider type is required.");
         }
-        if(validationErrors.Any())
+
+        if (validationErrors.Any())
         {
             throw new ValidationException("Variable provider configuration is invalid.")
             {
@@ -58,6 +63,7 @@ public sealed class VariableProviderDefinition
         {
             return Value.Merge(envOverride)!;
         }
+
         return Value;
     }
 }

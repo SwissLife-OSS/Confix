@@ -7,7 +7,7 @@ namespace Confix.Tool.Abstractions.Configuration;
 
 public sealed class SolutionConfiguration
 {
-    private static class FieldNames
+    public static class FieldNames
     {
         public const string Component = "component";
         public const string Project = "project";

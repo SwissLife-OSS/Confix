@@ -1,4 +1,5 @@
 using System.CommandLine;
+using Confix.Extensions;
 using Confix.Tool.Commands.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
@@ -24,15 +25,20 @@ public sealed class PipelineExecutor
 {
     private readonly MiddlewareDelegate _pipeline;
     private readonly IServiceProvider _services;
+    private readonly IDictionary<string, object> _contextData;
     private readonly Dictionary<Symbol, object?> _parameter = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PipelineExecutor"/> class.
     /// </summary>
-    public PipelineExecutor(MiddlewareDelegate pipeline, IServiceProvider services)
+    public PipelineExecutor(
+        MiddlewareDelegate pipeline,
+        IServiceProvider services,
+        IDictionary<string, object> contextData)
     {
         _pipeline = pipeline;
         _services = services;
+        _contextData = contextData;
     }
 
     /// <summary>
@@ -60,8 +66,17 @@ public sealed class PipelineExecutor
     {
         var console = _services.GetRequiredService<IAnsiConsole>();
 
-        await using var status = new SpectreStatusContext(console);
-        await status.StartAsync(cancellationToken);
+        IStatus status;
+        if (_contextData.Get(Context.DisableStatus) is true)
+        {
+            status = new NullStatusContext();
+        }
+        else
+        {
+            var spectreStatus = new SpectreStatusContext(console);
+            await spectreStatus.StartAsync(cancellationToken);
+            status = spectreStatus;
+        }
 
         var context = new MiddlewareContext
         {
@@ -70,6 +85,7 @@ public sealed class PipelineExecutor
             Console = _services.GetRequiredService<IAnsiConsole>(),
             Logger = _services.GetRequiredService<IConsoleLogger>(),
             Execution = _services.GetRequiredService<IExecutionContext>(),
+            ContextData = _contextData,
             Status = status,
             Services = _services
         };
@@ -78,4 +94,16 @@ public sealed class PipelineExecutor
 
         return context.ExitCode;
     }
+}
+
+file class NullStatusContext : IStatus
+{
+    public string Message { get; set; } = "";
+
+    public ValueTask<IAsyncDisposable> PauseAsync(CancellationToken cancellationToken)
+        => ValueTask.FromResult<IAsyncDisposable>(this);
+
+    /// <inheritdoc />
+    public ValueTask DisposeAsync()
+        => ValueTask.CompletedTask;
 }

@@ -21,8 +21,11 @@ public abstract class Pipeline
 
         Arguments = descriptor.Definition.Arguments;
         Options = descriptor.Definition.Options;
+        ContextData = descriptor.Definition.ContextData;
         _middlewares = descriptor.Definition.Middlewares;
     }
+
+    public IDictionary<string, object> ContextData { get; set; }
 
     public IReadOnlySet<Argument> Arguments { get; private set; } = new HashSet<Argument>();
 
@@ -30,7 +33,7 @@ public abstract class Pipeline
 
     public PipelineExecutor BuildExecutor(IServiceProvider services)
     {
-        return new PipelineExecutor(BuildDelegate(services), services);
+        return new PipelineExecutor(BuildDelegate(services), services, ContextData);
     }
 
     public async Task ExecuteAsync(IMiddlewareContext context)

@@ -109,21 +109,21 @@ public class ComponentConfigurationTests : ParserTestBase
         var original = new ComponentConfiguration("TestComponent",
             new List<ComponentInputConfiguration>()
             {
-                new("Test", JsonNode.Parse("{}")!)
+                new("Test", (JsonObject)JsonNode.Parse("{}")!)
             },
             new List<ComponentOutputConfiguration>()
             {
-                new("Test", JsonNode.Parse("{}")!)
+                new("Test", (JsonObject)JsonNode.Parse("{}")!)
             },
             Array.Empty<JsonFile>());
         var other = new ComponentConfiguration("MergedComponent",
             new List<ComponentInputConfiguration>()
             {
-                new("Test2", JsonNode.Parse("{}")!)
+                new("Test2", (JsonObject)JsonNode.Parse("{}")!)
             },
             new List<ComponentOutputConfiguration>()
             {
-                new("Test2", JsonNode.Parse("{}")!)
+                new("Test2", (JsonObject)JsonNode.Parse("{}")!)
             },
             Array.Empty<JsonFile>());
 

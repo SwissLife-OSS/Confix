@@ -1,5 +1,7 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Confix.Tool.Schema;
+using static Confix.Tool.Abstractions.ProjectConfiguration;
 
 namespace Confix.Tool.Abstractions;
 
@@ -51,6 +53,81 @@ public sealed class ProjectDefinition
 
     [JsonIgnore]
     public DirectoryInfo? Directory { get; }
+
+    public void WriteTo(Utf8JsonWriter writer)
+    {
+        writer.WriteStartObject();
+
+        writer.WriteString(FieldNames.Name, Name);
+
+        writer.WritePropertyName(FieldNames.Environments);
+        writer.WriteStartArray();
+        foreach (var environment in Environments)
+        {
+            environment.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+
+        writer.WritePropertyName(FieldNames.Components);
+        writer.WriteStartObject();
+        foreach (var component in Components)
+        {
+            writer.WritePropertyName(component.GetKey());
+            component.WriteTo(writer);
+        }
+
+        writer.WriteEndObject();
+
+        writer.WritePropertyName(FieldNames.ComponentRepositories);
+        writer.WriteStartArray();
+        foreach (var repository in Repositories)
+        {
+            repository.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+
+        writer.WritePropertyName(FieldNames.VariableProviders);
+        writer.WriteStartArray();
+        foreach (var provider in VariableProviders)
+        {
+            provider.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+
+        writer.WritePropertyName(FieldNames.ComponentProviders);
+        writer.WriteStartArray();
+        foreach (var provider in ComponentProviders)
+        {
+            provider.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+
+        writer.WritePropertyName(FieldNames.ConfigurationFiles);
+        writer.WriteStartArray();
+        foreach (var file in ConfigurationFiles)
+        {
+            file.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+
+        writer.WritePropertyName(FieldNames.Subprojects);
+        writer.WriteStartArray();
+        foreach (var subproject in Subprojects)
+        {
+            subproject.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+
+        writer.WriteString(FieldNames.ProjectType, ProjectType.ToString().ToLowerInvariant());
+
+        writer.WriteEndObject();
+    }
 
     public static ProjectDefinition From(ProjectConfiguration configuration)
     {

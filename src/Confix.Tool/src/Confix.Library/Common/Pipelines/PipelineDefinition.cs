@@ -9,4 +9,6 @@ public sealed class PipelineDefinition
     public HashSet<Argument> Arguments { get; set; } = new();
 
     public HashSet<Option> Options { get; set; } = new();
+
+    public IDictionary<string, object> ContextData { get; set; } = new Dictionary<string, object>();
 }

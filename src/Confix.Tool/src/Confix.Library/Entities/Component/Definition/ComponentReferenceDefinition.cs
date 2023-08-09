@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace Confix.Tool.Abstractions;
 
 public sealed class ComponentReferenceDefinition
@@ -26,6 +28,26 @@ public sealed class ComponentReferenceDefinition
 
     public IReadOnlyList<string> MountingPoints { get; }
 
+    public string GetKey() => $"@{Provider}/{ComponentName}";
+
+    public void WriteTo(Utf8JsonWriter writer)
+    {
+        writer.WriteStartObject();
+
+        writer.WriteString("version", Version);
+
+        writer.WriteStartArray("mountingPoint");
+
+        foreach (var mountingPoint in MountingPoints)
+        {
+            writer.WriteStringValue(mountingPoint);
+        }
+
+        writer.WriteEndArray();
+
+        writer.WriteEndObject();
+    }
+
     public static ComponentReferenceDefinition From(ComponentReferenceConfiguration configuration)
     {
         List<string> validationErrors = new();
@@ -33,13 +55,10 @@ public sealed class ComponentReferenceDefinition
         {
             validationErrors.Add("Provider is not defined.");
         }
+
         if (configuration.ComponentName is null)
         {
             validationErrors.Add("Component name is not defined.");
-        }
-        if (configuration.Version is null)
-        {
-            validationErrors.Add("Component version is not defined.");
         }
 
         if (validationErrors.Any())
@@ -59,7 +78,7 @@ public sealed class ComponentReferenceDefinition
         return new ComponentReferenceDefinition(
             configuration.Provider!,
             configuration.ComponentName!,
-            configuration.Version!,
+            configuration.Version,
             configuration.IsEnabled,
             mountingPoints);
     }
