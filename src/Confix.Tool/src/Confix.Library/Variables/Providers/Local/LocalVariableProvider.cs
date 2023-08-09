@@ -3,6 +3,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Schema;
+using Confix.Utilities.Json;
 using HotChocolate.Types;
 using Json.More;
 
@@ -59,37 +60,11 @@ public sealed class LocalVariableProvider : IVariableProvider
         EnsureConfigFile();
 
         var node = LoadFile() ?? new JsonObject();
-        var segments = path.Split('.');
-        var current = node;
-        var currentPath = "/";
-
-        for (var i = 0; i < segments.Length - 1; i++)
-        {
-            var segment = segments[i];
-
-            if (current is not JsonObject)
-            {
-                throw new ExitException(
-                    $"Could not set value in file {_localFile.FullName} because the path {path} is not an object");
-            }
-
-            current[segment] ??= new JsonObject();
-
-            current = current[segment];
-            currentPath = Path.Join(currentPath, segment);
-        }
-
-        if (current is not JsonObject)
-        {
-            throw new ExitException(
-                $"Could not set value in file {_localFile.FullName} because the path {path} is not an object");
-        }
-
-        current[segments[^1]] = value;
-
-        var serialized = JsonSerializer.Serialize(node, _options);
+        node = node.SetValue(path, value);
 
         App.Log.SavingFile(_localFile);
+
+        var serialized = JsonSerializer.Serialize(node, _options);
 
         File.WriteAllText(_localFile.FullName, serialized);
 

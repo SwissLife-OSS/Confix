@@ -1,6 +1,6 @@
 namespace Confix.Tool.Common.Pipelines;
 
-public interface IStatus
+public interface IStatus : IAsyncDisposable
 {
     string Message { get; set; }
 

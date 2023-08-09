@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Utilities.Json;
 using Confix.Utilities.Parsing;
@@ -8,7 +9,7 @@ namespace Confix.Tool.Abstractions;
 
 public sealed class ComponentReferenceConfiguration
 {
-    private static class FieldNames
+    public static class FieldNames
     {
         public const string MountingPoint = "mountingPoint";
         public const string Version = "version";

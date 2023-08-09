@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Confix.Tool;
 using Json.More;
 using Json.Schema;
 
@@ -83,6 +84,42 @@ public static class JsonNodeExtensions
         }
 
         return obj;
+    }
+
+    public static JsonNode SetValue(
+        this JsonNode node,
+        string path,
+        JsonNode value)
+    {
+        var segments = path.Split('.');
+        var current = node;
+        var currentPath = "/";
+
+        for (var i = 0; i < segments.Length - 1; i++)
+        {
+            var segment = segments[i];
+
+            if (current is not JsonObject)
+            {
+                throw new ExitException(
+                    $"Could not set value in file because the path {path} is not an object");
+            }
+
+            current[segment] ??= new JsonObject();
+
+            current = current[segment];
+            currentPath = Path.Join(currentPath, segment);
+        }
+
+        if (current is not JsonObject)
+        {
+            throw new ExitException(
+                $"Could not set value in file because the path {path} is not an object");
+        }
+
+        current[segments[^1]] = value;
+
+        return node;
     }
 
     public static async Task SerializeToStreamAsync(

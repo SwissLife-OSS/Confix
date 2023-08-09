@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Confix.Tool.Abstractions;
@@ -13,6 +14,8 @@ public sealed class ConfigurationFileDefinition
         Type = type;
         Value = value;
     }
+    
+    public void WriteTo(Utf8JsonWriter writer) => Value.WriteTo(writer);
 
     public static ConfigurationFileDefinition From(ConfigurationFileConfiguration configuration)
     {

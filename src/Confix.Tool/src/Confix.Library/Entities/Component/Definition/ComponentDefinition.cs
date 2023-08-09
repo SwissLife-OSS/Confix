@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace Confix.Tool.Abstractions;
 
 public sealed class ComponentDefinition
@@ -19,6 +21,33 @@ public sealed class ComponentDefinition
     public IReadOnlyList<ComponentInputDefinition> Inputs { get; }
 
     public IReadOnlyList<ComponentOutputDefinition> Outputs { get; }
+
+    public void WriteTo(Utf8JsonWriter writer)
+    {
+        writer.WriteStartObject();
+
+        writer.WriteString(ComponentConfiguration.FieldNames.Name, Name);
+
+        writer.WritePropertyName(ComponentConfiguration.FieldNames.Inputs);
+        writer.WriteStartArray();
+        foreach (var input in Inputs)
+        {
+            input.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+
+        writer.WritePropertyName(ComponentConfiguration.FieldNames.Outputs);
+        writer.WriteStartArray();
+        foreach (var output in Outputs)
+        {
+            output.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+
+        writer.WriteEndObject();
+    }
 
     public static ComponentDefinition From(ComponentConfiguration configuration)
     {

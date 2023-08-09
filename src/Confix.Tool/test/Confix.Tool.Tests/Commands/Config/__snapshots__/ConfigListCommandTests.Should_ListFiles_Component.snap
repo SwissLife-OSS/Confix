@@ -1,0 +1,13 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.component located at <</tmp>>/content/.confix.component
+  Replaced magic path ./**/some-config/appsettings*.json with <</tmp>>/home/**/some-config/appsettings*.json.
+  Merged .confix.project from .confix.solution
+  Merged .confix.component from .confix.solution
+✓ Running in scope Component
+✓ Configuration loaded
+   - <</tmp>>/home/.confixrc
+   - <</tmp>>/content/.confix.component
+

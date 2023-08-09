@@ -5,7 +5,7 @@ namespace Confix.Tool.Abstractions;
 
 public sealed class ComponentProviderConfiguration
 {
-    private static class FieldNames
+    public static class FieldNames
     {
         public const string Name = "name";
         public const string Type = "type";
@@ -41,7 +41,7 @@ public sealed class ComponentProviderConfiguration
         {
             return this;
         }
-        
+
         var name = other.Name ?? Name;
         var type = other.Type ?? Type;
         var value = Values.Merge(other.Values)!.AsObject();

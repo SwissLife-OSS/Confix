@@ -1,0 +1,96 @@
+﻿--------------------------------------------------
+### parsed
+--------------------------------------------------
+{
+  "scope": "None",
+  "project": {
+    "name": "TestProject",
+    "environments": [
+      {
+        "name": "development",
+        "enabled": false
+      },
+      {
+        "name": "staging",
+        "enabled": false
+      },
+      {
+        "name": "production",
+        "enabled": false
+      }
+    ],
+    "components": {
+      "@dotnet-package/BlobStorage": {
+        "version": null,
+        "mountingPoint": [
+          "documents/blob-storage",
+          "user-data/blob-storage"
+        ]
+      },
+      "@oss-components/CustomComponent": {
+        "version": "1.0.0",
+        "mountingPoint": [
+          "CustomComponent"
+        ]
+      }
+    },
+    "componentRepositories": [
+      {
+        "name": "common-components",
+        "type": "git",
+        "additional": "property"
+      }
+    ],
+    "variableProviders": [
+      {
+        "name": "appsettings",
+        "type": "dotnet-appsettings",
+        "environmentOverride": {
+          "dev": {
+            "file": "appsettings.dev.json"
+          },
+          "prod": {
+            "file": "appsettings.prod.json"
+          }
+        }
+      }
+    ],
+    "componentProviders": [
+      {
+        "name": "dotnet",
+        "type": "dotnet-package",
+        "additional": "property"
+      }
+    ],
+    "configurationFiles": [
+      "HOME/**/some-config/appsettings*.json",
+      {
+        "type": "dotnet-appsettings",
+        "additional": "property"
+      }
+    ],
+    "subprojects": [],
+    "type": "default"
+  },
+  "component": {
+    "name": "__Default",
+    "inputs": [
+      {
+        "type": "dotnet",
+        "additional": "property"
+      },
+      {
+        "type": "graphql",
+        "additional": "property"
+      }
+    ],
+    "outputs": []
+  },
+  "encryption": {
+    "provider": {
+      "type": "TestProvider",
+      "additional": "property"
+    }
+  }
+}
+

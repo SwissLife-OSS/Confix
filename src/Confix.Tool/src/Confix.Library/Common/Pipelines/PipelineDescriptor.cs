@@ -1,4 +1,5 @@
 using System.CommandLine;
+using Confix.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Common.Pipelines;
@@ -49,6 +50,14 @@ public sealed class PipelineDescriptor
         where TOption : Option
     {
         Definition.Options.Add(option);
+
+        return this;
+    }
+
+    /// <inheritdoc />
+    public IPipelineDescriptor AddContextData<T>(Context.Key<T> key, T value) where T : notnull
+    {
+        Definition.ContextData.Set(key, value);
 
         return this;
     }

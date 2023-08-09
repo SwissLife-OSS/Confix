@@ -45,7 +45,12 @@ public static class ConsoleExtensions
         var serializedData =
             JsonSerializer.Serialize(data, new JsonSerializerOptions() { WriteIndented = true });
 
-        var jsonText = new JsonText(serializedData);
+        console.WriteJson(serializedData);
+    }
+
+    public static void WriteJson(this IAnsiConsole console, string jsonString)
+    {
+        var jsonText = new JsonText(jsonString);
 
         console.Write(jsonText);
     }

@@ -1,0 +1,140 @@
+﻿--------------------------------------------------
+### parsed
+--------------------------------------------------
+{
+  "IsRoot": false,
+  "Component": {
+    "Name": "__Default",
+    "Inputs": [
+      {
+        "Type": "dotnet",
+        "Value": {
+          "type": "dotnet",
+          "additional": "property"
+        }
+      },
+      {
+        "Type": "graphql",
+        "Value": {
+          "type": "graphql",
+          "additional": "property"
+        }
+      }
+    ],
+    "Outputs": [],
+    "SourceFiles": []
+  },
+  "Project": {
+    "Name": "TestProject",
+    "Environments": [
+      {
+        "Name": "development",
+        "Enabled": false
+      },
+      {
+        "Name": "staging",
+        "Enabled": false
+      },
+      {
+        "Name": "production",
+        "Enabled": false
+      }
+    ],
+    "Components": [
+      {
+        "Provider": "dotnet-package",
+        "ComponentName": "BlobStorage",
+        "Version": null,
+        "IsEnabled": true,
+        "MountingPoints": [
+          "documents/blob-storage",
+          "user-data/blob-storage"
+        ]
+      },
+      {
+        "Provider": "oss-components",
+        "ComponentName": "CustomComponent",
+        "Version": "1.0.0",
+        "IsEnabled": true,
+        "MountingPoints": [
+          "CustomComponent"
+        ]
+      }
+    ],
+    "Repositories": [
+      {
+        "Name": "common-components",
+        "Type": "git",
+        "Values": {
+          "name": "common-components",
+          "type": "git",
+          "additional": "property"
+        }
+      }
+    ],
+    "VariableProviders": [
+      {
+        "Name": "appsettings",
+        "Type": "dotnet-appsettings",
+        "EnvironmentOverrides": {
+          "dev": {
+            "file": "appsettings.dev.json"
+          },
+          "prod": {
+            "file": "appsettings.prod.json"
+          }
+        },
+        "Values": {
+          "name": "appsettings",
+          "type": "dotnet-appsettings",
+          "environmentOverride": {
+            "dev": {
+              "file": "appsettings.dev.json"
+            },
+            "prod": {
+              "file": "appsettings.prod.json"
+            }
+          }
+        }
+      }
+    ],
+    "ComponentProviders": [
+      {
+        "Name": "dotnet",
+        "Type": "dotnet-package",
+        "Values": {
+          "name": "dotnet",
+          "type": "dotnet-package",
+          "additional": "property"
+        }
+      }
+    ],
+    "ConfigurationFiles": [
+      {
+        "Type": "inline",
+        "Value": "HOME/**/some-config/appsettings*.json"
+      },
+      {
+        "Type": "dotnet-appsettings",
+        "Value": {
+          "type": "dotnet-appsettings",
+          "additional": "property"
+        }
+      }
+    ],
+    "Subprojects": [],
+    "SourceFiles": [],
+    "ProjectType": "default"
+  },
+  "Encryption": {
+    "Provider": {
+      "Type": "TestProvider",
+      "EnvironmentOverrides": null,
+      "Values": {
+        "type": "TestProvider",
+        "additional": "property"
+      }
+    }
+  },
+  "SourceFiles": []
+}

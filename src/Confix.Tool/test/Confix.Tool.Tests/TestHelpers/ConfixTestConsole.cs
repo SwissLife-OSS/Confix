@@ -115,7 +115,14 @@ public sealed class ConfixTestConsole : IAnsiConsole, IDisposable, IConsole
                     continue;
                 }
 
-                Profile.Out.Writer.Write(segment.Text);
+                try
+                {
+                    Profile.Out.Writer.Write(segment.Text);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
         }
     }

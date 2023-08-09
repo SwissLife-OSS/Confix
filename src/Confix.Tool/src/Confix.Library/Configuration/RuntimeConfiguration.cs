@@ -8,7 +8,7 @@ namespace Confix.Extensions;
 
 public sealed class RuntimeConfiguration
 {
-    private static class FieldNames
+    public static class FieldNames
     {
         public const string IsRoot = "isRoot";
         public const string Component = "component";

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Confix.Tool.Abstractions;
@@ -17,6 +18,8 @@ public sealed class ComponentProviderDefinition
         Value = values;
     }
 
+    public void WriteTo(Utf8JsonWriter writer) => Value.WriteTo(writer);
+
     public static ComponentProviderDefinition From(ComponentProviderConfiguration configuration)
     {
         List<string> validationErrors = new();
@@ -24,6 +27,7 @@ public sealed class ComponentProviderDefinition
         {
             validationErrors.Add("Name is not defined.");
         }
+
         if (configuration.Type is null)
         {
             validationErrors.Add("Type is not defined.");

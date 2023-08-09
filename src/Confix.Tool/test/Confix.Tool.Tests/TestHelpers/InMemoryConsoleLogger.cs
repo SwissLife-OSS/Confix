@@ -1,3 +1,4 @@
+using Confix.Tool;
 using Confix.Tool.Commands.Logging;
 using Spectre.Console;
 using Spectre.Console.Testing;
@@ -22,5 +23,22 @@ public sealed class InMemoryConsoleLogger : IConsoleLogger
         }
 
         message.WriteTo(Console);
+    }
+
+    /// <inheritdoc />
+    public IDisposable SetVerbosity(Verbosity verbosity)
+    {
+        return NullDisposable.Instance;
+    }
+
+    private sealed class NullDisposable : IDisposable
+    {
+        public static NullDisposable Instance { get; } = new();
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            // empty on purpose
+        }
     }
 }

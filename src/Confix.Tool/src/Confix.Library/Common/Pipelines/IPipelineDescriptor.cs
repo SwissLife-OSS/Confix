@@ -1,4 +1,5 @@
 using System.CommandLine;
+using Confix.Extensions;
 
 namespace Confix.Tool.Common.Pipelines;
 
@@ -42,4 +43,13 @@ public interface IPipelineDescriptor
     /// <returns>The current command pipeline builder instance.</returns>
     IPipelineDescriptor AddOption<TOption>(TOption option)
         where TOption : Option;
+
+    /// <summary>
+    /// Adds a context data to the pipeline that can be used by the middleware components and
+    /// the executor.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    IPipelineDescriptor AddContextData<T>(Context.Key<T> key, T value) where T : notnull;
 }

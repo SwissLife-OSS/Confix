@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
@@ -7,7 +8,7 @@ namespace Confix.Tool.Abstractions;
 
 public sealed class ComponentConfiguration
 {
-    private static class FieldNames
+    public static class FieldNames
     {
         public const string Name = "name";
         public const string Inputs = "inputs";

@@ -1,6 +1,7 @@
 using System.CommandLine;
 using Confix.Tool.Commands;
 using Confix.Tool.Commands.Component;
+using Confix.Tool.Commands.Config;
 using Confix.Tool.Commands.Encryption;
 using Confix.Tool.Commands.Project;
 using Confix.Tool.Commands.Solution;
@@ -25,5 +26,7 @@ internal sealed class ConfixRootCommand : Command
 
         AddCommand(new FileEncryptCommand());
         AddCommand(new FileDecryptCommand());
+
+        AddCommand(new ConfigCommand());
     }
 }

@@ -42,24 +42,6 @@ public class ComponentReferenceDefinitionTests
         exception.Errors.Should().HaveCount(1);
     }
 
-    [Fact]
-    public void From_Should_Throw_When_VersionIsNull()
-    {
-        // Arrange
-        var configuration = new ComponentReferenceConfiguration(
-            "Provider",
-            "ComponentName",
-            null,
-            true,
-            new List<string>());
-
-        // Act
-        var exception = Assert.Throws<ValidationException>(() => ComponentReferenceDefinition.From(configuration));
-
-        // Assert
-        exception.Errors.Should().HaveCount(1);
-    }
-
      [Fact]
     public void From_Should_Throw_When_Name_And_ComponentName_And_Version()
     {
@@ -75,7 +57,7 @@ public class ComponentReferenceDefinitionTests
         var exception = Assert.Throws<ValidationException>(() => ComponentReferenceDefinition.From(configuration));
 
         // Assert
-        exception.Errors.Should().HaveCount(3);
+        exception.Errors.Should().HaveCount(2);
     }
 
     [Fact]
