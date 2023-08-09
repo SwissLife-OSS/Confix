@@ -82,7 +82,8 @@ public class LoadConfigurationMiddlewareTest
                 feature.Component,
                 feature.Project,
                 feature.Solution
-            }.ToJsonString().MatchSnapshot();
+            }.ToJsonString()
+            .MatchSnapshot();
     }
 
     [Fact]
@@ -92,6 +93,51 @@ public class LoadConfigurationMiddlewareTest
         await SetupHome();
         await SetupConfixRoot();
         await SetupRepo();
+        await SetupProject();
+        await SetupComponent();
+        var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
+        var featureCollection = new FeatureCollection();
+        var executionContext = new StubExecutionContext(_testProject, _testHome);
+        middelwareContext.SetupGet(x => x.CancellationToken).Returns(CancellationToken.None);
+        middelwareContext.SetupGet(x => x.Logger).Returns(ConsoleLogger.NullLogger);
+        middelwareContext.SetupGet(x => x.Status).Returns(Mock.Of<IStatus>());
+        middelwareContext.SetupGet(x => x.Execution).Returns(executionContext);
+        middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
+        var middleware = new LoadConfigurationMiddleware();
+        var isInvoked = false;
+        MiddlewareDelegate next = _ =>
+        {
+            isInvoked = true;
+            return Task.CompletedTask;
+        };
+
+        // act
+        await middleware.InvokeAsync(middelwareContext.Object, next);
+
+        // assert
+        Assert.True(isInvoked);
+        var feature = featureCollection.Get<ConfigurationFeature>();
+        Assert.NotNull(feature);
+        Assert.Equal(ConfigurationScope.Project, feature.Scope);
+        Assert.Null(feature.Component);
+        Assert.NotNull(feature.Project);
+        Assert.NotNull(feature.Solution);
+        new
+            {
+                feature.Component,
+                feature.Project,
+                feature.Solution
+            }.ToJsonString()
+            .MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_Discover_MonoRepo()
+    {
+        // arrange
+        await SetupHome();
+        await SetupConfixRoot();
+        await SetupMonoRepo();
         await SetupProject();
         await SetupComponent();
         var middelwareContext = new Mock<IMiddlewareContext>(MockBehavior.Strict);
@@ -224,78 +270,92 @@ public class LoadConfigurationMiddlewareTest
     {
         await File.WriteAllTextAsync(_testComponentConfig,
             """
-            {
-                "name": "TestComponent",
-                "inputs": [
-                    {
-                        "type": "graphql",
-                        "additional": "property"
-                    },
-                    {
-                        "type": "dotnet",
+                {
+                    "name": "TestComponent",
+                    "inputs": [
+                        {
+                            "type": "graphql",
+                            "additional": "property"
+                        },
+                        {
+                            "type": "dotnet",
+                            "additional2": "property"
+                        }
+                    ],
+                    "outputs": [{
+                        "type": "schema",
                         "additional2": "property"
-                    }
-                ],
-                "outputs": [{
-                    "type": "schema",
-                    "additional2": "property"
-                }]
-            }
-        """);
+                    }]
+                }
+            """);
     }
 
     private async Task SetupProject()
     {
         await File.WriteAllTextAsync(_testProjectConfig,
             """
-            { 
-                "environments": [ 
-                    "dev", "uat", "prod"
-                ] 
-            }
-        """);
+                {
+                    "environments": [
+                        "dev", "uat", "prod"
+                    ]
+                }
+            """);
     }
 
     private async Task SetupRepo()
     {
         await File.WriteAllTextAsync(_testRepoConfig,
             """
-            { 
-                "project": { 
-                    "environments": [ 
-                        "dev", "prod", { "name": "uat"}
-                    ] 
-                } 
-            }
-        """);
+                {
+                    "project": {
+                        "environments": [
+                            "dev", "prod", { "name": "uat"}
+                        ]
+                    }
+                }
+            """);
+    }
+
+    private async Task SetupMonoRepo()
+    {
+        await File.WriteAllTextAsync(Path.Combine(_monoRepo, FileNames.ConfixSolution),
+            """
+                {
+                    "project": {
+                        "environments": [
+                            "dev", "prod", { "name": "uat"}
+                        ]
+                    }
+                }
+            """);
     }
 
     private async Task SetupConfixRoot()
     {
         await File.WriteAllTextAsync(_confixRoot,
             """
-            {
-                "isRoot":false, 
-                "project": { 
-                    "environments": [ 
-                        "dev", { "name": "prod"}
-                    ] 
-                } 
-            }
-        """);
+                {
+                    "isRoot":false,
+                    "project": {
+                        "environments": [
+                            "dev", { "name": "prod"}
+                        ]
+                    }
+                }
+            """);
     }
 
     private async Task SetupHome()
     {
         await File.WriteAllTextAsync(_testHomeConfig,
             """
-            { 
-                "project": { 
-                    "environments": [ 
-                        { "name": "dev"}
-                    ] 
-                } 
-            }
-        """);
+                {
+                    "project": {
+                        "environments": [
+                            { "name": "dev"}
+                        ]
+                    }
+                }
+            """);
     }
 }

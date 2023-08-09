@@ -1,0 +1,54 @@
+﻿{
+  "Component": null,
+  "Project": {
+    "Name": "repo.project",
+    "Environments": [
+      {
+        "Name": "dev",
+        "Enabled": false
+      },
+      {
+        "Name": "uat",
+        "Enabled": false
+      },
+      {
+        "Name": "prod",
+        "Enabled": false
+      }
+    ],
+    "Components": [],
+    "Repositories": [],
+    "VariableProviders": [],
+    "ComponentProviders": [],
+    "ConfigurationFiles": [],
+    "Subprojects": [],
+    "ProjectType": 0
+  },
+  "Solution": {
+    "Component": null,
+    "Project": {
+      "Name": "__Default",
+      "Environments": [
+        {
+          "Name": "dev",
+          "Enabled": false
+        },
+        {
+          "Name": "prod",
+          "Enabled": false
+        },
+        {
+          "Name": "uat",
+          "Enabled": false
+        }
+      ],
+      "Components": [],
+      "Repositories": [],
+      "VariableProviders": [],
+      "ComponentProviders": [],
+      "ConfigurationFiles": [],
+      "Subprojects": [],
+      "ProjectType": 0
+    }
+  }
+}
