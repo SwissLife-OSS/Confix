@@ -1,0 +1,403 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nuke-build/nuke/master/source/Nuke.CodeGeneration/schema.json",
+  "name": "Confix",
+  "officialUrl": "https://swisslife-oss.github.io/Confix/",
+  "packageId": "Confix",
+  "packageExecutable": "Confix.dll",
+  "customExecutable": true,
+  "customLogger": true,
+  "tasks": [
+    {
+      "help": "builds a component. Runs all configured component inputs",
+      "postfix": "ComponentBuild",
+      "definiteArgument": "component build",
+      "settingsClass": {}
+    },
+    {
+      "help": "Initializes a component and creates a component file",
+      "postfix": "ComponentInit",
+      "definiteArgument": "component init",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Name",
+            "type": "string",
+            "format": "{value}",
+            "help": "The name of the component"
+          }
+        ]
+      }
+    },
+    {
+      "help": "Reloads the schema of a project",
+      "postfix": "ProjectReload",
+      "definiteArgument": "project reload",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "OutputFile",
+            "type": "string",
+            "format": "--output-file {value}",
+            "help": "Specifies the output file"
+          },
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          }
+        ]
+      }
+    },
+    {
+      "help": "Replaces all variables in the project files with their values",
+      "postfix": "ProjectBuild",
+      "definiteArgument": "project build",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "OutputFile",
+            "type": "string",
+            "format": "--output-file {value}",
+            "help": "Specifies the output file"
+          },
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "OnlyComponents",
+            "type": "string",
+            "format": "--only-components {value}",
+            "help": "If you specify this option, only the components will be built."
+          },
+          {
+            "name": "Encrypt",
+            "type": "string",
+            "format": "--encrypt {value}",
+            "help": "Encrypt the output file"
+          }
+        ]
+      }
+    },
+    {
+      "help": "Initializes a project and creates a project file",
+      "postfix": "ProjectInit",
+      "definiteArgument": "project init",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "OutputFile",
+            "type": "string",
+            "format": "--output-file {value}",
+            "help": "Specifies the output file"
+          }
+        ]
+      }
+    },
+    {
+      "help": "Validates the configuration files of a project",
+      "postfix": "ProjectValidate",
+      "definiteArgument": "project validate",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "OutputFile",
+            "type": "string",
+            "format": "--output-file {value}",
+            "help": "Specifies the output file"
+          },
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "OnlyComponents",
+            "type": "string",
+            "format": "--only-components {value}",
+            "help": "If you specify this option, only the components will be built."
+          }
+        ]
+      }
+    },
+    {
+      "help": "Reloads the schema of all the projects in the solution",
+      "postfix": "SolutionReload",
+      "definiteArgument": "solution reload",
+      "settingsClass": {}
+    },
+    {
+      "help": "Replaces all variables in the solution files with their values",
+      "postfix": "SolutionBuild",
+      "definiteArgument": "solution build",
+      "settingsClass": {}
+    },
+    {
+      "help": "Initializes a solution and creates a solution file",
+      "postfix": "SolutionInit",
+      "definiteArgument": "solution init",
+      "settingsClass": {}
+    },
+    {
+      "help": "Validates the schema of all the projects in the solution",
+      "postfix": "SolutionValidate",
+      "definiteArgument": "solution validate",
+      "settingsClass": {}
+    },
+    {
+      "help": "resolves a variable by name",
+      "postfix": "VariablesGet",
+      "definiteArgument": "variables get",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "Name",
+            "type": "string",
+            "format": "--name {value}",
+            "help": "The name of the variable"
+          }
+        ]
+      }
+    },
+    {
+      "help": "sets a variable. Overrides existing value if any.",
+      "postfix": "VariablesSet",
+      "definiteArgument": "variables set",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "Name",
+            "type": "string",
+            "format": "--name {value}",
+            "help": "The name of the variable"
+          },
+          {
+            "name": "Value",
+            "type": "string",
+            "format": "--value {value}",
+            "help": "The value of the variable"
+          }
+        ]
+      }
+    },
+    {
+      "help": "list available variables",
+      "postfix": "VariablesList",
+      "definiteArgument": "variables list",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "Provider",
+            "type": "string",
+            "format": "--provider {value}",
+            "help": "The name of the provider to resolve the variable from"
+          }
+        ]
+      }
+    },
+    {
+      "help": "Copies a variable from one provider to another provider",
+      "postfix": "VariablesCopy",
+      "definiteArgument": "variables copy",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "From",
+            "type": "string",
+            "format": "--from {value}",
+            "help": "The name of the new variable"
+          },
+          {
+            "name": "To",
+            "type": "string",
+            "format": "--to {value}",
+            "help": "The name of the new variable"
+          },
+          {
+            "name": "ToEnvironment",
+            "type": "string",
+            "format": "--to-environment {value}",
+            "help": "The name of the environment you want to migrate the variable to"
+          }
+        ]
+      }
+    },
+    {
+      "postfix": "Build",
+      "definiteArgument": "build",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "OutputFile",
+            "type": "string",
+            "format": "--output-file {value}",
+            "help": "Specifies the output file"
+          },
+          {
+            "name": "Encrypt",
+            "type": "string",
+            "format": "--encrypt {value}",
+            "help": "Encrypt the output file"
+          }
+        ]
+      }
+    },
+    {
+      "postfix": "Reload",
+      "definiteArgument": "reload",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          }
+        ]
+      }
+    },
+    {
+      "help": "Validates the schema of all the projects",
+      "postfix": "Validate",
+      "definiteArgument": "validate",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          }
+        ]
+      }
+    },
+    {
+      "help": "Encrypts a file using the configured provider",
+      "postfix": "Encrypt",
+      "definiteArgument": "encrypt",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "InputFile",
+            "type": "string",
+            "format": "{value}",
+            "help": "The path to the file to encrypt or decrypt."
+          },
+          {
+            "name": "OutFile",
+            "type": "string",
+            "format": "{value}",
+            "help": "The file to write the encrypted or decrypted data to. \nIf not provided the input file will be overwritten. \nExisting files will be overwritten."
+          }
+        ]
+      }
+    },
+    {
+      "help": "Decrypts a file using the configured provider",
+      "postfix": "Decrypt",
+      "definiteArgument": "decrypt",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "InputFile",
+            "type": "string",
+            "format": "{value}",
+            "help": "The path to the file to encrypt or decrypt."
+          },
+          {
+            "name": "OutFile",
+            "type": "string",
+            "format": "{value}",
+            "help": "The file to write the encrypted or decrypted data to. \nIf not provided the input file will be overwritten. \nExisting files will be overwritten."
+          }
+        ]
+      }
+    },
+    {
+      "help": "Shows the configuration to a file",
+      "postfix": "ConfigShow",
+      "definiteArgument": "config show",
+      "settingsClass": {}
+    },
+    {
+      "help": "Sets a configuration value in the nearest .confixrc",
+      "postfix": "ConfigSet",
+      "definiteArgument": "config set",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Path",
+            "type": "string",
+            "format": "{value}",
+            "help": "The path to the configuration file"
+          },
+          {
+            "name": "Value",
+            "type": "string",
+            "format": "{value}",
+            "help": "The value to set as json"
+          }
+        ]
+      }
+    },
+    {
+      "help": "Lists the configuration to a file",
+      "postfix": "ConfigList",
+      "definiteArgument": "config list",
+      "settingsClass": {}
+    }
+  ],
+  "commonTaskProperties": [
+    {
+      "name": "Framework",
+      "type": "string",
+      "noArgument": true
+    }
+  ]
+}

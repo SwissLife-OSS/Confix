@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <RootNamespace></RootNamespace>
+        <NoWarn>CS0649;CS0169</NoWarn>
+        <NukeRootDirectory>..</NukeRootDirectory>
+        <NukeScriptDirectory>..</NukeScriptDirectory>
+        <NukeTelemetryVersion>1</NukeTelemetryVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Nuke.Common"/>
+        <PackageReference Include="Nuke.CodeGeneration"/>
+        <PackageReference Include="System.CommandLine"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\src\Confix.Tool\src\Confix.Library\Confix.Library.csproj"/>
+    </ItemGroup>
+
+</Project>
