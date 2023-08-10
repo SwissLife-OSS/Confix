@@ -93,6 +93,7 @@ public class Build : NukeBuild
             }
 
             GenerateCode(ToolSpecfication, namespaceProvider: _ => "Confix.Nuke");
+            return;
 
             void Visit(Command command, Stack<string> parents)
             {
@@ -127,90 +128,5 @@ public class Build : NukeBuild
         return name[..1].ToUpper() + name[1..];
     }
 }
-
-/*
-{
-  "$schema": "https://raw.githubusercontent.com/nuke-build/nuke/master/source/Nuke.CodeGeneration/schema.json",
-  "name": "Confix",
-  "officialUrl": "https://swisslife-oss.github.io/Confix/",
-  "packageId": "Confix",
-  "packageExecutable": "Confix.dll",
-  "customExecutable": true,
-  "customLogger": true,
-  "tasks": [
-    {
-      "help": "",
-      "postfix": "ComponentBuild",
-      "definiteArgument": "component build",
-      "settingsClass": {
-        "properties": [
-          {
-            "name": "Verbosity",
-            "type": "string",
-            "format": "--verbosity {value}",
-            "help": "Sets the verbosity level <Detailed|Diagnostic|Minimal|Normal|Quiet> [default: Normal]"
-          }
-        ]
-      }
-    },
-    {
-      "help": "",
-      "postfix": "ComponentInit",
-      "definiteArgument": "component init",
-      "settingsClass": {
-        "properties": [
-          {
-            "name": "Name",
-            "type": "string",
-            "format": "{value}",
-            "help": "The name of the component"
-          },
-          {
-            "name": "Verbosity",
-            "type": "string",
-            "format": "--verbosity {value}",
-            "help": "Sets the verbosity level <Detailed|Diagnostic|Minimal|Normal|Quiet> [default: Normal]"
-          }
-        ]
-      }
-    },
-    {
-      "help": "",
-      "postfix": "ProjectReload",
-      "definiteArgument": "project reload",
-      "settingsClass": {
-        "properties": [
-          {
-            "name": "Environment",
-            "type": "string",
-            "format": "--environment {value}",
-            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
-          },
-          {
-            "name": "OutputFile",
-            "type": "string",
-            "format": "--output-file {value}",
-            "help": "specifies the output file"
-          },
-          {
-            "name": "Verbosity",
-            "type": "string",
-            "format": "--verbosity {value}",
-            "help": "Sets the verbosity level <Detailed|Diagnostic|Minimal|Normal|Quiet> [default: Normal]"
-          }
-        ]
-      }
-    },
-    }
-  ],
-  "commonTaskProperties": [
-    {
-      "name": "Framework",
-      "type": "string",
-      "noArgument": true
-    }
-  ]
-}
-*/
 
 public record CommandTask(string Name, string Argument, Command Command);

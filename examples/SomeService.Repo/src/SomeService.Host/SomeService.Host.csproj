@@ -1,9 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <ItemGroup>
-    <ProjectReference Include="..\SomeService.Abstractions\SomeService.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Common.Components\src\Common.Components.Security\Common.Components.Security.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\SomeService.Abstractions\SomeService.Abstractions.csproj"/>
+        <ProjectReference Include="..\..\..\Common.Components\src\Common.Components.Security\Common.Components.Security.csproj"/>
+    </ItemGroup>
 
-<PropertyGroup><UserSecretsId>6b20ee7b-eea9-4ce8-b1f2-a802998aaaa6</UserSecretsId></PropertyGroup></Project>
+    <PropertyGroup>
+        <UserSecretsId>6b20ee7b-eea9-4ce8-b1f2-a802998aaaa6</UserSecretsId>
+    </PropertyGroup>
+</Project>

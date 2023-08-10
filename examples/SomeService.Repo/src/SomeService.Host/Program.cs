@@ -1,4 +1,3 @@
-using System.Linq;
 using Common.Components.DataProtection;
 using Common.Components.Security;
 

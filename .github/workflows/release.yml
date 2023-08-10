@@ -29,5 +29,7 @@ jobs:
         run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
       - name: Push Library
         run: dotnet nuget push Confix.Library.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
+      - name: Push Nuke
+        run: dotnet nuget push Confix.Nuke.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
       - name: Push Tool
         run: dotnet nuget push Confix.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
