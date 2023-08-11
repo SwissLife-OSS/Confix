@@ -7,7 +7,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
-        <RootNamespace>ConfiX</RootNamespace>
+        <RootNamespace>Confix</RootNamespace>
         <Nullable>enable</Nullable>
         <LangVersion>11</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>

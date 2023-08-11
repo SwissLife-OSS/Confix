@@ -1,9 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <AssemblyName>Confix.Nuke</AssemblyName>
+        <RootNamespace>Confix</RootNamespace>
+        <IsPublishable>true</IsPublishable>
+        <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <Product>Confix</Product>
+        <PackageId>Confix.Nuke</PackageId>
+        <IsPackable>true</IsPackable>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseUrl>https://github.com/SwissLife-OSS/Confix/blob/main/LICENSE</PackageLicenseUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryUrl>https://github.com/SwissLife-OSS/Confix.git</RepositoryUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/SwissLife-OSS/Confix/main/images/logo_small.png</PackageIconUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../../../README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Nuke.Common"/>
