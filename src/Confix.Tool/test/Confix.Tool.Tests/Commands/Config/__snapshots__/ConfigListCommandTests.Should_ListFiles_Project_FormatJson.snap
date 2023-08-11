@@ -1,0 +1,90 @@
+﻿--------------------------------------------------
+### output
+--------------------------------------------------
+{
+  "files": [
+    {
+      "path": "HOME/.confixrc",
+      "kind": ".confixrc",
+      "content": {
+        "component": {
+          "name": "__Default",
+          "inputs": [
+            {
+              "type": "dotnet",
+              "additional": "property"
+            },
+            {
+              "type": "graphql",
+              "additional": "property"
+            }
+          ]
+        },
+        "isRoot": false,
+        "encryption": {
+          "provider": {
+            "type": "TestProvider",
+            "additional": "property"
+          }
+        },
+        "project": {
+          "name": "TestProject",
+          "environments": [
+            "development",
+            "staging",
+            "production"
+          ],
+          "components": {
+            "@dotnet-package/BlobStorage": {
+              "mountingPoint": [
+                "documents/blob-storage",
+                "user-data/blob-storage"
+              ]
+            },
+            "@oss-components/CustomComponent": "1.0.0"
+          },
+          "componentProviders": [
+            {
+              "name": "dotnet",
+              "type": "dotnet-package",
+              "additional": "property"
+            }
+          ],
+          "componentRepositories": [
+            {
+              "name": "common-components",
+              "type": "git",
+              "additional": "property"
+            }
+          ],
+          "configurationFiles": [
+            "HOME/**/some-config/appsettings*.json",
+            {
+              "type": "dotnet-appsettings",
+              "additional": "property"
+            }
+          ],
+          "variableProviders": [
+            {
+              "name": "appsettings",
+              "type": "dotnet-appsettings",
+              "environmentOverride": {
+                "dev": {
+                  "file": "appsettings.dev.json"
+                },
+                "prod": {
+                  "file": "appsettings.prod.json"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": "CONTENT/.confix.project",
+      "kind": ".confix.project",
+      "content": {}
+    }
+  ]
+}
