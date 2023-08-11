@@ -1,4 +1,5 @@
 using System.CommandLine.Builder;
+using Confix.Extensions;
 using Confix.Tool.Middlewares;
 using Microsoft.Extensions.DependencyInjection;
 using Factory =
@@ -8,7 +9,8 @@ namespace Confix.Tool.Entities.Components;
 
 public static class ComponentInputCommandLineBuilderExtensions
 {
-    private const string _componentInputs = "Confix.Tool.Entites.Component.ComponentInputs";
+    private static Context.Key<Dictionary<string, Factory>> _key =
+        new("Confix.Tool.Entities.Component.ComponentInputs");
 
     public static CommandLineBuilder AddComponentInput<T>(this CommandLineBuilder builder)
         where T : IComponentInput, new()
@@ -23,10 +25,10 @@ public static class ComponentInputCommandLineBuilderExtensions
     {
         var contextData = builder.GetContextData();
 
-        if (!contextData.TryGetValue(_componentInputs, out Dictionary<string, Factory>? lookup))
+        if (!contextData.TryGetValue(_key, out var lookup))
         {
             lookup = new Dictionary<string, Factory>();
-            contextData.Add(_componentInputs, lookup);
+            contextData.Set(_key, lookup);
 
             builder.AddSingleton<IComponentInputFactory>(_ => new ComponentInputFactory(lookup));
         }

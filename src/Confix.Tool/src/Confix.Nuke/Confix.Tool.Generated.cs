@@ -46,6 +46,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentBuildSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixComponentBuild(ConfixComponentBuildSettings toolSettings = null)
         {
@@ -60,6 +63,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentBuildSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixComponentBuild(Configure<ConfixComponentBuildSettings> configurator)
         {
@@ -71,6 +77,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentBuildSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixComponentBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixComponentBuild(CombinatorialConfigure<ConfixComponentBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
@@ -84,6 +93,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>&lt;name&gt;</c> via <see cref="ConfixComponentInitSettings.Name"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentInitSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixComponentInit(ConfixComponentInitSettings toolSettings = null)
@@ -101,6 +111,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>&lt;name&gt;</c> via <see cref="ConfixComponentInitSettings.Name"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentInitSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixComponentInit(Configure<ConfixComponentInitSettings> configurator)
@@ -115,6 +126,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>&lt;name&gt;</c> via <see cref="ConfixComponentInitSettings.Name"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentInitSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixComponentInitSettings Settings, IReadOnlyCollection<Output> Output)> ConfixComponentInit(CombinatorialConfigure<ConfixComponentInitSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -130,6 +142,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixProjectReloadSettings.Environment"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectReloadSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectReloadSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixProjectReload(ConfixProjectReloadSettings toolSettings = null)
@@ -148,6 +161,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixProjectReloadSettings.Environment"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectReloadSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectReloadSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixProjectReload(Configure<ConfixProjectReloadSettings> configurator)
@@ -163,6 +177,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixProjectReloadSettings.Environment"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectReloadSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectReloadSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixProjectReloadSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectReload(CombinatorialConfigure<ConfixProjectReloadSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -180,6 +195,7 @@ namespace Confix.Nuke
         ///     <li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li>
         ///     <li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixProjectBuild(ConfixProjectBuildSettings toolSettings = null)
@@ -200,6 +216,7 @@ namespace Confix.Nuke
         ///     <li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li>
         ///     <li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixProjectBuild(Configure<ConfixProjectBuildSettings> configurator)
@@ -217,6 +234,7 @@ namespace Confix.Nuke
         ///     <li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li>
         ///     <li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixProjectBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectBuild(CombinatorialConfigure<ConfixProjectBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -231,6 +249,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectInitSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectInitSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixProjectInit(ConfixProjectInitSettings toolSettings = null)
@@ -248,6 +267,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectInitSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectInitSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixProjectInit(Configure<ConfixProjectInitSettings> configurator)
@@ -262,6 +282,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectInitSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectInitSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixProjectInitSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectInit(CombinatorialConfigure<ConfixProjectInitSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -278,6 +299,7 @@ namespace Confix.Nuke
         ///     <li><c>--environment</c> via <see cref="ConfixProjectValidateSettings.Environment"/></li>
         ///     <li><c>--only-components</c> via <see cref="ConfixProjectValidateSettings.OnlyComponents"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectValidateSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectValidateSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixProjectValidate(ConfixProjectValidateSettings toolSettings = null)
@@ -297,6 +319,7 @@ namespace Confix.Nuke
         ///     <li><c>--environment</c> via <see cref="ConfixProjectValidateSettings.Environment"/></li>
         ///     <li><c>--only-components</c> via <see cref="ConfixProjectValidateSettings.OnlyComponents"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectValidateSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectValidateSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixProjectValidate(Configure<ConfixProjectValidateSettings> configurator)
@@ -313,6 +336,7 @@ namespace Confix.Nuke
         ///     <li><c>--environment</c> via <see cref="ConfixProjectValidateSettings.Environment"/></li>
         ///     <li><c>--only-components</c> via <see cref="ConfixProjectValidateSettings.OnlyComponents"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectValidateSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectValidateSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixProjectValidateSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectValidate(CombinatorialConfigure<ConfixProjectValidateSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -325,6 +349,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionReloadSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixSolutionReload(ConfixSolutionReloadSettings toolSettings = null)
         {
@@ -339,6 +366,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionReloadSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixSolutionReload(Configure<ConfixSolutionReloadSettings> configurator)
         {
@@ -350,6 +380,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionReloadSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixSolutionReloadSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionReload(CombinatorialConfigure<ConfixSolutionReloadSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
@@ -361,6 +394,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionBuildSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixSolutionBuild(ConfixSolutionBuildSettings toolSettings = null)
         {
@@ -375,6 +411,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionBuildSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixSolutionBuild(Configure<ConfixSolutionBuildSettings> configurator)
         {
@@ -386,6 +425,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionBuildSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixSolutionBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionBuild(CombinatorialConfigure<ConfixSolutionBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
@@ -397,6 +439,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionInitSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixSolutionInit(ConfixSolutionInitSettings toolSettings = null)
         {
@@ -411,6 +456,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionInitSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixSolutionInit(Configure<ConfixSolutionInitSettings> configurator)
         {
@@ -422,6 +470,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionInitSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixSolutionInitSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionInit(CombinatorialConfigure<ConfixSolutionInitSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
@@ -433,6 +484,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionValidateSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixSolutionValidate(ConfixSolutionValidateSettings toolSettings = null)
         {
@@ -447,6 +501,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionValidateSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixSolutionValidate(Configure<ConfixSolutionValidateSettings> configurator)
         {
@@ -458,6 +515,9 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionValidateSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixSolutionValidateSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionValidate(CombinatorialConfigure<ConfixSolutionValidateSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
@@ -472,6 +532,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixVariablesGetSettings.Environment"/></li>
         ///     <li><c>--name</c> via <see cref="ConfixVariablesGetSettings.Name"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesGetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixVariablesGet(ConfixVariablesGetSettings toolSettings = null)
@@ -490,6 +551,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixVariablesGetSettings.Environment"/></li>
         ///     <li><c>--name</c> via <see cref="ConfixVariablesGetSettings.Name"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesGetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixVariablesGet(Configure<ConfixVariablesGetSettings> configurator)
@@ -505,6 +567,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixVariablesGetSettings.Environment"/></li>
         ///     <li><c>--name</c> via <see cref="ConfixVariablesGetSettings.Name"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesGetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixVariablesGetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariablesGet(CombinatorialConfigure<ConfixVariablesGetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -521,6 +584,7 @@ namespace Confix.Nuke
         ///     <li><c>--environment</c> via <see cref="ConfixVariablesSetSettings.Environment"/></li>
         ///     <li><c>--name</c> via <see cref="ConfixVariablesSetSettings.Name"/></li>
         ///     <li><c>--value</c> via <see cref="ConfixVariablesSetSettings.Value"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesSetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixVariablesSet(ConfixVariablesSetSettings toolSettings = null)
@@ -540,6 +604,7 @@ namespace Confix.Nuke
         ///     <li><c>--environment</c> via <see cref="ConfixVariablesSetSettings.Environment"/></li>
         ///     <li><c>--name</c> via <see cref="ConfixVariablesSetSettings.Name"/></li>
         ///     <li><c>--value</c> via <see cref="ConfixVariablesSetSettings.Value"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesSetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixVariablesSet(Configure<ConfixVariablesSetSettings> configurator)
@@ -556,6 +621,7 @@ namespace Confix.Nuke
         ///     <li><c>--environment</c> via <see cref="ConfixVariablesSetSettings.Environment"/></li>
         ///     <li><c>--name</c> via <see cref="ConfixVariablesSetSettings.Name"/></li>
         ///     <li><c>--value</c> via <see cref="ConfixVariablesSetSettings.Value"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesSetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixVariablesSetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariablesSet(CombinatorialConfigure<ConfixVariablesSetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -571,6 +637,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixVariablesListSettings.Environment"/></li>
         ///     <li><c>--provider</c> via <see cref="ConfixVariablesListSettings.Provider"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesListSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixVariablesList(ConfixVariablesListSettings toolSettings = null)
@@ -589,6 +656,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixVariablesListSettings.Environment"/></li>
         ///     <li><c>--provider</c> via <see cref="ConfixVariablesListSettings.Provider"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesListSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixVariablesList(Configure<ConfixVariablesListSettings> configurator)
@@ -604,6 +672,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixVariablesListSettings.Environment"/></li>
         ///     <li><c>--provider</c> via <see cref="ConfixVariablesListSettings.Provider"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesListSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixVariablesListSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariablesList(CombinatorialConfigure<ConfixVariablesListSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -621,6 +690,7 @@ namespace Confix.Nuke
         ///     <li><c>--from</c> via <see cref="ConfixVariablesCopySettings.From"/></li>
         ///     <li><c>--to</c> via <see cref="ConfixVariablesCopySettings.To"/></li>
         ///     <li><c>--to-environment</c> via <see cref="ConfixVariablesCopySettings.ToEnvironment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesCopySettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixVariablesCopy(ConfixVariablesCopySettings toolSettings = null)
@@ -641,6 +711,7 @@ namespace Confix.Nuke
         ///     <li><c>--from</c> via <see cref="ConfixVariablesCopySettings.From"/></li>
         ///     <li><c>--to</c> via <see cref="ConfixVariablesCopySettings.To"/></li>
         ///     <li><c>--to-environment</c> via <see cref="ConfixVariablesCopySettings.ToEnvironment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesCopySettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixVariablesCopy(Configure<ConfixVariablesCopySettings> configurator)
@@ -658,6 +729,7 @@ namespace Confix.Nuke
         ///     <li><c>--from</c> via <see cref="ConfixVariablesCopySettings.From"/></li>
         ///     <li><c>--to</c> via <see cref="ConfixVariablesCopySettings.To"/></li>
         ///     <li><c>--to-environment</c> via <see cref="ConfixVariablesCopySettings.ToEnvironment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesCopySettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixVariablesCopySettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariablesCopy(CombinatorialConfigure<ConfixVariablesCopySettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -673,6 +745,7 @@ namespace Confix.Nuke
         ///     <li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixBuild(ConfixBuildSettings toolSettings = null)
@@ -691,6 +764,7 @@ namespace Confix.Nuke
         ///     <li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixBuild(Configure<ConfixBuildSettings> configurator)
@@ -706,6 +780,7 @@ namespace Confix.Nuke
         ///     <li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixBuild(CombinatorialConfigure<ConfixBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -719,6 +794,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixReloadSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixReloadSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixReload(ConfixReloadSettings toolSettings = null)
@@ -735,6 +811,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixReloadSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixReloadSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixReload(Configure<ConfixReloadSettings> configurator)
@@ -748,6 +825,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixReloadSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixReloadSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixReloadSettings Settings, IReadOnlyCollection<Output> Output)> ConfixReload(CombinatorialConfigure<ConfixReloadSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -762,6 +840,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixValidate(ConfixValidateSettings toolSettings = null)
@@ -779,6 +858,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixValidate(Configure<ConfixValidateSettings> configurator)
@@ -793,6 +873,7 @@ namespace Confix.Nuke
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
         ///     <li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixValidateSettings Settings, IReadOnlyCollection<Output> Output)> ConfixValidate(CombinatorialConfigure<ConfixValidateSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -809,6 +890,7 @@ namespace Confix.Nuke
         ///     <li><c>&lt;inputFile&gt;</c> via <see cref="ConfixEncryptSettings.InputFile"/></li>
         ///     <li><c>&lt;outFile&gt;</c> via <see cref="ConfixEncryptSettings.OutFile"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixEncryptSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixEncryptSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixEncrypt(ConfixEncryptSettings toolSettings = null)
@@ -828,6 +910,7 @@ namespace Confix.Nuke
         ///     <li><c>&lt;inputFile&gt;</c> via <see cref="ConfixEncryptSettings.InputFile"/></li>
         ///     <li><c>&lt;outFile&gt;</c> via <see cref="ConfixEncryptSettings.OutFile"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixEncryptSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixEncryptSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixEncrypt(Configure<ConfixEncryptSettings> configurator)
@@ -844,6 +927,7 @@ namespace Confix.Nuke
         ///     <li><c>&lt;inputFile&gt;</c> via <see cref="ConfixEncryptSettings.InputFile"/></li>
         ///     <li><c>&lt;outFile&gt;</c> via <see cref="ConfixEncryptSettings.OutFile"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixEncryptSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixEncryptSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixEncryptSettings Settings, IReadOnlyCollection<Output> Output)> ConfixEncrypt(CombinatorialConfigure<ConfixEncryptSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -860,6 +944,7 @@ namespace Confix.Nuke
         ///     <li><c>&lt;inputFile&gt;</c> via <see cref="ConfixDecryptSettings.InputFile"/></li>
         ///     <li><c>&lt;outFile&gt;</c> via <see cref="ConfixDecryptSettings.OutFile"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixDecryptSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixDecryptSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixDecrypt(ConfixDecryptSettings toolSettings = null)
@@ -879,6 +964,7 @@ namespace Confix.Nuke
         ///     <li><c>&lt;inputFile&gt;</c> via <see cref="ConfixDecryptSettings.InputFile"/></li>
         ///     <li><c>&lt;outFile&gt;</c> via <see cref="ConfixDecryptSettings.OutFile"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixDecryptSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixDecryptSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixDecrypt(Configure<ConfixDecryptSettings> configurator)
@@ -895,6 +981,7 @@ namespace Confix.Nuke
         ///     <li><c>&lt;inputFile&gt;</c> via <see cref="ConfixDecryptSettings.InputFile"/></li>
         ///     <li><c>&lt;outFile&gt;</c> via <see cref="ConfixDecryptSettings.OutFile"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixDecryptSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixDecryptSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixDecryptSettings Settings, IReadOnlyCollection<Output> Output)> ConfixDecrypt(CombinatorialConfigure<ConfixDecryptSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -907,6 +994,10 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--format</c> via <see cref="ConfixConfigShowSettings.Format"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixConfigShowSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixConfigShow(ConfixConfigShowSettings toolSettings = null)
         {
@@ -921,6 +1012,10 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--format</c> via <see cref="ConfixConfigShowSettings.Format"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixConfigShowSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixConfigShow(Configure<ConfixConfigShowSettings> configurator)
         {
@@ -932,6 +1027,10 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--format</c> via <see cref="ConfixConfigShowSettings.Format"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixConfigShowSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixConfigShowSettings Settings, IReadOnlyCollection<Output> Output)> ConfixConfigShow(CombinatorialConfigure<ConfixConfigShowSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
@@ -946,6 +1045,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>&lt;path&gt;</c> via <see cref="ConfixConfigSetSettings.Path"/></li>
         ///     <li><c>&lt;value&gt;</c> via <see cref="ConfixConfigSetSettings.Value"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixConfigSetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixConfigSet(ConfixConfigSetSettings toolSettings = null)
@@ -964,6 +1064,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>&lt;path&gt;</c> via <see cref="ConfixConfigSetSettings.Path"/></li>
         ///     <li><c>&lt;value&gt;</c> via <see cref="ConfixConfigSetSettings.Value"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixConfigSetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixConfigSet(Configure<ConfixConfigSetSettings> configurator)
@@ -979,6 +1080,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>&lt;path&gt;</c> via <see cref="ConfixConfigSetSettings.Path"/></li>
         ///     <li><c>&lt;value&gt;</c> via <see cref="ConfixConfigSetSettings.Value"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixConfigSetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixConfigSetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixConfigSet(CombinatorialConfigure<ConfixConfigSetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -991,6 +1093,10 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--format</c> via <see cref="ConfixConfigListSettings.Format"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixConfigListSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixConfigList(ConfixConfigListSettings toolSettings = null)
         {
@@ -1005,6 +1111,10 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--format</c> via <see cref="ConfixConfigListSettings.Format"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixConfigListSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IReadOnlyCollection<Output> ConfixConfigList(Configure<ConfixConfigListSettings> configurator)
         {
@@ -1016,6 +1126,10 @@ namespace Confix.Nuke
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--format</c> via <see cref="ConfixConfigListSettings.Format"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixConfigListSettings.Verbosity"/></li>
+        ///   </ul>
         /// </remarks>
         public static IEnumerable<(ConfixConfigListSettings Settings, IReadOnlyCollection<Output> Output)> ConfixConfigList(CombinatorialConfigure<ConfixConfigListSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
@@ -1036,11 +1150,16 @@ namespace Confix.Nuke
         /// </summary>
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("component build");
+              .Add("component build")
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1060,6 +1179,10 @@ namespace Confix.Nuke
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
         /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
+        /// <summary>
         ///   The name of the component
         /// </summary>
         public virtual string Name { get; internal set; }
@@ -1068,6 +1191,7 @@ namespace Confix.Nuke
         {
             arguments
               .Add("component init")
+              .Add("--verbosity {value}", Verbosity)
               .Add("{value}", Name);
             return base.ConfigureProcessArguments(arguments);
         }
@@ -1095,13 +1219,18 @@ namespace Confix.Nuke
         ///   The name of the environment to run the command in. Overrules the active environment set in .confixrc
         /// </summary>
         public virtual string Environment { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
               .Add("project reload")
               .Add("--output-file {value}", OutputFile)
-              .Add("--environment {value}", Environment);
+              .Add("--environment {value}", Environment)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1136,6 +1265,10 @@ namespace Confix.Nuke
         ///   Encrypt the output file
         /// </summary>
         public virtual string Encrypt { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
@@ -1144,7 +1277,8 @@ namespace Confix.Nuke
               .Add("--output-file {value}", OutputFile)
               .Add("--environment {value}", Environment)
               .Add("--only-components {value}", OnlyComponents)
-              .Add("--encrypt {value}", Encrypt);
+              .Add("--encrypt {value}", Encrypt)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1167,12 +1301,17 @@ namespace Confix.Nuke
         ///   Specifies the output file
         /// </summary>
         public virtual string OutputFile { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
               .Add("project init")
-              .Add("--output-file {value}", OutputFile);
+              .Add("--output-file {value}", OutputFile)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1203,6 +1342,10 @@ namespace Confix.Nuke
         ///   If you specify this option, only the components will be built.
         /// </summary>
         public virtual string OnlyComponents { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
@@ -1210,7 +1353,8 @@ namespace Confix.Nuke
               .Add("project validate")
               .Add("--output-file {value}", OutputFile)
               .Add("--environment {value}", Environment)
-              .Add("--only-components {value}", OnlyComponents);
+              .Add("--only-components {value}", OnlyComponents)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1229,11 +1373,16 @@ namespace Confix.Nuke
         /// </summary>
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("solution reload");
+              .Add("solution reload")
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1252,11 +1401,16 @@ namespace Confix.Nuke
         /// </summary>
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("solution build");
+              .Add("solution build")
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1275,11 +1429,16 @@ namespace Confix.Nuke
         /// </summary>
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("solution init");
+              .Add("solution init")
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1298,11 +1457,16 @@ namespace Confix.Nuke
         /// </summary>
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("solution validate");
+              .Add("solution validate")
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1329,13 +1493,18 @@ namespace Confix.Nuke
         ///   The name of the variable
         /// </summary>
         public virtual string Name { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
               .Add("variables get")
               .Add("--environment {value}", Environment)
-              .Add("--name {value}", Name);
+              .Add("--name {value}", Name)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1366,6 +1535,10 @@ namespace Confix.Nuke
         ///   The value of the variable
         /// </summary>
         public virtual string Value { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
@@ -1373,7 +1546,8 @@ namespace Confix.Nuke
               .Add("variables set")
               .Add("--environment {value}", Environment)
               .Add("--name {value}", Name)
-              .Add("--value {value}", Value);
+              .Add("--value {value}", Value)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1400,13 +1574,18 @@ namespace Confix.Nuke
         ///   The name of the provider to resolve the variable from
         /// </summary>
         public virtual string Provider { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
               .Add("variables list")
               .Add("--environment {value}", Environment)
-              .Add("--provider {value}", Provider);
+              .Add("--provider {value}", Provider)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1441,6 +1620,10 @@ namespace Confix.Nuke
         ///   The name of the environment you want to migrate the variable to
         /// </summary>
         public virtual string ToEnvironment { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
@@ -1449,7 +1632,8 @@ namespace Confix.Nuke
               .Add("--environment {value}", Environment)
               .Add("--from {value}", From)
               .Add("--to {value}", To)
-              .Add("--to-environment {value}", ToEnvironment);
+              .Add("--to-environment {value}", ToEnvironment)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1480,6 +1664,10 @@ namespace Confix.Nuke
         ///   Encrypt the output file
         /// </summary>
         public virtual string Encrypt { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
@@ -1487,7 +1675,8 @@ namespace Confix.Nuke
               .Add("build")
               .Add("--environment {value}", Environment)
               .Add("--output-file {value}", OutputFile)
-              .Add("--encrypt {value}", Encrypt);
+              .Add("--encrypt {value}", Encrypt)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1510,12 +1699,17 @@ namespace Confix.Nuke
         ///   The name of the environment to run the command in. Overrules the active environment set in .confixrc
         /// </summary>
         public virtual string Environment { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
               .Add("reload")
-              .Add("--environment {value}", Environment);
+              .Add("--environment {value}", Environment)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1538,12 +1732,17 @@ namespace Confix.Nuke
         ///   The name of the environment to run the command in. Overrules the active environment set in .confixrc
         /// </summary>
         public virtual string Environment { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
               .Add("validate")
-              .Add("--environment {value}", Environment);
+              .Add("--environment {value}", Environment)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1567,13 +1766,15 @@ namespace Confix.Nuke
         /// </summary>
         public virtual string Environment { get; internal set; }
         /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
+        /// <summary>
         ///   The path to the file to encrypt or decrypt.
         /// </summary>
         public virtual string InputFile { get; internal set; }
         /// <summary>
-        ///   The file to write the encrypted or decrypted data to. 
-        /// If not provided the input file will be overwritten. 
-        /// Existing files will be overwritten.
+        ///   The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.
         /// </summary>
         public virtual string OutFile { get; internal set; }
         public virtual string Framework { get; internal set; }
@@ -1582,6 +1783,7 @@ namespace Confix.Nuke
             arguments
               .Add("encrypt")
               .Add("--environment {value}", Environment)
+              .Add("--verbosity {value}", Verbosity)
               .Add("{value}", InputFile)
               .Add("{value}", OutFile);
             return base.ConfigureProcessArguments(arguments);
@@ -1607,13 +1809,15 @@ namespace Confix.Nuke
         /// </summary>
         public virtual string Environment { get; internal set; }
         /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
+        /// <summary>
         ///   The path to the file to encrypt or decrypt.
         /// </summary>
         public virtual string InputFile { get; internal set; }
         /// <summary>
-        ///   The file to write the encrypted or decrypted data to. 
-        /// If not provided the input file will be overwritten. 
-            /// Existing files will be overwritten.
+        ///   The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.
         /// </summary>
         public virtual string OutFile { get; internal set; }
         public virtual string Framework { get; internal set; }
@@ -1622,6 +1826,7 @@ namespace Confix.Nuke
             arguments
               .Add("decrypt")
               .Add("--environment {value}", Environment)
+              .Add("--verbosity {value}", Verbosity)
               .Add("{value}", InputFile)
               .Add("{value}", OutFile);
             return base.ConfigureProcessArguments(arguments);
@@ -1642,11 +1847,21 @@ namespace Confix.Nuke
         /// </summary>
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Sets the output format
+        /// </summary>
+        public virtual string Format { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("config show");
+              .Add("config show")
+              .Add("--format {value}", Format)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1666,6 +1881,10 @@ namespace Confix.Nuke
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
         /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
+        /// <summary>
         ///   The path to the configuration file
         /// </summary>
         public virtual string Path { get; internal set; }
@@ -1678,6 +1897,7 @@ namespace Confix.Nuke
         {
             arguments
               .Add("config set")
+              .Add("--verbosity {value}", Verbosity)
               .Add("{value}", Path)
               .Add("{value}", Value);
             return base.ConfigureProcessArguments(arguments);
@@ -1698,11 +1918,21 @@ namespace Confix.Nuke
         /// </summary>
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Sets the output format
+        /// </summary>
+        public virtual string Format { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
         public virtual string Framework { get; internal set; }
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("config list");
+              .Add("config list")
+              .Add("--format {value}", Format)
+              .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
     }
@@ -1715,6 +1945,30 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixComponentBuildSettingsExtensions
     {
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixComponentBuildSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixComponentBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixComponentBuildSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixComponentBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixComponentBuildSettings.Framework"/></em></p>
@@ -1747,6 +2001,30 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixComponentInitSettingsExtensions
     {
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixComponentInitSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixComponentInitSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixComponentInitSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixComponentInitSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Name
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixComponentInitSettings.Name"/></em></p>
@@ -1848,6 +2126,30 @@ namespace Confix.Nuke
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectReloadSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixProjectReloadSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectReloadSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixProjectReloadSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
             return toolSettings;
         }
         #endregion
@@ -1979,6 +2281,30 @@ namespace Confix.Nuke
             return toolSettings;
         }
         #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectBuildSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixProjectBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectBuildSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixProjectBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixProjectBuildSettings.Framework"/></em></p>
@@ -2032,6 +2358,30 @@ namespace Confix.Nuke
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.OutputFile = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectInitSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixProjectInitSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectInitSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixProjectInitSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
             return toolSettings;
         }
         #endregion
@@ -2139,6 +2489,30 @@ namespace Confix.Nuke
             return toolSettings;
         }
         #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectValidateSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixProjectValidateSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectValidateSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixProjectValidateSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixProjectValidateSettings.Framework"/></em></p>
@@ -2171,6 +2545,30 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixSolutionReloadSettingsExtensions
     {
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixSolutionReloadSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixSolutionReloadSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixSolutionReloadSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixSolutionReloadSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixSolutionReloadSettings.Framework"/></em></p>
@@ -2203,6 +2601,30 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixSolutionBuildSettingsExtensions
     {
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixSolutionBuildSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixSolutionBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixSolutionBuildSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixSolutionBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixSolutionBuildSettings.Framework"/></em></p>
@@ -2235,6 +2657,30 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixSolutionInitSettingsExtensions
     {
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixSolutionInitSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixSolutionInitSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixSolutionInitSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixSolutionInitSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixSolutionInitSettings.Framework"/></em></p>
@@ -2267,6 +2713,30 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixSolutionValidateSettingsExtensions
     {
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixSolutionValidateSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixSolutionValidateSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixSolutionValidateSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixSolutionValidateSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixSolutionValidateSettings.Framework"/></em></p>
@@ -2344,6 +2814,30 @@ namespace Confix.Nuke
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Name = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixVariablesGetSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariablesGetSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixVariablesGetSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariablesGetSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
             return toolSettings;
         }
         #endregion
@@ -2451,6 +2945,30 @@ namespace Confix.Nuke
             return toolSettings;
         }
         #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixVariablesSetSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariablesSetSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixVariablesSetSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariablesSetSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixVariablesSetSettings.Framework"/></em></p>
@@ -2528,6 +3046,30 @@ namespace Confix.Nuke
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Provider = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixVariablesListSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariablesListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixVariablesListSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariablesListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
             return toolSettings;
         }
         #endregion
@@ -2659,6 +3201,30 @@ namespace Confix.Nuke
             return toolSettings;
         }
         #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixVariablesCopySettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariablesCopySettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixVariablesCopySettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariablesCopySettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixVariablesCopySettings.Framework"/></em></p>
@@ -2763,6 +3329,30 @@ namespace Confix.Nuke
             return toolSettings;
         }
         #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixBuildSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixBuildSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixBuildSettings.Framework"/></em></p>
@@ -2816,6 +3406,30 @@ namespace Confix.Nuke
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixReloadSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixReloadSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixReloadSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixReloadSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
             return toolSettings;
         }
         #endregion
@@ -2875,6 +3489,30 @@ namespace Confix.Nuke
             return toolSettings;
         }
         #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixValidateSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixValidateSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixValidateSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixValidateSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixValidateSettings.Framework"/></em></p>
@@ -2931,6 +3569,30 @@ namespace Confix.Nuke
             return toolSettings;
         }
         #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixEncryptSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixEncryptSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixEncryptSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixEncryptSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region InputFile
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixEncryptSettings.InputFile"/></em></p>
@@ -2958,9 +3620,7 @@ namespace Confix.Nuke
         #region OutFile
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixEncryptSettings.OutFile"/></em></p>
-        ///   <p>The file to write the encrypted or decrypted data to. 
-        /// If not provided the input file will be overwritten. 
-        /// Existing files will be overwritten.</p>
+        ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
         /// </summary>
         [Pure]
         public static T SetOutFile<T>(this T toolSettings, string outFile) where T : ConfixEncryptSettings
@@ -2971,9 +3631,7 @@ namespace Confix.Nuke
         }
         /// <summary>
         ///   <p><em>Resets <see cref="ConfixEncryptSettings.OutFile"/></em></p>
-        ///   <p>The file to write the encrypted or decrypted data to. 
-        /// If not provided the input file will be overwritten. 
-        /// Existing files will be overwritten.</p>
+        ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
         /// </summary>
         [Pure]
         public static T ResetOutFile<T>(this T toolSettings) where T : ConfixEncryptSettings
@@ -3039,6 +3697,30 @@ namespace Confix.Nuke
             return toolSettings;
         }
         #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixDecryptSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixDecryptSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixDecryptSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixDecryptSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region InputFile
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixDecryptSettings.InputFile"/></em></p>
@@ -3066,9 +3748,7 @@ namespace Confix.Nuke
         #region OutFile
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixDecryptSettings.OutFile"/></em></p>
-        ///   <p>The file to write the encrypted or decrypted data to. 
-        /// If not provided the input file will be overwritten. 
-        /// Existing files will be overwritten.</p>
+        ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
         /// </summary>
         [Pure]
         public static T SetOutFile<T>(this T toolSettings, string outFile) where T : ConfixDecryptSettings
@@ -3079,9 +3759,7 @@ namespace Confix.Nuke
         }
         /// <summary>
         ///   <p><em>Resets <see cref="ConfixDecryptSettings.OutFile"/></em></p>
-        ///   <p>The file to write the encrypted or decrypted data to. 
-        /// If not provided the input file will be overwritten. 
-        /// Existing files will be overwritten.</p>
+        ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
         /// </summary>
         [Pure]
         public static T ResetOutFile<T>(this T toolSettings) where T : ConfixDecryptSettings
@@ -3123,6 +3801,54 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixConfigShowSettingsExtensions
     {
+        #region Format
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixConfigShowSettings.Format"/></em></p>
+        ///   <p>Sets the output format</p>
+        /// </summary>
+        [Pure]
+        public static T SetFormat<T>(this T toolSettings, string format) where T : ConfixConfigShowSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Format = format;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixConfigShowSettings.Format"/></em></p>
+        ///   <p>Sets the output format</p>
+        /// </summary>
+        [Pure]
+        public static T ResetFormat<T>(this T toolSettings) where T : ConfixConfigShowSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Format = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixConfigShowSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixConfigShowSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixConfigShowSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixConfigShowSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixConfigShowSettings.Framework"/></em></p>
@@ -3155,6 +3881,30 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixConfigSetSettingsExtensions
     {
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixConfigSetSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixConfigSetSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixConfigSetSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixConfigSetSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Path
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixConfigSetSettings.Path"/></em></p>
@@ -3235,6 +3985,54 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixConfigListSettingsExtensions
     {
+        #region Format
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixConfigListSettings.Format"/></em></p>
+        ///   <p>Sets the output format</p>
+        /// </summary>
+        [Pure]
+        public static T SetFormat<T>(this T toolSettings, string format) where T : ConfixConfigListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Format = format;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixConfigListSettings.Format"/></em></p>
+        ///   <p>Sets the output format</p>
+        /// </summary>
+        [Pure]
+        public static T ResetFormat<T>(this T toolSettings) where T : ConfixConfigListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Format = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixConfigListSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixConfigListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixConfigListSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixConfigListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
         #region Framework
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixConfigListSettings.Framework"/></em></p>

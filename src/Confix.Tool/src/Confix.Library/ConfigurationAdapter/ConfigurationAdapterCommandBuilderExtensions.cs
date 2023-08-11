@@ -6,7 +6,8 @@ namespace Confix.Tool.Middlewares;
 
 public static class ConfigurationAdapterCommandBuilderExtensions
 {
-    private const string _configurationAdpaters = "Confix.Tool.Entites.ConfigurationAdapters";
+    private static Context.Key<List<Factory>> _key =
+        new("Confix.Tool.Entites.ConfigurationAdapters");
 
     public static CommandLineBuilder AddConfigurationAdapter<T>(this CommandLineBuilder builder)
         where T : IConfigurationAdapter, new()
@@ -20,10 +21,10 @@ public static class ConfigurationAdapterCommandBuilderExtensions
     {
         var contextData = builder.GetContextData();
 
-        if (!contextData.TryGetValue(_configurationAdpaters, out List<Factory>? lookup))
+        if (!contextData.TryGetValue(_key, out var lookup))
         {
             lookup = new List<Factory>();
-            contextData.Add(_configurationAdpaters, lookup);
+            contextData.Set(_key, lookup);
 
             builder.AddSingleton<IEnumerable<IConfigurationAdapter>>(
                 sp => lookup.Select(f => f(sp)).ToList());

@@ -12,6 +12,7 @@ public sealed class VerbosityOption : Option<Verbosity>
         AddAlias("-v");
         AddAlias("--verbosity");
         SetDefaultValue(Verbosity.Normal);
+        this.FromAmong("diagnostic", "detailed", "normal", "minimal", "quiet");
     }
 
     public static VerbosityOption Instance { get; } = new();

@@ -1,4 +1,5 @@
 using System.CommandLine.Builder;
+using Confix.Tool.Commands.Logging;
 using Confix.Tool.Entities.Components;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares.Encryption;

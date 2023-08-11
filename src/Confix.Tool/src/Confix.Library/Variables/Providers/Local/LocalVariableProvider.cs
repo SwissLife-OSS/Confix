@@ -34,6 +34,8 @@ public sealed class LocalVariableProvider : IVariableProvider
         _localFile = new FileInfo(definition.Path);
         _parsedLocalFile = new(ParseConfiguration);
     }
+    
+    public static string Type => "local";
 
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
         => Task.FromResult<IReadOnlyList<string>>(_parsedLocalFile.Value.Keys.ToArray());

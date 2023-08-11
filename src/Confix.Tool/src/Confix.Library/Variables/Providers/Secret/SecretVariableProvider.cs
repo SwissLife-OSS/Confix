@@ -25,6 +25,8 @@ public sealed class SecretVariableProvider : IVariableProvider
         _privateKey = new Lazy<char[]>(() => GetKey(_definition.PrivateKey, _definition.PrivateKeyPath));
         _publicKey = new Lazy<char[]>(() => GetKey(_definition.PublicKey, _definition.PublicKeyPath));
     }
+    
+    public static string Type => "secret";
 
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
         => Task.FromResult<IReadOnlyList<string>>(Array.Empty<string>());

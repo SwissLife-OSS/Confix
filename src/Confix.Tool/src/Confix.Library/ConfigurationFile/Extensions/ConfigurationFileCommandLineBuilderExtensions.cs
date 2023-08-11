@@ -1,5 +1,7 @@
 using System.CommandLine.Builder;
 using Confix.ConfigurationFiles;
+using Confix.Tool.Commands.Configuration;
+using Confix.Tool.Commands.Logging;
 using Confix.Tool.Entities.Components;
 using Microsoft.Extensions.DependencyInjection;
 

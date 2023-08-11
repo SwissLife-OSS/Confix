@@ -17,23 +17,27 @@ public sealed class AzureKeyVaultEncryptionProvider : IEncryptionProvider
 
     public AzureKeyVaultEncryptionProvider(JsonNode configuration)
         : this(AzureKeyVaultEncryptionProviderConfiguration.Parse(configuration))
-    { }
+    {
+    }
 
-    public AzureKeyVaultEncryptionProvider(AzureKeyVaultEncryptionProviderConfiguration configuration)
+    public AzureKeyVaultEncryptionProvider(
+        AzureKeyVaultEncryptionProviderConfiguration configuration)
         : this(AzureKeyVaultEncryptionProviderDefinition.From(configuration))
-    { }
+    {
+    }
 
     public AzureKeyVaultEncryptionProvider(AzureKeyVaultEncryptionProviderDefinition definition)
         : this(new KeyClient(new Uri(definition.Uri), new DefaultAzureCredential())
             .GetCryptographyClient(definition.KeyName, definition.KeyVersion))
-    { }
+    {
+    }
 
     public AzureKeyVaultEncryptionProvider(CryptographyClient client)
     {
         _client = client;
     }
 
-    public const string Type = "AzureKeyVault";
+    public static string Type => "AzureKeyVault";
 
     public async Task<byte[]> EncryptAsync(byte[] data, CancellationToken cancellationToken)
     {
@@ -60,7 +64,8 @@ public sealed class AzureKeyVaultEncryptionProvider : IEncryptionProvider
 
         if (!contentHash.SequenceEqual(decryptedContentHash))
         {
-            throw new ExitException("Content hash of decrypted data does not match the original hash.");
+            throw new ExitException(
+                "Content hash of decrypted data does not match the original hash.");
         }
 
         return decryptedData;
@@ -93,14 +98,15 @@ public sealed class AzureKeyVaultEncryptionProvider : IEncryptionProvider
         byte[] encryptedData,
         byte[] encryptedAlgorithmData,
         byte[] contentHash)
-    => Encoding.UTF8.GetBytes(
-        Convert.ToBase64String(encryptedData)
-        + DELIMITER
-        + Convert.ToBase64String(encryptedAlgorithmData)
-        + DELIMITER
-        + Convert.ToBase64String(contentHash));
+        => Encoding.UTF8.GetBytes(
+            Convert.ToBase64String(encryptedData)
+            + DELIMITER
+            + Convert.ToBase64String(encryptedAlgorithmData)
+            + DELIMITER
+            + Convert.ToBase64String(contentHash));
 
-    private static (byte[] encryptedData, byte[] encryptedAlgorithmData, byte[] contentHash) SplitData(byte[] data)
+    private static (byte[] encryptedData, byte[] encryptedAlgorithmData, byte[] contentHash)
+        SplitData(byte[] data)
     {
         var dataParts = Encoding.UTF8.GetString(data).Split(DELIMITER);
         return (
@@ -110,24 +116,24 @@ public sealed class AzureKeyVaultEncryptionProvider : IEncryptionProvider
     }
 
     private Task<byte[]> DecryptWithKeyVaultAsync(byte[] data, CancellationToken cancellationToken)
-    => KeyVaultExtension.HandleKeyVaultException(async () =>
-    {
-        DecryptResult decrypted = await _client.DecryptAsync(
-            EncryptionAlgorithm.RsaOaep256,
-            data,
-            cancellationToken);
-        return decrypted.Plaintext;
-    });
+        => KeyVaultExtension.HandleKeyVaultException(async () =>
+        {
+            DecryptResult decrypted = await _client.DecryptAsync(
+                EncryptionAlgorithm.RsaOaep256,
+                data,
+                cancellationToken);
+            return decrypted.Plaintext;
+        });
 
     private Task<byte[]> EncryptWithKeyVaultAsync(byte[] data, CancellationToken cancellationToken)
-    => KeyVaultExtension.HandleKeyVaultException(async () =>
-    {
-        EncryptResult encrypted = await _client.EncryptAsync(
-            EncryptionAlgorithm.RsaOaep256,
-            data,
-            cancellationToken);
-        return encrypted.Ciphertext;
-    });
+        => KeyVaultExtension.HandleKeyVaultException(async () =>
+        {
+            EncryptResult encrypted = await _client.EncryptAsync(
+                EncryptionAlgorithm.RsaOaep256,
+                data,
+                cancellationToken);
+            return encrypted.Ciphertext;
+        });
 
     private static Task<byte[]> EncryptWithAes(
         AesEncryptionProviderDefinition configuration,
