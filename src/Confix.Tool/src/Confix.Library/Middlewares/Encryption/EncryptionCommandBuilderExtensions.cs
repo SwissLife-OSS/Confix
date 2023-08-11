@@ -8,13 +8,15 @@ namespace Confix.Tool.Middlewares.Encryption;
 
 public static class EncryptionCommandBuilderExtensions
 {
-    private const string _encryptionProviders = "Confix.Tool.Entites.Encryption.EncryptionProviders";
+    private static Context.Key<Dictionary<string, Func<JsonNode, IEncryptionProvider>>> _key =
+        new("Confix.Tool.Entites.Encryption.EncryptionProviders");
 
     public static CommandLineBuilder RegisterEncryptionMiddleware(this CommandLineBuilder builder)
     {
         builder.AddDefaultVariableProviders();
         builder.AddTransient(sp
-            => new OptionalEncryptionMiddleware(sp.GetRequiredService<IEncryptionProviderFactory>()));
+            => new OptionalEncryptionMiddleware(
+                sp.GetRequiredService<IEncryptionProviderFactory>()));
         builder.AddTransient(sp
             => new EncryptionMiddleware(sp.GetRequiredService<IEncryptionProviderFactory>()));
 
@@ -24,38 +26,34 @@ public static class EncryptionCommandBuilderExtensions
     private static CommandLineBuilder AddDefaultVariableProviders(this CommandLineBuilder builder)
     {
         builder.AddEncryptionProvider(
-            AzureKeyVaultEncryptionProvider.Type,
-            (config) => new AzureKeyVaultEncryptionProvider(config));
+            config => new AzureKeyVaultEncryptionProvider(config));
         builder.AddEncryptionProvider(
-            AesEncryptionProvider.Type,
-            (config) => new AesEncryptionProvider(config));
+            config => new AesEncryptionProvider(config));
 
         return builder;
     }
 
-    private static CommandLineBuilder AddEncryptionProvider(
+    private static CommandLineBuilder AddEncryptionProvider<T>(
         this CommandLineBuilder builder,
-        string name,
-        Func<JsonNode, IEncryptionProvider> factory)
+        Func<JsonNode, T> factory)
+        where T : IEncryptionProvider
     {
-        builder.GetEncryptionProviderLookup().Add(name, factory);
+        builder.GetEncryptionProviderLookup().Add(T.Type, c => factory(c));
 
         return builder;
     }
 
-    private static Dictionary<string, Func<JsonNode, IEncryptionProvider>> GetEncryptionProviderLookup(
-        this CommandLineBuilder builder)
+    private static Dictionary<string, Func<JsonNode, IEncryptionProvider>>
+        GetEncryptionProviderLookup(this CommandLineBuilder builder)
     {
         var contextData = builder.GetContextData();
-
-        if (!contextData.TryGetValue(_encryptionProviders,
-                out Dictionary<string, Func<JsonNode, IEncryptionProvider>>? lookup))
+        if (!contextData.TryGetValue(_key, out var lookup))
         {
             lookup = new Dictionary<string, Func<JsonNode, IEncryptionProvider>>();
-            contextData.Add(_encryptionProviders, lookup);
+            contextData.Set(_key, lookup);
 
-            builder.AddSingleton<IEncryptionProviderFactory>(_
-                => new EncryptionProviderFactory(lookup));
+            builder.AddSingleton<IEncryptionProviderFactory>(
+                _ => new EncryptionProviderFactory(lookup));
         }
 
         return lookup;

@@ -30,6 +30,27 @@ public class ConfigListCommandTests
     }
 
     [Fact]
+    public async Task Should_ListFiles_Project_FormatJson()
+    {
+        // Arrange
+        using var cli = _cli;
+
+        cli.Directories.Home.CreateConfixRc(_confixRc);
+        cli.Directories.Content.CreateConfixProject();
+
+        // Act
+        await cli.RunAsync("config list --format json");
+
+        // Assert
+        SnapshotBuilder
+            .New()
+            .Append("output", cli.Console.Output)
+            .AddReplacement(_cli.Directories.Home.FullName, "HOME")
+            .AddReplacement(_cli.Directories.Content.FullName, "CONTENT")
+            .MatchSnapshot();
+    }
+
+    [Fact]
     public async Task Should_ListFiles_Component()
     {
         // Arrange

@@ -35,7 +35,7 @@ public sealed class ValidationMiddleware : IMiddleware
 
         var evaluationOptions = new EvaluationOptions
         {
-            OutputFormat = OutputFormat.Hierarchical,
+            OutputFormat = Json.Schema.OutputFormat.Hierarchical,
             Log = context.Logger.CreateLog(),
         };
 

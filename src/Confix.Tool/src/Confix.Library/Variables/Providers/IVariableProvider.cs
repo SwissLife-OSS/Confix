@@ -2,8 +2,10 @@ using System.Text.Json.Nodes;
 
 namespace Confix.Variables;
 
-public interface IVariableProvider: IAsyncDisposable
+public interface IVariableProvider : IAsyncDisposable
 {
+    public static virtual string Type => throw new NotImplementedException();
+
     /// <summary>
     /// Gets all available variables
     /// </summary>

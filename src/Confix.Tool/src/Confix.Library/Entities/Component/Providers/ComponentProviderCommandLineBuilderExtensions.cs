@@ -11,7 +11,8 @@ namespace Confix.Tool.Entities.Components;
 
 public static class ComponentProviderCommandLineBuilderExtensions
 {
-    private const string _componentProviders = "Confix.Tool.Entites.Component.ComponentProviders";
+    private static Context.Key<Dictionary<string, Factory>> _key =
+        new("Confix.Tool.Entites.Component.ComponentProviders");
 
     public static CommandLineBuilder AddComponentProvider<T>(this CommandLineBuilder builder)
         where T : IComponentProvider, new()
@@ -32,10 +33,10 @@ public static class ComponentProviderCommandLineBuilderExtensions
     {
         var contextData = builder.GetContextData();
 
-        if (!contextData.TryGetValue(_componentProviders, out Dictionary<string, Factory>? lookup))
+        if (!contextData.TryGetValue(_key, out var lookup))
         {
             lookup = new Dictionary<string, Factory>();
-            contextData.Add(_componentProviders, lookup);
+            contextData.Set(_key, lookup);
 
             builder.AddSingleton<IComponentProviderFactory>(_
                 => new ComponentProviderFactory(lookup));

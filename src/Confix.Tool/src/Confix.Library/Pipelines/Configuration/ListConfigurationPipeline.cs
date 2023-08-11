@@ -1,6 +1,3 @@
-using System.Buffers;
-using System.Text;
-using System.Text.Json;
 using Confix.Extensions;
 using Confix.Tool.Commands.Configuration.Arguments;
 using Confix.Tool.Commands.Logging;
@@ -16,6 +13,7 @@ public sealed class ListConfigurationPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
+            .AddOption(FormatOption.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseHandler(InvokeAsync);
     }
@@ -24,6 +22,7 @@ public sealed class ListConfigurationPipeline : Pipeline
     {
         var configuration = context.Features.Get<ConfigurationFeature>();
 
+        context.SetOutput(configuration.ConfigurationFiles);
         foreach (var file in configuration.ConfigurationFiles)
         {
             context.Logger.Information(" - " + file.File.FullName);

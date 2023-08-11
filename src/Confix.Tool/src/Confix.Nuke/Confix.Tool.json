@@ -11,7 +11,16 @@
       "help": "builds a component. Runs all configured component inputs",
       "postfix": "ComponentBuild",
       "definiteArgument": "component build",
-      "settingsClass": {}
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          }
+        ]
+      }
     },
     {
       "help": "Initializes a component and creates a component file",
@@ -19,6 +28,12 @@
       "definiteArgument": "component init",
       "settingsClass": {
         "properties": [
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          },
           {
             "name": "Name",
             "type": "string",
@@ -45,6 +60,12 @@
             "type": "string",
             "format": "--environment {value}",
             "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -78,6 +99,12 @@
             "type": "string",
             "format": "--encrypt {value}",
             "help": "Encrypt the output file"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -93,6 +120,12 @@
             "type": "string",
             "format": "--output-file {value}",
             "help": "Specifies the output file"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -120,6 +153,12 @@
             "type": "string",
             "format": "--only-components {value}",
             "help": "If you specify this option, only the components will be built."
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -128,25 +167,61 @@
       "help": "Reloads the schema of all the projects in the solution",
       "postfix": "SolutionReload",
       "definiteArgument": "solution reload",
-      "settingsClass": {}
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          }
+        ]
+      }
     },
     {
       "help": "Replaces all variables in the solution files with their values",
       "postfix": "SolutionBuild",
       "definiteArgument": "solution build",
-      "settingsClass": {}
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          }
+        ]
+      }
     },
     {
       "help": "Initializes a solution and creates a solution file",
       "postfix": "SolutionInit",
       "definiteArgument": "solution init",
-      "settingsClass": {}
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          }
+        ]
+      }
     },
     {
       "help": "Validates the schema of all the projects in the solution",
       "postfix": "SolutionValidate",
       "definiteArgument": "solution validate",
-      "settingsClass": {}
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          }
+        ]
+      }
     },
     {
       "help": "resolves a variable by name",
@@ -165,6 +240,12 @@
             "type": "string",
             "format": "--name {value}",
             "help": "The name of the variable"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -192,6 +273,12 @@
             "type": "string",
             "format": "--value {value}",
             "help": "The value of the variable"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -213,6 +300,12 @@
             "type": "string",
             "format": "--provider {value}",
             "help": "The name of the provider to resolve the variable from"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -246,6 +339,12 @@
             "type": "string",
             "format": "--to-environment {value}",
             "help": "The name of the environment you want to migrate the variable to"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -272,6 +371,12 @@
             "type": "string",
             "format": "--encrypt {value}",
             "help": "Encrypt the output file"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -286,6 +391,12 @@
             "type": "string",
             "format": "--environment {value}",
             "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -301,6 +412,12 @@
             "type": "string",
             "format": "--environment {value}",
             "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
           }
         ]
       }
@@ -318,6 +435,12 @@
             "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
           },
           {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          },
+          {
             "name": "InputFile",
             "type": "string",
             "format": "{value}",
@@ -327,7 +450,7 @@
             "name": "OutFile",
             "type": "string",
             "format": "{value}",
-            "help": "The file to write the encrypted or decrypted data to. \nIf not provided the input file will be overwritten. \nExisting files will be overwritten."
+            "help": "The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten."
           }
         ]
       }
@@ -345,6 +468,12 @@
             "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
           },
           {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          },
+          {
             "name": "InputFile",
             "type": "string",
             "format": "{value}",
@@ -354,7 +483,7 @@
             "name": "OutFile",
             "type": "string",
             "format": "{value}",
-            "help": "The file to write the encrypted or decrypted data to. \nIf not provided the input file will be overwritten. \nExisting files will be overwritten."
+            "help": "The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten."
           }
         ]
       }
@@ -363,7 +492,22 @@
       "help": "Shows the configuration to a file",
       "postfix": "ConfigShow",
       "definiteArgument": "config show",
-      "settingsClass": {}
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Format",
+            "type": "string",
+            "format": "--format {value}",
+            "help": "Sets the output format"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          }
+        ]
+      }
     },
     {
       "help": "Sets a configuration value in the nearest .confixrc",
@@ -371,6 +515,12 @@
       "definiteArgument": "config set",
       "settingsClass": {
         "properties": [
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          },
           {
             "name": "Path",
             "type": "string",
@@ -390,7 +540,22 @@
       "help": "Lists the configuration to a file",
       "postfix": "ConfigList",
       "definiteArgument": "config list",
-      "settingsClass": {}
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Format",
+            "type": "string",
+            "format": "--format {value}",
+            "help": "Sets the output format"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          }
+        ]
+      }
     }
   ],
   "commonTaskProperties": [

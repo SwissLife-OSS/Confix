@@ -21,9 +21,15 @@ public class Build : NukeBuild
             var commands = new List<CommandTask>();
 
             var queue = new Stack<string>();
+            var parentSymbols = new Stack<Symbol[]>();
+            parentSymbols.Push(builder.Command.Options
+                .Where(x => x is { Name: not "help" and not "version" })
+                .OfType<Symbol>()
+                .Concat(builder.Command.Arguments)
+                .ToArray());
             foreach (var subcommand in builder.Command.Subcommands)
             {
-                Visit(subcommand, queue);
+                Visit(subcommand, queue, parentSymbols);
             }
 
             var buffer = new ArrayBufferWriter<byte>();
@@ -46,23 +52,26 @@ public class Build : NukeBuild
                 utf8JsonWriter.WriteString("definiteArgument", command.Argument);
                 utf8JsonWriter.WriteStartObject("settingsClass");
                 utf8JsonWriter.WriteStartArray("properties");
-                foreach (var property in command.Command.Options)
+
+                var parentOptions = command.ParentSymbols.OfType<Option>();
+                foreach (var property in command.Command.Options.Concat(parentOptions))
                 {
                     utf8JsonWriter.WriteStartObject();
                     utf8JsonWriter.WriteString("name", EncodeName(property.Name));
                     utf8JsonWriter.WriteString("type", "string");
                     utf8JsonWriter.WriteString("format", $"--{property.Name} {{value}}");
-                    utf8JsonWriter.WriteString("help", property.Description);
+                    utf8JsonWriter.WriteString("help", property.Description?.Replace("\n", " "));
                     utf8JsonWriter.WriteEndObject();
                 }
 
-                foreach (var property in command.Command.Arguments)
+                var parentArguments = command.ParentSymbols.OfType<Argument>();
+                foreach (var property in command.Command.Arguments.Concat(parentArguments))
                 {
                     utf8JsonWriter.WriteStartObject();
                     utf8JsonWriter.WriteString("name", EncodeName(property.Name));
                     utf8JsonWriter.WriteString("type", "string");
                     utf8JsonWriter.WriteString("format", "{value}");
-                    utf8JsonWriter.WriteString("help", property.Description);
+                    utf8JsonWriter.WriteString("help", property.Description?.Replace("\n", " "));
                     utf8JsonWriter.WriteEndObject();
                 }
 
@@ -95,7 +104,7 @@ public class Build : NukeBuild
             GenerateCode(ToolSpecfication, namespaceProvider: _ => "Confix.Nuke");
             return;
 
-            void Visit(Command command, Stack<string> parents)
+            void Visit(Command command, Stack<string> parents, Stack<Symbol[]> symbols)
             {
                 parents.Push(command.Name);
 
@@ -103,14 +112,23 @@ public class Build : NukeBuild
                 {
                     var reversed = parents.Reverse().ToList();
                     var name = string.Join("", reversed.Select(Capitalize));
-                    commands.Add(new(name, string.Join(" ", reversed), command));
+                    commands.Add(
+                        new(name,
+                            string.Join(" ", reversed),
+                            command,
+                            symbols.SelectMany(x => x).ToArray()));
                 }
                 else
                 {
+                    symbols.Push(command.Options.OfType<Symbol>()
+                        .Concat(command.Arguments)
+                        .ToArray());
                     foreach (var subcommand in command.Subcommands)
                     {
-                        Visit(subcommand, parents);
+                        Visit(subcommand, parents, symbols);
                     }
+
+                    symbols.Pop();
                 }
 
                 parents.Pop();
@@ -129,4 +147,8 @@ public class Build : NukeBuild
     }
 }
 
-public record CommandTask(string Name, string Argument, Command Command);
+public record CommandTask(
+    string Name,
+    string Argument,
+    Command Command,
+    IReadOnlyList<Symbol> ParentSymbols);

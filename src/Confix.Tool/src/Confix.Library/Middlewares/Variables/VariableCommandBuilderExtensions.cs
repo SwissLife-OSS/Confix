@@ -7,7 +7,8 @@ namespace Confix.Tool.Middlewares;
 
 public static class VariableCommandBuilderExtensions
 {
-    private const string _variableProviders = "Confix.Tool.Entites.Variables.VariableProvider";
+    private static Context.Key<Dictionary<string, Func<JsonNode, IVariableProvider>>> _key =
+        new("Confix.Tool.Entites.Variables.VariableProvider");
 
     public static CommandLineBuilder RegisterVariableMiddleware(this CommandLineBuilder builder)
     {
@@ -20,20 +21,31 @@ public static class VariableCommandBuilderExtensions
 
     private static CommandLineBuilder AddDefaultVariableProviders(this CommandLineBuilder builder)
     {
-        builder.AddVariableProvider("azure-keyvault", config => new AzureKeyVaultProvider(config));
-        builder.AddVariableProvider("git", config => new GitVariableProvider(config));
-        builder.AddVariableProvider("local", config => new LocalVariableProvider(config));
-        builder.AddVariableProvider("secret", config => new SecretVariableProvider(config));
+        builder.AddVariableProvider(config => new AzureKeyVaultProvider(config));
+        builder.AddVariableProvider(config => new GitVariableProvider(config));
+        builder.AddVariableProvider(config => new LocalVariableProvider(config));
+        builder.AddVariableProvider(config => new SecretVariableProvider(config));
 
         return builder;
     }
 
-    public static CommandLineBuilder AddVariableProvider(
+    public static CommandLineBuilder AddVariableProvider<T>(
+        this CommandLineBuilder builder,
+        Func<JsonNode, T> factory)
+        where T : IVariableProvider
+    {
+        builder.GetVariableProviderLookup().Add(T.Type, c => factory(c));
+
+        return builder;
+    }
+
+    public static CommandLineBuilder AddVariableProvider<T>(
         this CommandLineBuilder builder,
         string name,
-        Func<JsonNode, IVariableProvider> factory)
+        Func<JsonNode, T> factory)
+        where T : IVariableProvider
     {
-        builder.GetVariableProviderLookup().Add(name, factory);
+        builder.GetVariableProviderLookup().Add(name, c => factory(c));
 
         return builder;
     }
@@ -43,11 +55,10 @@ public static class VariableCommandBuilderExtensions
     {
         var contextData = builder.GetContextData();
 
-        if (!contextData.TryGetValue(_variableProviders,
-                out Dictionary<string, Func<JsonNode, IVariableProvider>>? lookup))
+        if (!contextData.TryGetValue(_key, out var lookup))
         {
             lookup = new Dictionary<string, Func<JsonNode, IVariableProvider>>();
-            contextData.Add(_variableProviders, lookup);
+            contextData.Set(_key, lookup);
 
             builder.AddSingleton<IVariableProviderFactory>(_
                 => new VariableProviderFactory(lookup));

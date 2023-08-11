@@ -33,6 +33,8 @@ public sealed class GitVariableProvider : IVariableProvider
         var localDefinition = new LocalVariableProviderDefinition(tempPath);
         _localVariableProvider = new LocalVariableProvider(localDefinition);
     }
+    
+    public static string Type => "git";
 
     public async Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
     {

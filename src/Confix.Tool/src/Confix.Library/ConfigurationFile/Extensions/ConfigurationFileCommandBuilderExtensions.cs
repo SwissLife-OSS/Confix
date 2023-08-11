@@ -8,7 +8,8 @@ namespace Confix.Tool.Middlewares;
 
 public static class ConfigurationFileCommandBuilderExtensions
 {
-    private const string _componentFiles = "Confix.Tool.Entites.Configuration.ConfigurationFiles";
+    private static Context.Key<Dictionary<string, Factory>> _key =
+        new("Confix.Tool.Entites.Configuration.ConfigurationFiles");
 
     public static CommandLineBuilder AddConfigurationFileProvider<T>(
         this CommandLineBuilder builder)
@@ -30,10 +31,10 @@ public static class ConfigurationFileCommandBuilderExtensions
     {
         var contextData = builder.GetContextData();
 
-        if (!contextData.TryGetValue(_componentFiles, out Dictionary<string, Factory>? lookup))
+        if (!contextData.TryGetValue(_key, out var lookup))
         {
             lookup = new Dictionary<string, Factory>();
-            contextData.Add(_componentFiles, lookup);
+            contextData.Set(_key, lookup);
 
             builder.AddSingleton<IConfigurationFileProviderFactory>(_
                 => new ConfigurationFileProviderFactory(lookup));

@@ -17,7 +17,7 @@ public static class CommandExtensions
         async Task<int> Handler(InvocationContext context)
         {
             // create the pipeline from the definition with the binding context
-            var executor = definition.BuildExecutor(context.BindingContext);
+            var executor = definition.BuildExecutor(context);
 
             command.Arguments.ForEach(argument =>
             {
