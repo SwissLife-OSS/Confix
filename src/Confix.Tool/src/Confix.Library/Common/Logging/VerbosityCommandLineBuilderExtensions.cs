@@ -1,4 +1,5 @@
 using System.CommandLine.Builder;
+using System.CommandLine.Invocation;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -16,14 +17,15 @@ public static class VerbosityCommandLineBuilderExtensions
             return new ConsoleLogger(console, verbosity);
         });
         builder.AddMiddleware((context, next) =>
-        {
-            verbosity =
-                context.ParseResult.GetValueForOption(VerbosityOption.Instance);
+            {
+                verbosity =
+                    context.ParseResult.GetValueForOption(VerbosityOption.Instance);
 
-            App.Log = context.BindingContext.GetRequiredService<IConsoleLogger>();
+                App.Log = context.BindingContext.GetRequiredService<IConsoleLogger>();
 
-            return next(context);
-        });
+                return next(context);
+            },
+            MiddlewareOrder.Default - 1);
 
         return builder;
     }
