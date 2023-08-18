@@ -7,6 +7,7 @@ public static class OutputFormattersConfigurationFilesExtensions
 {
     public static CommandLineBuilder AddOutputFormatters(this CommandLineBuilder builder)
     {
+        builder.AddOutputFormatter<ComponentListOutputFormatter>();
         builder.AddOutputFormatter<ConfigurationFeatureOutputFormatter>();
         builder.AddOutputFormatter<ConfigurationFileOutputFormatter>();
         return builder;

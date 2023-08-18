@@ -1,0 +1,27 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.solution
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.project
+  Merged .confix.solution from .confixrc
+  Merged .confix.project from .confix.solution
+  Merged .confix.component from .confix.solution
+✓ Running in scope Project
+✓ Configuration loaded
+i No active environment set. Use --environment or set one environment in .confixrc as active
+  Component provider 'dotnet-package' loaded
+✓ Component inputs loaded
+  Start loading components from project '.'
+  Found .NET project:'<</tmp>>/content/Confix.csproj' <</tmp>>/content/Confix.csproj
+  Found assembly: Confix.dll
+  Scanning assembly: Confix
+  Found assembly file: <</tmp>>/content/bin/Debug/net8.0/Confix.dll
+  Scanning assembly: System.Runtime
+  Assembly file not found for assembly: System.Runtime
+  Scanning assembly: System.Console
+  Assembly file not found for assembly: System.Console
+  Start loading components from project '.'
+  No components found
+  Skipping IntelliJ IDEA settings file as there is no .idea folder in the solution root. Expected location: <</tmp>>/content/.idea
+
