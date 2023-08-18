@@ -58,4 +58,26 @@ public static class DirectoryTestExtensions
         path = path ?? FileNames.ConfixRc;
         return directory.CreateFileInPath(path, content ?? "{}");
     }
+
+    public static void CreateConsoleApp(this DirectoryInfo directory)
+    {
+        directory.CreateFileInPath(
+            "Program.cs",
+            """
+                Console.WriteLine("Hello World!");
+            """);
+        directory.CreateFileInPath("Confix.csproj",
+            """
+            <Project Sdk="Microsoft.NET.Sdk">
+            
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net8.0</TargetFramework>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <Nullable>enable</Nullable>
+              </PropertyGroup>
+
+            </Project>
+            """);
+    }
 }
