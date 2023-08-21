@@ -41,7 +41,7 @@ public sealed class SpectreStatusContext : IStatus, IAsyncDisposable
         await _status.StartAsync(_statusText, cancellationToken);
     }
 
-    public async Task StopAsync()
+    public async ValueTask StopAsync()
     {
         if (_status is not null)
         {
