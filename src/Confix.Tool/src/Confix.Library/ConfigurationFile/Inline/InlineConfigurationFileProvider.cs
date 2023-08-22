@@ -10,11 +10,16 @@ public sealed class InlineConfigurationFileProvider : IConfigurationFileProvider
 
     public IReadOnlyList<ConfigurationFile> GetConfigurationFiles(IConfigurationFileContext context)
     {
-        var files = new List<ConfigurationFile>();
-
         var path = context.Definition.Value.ExpectValue<string>();
 
-        foreach (var file in context.Project.Directory!.FindAllInPath(path, false))
+        if (context.Project.Directory is not { } directory)
+        {
+            return Array.Empty<ConfigurationFile>();
+        }
+
+        var files = new List<ConfigurationFile>();
+
+        foreach (var file in directory.FindAllInPath(path, false))
         {
             context.Logger.FoundAInlineConfigurationFile(file);
 

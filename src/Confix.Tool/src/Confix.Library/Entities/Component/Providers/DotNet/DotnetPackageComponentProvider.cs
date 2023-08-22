@@ -35,8 +35,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
         var buildResult = await DotnetHelpers.BuildProjectAsync(csproj, context.CancellationToken);
         if (!buildResult.Succeeded)
         {
-            context.Logger.DotnetProjectBuildFailed(buildResult.Output);
-            throw new ExitException();
+            var output = buildResult.Output.EscapeMarkup();
+            throw new ExitException($"Failed to build project:\n{output}");
         }
 
         var projectAssembly = DotnetHelpers.GetAssemblyFileFromCsproj(csproj);
@@ -276,10 +276,5 @@ file static class Log
     {
         logger.Debug(
             $"Parsing component from resource '{resourceName}' in assembly '{assembly.FullName}'");
-    }
-
-    public static void DotnetProjectBuildFailed(this IConsoleLogger logger, string output)
-    {
-        logger.Error($"Failed to build project:\n{output.EscapeMarkup()}");
     }
 }

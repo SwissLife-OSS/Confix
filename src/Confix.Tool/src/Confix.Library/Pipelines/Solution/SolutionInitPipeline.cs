@@ -22,8 +22,9 @@ public sealed class SolutionInitPipeline : Pipeline
 
         if (solutionFile.Exists)
         {
-            context.Logger.LogSolutionAlreadyExists(solutionFile);
-            throw new ExitException();
+            var info = solutionFile.Directory?.Name.ToLink(solutionFile);
+            throw new ExitException(
+                $"Solution already exists: {info} [dim]{solutionFile.FullName}[/]");
         }
 
         await File.WriteAllTextAsync(solutionFile.FullName, "{}");
@@ -33,14 +34,6 @@ public sealed class SolutionInitPipeline : Pipeline
 
 file static class Log
 {
-    public static void LogSolutionAlreadyExists(
-        this IConsoleLogger console,
-        FileInfo info)
-    {
-        console.Error(
-            $"Solution already exists: {info.Directory?.Name.ToLink(info)} [dim]{info.FullName}[/]");
-    }
-
     public static void LogSolutionCreated(
         this IConsoleLogger console,
         FileInfo info)
