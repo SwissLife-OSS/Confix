@@ -4,7 +4,7 @@ using Confix.Tool.Middlewares;
 
 namespace Confix.Tool.Commands.Component;
 
-public sealed class BuildComponentPipeline : Pipeline
+public sealed class ComponentBuildPipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)

@@ -2,7 +2,7 @@ using Confix.Tool.Commands.Project;
 
 namespace Confix.Tool.Commands.Component;
 
-public sealed class BuildComponentCommand : PipelineCommand<BuildComponentPipeline>
+public sealed class BuildComponentCommand : PipelineCommand<ComponentBuildPipeline>
 {
     public BuildComponentCommand() : base("build")
     {

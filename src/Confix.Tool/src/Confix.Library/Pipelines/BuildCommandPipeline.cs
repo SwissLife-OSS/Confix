@@ -1,3 +1,4 @@
+using Confix.Tool.Commands.Component;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Project;
 using Confix.Tool.Commands.Solution;
@@ -6,7 +7,7 @@ using Confix.Tool.Middlewares;
 
 namespace Confix.Tool.Commands;
 
-public class ComponentBuildPipeline : Pipeline
+public class BuildCommandPipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
