@@ -25,7 +25,7 @@ public sealed class BuildComponentsOfProjectMiddleware : IMiddleware
             context.Logger.LogComponentDetected(component);
 
             var componentDirectory = component.Directory!;
-            var pipeline = new BuildComponentPipeline();
+            var pipeline = new ComponentBuildPipeline();
             var componentContext = context
                 .WithExecutingDirectory(componentDirectory)
                 .WithFeatureCollection();
