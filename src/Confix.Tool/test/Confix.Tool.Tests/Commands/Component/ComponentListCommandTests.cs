@@ -50,7 +50,7 @@ public class ComponentListCommandTests
             .AddOutput(cli)
             .AddReplacement(cli.Directories.Home.FullName, "HOME")
             .AddReplacement(cli.Directories.Content.FullName, "CONTENT")
-            .RemoveLineThatStartsWith("Parsing component from resource")
+            .RemoveLineThatStartsWith("  Parsing component from resource")
             .MatchSnapshot();
     }
 
