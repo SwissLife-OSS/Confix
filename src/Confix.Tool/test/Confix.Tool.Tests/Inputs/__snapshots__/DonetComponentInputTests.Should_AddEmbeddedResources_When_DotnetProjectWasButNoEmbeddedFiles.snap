@@ -3,7 +3,7 @@
 --------------------------------------------------
   Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
   Configuration files of type .confix.solution located at <</tmp>>/content/.confix.project
-  Configuration files of type .confix.component located at <</tmp>>/content/Components/test/.confix.component
+  Configuration files of type .confix.component located at <</tmp>>/content/confix/components/test/.confix.component
   Merged .confix.component from .confix.solution
 ✓ Running in scope Component
 ✓ Configuration loaded
@@ -12,7 +12,7 @@
   Building component...
   Found .NET project:'<</tmp>>/content/test.csproj' <</tmp>>/content/test.csproj
   Ensuring embedded is in the csproj file '<</tmp>>/content/test.csproj'
-  Added EmbeddedResource '$(MSBuildProjectDirectory)/Components/**/*.*' to the csproj file
+  Added EmbeddedResource '$(MSBuildProjectDirectory)/confix/components/**/*.*' to the csproj file
   Building component completed
 
 --------------------------------------------------
@@ -21,6 +21,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildProjectDirectory)/Components/**/*.*" />
+    <EmbeddedResource Include="$(MSBuildProjectDirectory)/confix/components/**/*.*" />
   </ItemGroup>
 </Project>

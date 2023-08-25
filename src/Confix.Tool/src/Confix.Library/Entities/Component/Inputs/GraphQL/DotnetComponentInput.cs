@@ -10,7 +10,7 @@ namespace Confix.Tool.Entities.Components;
 public sealed class DotnetComponentInput : IComponentInput
 {
     private const string _embeddedResourcePath =
-        $"$(MSBuildProjectDirectory)/{FolderNames.Components}/**/*.*";
+        $"$(MSBuildProjectDirectory)/{FolderNames.Confix}/{FolderNames.Components}/**/*.*";
 
     public static string Type => "dotnet";
 

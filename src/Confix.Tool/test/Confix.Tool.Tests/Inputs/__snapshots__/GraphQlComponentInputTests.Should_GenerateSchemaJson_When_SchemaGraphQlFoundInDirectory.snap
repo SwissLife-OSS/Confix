@@ -2,21 +2,21 @@
 ### CLI Output
 --------------------------------------------------
   Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
-  Configuration files of type .confix.component located at <</tmp>>/content/Components/test/.confix.component
+  Configuration files of type .confix.component located at <</tmp>>/content/confix/components/test/.confix.component
   Merged .confix.component from .confix.solution
 ✓ Running in scope Component
 ✓ Configuration loaded
   Component input 'graphql' loaded
 ✓ Component inputs loaded
   Building component...
-  Searching in '<</tmp>>/content/Components/test/schema.graphql' for GraphQL Schema
-   -> <</tmp>>/content/Components/test/schema.graphql
-  GraphQL Schema was found: '<</tmp>>/content/Components/test/schema.graphql' <</tmp>>/content/Components/test/schema.graphql
-  Generated schema based on GraphQL Schema:'<</tmp>>/content/Components/test/schema.json' <</tmp>>/content/Components/test/schema.json
+  Searching in '<</tmp>>/content/confix/components/test/schema.graphql' for GraphQL Schema
+   -> <</tmp>>/content/confix/components/test/schema.graphql
+  GraphQL Schema was found: '<</tmp>>/content/confix/components/test/schema.graphql' <</tmp>>/content/confix/components/test/schema.graphql
+  Generated schema based on GraphQL Schema:'<</tmp>>/content/confix/components/test/schema.json' <</tmp>>/content/confix/components/test/schema.json
   Building component completed
 
 --------------------------------------------------
-### File: <<root>>/content/Components/test/schema.json
+### File: <<root>>/content/confix/components/test/schema.json
 --------------------------------------------------
 {
   "type": "object",
