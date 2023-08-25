@@ -26,10 +26,12 @@ i No active environment set. Use --environment or set one environment in .confix
   Building component...
   Searching in '<</tmp>>/content/Confix/Components/test/schema.graphql' for GraphQL Schema
    -> <</tmp>>/content/Confix/Components/test/schema.graphql
-  GraphQL Schema was not found. Skipping GraphQL provider
+  GraphQL Schema was found: '<</tmp>>/content/Confix/Components/test/schema.graphql' <</tmp>>/content/Confix/Components/test/schema.graphql
+  Replacing existing schema.json file: '<</tmp>>/content/Confix/Components/test/schema.json' <</tmp>>/content/Confix/Components/test/schema.json
+  Generated schema based on GraphQL Schema:'<</tmp>>/content/Confix/Components/test/schema.json' <</tmp>>/content/Confix/Components/test/schema.json
   Found .NET project:'<</tmp>>/content/Confix.csproj' <</tmp>>/content/Confix.csproj
   Ensuring embedded is in the csproj file '<</tmp>>/content/Confix.csproj'
-  Added EmbeddedResource '$(MSBuildProjectDirectory)/Confix/Components/**/*.*' to the csproj file
+  EmbeddedResource '$(MSBuildProjectDirectory)/Confix/Components/**/*.*' already exists in the csproj file
   Building component completed
   Component provider 'dotnet-package' loaded
 ✓ Component inputs loaded
@@ -39,12 +41,13 @@ i No active environment set. Use --environment or set one environment in .confix
   Scanning assembly: Confix
   Found assembly file: <</tmp>>/content/bin/Debug/net8.0/Confix.dll
   Found manifest resource in assembly 'Confix.Confix.Components.test..confix.component': Confix
+  Found manifest resource in assembly 'Confix.Confix.Components.test.schema.graphql': Confix
+  Found manifest resource in assembly 'Confix.Confix.Components.test.schema.json': Confix
   Scanning assembly: System.Runtime
   Assembly file not found for assembly: System.Runtime
   Scanning assembly: System.Console
   Assembly file not found for assembly: System.Console
-✕ Confix failed.
-  Could not find component definition or schema for component: Confix.Confix.Components.test.
-Exception of type ExitException was thrown.
-  
+  Start loading components from project '.'
+   - test
+  Skipping IntelliJ IDEA settings file as there is no .idea folder in the solution root. Expected location: <</tmp>>/content/.idea
 
