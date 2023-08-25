@@ -178,8 +178,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                 assembly
                     .GetReferencedAssemblies()
                     .Where(x => !string.IsNullOrWhiteSpace(x.Name) && 
-                                x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
-                                x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
+                                !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
+                                !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
                     .ForEach(x => assembliesToScan.Enqueue(x.Name!));
 
                 foreach (var resourceName in assembly.GetManifestResourceNames())
