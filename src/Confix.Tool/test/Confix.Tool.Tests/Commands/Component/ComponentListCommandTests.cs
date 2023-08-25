@@ -1,5 +1,7 @@
 using Confix.Inputs;
 using Confix.Tool.Commands.Temp;
+using Confix.Tool.Schema;
+using Confix.Utilities.FileSystem;
 
 namespace Confix.Commands.Component;
 
@@ -37,7 +39,10 @@ public class ComponentListCommandTests
         cli.Directories.Content.CreateConfixProject();
         cli.Directories.Content.CreateConfixSolution();
         cli.Directories.Content.CreateConsoleApp();
-        var componentDirectory = cli.Directories.Content.Append("Components").Append("test");
+        var componentDirectory = cli.Directories.Content
+            .Append(FolderNames.Confix)
+            .Append(FolderNames.Components)
+            .Append("test");
         componentDirectory.CreateFileInPath("schema.graphql", "type Query { str: String }");
 
         // Act
@@ -64,7 +69,10 @@ public class ComponentListCommandTests
         cli.Directories.Content.CreateConfixProject();
         cli.Directories.Content.CreateConfixSolution();
         cli.Directories.Content.CreateConsoleApp();
-        var componentDirectory = cli.Directories.Content.Append("Components").Append("test");
+        var componentDirectory = cli.Directories.Content
+            .Append(FolderNames.Confix)
+            .Append(FolderNames.Components)
+            .Append("test");
         componentDirectory.CreateFileInPath("schema.graphql", "type Query { str: String }");
 
         // Act
@@ -86,7 +94,8 @@ public class ComponentListCommandTests
         otherCli.ExecutionContext = cli.ExecutionContext with
         {
             CurrentDirectory = cli.ExecutionContext.CurrentDirectory
-                .Append("Components")
+                .Append(FolderNames.Confix)
+                .Append(FolderNames.Components)
                 .Append("test")
         };
         await otherCli.RunAsync("component build");

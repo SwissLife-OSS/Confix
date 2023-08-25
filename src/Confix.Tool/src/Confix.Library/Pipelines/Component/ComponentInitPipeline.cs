@@ -30,7 +30,8 @@ public sealed class ComponentInitPipeline : Pipeline
         var componentFolder =
             project.Directory!
                 .Append(FolderNames.Confix)
-                .Append(FolderNames.Components).Append(componentName);
+                .Append(FolderNames.Components)
+                .Append(componentName);
         componentFolder.EnsureFolder();
 
         var componentFile = componentFolder.AppendFile(FileNames.ConfixComponent);
