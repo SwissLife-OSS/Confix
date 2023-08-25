@@ -20,9 +20,7 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
         var configuration =
             AppSettingsConfigurationFileProviderConfiguration.Parse(context.Definition.Value);
 
-        var input = context.Project.Directory!.FindInPath(FileNames.AppSettings, false);
-
-        if (input is null)
+        if (context.Project.Directory?.FindInPath(FileNames.AppSettings, false) is not { } input)
         {
             return Array.Empty<ConfigurationFile>();
         }

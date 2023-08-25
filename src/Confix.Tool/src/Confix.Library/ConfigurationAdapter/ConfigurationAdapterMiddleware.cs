@@ -22,8 +22,8 @@ public sealed class ConfigurationAdapterMiddleware : IMiddleware
         var configuration = context.Features.Get<ConfigurationFeature>();
         if (!configuration.TryGetSolution(out var solutionFile))
         {
-            context.Logger.NoSolutionFileFound();
-            throw new ExitException();
+            throw new ExitException(
+                "No solution file found, could not load VSCode Settings. Please make sure that the current directory is a Confix solution.");
         }
 
         await next(context);
@@ -42,15 +42,6 @@ public sealed class ConfigurationAdapterMiddleware : IMiddleware
         {
             await adapter.UpdateJsonSchemasAsync(adapterContext);
         }
-    }
-}
-
-file static class Logs
-{
-    public static void NoSolutionFileFound(this IConsoleLogger logger)
-    {
-        logger.Error(
-            "No solution file found, could not load VSCode Settings. Please make sure that the current directory is a Confix solution.");
     }
 }
 

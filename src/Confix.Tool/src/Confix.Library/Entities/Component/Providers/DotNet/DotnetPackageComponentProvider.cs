@@ -35,8 +35,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
         var buildResult = await DotnetHelpers.BuildProjectAsync(csproj, context.CancellationToken);
         if (!buildResult.Succeeded)
         {
-            context.Logger.DotnetProjectBuildFailed(buildResult.Output);
-            throw new ExitException();
+            var output = buildResult.Output.EscapeMarkup();
+            throw new ExitException($"Failed to build project:\n{output}");
         }
 
         var projectAssembly = DotnetHelpers.GetAssemblyFileFromCsproj(csproj);
@@ -177,7 +177,7 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
 
                 assembly
                     .GetReferencedAssemblies()
-                    .Where(x => !string.IsNullOrWhiteSpace(x.Name) && 
+                    .Where(x => !string.IsNullOrWhiteSpace(x.Name) &&
                                 !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
                                 !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
                     .ForEach(x => assembliesToScan.Enqueue(x.Name!));
@@ -247,9 +247,9 @@ file static class Log
     {
         logger.Debug($"Found assembly file: {assembly.FullName}");
     }
-    
+
     public static void CouldNotLoadAssembly(
-        this IConsoleLogger logger, 
+        this IConsoleLogger logger,
         FileSystemInfo assembly, Exception ex)
     {
         logger.Debug($"Could not load assembly: {assembly.FullName}. {ex.Message}");
@@ -292,10 +292,5 @@ file static class Log
     {
         logger.Debug(
             $"Parsing component from resource '{resourceName}' in assembly '{assembly.FullName}'");
-    }
-
-    public static void DotnetProjectBuildFailed(this IConsoleLogger logger, string output)
-    {
-        logger.Error($"Failed to build project:\n{output.EscapeMarkup()}");
     }
 }

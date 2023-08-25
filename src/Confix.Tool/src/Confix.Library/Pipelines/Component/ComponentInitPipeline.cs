@@ -35,8 +35,9 @@ public sealed class ComponentInitPipeline : Pipeline
 
         if (componentFile.Exists)
         {
-            context.Logger.LogComponentAlreadyExists(componentFile);
-            throw new ExitException();
+            var link = componentFile.Directory?.Name.ToLink(componentFile);
+            throw new ExitException(
+                $"Component already exists:{link} [dim]{componentFile.FullName}[/]");
         }
 
         await File
@@ -47,14 +48,6 @@ public sealed class ComponentInitPipeline : Pipeline
 
 file static class Log
 {
-    public static void LogComponentAlreadyExists(
-        this IConsoleLogger console,
-        FileInfo info)
-    {
-        console.Error(
-            $"Component already exists:{info.Directory?.Name.ToLink(info)} [dim]{info.FullName}[/]");
-    }
-
     public static void LogComponentCreated(
         this IConsoleLogger console,
         FileInfo info)

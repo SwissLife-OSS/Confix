@@ -90,9 +90,14 @@ public sealed class PipelineExecutor
             Services = _services
         };
 
-        await _pipeline(context);
-
-        await status.StopAsync();
+        try
+        {
+            await _pipeline(context);
+        }
+        finally
+        {
+            await status.StopAsync();
+        }
 
         return context.ExitCode;
     }
@@ -104,6 +109,7 @@ file class NullStatusContext : IStatus
 
     public ValueTask<IAsyncDisposable> PauseAsync(CancellationToken cancellationToken)
         => ValueTask.FromResult<IAsyncDisposable>(this);
+
     public ValueTask StopAsync() => ValueTask.CompletedTask;
 
     /// <inheritdoc />
