@@ -26,13 +26,13 @@ public sealed class ReloadCommandPipeline : Pipeline
         switch (configuration.Scope)
         {
             case ConfigurationScope.None:
-                context.Logger
-                    .LogNoConfixContextWasFound(context.Execution.CurrentDirectory.FullName);
-                throw new ExitException();
+                var directory = context.Execution.CurrentDirectory.FullName;
+                throw new ExitException(
+                    $"No confix context was found in the executing directory: [yellow]{directory}[/]");
 
             case ConfigurationScope.Component:
-                App.Log.ComponentsDoNotSupportReload();
-                throw new ExitException();
+                throw new ExitException(
+                    "Components do not support reload. `reload` only works for projects and solutions.");
 
             case ConfigurationScope.Project:
             {
@@ -61,22 +61,5 @@ public sealed class ReloadCommandPipeline : Pipeline
             default:
                 throw new ArgumentOutOfRangeException();
         }
-    }
-}
-
-file static class Log
-{
-    public static void LogNoConfixContextWasFound(
-        this IConsoleLogger console,
-        string directory)
-    {
-        console.Error(
-            $"No confix context was found in the executing directory: [yellow]{directory}[/]");
-    }
-
-    public static void ComponentsDoNotSupportReload(this IConsoleLogger console)
-    {
-        console.Error(
-            "Components do not support reload. `reload` only works for projects and solutions.");
     }
 }

@@ -3,30 +3,39 @@ namespace Confix.Tool.Commands.Temp;
 public static class DirectoryExtensions
 {
     public static FileInfo? FindInPath(
-        this DirectoryInfo directory,
+        this DirectoryInfo? directory,
         string fileName,
         bool recursive = true)
-        => Directory
-            .EnumerateFiles(
-                directory.FullName,
-                fileName,
-                recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
-            .Select(x => new FileInfo(x))
-            .FirstOrDefault();
+        => directory is not null
+            ? Directory
+                .EnumerateFiles(
+                    directory.FullName,
+                    fileName,
+                    recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                .Select(x => new FileInfo(x))
+                .FirstOrDefault()
+            : null;
 
     public static IEnumerable<FileInfo> FindAllInPath(
-        this DirectoryInfo directory,
+        this DirectoryInfo? directory,
         string pattern,
         bool recursive = true)
-        => Directory
-            .EnumerateFiles(
-                directory.FullName,
-                pattern,
-                recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
-            .Select(x => new FileInfo(x));
+        => directory is not null
+            ? Directory
+                .EnumerateFiles(
+                    directory.FullName,
+                    pattern,
+                    recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                .Select(x => new FileInfo(x))
+            : Array.Empty<FileInfo>();
 
-    public static string? FindInTree(this DirectoryInfo directory, string fileName)
+    public static string? FindInTree(this DirectoryInfo? directory, string fileName)
     {
+        if (directory is null)
+        {
+            return null;
+        }
+
         if (!directory.Exists)
         {
             throw new DirectoryNotFoundException($"The directory '{directory}' was not found.");
