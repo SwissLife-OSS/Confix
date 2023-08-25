@@ -3,6 +3,7 @@ using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Entities.Components;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Middlewares.JsonSchemas;
+using Confix.Tool.Middlewares.Project;
 
 namespace Confix.Tool.Commands.Component;
 
@@ -16,6 +17,7 @@ public sealed class ListComponentPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseReadConfigurationFiles()
             .UseEnvironment()
+            .UseBuildComponentsOfProject()
             .Use<JsonSchemaCollectionMiddleware>()
             .Use<ConfigurationAdapterMiddleware>()
             .Use<BuildComponentProviderMiddleware>()

@@ -170,19 +170,27 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                 continue;
             }
 
-            logger.FoundAssemblyFile(assemblyFilePath);
-
-            var assembly = Assembly.LoadFile(assemblyFilePath.FullName);
-
-            assembly
-                .GetReferencedAssemblies()
-                .Where(x => !string.IsNullOrWhiteSpace(x.Name))
-                .ForEach(x => assembliesToScan.Enqueue(x.Name!));
-
-            foreach (var resourceName in assembly.GetManifestResourceNames())
+            try
             {
-                logger.FoundManifestResourceInAssembly(resourceName, assemblyName);
-                discoveredResources.Add(new DiscoveredResource(assembly, resourceName));
+                logger.FoundAssemblyFile(assemblyFilePath);
+                var assembly = Assembly.LoadFile(assemblyFilePath.FullName);
+
+                assembly
+                    .GetReferencedAssemblies()
+                    .Where(x => !string.IsNullOrWhiteSpace(x.Name) &&
+                                !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
+                                !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
+                    .ForEach(x => assembliesToScan.Enqueue(x.Name!));
+
+                foreach (var resourceName in assembly.GetManifestResourceNames())
+                {
+                    logger.FoundManifestResourceInAssembly(resourceName, assemblyName);
+                    discoveredResources.Add(new DiscoveredResource(assembly, resourceName));
+                }
+            }
+            catch (BadImageFormatException ex)
+            {
+                logger.CouldNotLoadAssembly(assemblyFile, ex);
             }
         }
 
@@ -192,7 +200,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
     private record DiscoveredResource(Assembly Assembly, string ResourceName)
     {
         public Stream GetStream() => Assembly.GetManifestResourceStream(ResourceName) ??
-            throw new ExitException($"Could not find resource: {ResourceName}");
+                                     throw new ExitException(
+                                         $"Could not find resource: {ResourceName}");
     }
 }
 
@@ -237,6 +246,13 @@ file static class Log
     public static void FoundAssemblyFile(this IConsoleLogger logger, FileSystemInfo assembly)
     {
         logger.Debug($"Found assembly file: {assembly.FullName}");
+    }
+
+    public static void CouldNotLoadAssembly(
+        this IConsoleLogger logger,
+        FileSystemInfo assembly, Exception ex)
+    {
+        logger.Debug($"Could not load assembly: {assembly.FullName}. {ex.Message}");
     }
 
     public static void AssemblyFileNotFound(this IConsoleLogger logger, string assembly)
