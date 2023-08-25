@@ -28,7 +28,9 @@ public sealed class ComponentInitPipeline : Pipeline
 
         var componentName = context.Parameter.Get(ComponentNameArgument.Instance);
         var componentFolder =
-            project.Directory!.Append(FolderNames.Components).Append(componentName);
+            project.Directory!
+                .Append(FolderNames.Confix)
+                .Append(FolderNames.Components).Append(componentName);
         componentFolder.EnsureFolder();
 
         var componentFile = componentFolder.AppendFile(FileNames.ConfixComponent);

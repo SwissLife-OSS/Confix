@@ -1,4 +1,5 @@
 using Confix.Tool.Commands.Temp;
+using Confix.Utilities.FileSystem;
 
 namespace Confix.Inputs;
 
@@ -29,7 +30,10 @@ public class GraphQlComponentInputTests
         cli.Directories.Content.CreateConfixComponent("test");
         cli.ExecutionContext = cli.ExecutionContext with
         {
-            CurrentDirectory = cli.Directories.Content.Append("Components").Append("test")
+            CurrentDirectory = cli.Directories.Content
+                .Append(FolderNames.Confix)
+                .Append(FolderNames.Components)
+                .Append("test")
         };
 
         // Act
@@ -46,7 +50,10 @@ public class GraphQlComponentInputTests
         using var cli = new TestConfixCommandline();
         cli.Directories.Home.CreateConfixRc(_confixRc);
         cli.Directories.Content.CreateConfixComponent("test");
-        var componentDirectory = cli.Directories.Content.Append("Components").Append("test");
+        var componentDirectory = cli.Directories.Content
+            .Append(FolderNames.Confix)
+            .Append(FolderNames.Components)
+            .Append("test");
         componentDirectory.CreateFileInPath("schema.graphql", "type Query { str: String }");
         cli.ExecutionContext = cli.ExecutionContext with
         {
@@ -70,7 +77,10 @@ public class GraphQlComponentInputTests
         using var cli = new TestConfixCommandline();
         cli.Directories.Home.CreateConfixRc(_confixRc);
         cli.Directories.Content.CreateConfixComponent("test");
-        var componentDirectory = cli.Directories.Content.Append("Components").Append("test");
+        var componentDirectory = cli.Directories.Content
+            .Append(FolderNames.Confix)
+            .Append(FolderNames.Components)
+            .Append("test");
         componentDirectory.CreateFileInPath("schema.graphql", "type Query { str: String }");
         componentDirectory.CreateFileInPath("schema.json", "SHOULD BE REPLACED");
         cli.ExecutionContext = cli.ExecutionContext with
@@ -89,15 +99,15 @@ public class GraphQlComponentInputTests
     }
 
     private const string _confixRc = """
-        {
-            "component": 
             {
-                 "inputs": [
-                      {
-                        "type": "graphql"
-                      }
-                    ]
+                "component":
+                {
+                     "inputs": [
+                          {
+                            "type": "graphql"
+                          }
+                        ]
+                }
             }
-        }
-    """;
+        """;
 }

@@ -37,7 +37,11 @@ public static class DirectoryTestExtensions
     {
         projectPath = projectPath ?? "";
         return directory.CreateFileInPath(
-            Path.Combine(projectPath, FolderNames.Components, name, FileNames.ConfixComponent),
+            Path.Combine(projectPath,
+                FolderNames.Confix,
+                FolderNames.Components,
+                name,
+                FileNames.ConfixComponent),
             content ?? $$""" { "name": "{{name}}" } """);
     }
 

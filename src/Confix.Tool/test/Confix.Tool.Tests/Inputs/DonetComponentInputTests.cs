@@ -5,6 +5,8 @@ using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Entities.Components;
 using Confix.Tool.Middlewares;
+using Confix.Tool.Schema;
+using Confix.Utilities.FileSystem;
 using Moq;
 using Snapshooter.Xunit;
 
@@ -35,7 +37,10 @@ public class DonetComponentInputTests
         cli.Directories.Content.CreateConfixComponent("test");
         cli.ExecutionContext = cli.ExecutionContext with
         {
-            CurrentDirectory = cli.Directories.Content.Append("Components").Append("test")
+            CurrentDirectory = cli.Directories.Content
+                .Append(FolderNames.Confix)
+                .Append(FolderNames.Components)
+                .Append("test")
         };
 
         // Act
@@ -55,7 +60,10 @@ public class DonetComponentInputTests
         cli.Directories.Content.CreateConfixProject();
         cli.ExecutionContext = cli.ExecutionContext with
         {
-            CurrentDirectory = cli.Directories.Content.Append("Components").Append("test")
+            CurrentDirectory = cli.Directories.Content
+                .Append(FolderNames.Confix)
+                .Append(FolderNames.Components)
+                .Append("test")
         };
 
         // Act
@@ -76,7 +84,10 @@ public class DonetComponentInputTests
         var csproj = cli.Directories.Content.CreateFileInPath("test.csproj", "");
         cli.ExecutionContext = cli.ExecutionContext with
         {
-            CurrentDirectory = cli.Directories.Content.Append("Components").Append("test")
+            CurrentDirectory = cli.Directories.Content
+                .Append(FolderNames.Confix)
+                .Append(FolderNames.Components)
+                .Append("test")
         };
 
         // Act
@@ -97,7 +108,10 @@ public class DonetComponentInputTests
         var csproj = cli.Directories.Content.CreateFileInPath("test.csproj", "<Project></Project>");
         cli.ExecutionContext = cli.ExecutionContext with
         {
-            CurrentDirectory = cli.Directories.Content.Append("Components").Append("test")
+            CurrentDirectory = cli.Directories.Content
+                .Append(FolderNames.Confix)
+                .Append(FolderNames.Components)
+                .Append("test")
         };
 
         // Act
@@ -118,7 +132,10 @@ public class DonetComponentInputTests
         var csproj = cli.Directories.Content.CreateFileInPath("test.csproj", "");
         cli.ExecutionContext = cli.ExecutionContext with
         {
-            CurrentDirectory = cli.Directories.Content.Append("Components").Append("test")
+            CurrentDirectory = cli.Directories.Content
+                .Append(FolderNames.Confix)
+                .Append(FolderNames.Components)
+                .Append("test")
         };
 
         // Act
@@ -137,16 +154,19 @@ public class DonetComponentInputTests
         cli.Directories.Content.CreateConfixComponent("test");
         cli.Directories.Content.CreateConfixProject();
         const string projectContent = """
-        <Project>
-          <ItemGroup>
-            <EmbeddedResource Include="$(MSBuildProjectDirectory)/Components/**/*.*" />
-          </ItemGroup>
-        </Project>
-        """;
+            <Project>
+              <ItemGroup>
+                <EmbeddedResource Include="$(MSBuildProjectDirectory)/Components/**/*.*" />
+              </ItemGroup>
+            </Project>
+            """;
         var csproj = cli.Directories.Content.CreateFileInPath("test.csproj", projectContent);
         cli.ExecutionContext = cli.ExecutionContext with
         {
-            CurrentDirectory = cli.Directories.Content.Append("Components").Append("test")
+            CurrentDirectory = cli.Directories.Content
+                .Append(FolderNames.Confix)
+                .Append(FolderNames.Components)
+                .Append("test")
         };
 
         // Act
@@ -157,17 +177,17 @@ public class DonetComponentInputTests
     }
 
     private const string _confixRc = """
-        {
-            "component": 
             {
-                 "inputs": [
-                      {
-                        "type": "dotnet"
-                      }
-                    ]
+                "component":
+                {
+                     "inputs": [
+                          {
+                            "type": "dotnet"
+                          }
+                        ]
+                }
             }
-        }
-    """;
+        """;
 
     private IMiddlewareContext CreateMiddlewareContext(ConfigurationFeature configurationFeature)
     {
