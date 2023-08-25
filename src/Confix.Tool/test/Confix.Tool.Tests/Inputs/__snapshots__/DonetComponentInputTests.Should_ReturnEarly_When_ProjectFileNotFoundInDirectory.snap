@@ -2,7 +2,7 @@
 ### CLI Output
 --------------------------------------------------
   Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
-  Configuration files of type .confix.component located at <</tmp>>/content/Confix/Components/test/.confix.component
+  Configuration files of type .confix.component located at <</tmp>>/content/confix/components/test/.confix.component
   Merged .confix.component from .confix.solution
 ✓ Running in scope Component
 ✓ Configuration loaded

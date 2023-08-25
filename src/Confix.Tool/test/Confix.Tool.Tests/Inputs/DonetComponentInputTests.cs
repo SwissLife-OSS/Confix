@@ -156,7 +156,7 @@ public class DonetComponentInputTests
         const string projectContent = """
             <Project>
               <ItemGroup>
-                <EmbeddedResource Include="$(MSBuildProjectDirectory)/Components/**/*.*" />
+                <EmbeddedResource Include="$(MSBuildProjectDirectory)/confix/components/**/*.*" />
               </ItemGroup>
             </Project>
             """;
