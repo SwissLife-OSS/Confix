@@ -13,7 +13,7 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
 {
     public static string Type => "appsettings";
 
-    public async Task<IReadOnlyList<ConfigurationFile>> GetConfigurationFilesAsync(
+    public async ValueTask<IReadOnlyList<ConfigurationFile>> GetConfigurationFilesAsync(
         IConfigurationFileContext context,
         CancellationToken ct)
     {

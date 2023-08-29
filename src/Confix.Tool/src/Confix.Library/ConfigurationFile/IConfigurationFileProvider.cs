@@ -8,7 +8,7 @@ public interface IConfigurationFileProvider
 {
     public static virtual string Type => string.Empty;
     
-    Task<IReadOnlyList<ConfigurationFile>> GetConfigurationFilesAsync(
+    ValueTask<IReadOnlyList<ConfigurationFile>> GetConfigurationFilesAsync(
         IConfigurationFileContext context,
         CancellationToken ct);
 }

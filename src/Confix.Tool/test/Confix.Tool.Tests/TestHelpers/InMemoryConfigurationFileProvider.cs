@@ -9,10 +9,10 @@ public class InMemoryConfigurationFileProvider : IConfigurationFileProvider
     public List<ConfigurationFile> Files { get; } = new();
 
     /// <inheritdoc />
-    public Task<IReadOnlyList<ConfigurationFile>> GetConfigurationFilesAsync(
+    public ValueTask<IReadOnlyList<ConfigurationFile>> GetConfigurationFilesAsync(
         IConfigurationFileContext context,
         CancellationToken ct)
     {
-        return Task.FromResult<IReadOnlyList<ConfigurationFile>>(Files);
+        return ValueTask.FromResult<IReadOnlyList<ConfigurationFile>>(Files);
     }
 }
