@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Confix.Tool.Commands.Logging;
@@ -96,11 +97,14 @@ public static class DotnetHelpers
         return userSecretsId;
     }
 
-    public static void EnsureEmbeddedResource(FileInfo csprojFile, string path)
+    public static async Task EnsureEmbeddedResourceAsync(
+        FileInfo csprojFile, 
+        string path,
+        CancellationToken ct)
     {
         App.Log.EnsureEmbeddedResourceExists(csprojFile.FullName);
 
-        var csprojDoc = XDocument.Load(csprojFile.FullName, LoadOptions.PreserveWhitespace);
+        var csprojDoc = XDocument.Load(csprojFile.FullName, LoadOptions.None);
 
         var project = csprojDoc.Element(Xml.Project);
         if (project == null)
@@ -129,8 +133,18 @@ public static class DotnetHelpers
             embeddedResource.Add(new XAttribute("Include", path));
 
             App.Log.AddedEmbeddedResourceToTheCsprojFile(path);
+            
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Async = true;
+            settings.OmitXmlDeclaration = true;
+            
+            var formattedCsproj = new StringBuilder();
+            await using var writer = XmlWriter.Create(formattedCsproj, settings);
+            await csprojDoc.WriteToAsync(writer, ct);
+            await writer.FlushAsync();
 
-            csprojDoc.Save(csprojFile.FullName);
+            await File.WriteAllTextAsync(csprojFile.FullName, formattedCsproj.ToString(), ct);
         }
         else
         {
