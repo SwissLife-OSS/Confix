@@ -44,7 +44,10 @@ public sealed class DotnetComponentInput : IComponentInput
 
         try
         {
-            DotnetHelpers.EnsureEmbeddedResource(csproj, _embeddedResourcePath);
+            await DotnetHelpers.EnsureEmbeddedResourceAsync(
+                csproj, 
+                _embeddedResourcePath, 
+                context.CancellationToken);
         }
         catch
         {

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Confix.Tool.Commands.Logging;
@@ -48,11 +49,13 @@ public static class DotnetHelpers
         return GetAssemblyInPathByName(projectFile.Directory!, propertyGroup);
     }
 
-    public static string EnsureUserSecretsId(FileInfo csprojFile)
+    public static async Task<string> EnsureUserSecretsIdAsync(
+        FileInfo csprojFile,
+        CancellationToken ct)
     {
         App.Log.EnsuringUserSecretsIdInTheCsprojFile(csprojFile.FullName);
 
-        var csprojDoc = XDocument.Load(csprojFile.FullName, LoadOptions.PreserveWhitespace);
+        var csprojDoc = XDocument.Load(csprojFile.FullName, LoadOptions.None);
 
         var project = csprojDoc.Element(Xml.Project);
         if (project == null)
@@ -85,8 +88,8 @@ public static class DotnetHelpers
             propertyGroup.Add(new XElement(Xml.UserSecretsId, userSecretsId));
 
             App.Log.AddedUserSecretsIdToTheCsprojFile(userSecretsId);
-
-            csprojDoc.Save(csprojFile.FullName);
+            
+            await csprojDoc.PrettifyAndSaveAsync(csprojFile.FullName, ct);
         }
         else
         {
@@ -96,11 +99,14 @@ public static class DotnetHelpers
         return userSecretsId;
     }
 
-    public static void EnsureEmbeddedResource(FileInfo csprojFile, string path)
+    public static async Task EnsureEmbeddedResourceAsync(
+        FileInfo csprojFile, 
+        string path,
+        CancellationToken ct)
     {
         App.Log.EnsureEmbeddedResourceExists(csprojFile.FullName);
 
-        var csprojDoc = XDocument.Load(csprojFile.FullName, LoadOptions.PreserveWhitespace);
+        var csprojDoc = XDocument.Load(csprojFile.FullName, LoadOptions.None);
 
         var project = csprojDoc.Element(Xml.Project);
         if (project == null)
@@ -130,7 +136,7 @@ public static class DotnetHelpers
 
             App.Log.AddedEmbeddedResourceToTheCsprojFile(path);
 
-            csprojDoc.Save(csprojFile.FullName);
+            await csprojDoc.PrettifyAndSaveAsync(csprojFile.FullName, ct);
         }
         else
         {
@@ -161,6 +167,24 @@ public static class DotnetHelpers
             .EnumerateFiles(directory.FullName, "*.csproj", SearchOption.TopDirectoryOnly)
             .Select(x => new FileInfo(x))
             .FirstOrDefault();
+
+    private static async Task PrettifyAndSaveAsync(
+        this XDocument xDocument,
+        string filePath,
+        CancellationToken ct)
+    {
+        XmlWriterSettings settings = new XmlWriterSettings();
+        settings.Indent = true;
+        settings.Async = true;
+        settings.OmitXmlDeclaration = true;
+            
+        var formattedCsproj = new StringBuilder();
+        await using var writer = XmlWriter.Create(formattedCsproj, settings);
+        await xDocument.WriteToAsync(writer, ct);
+        await writer.FlushAsync();
+
+        await File.WriteAllTextAsync(filePath, formattedCsproj.ToString(), ct);
+    }
 }
 
 file static class Xml
