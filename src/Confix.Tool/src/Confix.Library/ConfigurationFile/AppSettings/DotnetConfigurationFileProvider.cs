@@ -13,7 +13,9 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
 {
     public static string Type => "appsettings";
 
-    public IReadOnlyList<ConfigurationFile> GetConfigurationFiles(IConfigurationFileContext context)
+    public async Task<IReadOnlyList<ConfigurationFile>> GetConfigurationFilesAsync(
+        IConfigurationFileContext context,
+        CancellationToken ct)
     {
         var files = new List<ConfigurationFile>();
 
@@ -33,7 +35,7 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
             var csproj = DotnetHelpers.FindProjectFileInPath(context.Project.Directory!);
             if (csproj is not null)
             {
-                var userSecretsId = DotnetHelpers.EnsureUserSecretsId(csproj);
+                var userSecretsId = await DotnetHelpers.EnsureUserSecretsIdAsync(csproj, ct);
                 var userSecretsFolder = GetUserSecretPath(userSecretsId);
                 output = new FileInfo(Path.Combine(userSecretsFolder.FullName, FileNames.Secrets));
                 context.Logger.UseUserSecretsConfigurationFile(output);

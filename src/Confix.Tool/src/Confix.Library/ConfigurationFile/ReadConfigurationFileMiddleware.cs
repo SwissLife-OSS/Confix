@@ -36,7 +36,8 @@ public sealed class ReadConfigurationFileMiddleware : IMiddleware
                 Project = project
             };
 
-            foreach (var configurationFile in provider.GetConfigurationFiles(factoryContext))
+            foreach (var configurationFile in 
+                await provider.GetConfigurationFilesAsync(factoryContext, context.CancellationToken))
             {
                 feature.Files.Add(configurationFile);
             }

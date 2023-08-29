@@ -8,13 +8,16 @@ public sealed class InlineConfigurationFileProvider : IConfigurationFileProvider
 {
     public static string Type => "inline";
 
-    public IReadOnlyList<ConfigurationFile> GetConfigurationFiles(IConfigurationFileContext context)
+    public Task<IReadOnlyList<ConfigurationFile>> GetConfigurationFilesAsync(
+        IConfigurationFileContext context,
+        CancellationToken ct)
     {
         var path = context.Definition.Value.ExpectValue<string>();
 
         if (context.Project.Directory is not { } directory)
         {
-            return Array.Empty<ConfigurationFile>();
+            return Task.FromResult<IReadOnlyList<ConfigurationFile>>(
+                Array.Empty<ConfigurationFile>());
         }
 
         var files = new List<ConfigurationFile>();
@@ -26,7 +29,7 @@ public sealed class InlineConfigurationFileProvider : IConfigurationFileProvider
             files.Add(new ConfigurationFile { InputFile = file, OutputFile = file });
         }
 
-        return files;
+        return Task.FromResult<IReadOnlyList<ConfigurationFile>>(files);
     }
 }
 

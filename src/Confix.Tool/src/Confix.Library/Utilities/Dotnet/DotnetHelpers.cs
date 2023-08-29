@@ -49,11 +49,13 @@ public static class DotnetHelpers
         return GetAssemblyInPathByName(projectFile.Directory!, propertyGroup);
     }
 
-    public static string EnsureUserSecretsId(FileInfo csprojFile)
+    public static async Task<string> EnsureUserSecretsIdAsync(
+        FileInfo csprojFile,
+        CancellationToken ct)
     {
         App.Log.EnsuringUserSecretsIdInTheCsprojFile(csprojFile.FullName);
 
-        var csprojDoc = XDocument.Load(csprojFile.FullName, LoadOptions.PreserveWhitespace);
+        var csprojDoc = XDocument.Load(csprojFile.FullName, LoadOptions.None);
 
         var project = csprojDoc.Element(Xml.Project);
         if (project == null)
@@ -86,8 +88,8 @@ public static class DotnetHelpers
             propertyGroup.Add(new XElement(Xml.UserSecretsId, userSecretsId));
 
             App.Log.AddedUserSecretsIdToTheCsprojFile(userSecretsId);
-
-            csprojDoc.Save(csprojFile.FullName);
+            
+            await csprojDoc.PrettifyAndSaveAsync(csprojFile.FullName, ct);
         }
         else
         {
@@ -133,18 +135,8 @@ public static class DotnetHelpers
             embeddedResource.Add(new XAttribute("Include", path));
 
             App.Log.AddedEmbeddedResourceToTheCsprojFile(path);
-            
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.Async = true;
-            settings.OmitXmlDeclaration = true;
-            
-            var formattedCsproj = new StringBuilder();
-            await using var writer = XmlWriter.Create(formattedCsproj, settings);
-            await csprojDoc.WriteToAsync(writer, ct);
-            await writer.FlushAsync();
 
-            await File.WriteAllTextAsync(csprojFile.FullName, formattedCsproj.ToString(), ct);
+            await csprojDoc.PrettifyAndSaveAsync(csprojFile.FullName, ct);
         }
         else
         {
@@ -175,6 +167,24 @@ public static class DotnetHelpers
             .EnumerateFiles(directory.FullName, "*.csproj", SearchOption.TopDirectoryOnly)
             .Select(x => new FileInfo(x))
             .FirstOrDefault();
+
+    private static async Task PrettifyAndSaveAsync(
+        this XDocument xDocument,
+        string filePath,
+        CancellationToken ct)
+    {
+        XmlWriterSettings settings = new XmlWriterSettings();
+        settings.Indent = true;
+        settings.Async = true;
+        settings.OmitXmlDeclaration = true;
+            
+        var formattedCsproj = new StringBuilder();
+        await using var writer = XmlWriter.Create(formattedCsproj, settings);
+        await xDocument.WriteToAsync(writer, ct);
+        await writer.FlushAsync();
+
+        await File.WriteAllTextAsync(filePath, formattedCsproj.ToString(), ct);
+    }
 }
 
 file static class Xml
