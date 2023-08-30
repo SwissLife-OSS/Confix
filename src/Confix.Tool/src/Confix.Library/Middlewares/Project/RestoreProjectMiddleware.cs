@@ -36,16 +36,9 @@ public class RestoreProjectMiddleware : IMiddleware
         var project = configuration.EnsureProject();
         var solution = configuration.EnsureSolution();
 
-        var componentProvider =
-            context.Features.Get<ComponentProviderExecutorFeature>().Executor;
-
-        var providerContext =
-            new ComponentProviderContext(context.Logger, cancellationToken, project, solution);
-
         context.SetStatus("Loading components...");
-        await componentProvider.ExecuteAsync(providerContext);
-        var components = providerContext.Components;
-        context.Logger.LogComponentsLoaded(components);
+        var components = await context.Features.Get<ComponentProviderExecutorFeature>()
+            .Executor.LoadComponents(solution, project, cancellationToken);
 
         context.SetStatus("Loading variables...");
         var variableResolver = context.Features.Get<VariableResolverFeature>().Resolver;
@@ -74,17 +67,6 @@ public class RestoreProjectMiddleware : IMiddleware
 
 file static class Log
 {
-    public static void LogComponentsLoaded(
-        this IConsoleLogger console,
-        ICollection<Component> components)
-    {
-        console.Success($"Loaded {components.Count} components");
-        foreach (var component in components)
-        {
-            console.Information($"-  @{component.Provider}/{component.ComponentName}");
-        }
-    }
-
     public static void LogSchemaCompositionCompleted(
         this IConsoleLogger console,
         ProjectDefinition project)

@@ -23,6 +23,31 @@ public sealed class ComponentProviderExecutor
         }
     }
 
+    private readonly Dictionary<(ProjectDefinition, SolutionDefinition), IList<Component>> _cache =
+        new();
+    
+    public async Task<IList<Component>> LoadComponents(
+        SolutionDefinition solution,
+        ProjectDefinition project,
+        CancellationToken cancellationToken)
+    {
+        if (_cache.TryGetValue((project, solution), out var components))
+        {
+            return components;
+        }
+
+        var providerContext =
+            new ComponentProviderContext(App.Log, cancellationToken, project, solution);
+
+        await ExecuteAsync(providerContext);
+
+        _cache[(project, solution)] = components = providerContext.Components;
+
+        App.Log.LogComponentsLoaded(components);
+
+        return components;
+    }
+
     public static IComponentProviderExecutor FromDefinitions(
         IComponentProviderFactory componentProviders,
         IEnumerable<ComponentProviderDefinition> configurations)
@@ -57,5 +82,16 @@ file static class Log
     {
         console.Warning(
             "No component providers loaded because no component providers were defined. You can define component providers in the 'confix.json' or the 'confix.solution' file.");
+    }
+
+    public static void LogComponentsLoaded(
+        this IConsoleLogger console,
+        ICollection<Component> components)
+    {
+        console.Success($"Loaded {components.Count} components");
+        foreach (var component in components)
+        {
+            console.Information($"-  @{component.Provider}/{component.ComponentName}");
+        }
     }
 }

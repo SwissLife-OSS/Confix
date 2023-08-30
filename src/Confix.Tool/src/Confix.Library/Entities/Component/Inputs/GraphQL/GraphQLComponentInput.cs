@@ -74,7 +74,7 @@ file static class Log
         this IConsoleLogger console,
         FileSystemInfo schemaFile)
     {
-        console.Information("GraphQL Schema was found: {0} [dim]{1}[/]",
+        console.Debug("GraphQL Schema was found: {0} [dim]{1}[/]",
             schemaFile.ToLink(),
             schemaFile.FullName);
     }
@@ -96,7 +96,7 @@ file static class Log
         this IConsoleLogger console,
         FileSystemInfo schemaFile)
     {
-        console.Information("Generated schema based on GraphQL Schema:{0} [dim]{1}[/]",
+        console.Debug("Generated schema based on GraphQL Schema:{0} [dim]{1}[/]",
             schemaFile.ToLink(),
             schemaFile.FullName);
     }

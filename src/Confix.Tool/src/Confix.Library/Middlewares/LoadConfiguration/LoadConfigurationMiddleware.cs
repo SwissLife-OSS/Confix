@@ -18,6 +18,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         if (context.Features.TryGet(out ConfigurationFeature _))
         {
             await next(context);
+            return;
         }
 
         context.SetStatus("Loading configuration...");

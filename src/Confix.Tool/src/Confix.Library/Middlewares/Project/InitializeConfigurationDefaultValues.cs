@@ -52,6 +52,9 @@ public sealed class InitializeConfigurationDefaultValues : IMiddleware
             // we ensure to replace the input file as we want to add the properties
             await using var stream = file.InputFile.OpenReplacementStream();
             await content.SerializeToStreamAsync(stream, context.CancellationToken);
+            
+            // we update the content of the file so later middlewares can use it
+            file.Content = content;
         }
 
         await next(context);

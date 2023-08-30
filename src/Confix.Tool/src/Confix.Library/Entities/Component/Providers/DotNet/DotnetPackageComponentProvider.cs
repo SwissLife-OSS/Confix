@@ -262,7 +262,7 @@ file static class Log
 
     public static void FoundDotnetProject(this IConsoleLogger logger, FileSystemInfo csproj)
     {
-        logger.Information($"Found .NET project:{csproj.ToLink()} [dim]{csproj.FullName}[/]");
+        logger.Debug($"Found .NET project:{csproj.ToLink()} [dim]{csproj.FullName}[/]");
     }
 
     public static void FoundManifestResourceInAssembly(

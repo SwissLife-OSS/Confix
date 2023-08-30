@@ -1,5 +1,6 @@
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
+using Confix.Variables;
 
 namespace Confix.Tool.Middlewares.Project;
 
@@ -31,7 +32,7 @@ public sealed class BuildProjectMiddleware : IMiddleware
             context.Logger.ReplaceVariablesOfConfigurationFile(file);
 
             file.Content = await variableReplacer
-                .RewriteAsync(content, context.CancellationToken);
+                .RewriteOrThrowAsync(content, context.CancellationToken);
         }
 
         await next(context);
