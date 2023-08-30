@@ -8,13 +8,13 @@ using Confix.Tool.Schema;
 
 namespace Confix.Tool.Middlewares.Project;
 
-public class ReloadProjectMiddleware : IMiddleware
+public class RestoreProjectMiddleware : IMiddleware
 {
     private readonly IProjectComposer _projectComposer;
 
     private readonly ISchemaStore _schemaStore;
 
-    public ReloadProjectMiddleware(IProjectComposer projectComposer, ISchemaStore schemaStore)
+    public RestoreProjectMiddleware(IProjectComposer projectComposer, ISchemaStore schemaStore)
     {
         _projectComposer = projectComposer;
         _schemaStore = schemaStore;

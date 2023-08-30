@@ -84,8 +84,8 @@
     },
     {
       "help": "Reloads the schema of a project",
-      "postfix": "ProjectReload",
-      "definiteArgument": "project reload",
+      "postfix": "ProjectRestore",
+      "definiteArgument": "project restore",
       "settingsClass": {
         "properties": [
           {
@@ -204,8 +204,8 @@
     },
     {
       "help": "Reloads the schema of all the projects in the solution",
-      "postfix": "SolutionReload",
-      "definiteArgument": "solution reload",
+      "postfix": "SolutionRestore",
+      "definiteArgument": "solution restore",
       "settingsClass": {
         "properties": [
           {
@@ -421,8 +421,8 @@
       }
     },
     {
-      "postfix": "Reload",
-      "definiteArgument": "reload",
+      "postfix": "Restore",
+      "definiteArgument": "restore",
       "settingsClass": {
         "properties": [
           {

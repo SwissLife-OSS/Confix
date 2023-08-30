@@ -9,7 +9,7 @@ public static class ProjectMiddlewareExtensions
     public static CommandLineBuilder RegisterProjectMiddlewares(this CommandLineBuilder builder)
         => builder
             .AddTransient(sp => new ValidationMiddleware(sp.GetRequiredService<ISchemaStore>()))
-            .AddTransient(sp => new ReloadProjectMiddleware(
+            .AddTransient(sp => new RestoreProjectMiddleware(
                 sp.GetRequiredService<IProjectComposer>(),
                 sp.GetRequiredService<ISchemaStore>()))
             .AddTransient(sp =>
