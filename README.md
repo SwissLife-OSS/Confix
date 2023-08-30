@@ -268,7 +268,7 @@ Here's an example JSON configuration file that uses Confix variables:
 
 To manage variables in Confix, you can use the following commands:
 
-- `confix variables reload`: This command reloads the variables for a project from the providers. Useful for updating your local environment with newly created variables.
+- `confix variables restore`: This command reloads the variables for a project from the providers. Useful for updating your local environment with newly created variables.
 
 - `confix variables set <variable> <value>`: This command sets the value for a specified variable.
 
@@ -330,7 +330,7 @@ Confix provides several commands to manage your project:
 
 - `confix project init`: Initializes a new project
 - `confix project build`: builds the final configuration files of the project
-- `confix project reload`: Reloads the configuration of the component providers 
+- `confix project restore`: Reloads the configuration of the component providers 
 - `confix project validate`: Validates the configuration of the current project
 
 Here is an example of a `.confix.project` file:

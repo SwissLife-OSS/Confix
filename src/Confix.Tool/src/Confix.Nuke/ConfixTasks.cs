@@ -37,7 +37,7 @@ public partial class ConfixComponentInitSettings
     }
 }
 
-public partial class ConfixProjectReloadSettings
+public partial class ConfixProjectRestoreSettings
 {
     private string GetProcessToolPath()
     {
@@ -69,7 +69,7 @@ public partial class ConfixProjectValidateSettings
     }
 }
 
-public partial class ConfixSolutionReloadSettings
+public partial class ConfixSolutionRestoreSettings
 {
     private string GetProcessToolPath()
     {
@@ -141,7 +141,7 @@ public partial class ConfixBuildSettings
     }
 }
 
-public partial class ConfixReloadSettings
+public partial class ConfixRestoreSettings
 {
     private string GetProcessToolPath()
     {

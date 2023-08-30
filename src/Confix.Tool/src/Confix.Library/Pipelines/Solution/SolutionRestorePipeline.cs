@@ -7,7 +7,7 @@ using Confix.Tool.Schema;
 
 namespace Confix.Tool.Commands.Solution;
 
-public sealed class SolutionReloadPipeline : Pipeline
+public sealed class SolutionRestorePipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
@@ -31,7 +31,7 @@ public sealed class SolutionReloadPipeline : Pipeline
             context.Logger.LogProjectedDetected(project);
 
             var projectDirectory = project.Directory!;
-            var pipeline = new ProjectReloadPipeline();
+            var pipeline = new ProjectRestorePipeline();
             var projectContext = context
                 .WithExecutingDirectory(projectDirectory)
                 .WithFeatureCollection();

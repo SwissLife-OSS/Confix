@@ -65,8 +65,8 @@ public sealed class InitializeConfigurationDefaultValues : IMiddleware
         if (!_schemaStore.TryLoad(solution, project, out var schema))
         {
             context.Logger.SchemaNotFoundInitiateSchemaReload(project);
-            var reloadProjectPipeline = new ProjectReloadPipeline();
-            await reloadProjectPipeline.ExecuteAsync(context);
+            var projectRestorePipeline = new ProjectRestorePipeline();
+            await projectRestorePipeline.ExecuteAsync(context);
 
             if (!_schemaStore.TryLoad(solution, project, out schema))
             {

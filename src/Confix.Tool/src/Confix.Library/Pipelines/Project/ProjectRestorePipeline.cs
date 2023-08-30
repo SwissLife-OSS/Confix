@@ -5,7 +5,7 @@ using Confix.Tool.Middlewares.Project;
 
 namespace Confix.Tool.Commands.Project;
 
-public sealed class ProjectReloadPipeline : Pipeline
+public sealed class ProjectRestorePipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
@@ -18,6 +18,6 @@ public sealed class ProjectReloadPipeline : Pipeline
             .Use<JsonSchemaCollectionMiddleware>()
             .Use<ConfigurationAdapterMiddleware>()
             .Use<BuildComponentProviderMiddleware>()
-            .Use<ReloadProjectMiddleware>();
+            .Use<RestoreProjectMiddleware>();
     }
 }

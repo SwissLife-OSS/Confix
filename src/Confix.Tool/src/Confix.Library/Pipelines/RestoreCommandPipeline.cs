@@ -6,7 +6,7 @@ using Confix.Tool.Middlewares;
 
 namespace Confix.Tool.Commands;
 
-public sealed class ReloadCommandPipeline : Pipeline
+public sealed class RestoreCommandPipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
@@ -37,7 +37,7 @@ public sealed class ReloadCommandPipeline : Pipeline
             case ConfigurationScope.Project:
             {
                 var projectDirectory = configuration.Project!.Directory!;
-                var pipeline = new ProjectReloadPipeline();
+                var pipeline = new ProjectRestorePipeline();
                 var projectContext = context
                     .WithExecutingDirectory(projectDirectory)
                     .WithFeatureCollection();
@@ -49,7 +49,7 @@ public sealed class ReloadCommandPipeline : Pipeline
             case ConfigurationScope.Solution:
             {
                 var solutionDirectory = configuration.Solution!.Directory!;
-                var pipeline = new SolutionReloadPipeline();
+                var pipeline = new SolutionRestorePipeline();
                 var solutionContext = context
                     .WithExecutingDirectory(solutionDirectory)
                     .WithFeatureCollection();

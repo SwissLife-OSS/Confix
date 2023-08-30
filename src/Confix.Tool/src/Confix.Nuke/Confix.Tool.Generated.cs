@@ -134,20 +134,77 @@ namespace Confix.Nuke
             return configurator.Invoke(ConfixComponentInit, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
+        ///   <p>Lists the component of the project</p>
+        ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
+        /// </summary>
+        /// <remarks>
+        ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--environment</c> via <see cref="ConfixComponentListSettings.Environment"/></li>
+        ///     <li><c>--format</c> via <see cref="ConfixComponentListSettings.Format"/></li>
+        ///     <li><c>--only-components</c> via <see cref="ConfixComponentListSettings.OnlyComponents"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixComponentListSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentListSettings.Verbosity"/></li>
+        ///   </ul>
+        /// </remarks>
+        public static IReadOnlyCollection<Output> ConfixComponentList(ConfixComponentListSettings toolSettings = null)
+        {
+            toolSettings = toolSettings ?? new ConfixComponentListSettings();
+            using var process = ProcessTasks.StartProcess(toolSettings);
+            process.AssertZeroExitCode();
+            return process.Output;
+        }
+        /// <summary>
+        ///   <p>Lists the component of the project</p>
+        ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
+        /// </summary>
+        /// <remarks>
+        ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--environment</c> via <see cref="ConfixComponentListSettings.Environment"/></li>
+        ///     <li><c>--format</c> via <see cref="ConfixComponentListSettings.Format"/></li>
+        ///     <li><c>--only-components</c> via <see cref="ConfixComponentListSettings.OnlyComponents"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixComponentListSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentListSettings.Verbosity"/></li>
+        ///   </ul>
+        /// </remarks>
+        public static IReadOnlyCollection<Output> ConfixComponentList(Configure<ConfixComponentListSettings> configurator)
+        {
+            return ConfixComponentList(configurator(new ConfixComponentListSettings()));
+        }
+        /// <summary>
+        ///   <p>Lists the component of the project</p>
+        ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
+        /// </summary>
+        /// <remarks>
+        ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--environment</c> via <see cref="ConfixComponentListSettings.Environment"/></li>
+        ///     <li><c>--format</c> via <see cref="ConfixComponentListSettings.Format"/></li>
+        ///     <li><c>--only-components</c> via <see cref="ConfixComponentListSettings.OnlyComponents"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixComponentListSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentListSettings.Verbosity"/></li>
+        ///   </ul>
+        /// </remarks>
+        public static IEnumerable<(ConfixComponentListSettings Settings, IReadOnlyCollection<Output> Output)> ConfixComponentList(CombinatorialConfigure<ConfixComponentListSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        {
+            return configurator.Invoke(ConfixComponentList, ConfixLogger, degreeOfParallelism, completeOnFailure);
+        }
+        /// <summary>
         ///   <p>Reloads the schema of a project</p>
         ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
         /// </summary>
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixProjectReloadSettings.Environment"/></li>
-        ///     <li><c>--output-file</c> via <see cref="ConfixProjectReloadSettings.OutputFile"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectReloadSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixProjectReload(ConfixProjectReloadSettings toolSettings = null)
+        public static IReadOnlyCollection<Output> ConfixProjectRestore(ConfixProjectRestoreSettings toolSettings = null)
         {
-            toolSettings = toolSettings ?? new ConfixProjectReloadSettings();
+            toolSettings = toolSettings ?? new ConfixProjectRestoreSettings();
             using var process = ProcessTasks.StartProcess(toolSettings);
             process.AssertZeroExitCode();
             return process.Output;
@@ -159,14 +216,14 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixProjectReloadSettings.Environment"/></li>
-        ///     <li><c>--output-file</c> via <see cref="ConfixProjectReloadSettings.OutputFile"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectReloadSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixProjectReload(Configure<ConfixProjectReloadSettings> configurator)
+        public static IReadOnlyCollection<Output> ConfixProjectRestore(Configure<ConfixProjectRestoreSettings> configurator)
         {
-            return ConfixProjectReload(configurator(new ConfixProjectReloadSettings()));
+            return ConfixProjectRestore(configurator(new ConfixProjectRestoreSettings()));
         }
         /// <summary>
         ///   <p>Reloads the schema of a project</p>
@@ -175,14 +232,14 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixProjectReloadSettings.Environment"/></li>
-        ///     <li><c>--output-file</c> via <see cref="ConfixProjectReloadSettings.OutputFile"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectReloadSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IEnumerable<(ConfixProjectReloadSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectReload(CombinatorialConfigure<ConfixProjectReloadSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        public static IEnumerable<(ConfixProjectRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectRestore(CombinatorialConfigure<ConfixProjectRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
-            return configurator.Invoke(ConfixProjectReload, ConfixLogger, degreeOfParallelism, completeOnFailure);
+            return configurator.Invoke(ConfixProjectRestore, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
         ///   <p>Replaces all variables in the project files with their values</p>
@@ -350,12 +407,12 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionReloadSettings.Verbosity"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionRestoreSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixSolutionReload(ConfixSolutionReloadSettings toolSettings = null)
+        public static IReadOnlyCollection<Output> ConfixSolutionRestore(ConfixSolutionRestoreSettings toolSettings = null)
         {
-            toolSettings = toolSettings ?? new ConfixSolutionReloadSettings();
+            toolSettings = toolSettings ?? new ConfixSolutionRestoreSettings();
             using var process = ProcessTasks.StartProcess(toolSettings);
             process.AssertZeroExitCode();
             return process.Output;
@@ -367,12 +424,12 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionReloadSettings.Verbosity"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionRestoreSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixSolutionReload(Configure<ConfixSolutionReloadSettings> configurator)
+        public static IReadOnlyCollection<Output> ConfixSolutionRestore(Configure<ConfixSolutionRestoreSettings> configurator)
         {
-            return ConfixSolutionReload(configurator(new ConfixSolutionReloadSettings()));
+            return ConfixSolutionRestore(configurator(new ConfixSolutionRestoreSettings()));
         }
         /// <summary>
         ///   <p>Reloads the schema of all the projects in the solution</p>
@@ -381,12 +438,12 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionReloadSettings.Verbosity"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixSolutionRestoreSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IEnumerable<(ConfixSolutionReloadSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionReload(CombinatorialConfigure<ConfixSolutionReloadSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        public static IEnumerable<(ConfixSolutionRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionRestore(CombinatorialConfigure<ConfixSolutionRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
-            return configurator.Invoke(ConfixSolutionReload, ConfixLogger, degreeOfParallelism, completeOnFailure);
+            return configurator.Invoke(ConfixSolutionRestore, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
         ///   <p>Replaces all variables in the solution files with their values</p>
@@ -793,13 +850,13 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixReloadSettings.Environment"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixReloadSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixReload(ConfixReloadSettings toolSettings = null)
+        public static IReadOnlyCollection<Output> ConfixRestore(ConfixRestoreSettings toolSettings = null)
         {
-            toolSettings = toolSettings ?? new ConfixReloadSettings();
+            toolSettings = toolSettings ?? new ConfixRestoreSettings();
             using var process = ProcessTasks.StartProcess(toolSettings);
             process.AssertZeroExitCode();
             return process.Output;
@@ -810,13 +867,13 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixReloadSettings.Environment"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixReloadSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixReload(Configure<ConfixReloadSettings> configurator)
+        public static IReadOnlyCollection<Output> ConfixRestore(Configure<ConfixRestoreSettings> configurator)
         {
-            return ConfixReload(configurator(new ConfixReloadSettings()));
+            return ConfixRestore(configurator(new ConfixRestoreSettings()));
         }
         /// <summary>
         ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
@@ -824,13 +881,13 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixReloadSettings.Environment"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixReloadSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IEnumerable<(ConfixReloadSettings Settings, IReadOnlyCollection<Output> Output)> ConfixReload(CombinatorialConfigure<ConfixReloadSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        public static IEnumerable<(ConfixRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixRestore(CombinatorialConfigure<ConfixRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
-            return configurator.Invoke(ConfixReload, ConfixLogger, degreeOfParallelism, completeOnFailure);
+            return configurator.Invoke(ConfixRestore, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
         ///   <p>Validates the schema of all the projects</p>
@@ -1197,14 +1254,62 @@ namespace Confix.Nuke
         }
     }
     #endregion
-    #region ConfixProjectReloadSettings
+    #region ConfixComponentListSettings
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
     [Serializable]
-    public partial class ConfixProjectReloadSettings : ToolSettings
+    public partial class ConfixComponentListSettings : ToolSettings
+    {
+        /// <summary>
+        ///   Path to the Confix executable.
+        /// </summary>
+        public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
+        public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Sets the output format
+        /// </summary>
+        public virtual string Format { get; internal set; }
+        /// <summary>
+        ///   Specifies the output file
+        /// </summary>
+        public virtual string OutputFile { get; internal set; }
+        /// <summary>
+        ///   The name of the environment to run the command in. Overrules the active environment set in .confixrc
+        /// </summary>
+        public virtual string Environment { get; internal set; }
+        /// <summary>
+        ///   If you specify this option, only the components will be built.
+        /// </summary>
+        public virtual string OnlyComponents { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
+        public virtual string Framework { get; internal set; }
+        protected override Arguments ConfigureProcessArguments(Arguments arguments)
+        {
+            arguments
+              .Add("component list")
+              .Add("--format {value}", Format)
+              .Add("--output-file {value}", OutputFile)
+              .Add("--environment {value}", Environment)
+              .Add("--only-components {value}", OnlyComponents)
+              .Add("--verbosity {value}", Verbosity);
+            return base.ConfigureProcessArguments(arguments);
+        }
+    }
+    #endregion
+    #region ConfixProjectRestoreSettings
+    /// <summary>
+    ///   Used within <see cref="ConfixTasks"/>.
+    /// </summary>
+    [PublicAPI]
+    [ExcludeFromCodeCoverage]
+    [Serializable]
+    public partial class ConfixProjectRestoreSettings : ToolSettings
     {
         /// <summary>
         ///   Path to the Confix executable.
@@ -1227,7 +1332,7 @@ namespace Confix.Nuke
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("project reload")
+              .Add("project restore")
               .Add("--output-file {value}", OutputFile)
               .Add("--environment {value}", Environment)
               .Add("--verbosity {value}", Verbosity);
@@ -1359,14 +1464,14 @@ namespace Confix.Nuke
         }
     }
     #endregion
-    #region ConfixSolutionReloadSettings
+    #region ConfixSolutionRestoreSettings
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
     [Serializable]
-    public partial class ConfixSolutionReloadSettings : ToolSettings
+    public partial class ConfixSolutionRestoreSettings : ToolSettings
     {
         /// <summary>
         ///   Path to the Confix executable.
@@ -1381,7 +1486,7 @@ namespace Confix.Nuke
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("solution reload")
+              .Add("solution restore")
               .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
         }
@@ -1681,14 +1786,14 @@ namespace Confix.Nuke
         }
     }
     #endregion
-    #region ConfixReloadSettings
+    #region ConfixRestoreSettings
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
     [Serializable]
-    public partial class ConfixReloadSettings : ToolSettings
+    public partial class ConfixRestoreSettings : ToolSettings
     {
         /// <summary>
         ///   Path to the Confix executable.
@@ -1707,7 +1812,7 @@ namespace Confix.Nuke
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("reload")
+              .Add("restore")
               .Add("--environment {value}", Environment)
               .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
@@ -2073,32 +2178,56 @@ namespace Confix.Nuke
         #endregion
     }
     #endregion
-    #region ConfixProjectReloadSettingsExtensions
+    #region ConfixComponentListSettingsExtensions
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
-    public static partial class ConfixProjectReloadSettingsExtensions
+    public static partial class ConfixComponentListSettingsExtensions
     {
+        #region Format
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixComponentListSettings.Format"/></em></p>
+        ///   <p>Sets the output format</p>
+        /// </summary>
+        [Pure]
+        public static T SetFormat<T>(this T toolSettings, string format) where T : ConfixComponentListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Format = format;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixComponentListSettings.Format"/></em></p>
+        ///   <p>Sets the output format</p>
+        /// </summary>
+        [Pure]
+        public static T ResetFormat<T>(this T toolSettings) where T : ConfixComponentListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Format = null;
+            return toolSettings;
+        }
+        #endregion
         #region OutputFile
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixProjectReloadSettings.OutputFile"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixComponentListSettings.OutputFile"/></em></p>
         ///   <p>Specifies the output file</p>
         /// </summary>
         [Pure]
-        public static T SetOutputFile<T>(this T toolSettings, string outputFile) where T : ConfixProjectReloadSettings
+        public static T SetOutputFile<T>(this T toolSettings, string outputFile) where T : ConfixComponentListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.OutputFile = outputFile;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixProjectReloadSettings.OutputFile"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixComponentListSettings.OutputFile"/></em></p>
         ///   <p>Specifies the output file</p>
         /// </summary>
         [Pure]
-        public static T ResetOutputFile<T>(this T toolSettings) where T : ConfixProjectReloadSettings
+        public static T ResetOutputFile<T>(this T toolSettings) where T : ConfixComponentListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.OutputFile = null;
@@ -2107,46 +2236,70 @@ namespace Confix.Nuke
         #endregion
         #region Environment
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixProjectReloadSettings.Environment"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixComponentListSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixProjectReloadSettings
+        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixComponentListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = environment;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixProjectReloadSettings.Environment"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixComponentListSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixProjectReloadSettings
+        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixComponentListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = null;
             return toolSettings;
         }
         #endregion
+        #region OnlyComponents
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixComponentListSettings.OnlyComponents"/></em></p>
+        ///   <p>If you specify this option, only the components will be built.</p>
+        /// </summary>
+        [Pure]
+        public static T SetOnlyComponents<T>(this T toolSettings, string onlyComponents) where T : ConfixComponentListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OnlyComponents = onlyComponents;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixComponentListSettings.OnlyComponents"/></em></p>
+        ///   <p>If you specify this option, only the components will be built.</p>
+        /// </summary>
+        [Pure]
+        public static T ResetOnlyComponents<T>(this T toolSettings) where T : ConfixComponentListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OnlyComponents = null;
+            return toolSettings;
+        }
+        #endregion
         #region Verbosity
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixProjectReloadSettings.Verbosity"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixComponentListSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixProjectReloadSettings
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixComponentListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = verbosity;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixProjectReloadSettings.Verbosity"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixComponentListSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixProjectReloadSettings
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixComponentListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = null;
@@ -2155,20 +2308,124 @@ namespace Confix.Nuke
         #endregion
         #region Framework
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixProjectReloadSettings.Framework"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixComponentListSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixProjectReloadSettings
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixComponentListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = framework;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixProjectReloadSettings.Framework"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixComponentListSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T ResetFramework<T>(this T toolSettings) where T : ConfixProjectReloadSettings
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixComponentListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Framework = null;
+            return toolSettings;
+        }
+        #endregion
+    }
+    #endregion
+    #region ConfixProjectRestoreSettingsExtensions
+    /// <summary>
+    ///   Used within <see cref="ConfixTasks"/>.
+    /// </summary>
+    [PublicAPI]
+    [ExcludeFromCodeCoverage]
+    public static partial class ConfixProjectRestoreSettingsExtensions
+    {
+        #region OutputFile
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectRestoreSettings.OutputFile"/></em></p>
+        ///   <p>Specifies the output file</p>
+        /// </summary>
+        [Pure]
+        public static T SetOutputFile<T>(this T toolSettings, string outputFile) where T : ConfixProjectRestoreSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OutputFile = outputFile;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectRestoreSettings.OutputFile"/></em></p>
+        ///   <p>Specifies the output file</p>
+        /// </summary>
+        [Pure]
+        public static T ResetOutputFile<T>(this T toolSettings) where T : ConfixProjectRestoreSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OutputFile = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Environment
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectRestoreSettings.Environment"/></em></p>
+        ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
+        /// </summary>
+        [Pure]
+        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixProjectRestoreSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Environment = environment;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectRestoreSettings.Environment"/></em></p>
+        ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
+        /// </summary>
+        [Pure]
+        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixProjectRestoreSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Environment = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectRestoreSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixProjectRestoreSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectRestoreSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixProjectRestoreSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Framework
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectRestoreSettings.Framework"/></em></p>
+        /// </summary>
+        [Pure]
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixProjectRestoreSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Framework = framework;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectRestoreSettings.Framework"/></em></p>
+        /// </summary>
+        [Pure]
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixProjectRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = null;
@@ -2537,32 +2794,32 @@ namespace Confix.Nuke
         #endregion
     }
     #endregion
-    #region ConfixSolutionReloadSettingsExtensions
+    #region ConfixSolutionRestoreSettingsExtensions
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
-    public static partial class ConfixSolutionReloadSettingsExtensions
+    public static partial class ConfixSolutionRestoreSettingsExtensions
     {
         #region Verbosity
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixSolutionReloadSettings.Verbosity"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixSolutionRestoreSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixSolutionReloadSettings
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixSolutionRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = verbosity;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixSolutionReloadSettings.Verbosity"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixSolutionRestoreSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixSolutionReloadSettings
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixSolutionRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = null;
@@ -2571,20 +2828,20 @@ namespace Confix.Nuke
         #endregion
         #region Framework
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixSolutionReloadSettings.Framework"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixSolutionRestoreSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixSolutionReloadSettings
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixSolutionRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = framework;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixSolutionReloadSettings.Framework"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixSolutionRestoreSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T ResetFramework<T>(this T toolSettings) where T : ConfixSolutionReloadSettings
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixSolutionRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = null;
@@ -3377,32 +3634,32 @@ namespace Confix.Nuke
         #endregion
     }
     #endregion
-    #region ConfixReloadSettingsExtensions
+    #region ConfixRestoreSettingsExtensions
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
-    public static partial class ConfixReloadSettingsExtensions
+    public static partial class ConfixRestoreSettingsExtensions
     {
         #region Environment
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixReloadSettings.Environment"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixRestoreSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixReloadSettings
+        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = environment;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixReloadSettings.Environment"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixRestoreSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixReloadSettings
+        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = null;
@@ -3411,22 +3668,22 @@ namespace Confix.Nuke
         #endregion
         #region Verbosity
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixReloadSettings.Verbosity"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixRestoreSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixReloadSettings
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = verbosity;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixReloadSettings.Verbosity"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixRestoreSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixReloadSettings
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = null;
@@ -3435,20 +3692,20 @@ namespace Confix.Nuke
         #endregion
         #region Framework
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixReloadSettings.Framework"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixRestoreSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixReloadSettings
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = framework;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixReloadSettings.Framework"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixRestoreSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T ResetFramework<T>(this T toolSettings) where T : ConfixReloadSettings
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixRestoreSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = null;

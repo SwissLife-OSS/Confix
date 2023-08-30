@@ -21,7 +21,7 @@ internal sealed class ConfixRootCommand : Command
         AddCommand(new VariableCommand());
 
         AddCommand(new BuildCommand());
-        AddCommand(new ReloadCommand());
+        AddCommand(new RestoreCommand());
         AddCommand(new ValidateCommand());
 
         AddCommand(new FileEncryptCommand());
