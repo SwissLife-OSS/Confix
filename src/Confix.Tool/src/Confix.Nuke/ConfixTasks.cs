@@ -141,6 +141,14 @@ public partial class ConfixBuildSettings
     }
 }
 
+public partial class ConfixComponentListSettings
+{
+    private string GetProcessToolPath()
+    {
+        return ConfixTasks.GetToolPath(Framework);
+    }
+}
+
 public partial class ConfixRestoreSettings
 {
     private string GetProcessToolPath()
