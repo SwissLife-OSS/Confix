@@ -44,6 +44,8 @@ i No active environment set. Use --environment or set one environment in .confix
   Found manifest resource in assembly 'Confix.confix.components.test.schema.graphql': Confix
   Found manifest resource in assembly 'Confix.confix.components.test.schema.json': Confix
   Start loading components from project '.'
+✓ Loaded 1 components
+  -  @dotnet-package/test
    - test
   Skipping IntelliJ IDEA settings file as there is no .idea folder in the solution root. Expected location: <</tmp>>/content/.idea
 
