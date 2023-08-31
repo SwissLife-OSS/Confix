@@ -27,7 +27,7 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
             // we create a appsettings.json file if we can find a csproj file. This will avoid
             // the need to create a appsettings.json file in the project directory manually. 
             if (context.Project.Directory is { FullName: { } fullName } d &&
-                d.EnumerateFiles().FirstOrDefault(x => x.Extension == ".csproj") is not null)
+                d.EnumerateFiles().Any(x => x.Extension == ".csproj"))
             {
                 input = new FileInfo(Path.Combine(fullName, FileNames.AppSettings));
                 await File.WriteAllTextAsync(input.FullName, "{}", ct);
