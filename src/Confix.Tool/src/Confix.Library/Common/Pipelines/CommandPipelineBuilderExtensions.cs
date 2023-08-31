@@ -45,4 +45,24 @@ public static class PipelineDescriptorExtensions
 
         return builder;
     }
+
+    public static IPipelineDescriptor When(
+        this IPipelineDescriptor builder,
+        Func<IMiddlewareContext, bool> predicate,
+        Action<IPipelineDescriptor> configuration)
+    {
+        var pipeline = new PipelineDescriptor();
+        configuration(pipeline);
+
+        builder.Use(async (context, next) =>
+        {
+            if (predicate(context))
+            {
+                await new Pipeline(configuration).ExecuteAsync(context);
+            }
+
+            await next(context);
+        });
+        return builder;
+    }
 }

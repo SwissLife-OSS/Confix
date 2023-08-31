@@ -24,7 +24,18 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
 
         if (context.Project.Directory?.FindInPath(FileNames.AppSettings, false) is not { } input)
         {
-            return Array.Empty<ConfigurationFile>();
+            // we create a appsettings.json file if we can find a csproj file. This will avoid
+            // the need to create a appsettings.json file in the project directory manually. 
+            if (context.Project.Directory is { FullName: { } fullName } d &&
+                d.EnumerateFiles().Any(x => x.Extension == ".csproj"))
+            {
+                input = new FileInfo(Path.Combine(fullName, FileNames.AppSettings));
+                await File.WriteAllTextAsync(input.FullName, "{}", ct);
+            }
+            else
+            {
+                return Array.Empty<ConfigurationFile>();
+            }
         }
 
         var output = input;
@@ -42,7 +53,7 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
             }
         }
 
-        context.Logger.FoundAAppSettingsConfigurationFile(input);
+        context.Logger.FoundAppSettingsConfigurationFile(input);
 
         files.Add(new ConfigurationFile { InputFile = input, OutputFile = output });
 
@@ -66,7 +77,7 @@ file static class FileNames
 
 file static class Log
 {
-    public static void FoundAAppSettingsConfigurationFile(
+    public static void FoundAppSettingsConfigurationFile(
         this IConsoleLogger console,
         FileInfo file)
     {

@@ -3,22 +3,30 @@ using System.CommandLine.Invocation;
 
 namespace Confix.Tool.Common.Pipelines;
 
-public abstract class Pipeline
+public class Pipeline
 {
     private IReadOnlyList<Func<IServiceProvider, IMiddleware>> _middlewares =
         Array.Empty<Func<IServiceProvider, IMiddleware>>();
 
-    protected abstract void Configure(IPipelineDescriptor builder);
+    protected virtual void Configure(IPipelineDescriptor builder)
+    {
+        throw new InvalidOperationException("Configure method must be overridden.");
+    }
 
     protected Pipeline()
     {
-        Initialize();
+        Initialize(Configure);
     }
 
-    private void Initialize()
+    public Pipeline(Action<IPipelineDescriptor> configure)
+    {
+        Initialize(configure);
+    }
+
+    private void Initialize(Action<IPipelineDescriptor> configure)
     {
         var descriptor = new PipelineDescriptor();
-        Configure(descriptor);
+        configure(descriptor);
 
         Arguments = descriptor.Definition.Arguments;
         Options = descriptor.Definition.Options;

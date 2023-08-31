@@ -50,6 +50,7 @@ file static class Logs
     public static void SkippedProjectBuildBecauseNoConfigurationFilesWereFound(
         this IConsoleLogger logger)
     {
-        logger.Debug("Skipped command execution build because no configuration files were found");
+        logger.Information(
+            "Skipped command execution build because no configuration files were found.");
     }
 }

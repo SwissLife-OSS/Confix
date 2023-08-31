@@ -18,6 +18,7 @@ i No active environment set. Use --environment or set one environment in .confix
   Scanning assembly: Confix
   Found assembly file: <</tmp>>/content/bin/Debug/net8.0/Confix.dll
   Start loading components from project '.'
+✓ Loaded 0 components
   No components found
   Skipping IntelliJ IDEA settings file as there is no .idea folder in the solution root. Expected location: <</tmp>>/content/.idea
 

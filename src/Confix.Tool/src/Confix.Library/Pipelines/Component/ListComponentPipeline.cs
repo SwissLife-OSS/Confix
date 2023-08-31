@@ -37,24 +37,20 @@ public sealed class ListComponentPipeline : Pipeline
         var project = configuration.EnsureProject();
         var solution = configuration.EnsureSolution();
 
-        var componentProvider =
-            context.Features.Get<ComponentProviderExecutorFeature>().Executor;
-
-        var providerContext =
-            new ComponentProviderContext(context.Logger, cancellationToken, project, solution);
-
         context.SetStatus("Loading components...");
-        await componentProvider.ExecuteAsync(providerContext);
-
-        context.SetOutput(providerContext.Components);
         
-        if (providerContext.Components.Count == 0)
+        var components = await context.Features.Get<ComponentProviderExecutorFeature>()
+            .Executor.LoadComponents(solution, project, cancellationToken);
+
+        context.SetOutput(components);
+
+        if (components.Count == 0)
         {
             context.Logger.Information("No components found");
             return;
         }
 
-        foreach (var file in providerContext.Components)
+        foreach (var file in components)
         {
             context.Logger.Information(" - " + file.ComponentName);
         }

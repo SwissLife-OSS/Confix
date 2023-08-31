@@ -30,6 +30,7 @@ public sealed class BuildComponentsOfProjectMiddleware : IMiddleware
                 .WithExecutingDirectory(componentDirectory)
                 .WithFeatureCollection();
 
+            using var scope = context.Logger.SetVerbosity(Verbosity.Quiet);
             await pipeline.ExecuteAsync(componentContext);
         }
 
@@ -56,7 +57,7 @@ file static class Log
         this IConsoleLogger console,
         FileInfo component)
     {
-        console.Information(
+        console.Debug(
             $"Component detected:{component.Directory?.Name.ToLink(component)} [dim]{component.FullName}[/]");
     }
 }
