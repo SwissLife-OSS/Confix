@@ -250,6 +250,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li>
+        ///     <li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li>
         ///     <li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li>
         ///     <li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li>
@@ -271,6 +272,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li>
+        ///     <li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li>
         ///     <li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li>
         ///     <li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li>
@@ -289,6 +291,7 @@ namespace Confix.Nuke
         ///   <ul>
         ///     <li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li>
         ///     <li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li>
+        ///     <li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li>
         ///     <li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li>
         ///     <li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li>
         ///     <li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li>
@@ -1355,6 +1358,10 @@ namespace Confix.Nuke
         public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
         public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
         /// <summary>
+        ///   Disables restoring of schemas
+        /// </summary>
+        public virtual string NoRestore { get; internal set; }
+        /// <summary>
         ///   Specifies the output file
         /// </summary>
         public virtual string OutputFile { get; internal set; }
@@ -1379,6 +1386,7 @@ namespace Confix.Nuke
         {
             arguments
               .Add("project build")
+              .Add("--no-restore {value}", NoRestore)
               .Add("--output-file {value}", OutputFile)
               .Add("--environment {value}", Environment)
               .Add("--only-components {value}", OnlyComponents)
@@ -2442,6 +2450,30 @@ namespace Confix.Nuke
     [ExcludeFromCodeCoverage]
     public static partial class ConfixProjectBuildSettingsExtensions
     {
+        #region NoRestore
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectBuildSettings.NoRestore"/></em></p>
+        ///   <p>Disables restoring of schemas</p>
+        /// </summary>
+        [Pure]
+        public static T SetNoRestore<T>(this T toolSettings, string noRestore) where T : ConfixProjectBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.NoRestore = noRestore;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectBuildSettings.NoRestore"/></em></p>
+        ///   <p>Disables restoring of schemas</p>
+        /// </summary>
+        [Pure]
+        public static T ResetNoRestore<T>(this T toolSettings) where T : ConfixProjectBuildSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.NoRestore = null;
+            return toolSettings;
+        }
+        #endregion
         #region OutputFile
         /// <summary>
         ///   <p><em>Sets <see cref="ConfixProjectBuildSettings.OutputFile"/></em></p>
