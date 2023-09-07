@@ -2,10 +2,104 @@ using System.Diagnostics;
 using Confix.Tool.Commands.Logging;
 using Spectre.Console;
 
-namespace Confix.Variables;
+namespace Confix.Utilities;
 
 public static class GitHelpers
 {
+    public static async Task SparseCheckoutAsync(
+        GitSparseCheckoutConfiguration configuration,
+        CancellationToken cancellationToken)
+    {
+        var arguments = new List<string>()
+        {
+            "clone", "--no-checkout"
+        };
+
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+
+        arguments.Add(configuration.RepositoryUrl);
+        arguments.Add($"\"{configuration.Location}\"");
+
+        try
+        {
+            App.Log.GitSparseCheckoutStarted(configuration.RepositoryUrl, configuration.Location);
+
+            var output = await ExecuteAsync(arguments, cancellationToken);
+
+            App.Log.GitSparseCheckoutOutput(output);
+        }
+        catch (Exception ex)
+        {
+            App.Log.GitSparseCheckoutFailed(ex);
+        }
+    }
+
+    public static async Task<string> ShowRefsAsync(
+        GitShowRefsConfiguration configuration,
+        CancellationToken cancellationToken)
+    {
+        var arguments = new List<string>()
+        {
+            "-C",
+            $"\"{configuration.Location}\"",
+            "show-ref"
+        };
+
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+
+        try
+        {
+            App.Log.GitShowRefsStarted(configuration.Location);
+
+            var output = await ExecuteAsync(arguments, cancellationToken);
+
+            App.Log.GitShowRefsOutput(output);
+            return output;
+        }
+        catch (Exception ex)
+        {
+            App.Log.GitShowRefsFailed(ex);
+        }
+
+        return string.Empty;
+    }
+
+    public static async Task CheckoutAsync(
+        GitCheckoutConfiguration configuration,
+        CancellationToken cancellationToken)
+    {
+        var arguments = new List<string>()
+        {
+            "-C",
+            $"\"{configuration.Location}\"",
+            "checkout",
+            configuration.Ref
+        };
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+
+        try
+        {
+            App.Log.GitCheckoutStarted(configuration.Ref);
+
+            var output = await ExecuteAsync(arguments, cancellationToken);
+
+            App.Log.GitCheckoutOutput(output);
+        }
+        catch (Exception ex)
+        {
+            App.Log.GitCheckoutFailed(ex);
+        }
+    }
+
     public static async Task CloneAsync(
         GitCloneConfiguration configuration,
         CancellationToken cancellationToken)
@@ -158,6 +252,7 @@ public static class GitHelpers
         IEnumerable<string> arguments,
         CancellationToken cancellationToken)
     {
+        var argumentsString = string.Join(" ", arguments);
         using Process process = new()
         {
             StartInfo = new()
@@ -167,9 +262,11 @@ public static class GitHelpers
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                Arguments = string.Join(" ", arguments)
+                Arguments = argumentsString
             }
         };
+        
+        App.Log.Debug($"Executing `git {argumentsString}`");
 
         process.Start();
 
@@ -184,6 +281,20 @@ public static class GitHelpers
 }
 
 public record GitCloneConfiguration(
+    string RepositoryUrl,
+    string Location,
+    string[]? Arguments);
+
+public record GitCheckoutConfiguration(
+    string Location,
+    string Ref,
+    string[]? Arguments);
+
+public record GitShowRefsConfiguration(
+    string Location,
+    string[]? Arguments);
+
+public record GitSparseCheckoutConfiguration(
     string RepositoryUrl,
     string Location,
     string[]? Arguments);
@@ -296,5 +407,55 @@ file static class LogExtensions
     public static void GitPushFailed(this IConsoleLogger log, Exception ex)
     {
         log.Exception("Git push failed", ex);
+    }
+
+    public static void GitSparseCheckoutStarted(
+        this IConsoleLogger log,
+        string repositoryUrl,
+        string location)
+    {
+        log.Debug($"Sparse checkout {repositoryUrl} to {location}");
+    }
+
+    public static void GitSparseCheckoutOutput(this IConsoleLogger log, string output)
+    {
+        log.Debug(output.EscapeMarkup());
+    }
+
+    public static void GitSparseCheckoutFailed(this IConsoleLogger log, Exception ex)
+    {
+        log.Exception("Git sparse checkout failed", ex);
+    }
+
+    public static void GitShowRefsStarted(
+        this IConsoleLogger log,
+        string location)
+    {
+        log.Debug($"Show refs in {location}");
+    }
+
+    public static void GitShowRefsOutput(this IConsoleLogger log, string output)
+    {
+        log.Debug(output.EscapeMarkup());
+    }
+
+    public static void GitShowRefsFailed(this IConsoleLogger log, Exception ex)
+    {
+        log.Exception("Git show refs failed", ex);
+    }
+
+    public static void GitCheckoutStarted(this IConsoleLogger log, string @ref)
+    {
+        log.Debug($"Checkout {@ref}");
+    }
+
+    public static void GitCheckoutOutput(this IConsoleLogger log, string output)
+    {
+        log.Debug(output.EscapeMarkup());
+    }
+
+    public static void GitCheckoutFailed(this IConsoleLogger log, Exception ex)
+    {
+        log.Exception("Git checkout failed", ex);
     }
 }

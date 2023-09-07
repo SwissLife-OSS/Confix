@@ -35,7 +35,6 @@ public sealed record GitComponentProviderDefinition(
             configuration.Name!,
             configuration.RepositoryUrl!,
             configuration.Path!,
-            configuration.Arguments ?? Array.Empty<string>()
-        );
+            configuration.Arguments ?? Array.Empty<string>());
     }
 }

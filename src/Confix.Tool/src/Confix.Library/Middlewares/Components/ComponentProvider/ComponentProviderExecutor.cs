@@ -6,7 +6,7 @@ using Confix.Tool.Entities.Components;
 namespace Confix.Tool.Middlewares;
 
 public sealed class ComponentProviderExecutor
-    : IComponentProviderExecutor
+    : IComponentProviderExecutor, IAsyncDisposable
 {
     private readonly IReadOnlyList<IComponentProvider> _providers;
 
@@ -25,7 +25,7 @@ public sealed class ComponentProviderExecutor
 
     private readonly Dictionary<(ProjectDefinition, SolutionDefinition), IList<Component>> _cache =
         new();
-    
+
     public async Task<IList<Component>> LoadComponents(
         SolutionDefinition solution,
         ProjectDefinition project,
@@ -36,8 +36,12 @@ public sealed class ComponentProviderExecutor
             return components;
         }
 
-        var providerContext =
-            new ComponentProviderContext(App.Log, cancellationToken, project, solution);
+        var providerContext = new ComponentProviderContext(
+            App.Log,
+            cancellationToken,
+            project,
+            solution,
+            project.Components);
 
         await ExecuteAsync(providerContext);
 
@@ -68,6 +72,18 @@ public sealed class ComponentProviderExecutor
         providers.Add(new MergeComponentProvider());
 
         return new ComponentProviderExecutor(providers);
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        foreach (var provider in _providers)
+        {
+            if (provider is IAsyncDisposable disposable)
+            {
+                await disposable.DisposeAsync();
+            }
+        }
     }
 }
 

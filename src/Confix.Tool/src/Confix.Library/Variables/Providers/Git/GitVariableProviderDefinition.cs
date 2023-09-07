@@ -5,8 +5,7 @@ namespace Confix.Variables;
 public sealed record GitVariableProviderDefinition(
     string RepositoryUrl,
     string FilePath,
-    string[] Arguments
-)
+    string[] Arguments)
 {
     public static GitVariableProviderDefinition From(GitVariableProviderConfiguration configuration)
     {
@@ -15,6 +14,7 @@ public sealed record GitVariableProviderDefinition(
         {
             validationErrors.Add("RepositoryUrl is required");
         }
+
         if (string.IsNullOrWhiteSpace(configuration.FilePath))
         {
             validationErrors.Add("FilePath is required");
@@ -23,7 +23,7 @@ public sealed record GitVariableProviderDefinition(
         if (validationErrors.Any())
         {
             throw new ValidationException("Configuration of GitVariableProvider is invalid")
-            { Errors = validationErrors };
+                { Errors = validationErrors };
         }
 
         return new(

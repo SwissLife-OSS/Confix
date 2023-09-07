@@ -1,3 +1,4 @@
+using Confix.Tool.Commands.Component;
 using Confix.Tool.Commands.Project;
 
 namespace Confix.Commands.Component;

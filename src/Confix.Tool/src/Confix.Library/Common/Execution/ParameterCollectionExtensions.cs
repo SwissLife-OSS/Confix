@@ -46,16 +46,16 @@ public static class ParameterCollectionExtensions
         out T value)
     {
         collection.TryGet(argument, out object? val);
-        
+
         if (val is T valueOfT)
         {
             value = valueOfT;
             return true;
         }
-        
+
         if (val is Token { Type: TokenType.Argument } token)
         {
-            value = (T)Activator.CreateInstance(typeof(T), token.Value)!;
+            value = (T) Activator.CreateInstance(typeof(T), token.Value)!;
             return true;
         }
 
@@ -63,3 +63,4 @@ public static class ParameterCollectionExtensions
         return false;
     }
 }
+

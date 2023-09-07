@@ -1,4 +1,5 @@
 using System.CommandLine.Builder;
+using System.CommandLine.Parsing;
 using Confix.Entities.Project.Extensions;
 using Confix.Entities.Schema.Extensions;
 using Confix.Tool.Commands.Configuration;

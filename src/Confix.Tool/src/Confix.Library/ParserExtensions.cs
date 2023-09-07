@@ -1,6 +1,8 @@
 using System.CommandLine;
 using System.CommandLine.Parsing;
 
+namespace Confix.Tool;
+
 public static class ParserExtensions
 {
     public static Task<int> InvokeWithoutOutputFileAsync(
@@ -10,9 +12,9 @@ public static class ParserExtensions
     {
         for (var i = 0; i < args.Length; i++)
         {
-            if (args[i] is ['@'])
+            if (args[i] is ['@', ..])
             {
-                args[i] = $"\"\\@{args[i]}\"";
+                args[i] = $"\"\\{args[i]}\"";
             }
         }
 

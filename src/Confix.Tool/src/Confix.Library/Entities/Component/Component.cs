@@ -28,7 +28,7 @@ public class Component
 
     public bool IsEnabled { get; set; }
 
-    public JsonSchema Schema { get; }
+    public JsonSchema Schema { get; set; }
 
     public IReadOnlyList<string> MountingPoints { get; set; }
 }
