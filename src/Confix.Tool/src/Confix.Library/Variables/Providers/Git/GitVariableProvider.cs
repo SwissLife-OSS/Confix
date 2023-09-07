@@ -2,9 +2,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Confix.Utilities;
 using static System.Environment.SpecialFolder;
 using static System.Environment.SpecialFolderOption;
-using static Confix.Variables.GitHelpers;
+using static Confix.Utilities.GitHelpers;
 
 namespace Confix.Variables;
 

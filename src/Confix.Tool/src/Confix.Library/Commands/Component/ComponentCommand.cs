@@ -12,5 +12,6 @@ public sealed class ComponentCommand : Command
         AddCommand(new BuildComponentCommand());
         AddCommand(new ComponentInitCommand());
         AddCommand(new ComponentListCommand());
+        AddCommand(new ComponentAddCommand());
     }
 }

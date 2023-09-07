@@ -10,12 +10,14 @@ public class ComponentProviderContext
         IConsoleLogger logger,
         CancellationToken cancellationToken,
         ProjectDefinition project,
-        SolutionDefinition solution)
+        SolutionDefinition solution,
+        IReadOnlyList<ComponentReferenceDefinition> componentReferences)
     {
         Logger = logger;
         CancellationToken = cancellationToken;
         Project = project;
         Solution = solution;
+        ComponentReferences = componentReferences;
     }
 
     /// <inheritdoc />
@@ -23,6 +25,8 @@ public class ComponentProviderContext
 
     /// <inheritdoc />
     public SolutionDefinition Solution { get; }
+
+    public IReadOnlyList<ComponentReferenceDefinition> ComponentReferences { get; }
 
     /// <inheritdoc />
     public IConsoleLogger Logger { get; }
