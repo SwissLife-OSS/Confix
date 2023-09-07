@@ -10,11 +10,11 @@ public static class VariableCommandBuilderExtensions
 {
     private static Context.Key<Dictionary<string, Func<JsonNode, IVariableProvider>>> _key =
         new("Confix.Tool.Entites.Variables.VariableProvider");
-    private static ConcurrentDictionary<string, IReadOnlyList<string>> _variableListCache = new();
-
+    
     public static CommandLineBuilder RegisterVariableMiddleware(this CommandLineBuilder builder)
     {
         builder.AddDefaultVariableProviders();
+        builder.AddSingleton<VariableListCache>();
         builder.AddTransient(sp
             => new VariableMiddleware(sp.GetRequiredService<IVariableProviderFactory>()));
 
@@ -25,14 +25,8 @@ public static class VariableCommandBuilderExtensions
     {
         builder.AddVariableProvider(config => new LocalVariableProvider(config));
         builder.AddVariableProvider(config => new SecretVariableProvider(config));
-        builder.AddVariableProvider(
-            AzureKeyVaultProvider.Type,
-            config => new CachedListVariableProvider(
-                new AzureKeyVaultProvider(config), _variableListCache));
-        builder.AddVariableProvider(
-            GitVariableProvider.Type,
-            config => new CachedListVariableProvider(
-                new GitVariableProvider(config), _variableListCache));
+        builder.AddVariableProvider(config => new AzureKeyVaultProvider(config));
+        builder.AddVariableProvider(config => new GitVariableProvider(config));
 
         return builder;
     }

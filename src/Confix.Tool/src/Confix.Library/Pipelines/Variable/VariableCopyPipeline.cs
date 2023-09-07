@@ -2,6 +2,7 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Variables;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Commands.Variable;
 
@@ -69,7 +70,9 @@ public sealed class VariableCopyPipeline : Pipeline
             throw ThrowHelper.EnvironmentDoesNotExist(toEnvironment);
         }
 
-        return variableFeature.CreateResolver(toEnvironment);
+        return variableFeature.CreateResolver(
+            toEnvironment, 
+            context.Services.GetRequiredService<VariableListCache>());
     }
 
     private static VariablePath Parse(
