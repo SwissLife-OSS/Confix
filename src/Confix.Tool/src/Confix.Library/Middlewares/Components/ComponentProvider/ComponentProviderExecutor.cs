@@ -25,7 +25,7 @@ public sealed class ComponentProviderExecutor
 
     private readonly Dictionary<(ProjectDefinition, SolutionDefinition), IList<Component>> _cache =
         new();
-
+    
     public async Task<IList<Component>> LoadComponents(
         SolutionDefinition solution,
         ProjectDefinition project,

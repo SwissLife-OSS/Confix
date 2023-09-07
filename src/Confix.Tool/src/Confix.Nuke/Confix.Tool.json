@@ -116,6 +116,12 @@
       "settingsClass": {
         "properties": [
           {
+            "name": "NoRestore",
+            "type": "string",
+            "format": "--no-restore {value}",
+            "help": "Disables restoring of schemas"
+          },
+          {
             "name": "OutputFile",
             "type": "string",
             "format": "--output-file {value}",
