@@ -4,7 +4,7 @@ namespace Confix.Tool.Middlewares;
 
 public class VariableListCache
 {
-    private readonly ConcurrentDictionary<(string, string), IReadOnlyList<VariablePath>> _cache = new();
+    private readonly ConcurrentDictionary<string, IReadOnlyList<VariablePath>> _cache = new();
     private readonly IReadOnlyList<string> _cacheEnabledVariableProviderTypes = new[]
     {
         GitVariableProvider.Type,
@@ -16,7 +16,7 @@ public class VariableListCache
         out IReadOnlyList<VariablePath> variables)
     {
         if (CacheEnabled(configuration) &&
-            _cache.TryGetValue((configuration.Name, configuration.Type), out var cachedValues))
+            _cache.TryGetValue(configuration.Type, out var cachedValues))
         {
             variables = cachedValues;
             return true;
@@ -33,13 +33,12 @@ public class VariableListCache
     {
         if (CacheEnabled(configuration))
         {
-            return _cache.TryAdd((configuration.Name, configuration.Type), variables);
+            return _cache.TryAdd(configuration.Type, variables);
         }
 
         return false;
     }
-        
-
+    
     private bool CacheEnabled(VariableProviderConfiguration configuration) =>
         _cacheEnabledVariableProviderTypes.Contains(
             configuration.Type,
