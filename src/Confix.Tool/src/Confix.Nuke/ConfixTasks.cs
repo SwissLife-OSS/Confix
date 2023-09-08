@@ -29,6 +29,14 @@ public partial class ConfixComponentBuildSettings
     }
 }
 
+public partial class ConfixComponentAddSettings
+{
+    private string GetProcessToolPath()
+    {
+        return ConfixTasks.GetToolPath(Framework);
+    }
+}
+
 public partial class ConfixComponentInitSettings
 {
     private string GetProcessToolPath()
