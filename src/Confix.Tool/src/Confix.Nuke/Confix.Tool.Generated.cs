@@ -191,6 +191,60 @@ namespace Confix.Nuke
             return configurator.Invoke(ConfixComponentList, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
+        ///   <p>Adds a component to the project</p>
+        ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
+        /// </summary>
+        /// <remarks>
+        ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>&lt;name&gt;</c> via <see cref="ConfixComponentAddSettings.Name"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixComponentAddSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentAddSettings.Verbosity"/></li>
+        ///     <li><c>--version</c> via <see cref="ConfixComponentAddSettings.Version"/></li>
+        ///   </ul>
+        /// </remarks>
+        public static IReadOnlyCollection<Output> ConfixComponentAdd(ConfixComponentAddSettings toolSettings = null)
+        {
+            toolSettings = toolSettings ?? new ConfixComponentAddSettings();
+            using var process = ProcessTasks.StartProcess(toolSettings);
+            process.AssertZeroExitCode();
+            return process.Output;
+        }
+        /// <summary>
+        ///   <p>Adds a component to the project</p>
+        ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
+        /// </summary>
+        /// <remarks>
+        ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>&lt;name&gt;</c> via <see cref="ConfixComponentAddSettings.Name"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixComponentAddSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentAddSettings.Verbosity"/></li>
+        ///     <li><c>--version</c> via <see cref="ConfixComponentAddSettings.Version"/></li>
+        ///   </ul>
+        /// </remarks>
+        public static IReadOnlyCollection<Output> ConfixComponentAdd(Configure<ConfixComponentAddSettings> configurator)
+        {
+            return ConfixComponentAdd(configurator(new ConfixComponentAddSettings()));
+        }
+        /// <summary>
+        ///   <p>Adds a component to the project</p>
+        ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
+        /// </summary>
+        /// <remarks>
+        ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>&lt;name&gt;</c> via <see cref="ConfixComponentAddSettings.Name"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixComponentAddSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixComponentAddSettings.Verbosity"/></li>
+        ///     <li><c>--version</c> via <see cref="ConfixComponentAddSettings.Version"/></li>
+        ///   </ul>
+        /// </remarks>
+        public static IEnumerable<(ConfixComponentAddSettings Settings, IReadOnlyCollection<Output> Output)> ConfixComponentAdd(CombinatorialConfigure<ConfixComponentAddSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        {
+            return configurator.Invoke(ConfixComponentAdd, ConfixLogger, degreeOfParallelism, completeOnFailure);
+        }
+        /// <summary>
         ///   <p>Reloads the schema of a project</p>
         ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
         /// </summary>
@@ -1305,6 +1359,49 @@ namespace Confix.Nuke
         }
     }
     #endregion
+    #region ConfixComponentAddSettings
+    /// <summary>
+    ///   Used within <see cref="ConfixTasks"/>.
+    /// </summary>
+    [PublicAPI]
+    [ExcludeFromCodeCoverage]
+    [Serializable]
+    public partial class ConfixComponentAddSettings : ToolSettings
+    {
+        /// <summary>
+        ///   Path to the Confix executable.
+        /// </summary>
+        public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
+        public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Shows the version information
+        /// </summary>
+        public virtual string Version { get; internal set; }
+        /// <summary>
+        ///   Specifies the output file
+        /// </summary>
+        public virtual string OutputFile { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
+        /// <summary>
+        ///   The name of the component
+        /// </summary>
+        public virtual string Name { get; internal set; }
+        public virtual string Framework { get; internal set; }
+        protected override Arguments ConfigureProcessArguments(Arguments arguments)
+        {
+            arguments
+              .Add("component add")
+              .Add("--version {value}", Version)
+              .Add("--output-file {value}", OutputFile)
+              .Add("--verbosity {value}", Verbosity)
+              .Add("{value}", Name);
+            return base.ConfigureProcessArguments(arguments);
+        }
+    }
+    #endregion
     #region ConfixProjectRestoreSettings
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
@@ -2330,6 +2427,134 @@ namespace Confix.Nuke
         /// </summary>
         [Pure]
         public static T ResetFramework<T>(this T toolSettings) where T : ConfixComponentListSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Framework = null;
+            return toolSettings;
+        }
+        #endregion
+    }
+    #endregion
+    #region ConfixComponentAddSettingsExtensions
+    /// <summary>
+    ///   Used within <see cref="ConfixTasks"/>.
+    /// </summary>
+    [PublicAPI]
+    [ExcludeFromCodeCoverage]
+    public static partial class ConfixComponentAddSettingsExtensions
+    {
+        #region Version
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixComponentAddSettings.Version"/></em></p>
+        ///   <p>Shows the version information</p>
+        /// </summary>
+        [Pure]
+        public static T SetVersion<T>(this T toolSettings, string version) where T : ConfixComponentAddSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Version = version;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixComponentAddSettings.Version"/></em></p>
+        ///   <p>Shows the version information</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVersion<T>(this T toolSettings) where T : ConfixComponentAddSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Version = null;
+            return toolSettings;
+        }
+        #endregion
+        #region OutputFile
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixComponentAddSettings.OutputFile"/></em></p>
+        ///   <p>Specifies the output file</p>
+        /// </summary>
+        [Pure]
+        public static T SetOutputFile<T>(this T toolSettings, string outputFile) where T : ConfixComponentAddSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OutputFile = outputFile;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixComponentAddSettings.OutputFile"/></em></p>
+        ///   <p>Specifies the output file</p>
+        /// </summary>
+        [Pure]
+        public static T ResetOutputFile<T>(this T toolSettings) where T : ConfixComponentAddSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OutputFile = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixComponentAddSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixComponentAddSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixComponentAddSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixComponentAddSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Name
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixComponentAddSettings.Name"/></em></p>
+        ///   <p>The name of the component</p>
+        /// </summary>
+        [Pure]
+        public static T SetName<T>(this T toolSettings, string name) where T : ConfixComponentAddSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Name = name;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixComponentAddSettings.Name"/></em></p>
+        ///   <p>The name of the component</p>
+        /// </summary>
+        [Pure]
+        public static T ResetName<T>(this T toolSettings) where T : ConfixComponentAddSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Name = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Framework
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixComponentAddSettings.Framework"/></em></p>
+        /// </summary>
+        [Pure]
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixComponentAddSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Framework = framework;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixComponentAddSettings.Framework"/></em></p>
+        /// </summary>
+        [Pure]
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixComponentAddSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = null;

@@ -83,6 +83,39 @@
       }
     },
     {
+      "help": "Adds a component to the project",
+      "postfix": "ComponentAdd",
+      "definiteArgument": "component add",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Version",
+            "type": "string",
+            "format": "--version {value}",
+            "help": "Shows the version information"
+          },
+          {
+            "name": "OutputFile",
+            "type": "string",
+            "format": "--output-file {value}",
+            "help": "Specifies the output file"
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          },
+          {
+            "name": "Name",
+            "type": "string",
+            "format": "{value}",
+            "help": "The name of the component"
+          }
+        ]
+      }
+    },
+    {
       "help": "Reloads the schema of a project",
       "postfix": "ProjectRestore",
       "definiteArgument": "project restore",
