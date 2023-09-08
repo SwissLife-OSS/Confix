@@ -70,13 +70,20 @@ public sealed class DefaultValueVisitor : JsonDocumentRewriter<DefaultValueVisit
             // when the field is null and we have a required field, initialize it
             if (obj.ContainsKey(field) && obj[field] is null)
             {
-                var hasSchemaOrDefaults = possiblePropertySchemas
-                    .Where(x => x.GetRequired() is { Count: > 0 })
-                    .SingleOrNone() is not null;
-
-                if (hasSchemaOrDefaults)
+                if (possiblePropertySchemas.GetDefaultValue() is { } value)
                 {
-                    obj[field] = new JsonObject();
+                    obj[field] = value;
+                }
+                else
+                {
+                    var isObjectWithRequired = possiblePropertySchemas
+                        .Where(x => x.GetRequired() is { Count: > 0 })
+                        .SingleOrNone() is not null;
+
+                    if (isObjectWithRequired)
+                    {
+                        obj[field] = new JsonObject();
+                    }
                 }
             }
 

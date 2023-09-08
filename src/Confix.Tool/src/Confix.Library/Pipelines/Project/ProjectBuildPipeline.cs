@@ -19,7 +19,7 @@ public sealed class ProjectBuildPipeline : Pipeline
             .UseCompleteWhenNoConfigurationFiles()
             .Use<VariableMiddleware>()
             .When(x =>
-                    !x.Parameter.TryGet(NoRestoreOptions.Instance, out bool noRestore) || noRestore,
+                    !x.Parameter.TryGet(NoRestoreOptions.Instance, out bool noRestore) || !noRestore,
                 n => n
                     .Use<JsonSchemaCollectionMiddleware>()
                     .Use<ConfigurationAdapterMiddleware>()
