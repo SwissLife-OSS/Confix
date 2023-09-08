@@ -1,6 +1,7 @@
 using Confix.Tool.Abstractions;
 using Confix.Tool.Common.Pipelines;
 using Confix.Variables;
+using Microsoft.Extensions.DependencyInjection;
 using VariableProviderConfiguration = Confix.Variables.VariableProviderConfiguration;
 
 namespace Confix.Tool.Middlewares;
@@ -20,7 +21,8 @@ public sealed class VariableMiddleware : IMiddleware
         var environmentFeature = context.Features.Get<EnvironmentFeature>();
 
         var environmentName = environmentFeature.ActiveEnvironment.Name;
-        var variableResolver = CreateResolver(environmentName);
+        var variableListCache = context.Services.GetRequiredService<VariableListCache>();
+        var variableResolver = CreateResolver(environmentName, variableListCache);
 
         var replacerService = new VariableReplacerService(variableResolver);
 
@@ -31,12 +33,12 @@ public sealed class VariableMiddleware : IMiddleware
 
         return next(context);
 
-        IVariableResolver CreateResolver(string environment)
+        IVariableResolver CreateResolver(string environment, VariableListCache variableListCache)
         {
             var configurations =
                 GetProviderConfiguration(configurationFeature, environment).ToArray();
 
-            return new VariableResolver(_variableProviderFactory, configurations);
+            return new VariableResolver(_variableProviderFactory, variableListCache, configurations);
         }
     }
 

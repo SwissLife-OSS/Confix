@@ -45,10 +45,17 @@ public class VariableMiddlewareTests
             null,
             null
         );
+
+        var serviceProviderMock = new Mock<IServiceProvider>();
+        serviceProviderMock
+            .Setup(p => p.GetService(typeof(VariableListCache)))
+            .Returns(new VariableListCache());
+        
         featureCollection.Set(configurationFeature);
         EnvironmentFeature environmentFeature = new(new EnvironmentDefinition("test", true));
         featureCollection.Set(environmentFeature);
         middelwareContext.SetupGet(x => x.Features).Returns(featureCollection);
+        middelwareContext.SetupGet(x => x.Services).Returns(serviceProviderMock.Object);
 
         Mock<IVariableProviderFactory> factoryMock = new(MockBehavior.Strict);
         var middleware = new VariableMiddleware(factoryMock.Object);

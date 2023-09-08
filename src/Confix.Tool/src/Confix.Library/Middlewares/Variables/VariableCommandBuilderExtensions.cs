@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
 using Confix.Variables;
@@ -9,10 +10,11 @@ public static class VariableCommandBuilderExtensions
 {
     private static Context.Key<Dictionary<string, Func<JsonNode, IVariableProvider>>> _key =
         new("Confix.Tool.Entites.Variables.VariableProvider");
-
+    
     public static CommandLineBuilder RegisterVariableMiddleware(this CommandLineBuilder builder)
     {
         builder.AddDefaultVariableProviders();
+        builder.AddSingleton<VariableListCache>();
         builder.AddTransient(sp
             => new VariableMiddleware(sp.GetRequiredService<IVariableProviderFactory>()));
 
@@ -21,10 +23,10 @@ public static class VariableCommandBuilderExtensions
 
     private static CommandLineBuilder AddDefaultVariableProviders(this CommandLineBuilder builder)
     {
-        builder.AddVariableProvider(config => new AzureKeyVaultProvider(config));
-        builder.AddVariableProvider(config => new GitVariableProvider(config));
         builder.AddVariableProvider(config => new LocalVariableProvider(config));
         builder.AddVariableProvider(config => new SecretVariableProvider(config));
+        builder.AddVariableProvider(config => new AzureKeyVaultProvider(config));
+        builder.AddVariableProvider(config => new GitVariableProvider(config));
 
         return builder;
     }

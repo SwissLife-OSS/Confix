@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
+using Confix.Tool.Middlewares;
 using Json.Schema;
 
 namespace Confix.Variables;
@@ -10,13 +11,16 @@ namespace Confix.Variables;
 public sealed class VariableResolver : IVariableResolver
 {
     private readonly IVariableProviderFactory _variableProviderFactory;
+    private readonly VariableListCache _variableListCache;
     private readonly IReadOnlyList<VariableProviderConfiguration> _configurations;
 
     public VariableResolver(
         IVariableProviderFactory variableProviderFactory,
+        VariableListCache variableListCache,
         IReadOnlyList<VariableProviderConfiguration> configurations)
     {
         _variableProviderFactory = variableProviderFactory;
+        _variableListCache = variableListCache;
         _configurations = configurations;
     }
 
@@ -48,10 +52,19 @@ public sealed class VariableResolver : IVariableResolver
         CancellationToken cancellationToken)
     {
         var configuration = GetProviderConfiguration(providerName);
+        
+        if (_variableListCache.TryGet(configuration, out var cachedList))
+        {
+            return cachedList;
+        }
+        
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
-        var variableKey = await provider.ListAsync(cancellationToken);
+        var variableKeys = await provider.ListAsync(cancellationToken);
 
-        return variableKey.Select(k => new VariablePath(providerName, k));
+        var items =  variableKeys.Select(k => new VariablePath(providerName, k)).ToArray();
+        _variableListCache.TryAdd(configuration, items);
+
+        return items;
     }
 
     /// <inheritdoc />
@@ -131,8 +144,8 @@ public sealed class VariableResolver : IVariableResolver
 
     private VariableProviderConfiguration GetProviderConfiguration(string providerName)
         => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
-            ?? throw new ExitException(
-                $"No VariableProvider with name '{providerName.AsHighlighted()}' configured.");
+           ?? throw new ExitException(
+               $"No VariableProvider with name '{providerName.AsHighlighted()}' configured.");
 }
 
 public static class Extension
@@ -142,7 +155,7 @@ public static class Extension
         [NotNullWhen(true)] out VariablePath? variablePath)
     {
         if (node.GetSchemaValueType() == SchemaValueType.String
-            && VariablePath.TryParse((string) node!, out var parsed))
+            && VariablePath.TryParse((string)node!, out var parsed))
         {
             variablePath = parsed;
             return true;

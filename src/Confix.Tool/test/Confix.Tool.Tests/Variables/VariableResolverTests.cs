@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Middlewares;
 using Confix.Variables;
 using FluentAssertions;
 using Json.More;
@@ -45,7 +46,7 @@ public class VariableResolverTests
                     """)!
             }
         };
-        var resolver = new VariableResolver(factoryMock.Object, configurations);
+        var resolver = new VariableResolver(factoryMock.Object, new VariableListCache(), configurations);
         var cancellationToken = CancellationToken.None;
 
         var provider1Mock = new Mock<IVariableProvider>();
@@ -110,7 +111,7 @@ public class VariableResolverTests
                     """)!
             }
         };
-        var resolver = new VariableResolver(factoryMock.Object, configurations);
+        var resolver = new VariableResolver(factoryMock.Object, new VariableListCache(), configurations);
         var cancellationToken = CancellationToken.None;
 
         var provider1Mock = new Mock<IVariableProvider>();
@@ -171,7 +172,7 @@ public class VariableResolverTests
                     """)!
             }
         };
-        var resolver = new VariableResolver(factoryMock.Object, configurations);
+        var resolver = new VariableResolver(factoryMock.Object, new VariableListCache(), configurations);
         var cancellationToken = CancellationToken.None;
 
         var provider1Mock = new Mock<IVariableProvider>();
@@ -212,7 +213,7 @@ public class VariableResolverTests
         // Arrange
         var factoryMock = new Mock<IVariableProviderFactory>();
         var configurations = new List<VariableProviderConfiguration>();
-        var resolver = new VariableResolver(factoryMock.Object, configurations);
+        var resolver = new VariableResolver(factoryMock.Object,new VariableListCache(), configurations);
         var cancellationToken = CancellationToken.None;
 
         // Act & Assert
@@ -232,7 +233,7 @@ public class VariableResolverTests
         };
 
         var configurations = new List<VariableProviderConfiguration>();
-        var resolver = new VariableResolver(factoryMock.Object, configurations);
+        var resolver = new VariableResolver(factoryMock.Object, new VariableListCache(), configurations);
         var cancellationToken = CancellationToken.None;
 
         // Act & Assert
