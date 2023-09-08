@@ -16,7 +16,7 @@ public class VariableListCache
         out IReadOnlyList<VariablePath> variables)
     {
         if (CacheEnabled(configuration) &&
-            _cache.TryGetValue(configuration.Type, out var cachedValues))
+            _cache.TryGetValue(GetCacheKey(configuration), out var cachedValues))
         {
             variables = cachedValues;
             return true;
@@ -25,14 +25,14 @@ public class VariableListCache
         variables = Array.Empty<VariablePath>();
         return false;
     }
-
+    
     public bool TryAdd(
         VariableProviderConfiguration configuration,
         IReadOnlyList<VariablePath> variables)
     {
         if (CacheEnabled(configuration))
         {
-            return _cache.TryAdd(configuration.Type, variables);
+            return _cache.TryAdd(GetCacheKey(configuration), variables);
         }
 
         return false;
@@ -42,4 +42,7 @@ public class VariableListCache
         _cacheEnabledVariableProviderTypes.Contains(
             configuration.Type,
             StringComparer.CurrentCultureIgnoreCase);
+    
+    private string GetCacheKey(VariableProviderConfiguration configuration) =>
+        configuration.Configuration.ToString();
 }
