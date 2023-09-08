@@ -1,6 +1,7 @@
 using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
 using Confix.Tool.Entities.Components.DotNet;
+using Confix.Tool.Entities.Components.Git;
 using Confix.Tool.Middlewares;
 using Microsoft.Extensions.DependencyInjection;
 using Factory =
@@ -17,6 +18,12 @@ public static class ComponentProviderCommandLineBuilderExtensions
     public static CommandLineBuilder AddComponentProvider<T>(this CommandLineBuilder builder)
         where T : IComponentProvider, new()
         => builder.AddComponentProvider(T.Type, _ => new T());
+
+    public static CommandLineBuilder AddComponentProvider<T>(
+        this CommandLineBuilder builder,
+        Func<JsonNode, T> factory)
+        where T : IComponentProvider
+        => builder.AddComponentProvider(T.Type, c => factory(c));
 
     public static CommandLineBuilder AddComponentProvider(
         this CommandLineBuilder builder,
@@ -52,6 +59,7 @@ public static class ComponentProviderCommandLineBuilderExtensions
                 sp.GetRequiredService<IComponentProviderFactory>()));
 
         builder.AddComponentProvider<DotnetPackageComponentProvider>();
+        builder.AddComponentProvider(c => new GitComponentProvider(c));
 
         return builder;
     }

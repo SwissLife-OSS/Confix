@@ -19,4 +19,6 @@ public interface IComponentProviderContext
     CancellationToken CancellationToken { get; }
 
     IList<Component> Components { get; }
+
+    IReadOnlyList<ComponentReferenceDefinition> ComponentReferences { get; }
 }

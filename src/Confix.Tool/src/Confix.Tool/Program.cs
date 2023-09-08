@@ -1,4 +1,3 @@
-﻿using System.CommandLine.Parsing;
-using Confix.Tool;
+﻿using Confix.Tool;
 
-return await new ConfixCommandLine().Build().InvokeAsync(args);
+return await new ConfixCommandLine().Build().InvokeWithoutOutputFileAsync(args);
