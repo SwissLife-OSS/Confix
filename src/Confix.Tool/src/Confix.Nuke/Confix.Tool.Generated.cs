@@ -644,14 +644,14 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesGetSettings.Environment"/></li>
-        ///     <li><c>--name</c> via <see cref="ConfixVariablesGetSettings.Name"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesGetSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li>
+        ///     <li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixVariablesGet(ConfixVariablesGetSettings toolSettings = null)
+        public static IReadOnlyCollection<Output> ConfixVariableGet(ConfixVariableGetSettings toolSettings = null)
         {
-            toolSettings = toolSettings ?? new ConfixVariablesGetSettings();
+            toolSettings = toolSettings ?? new ConfixVariableGetSettings();
             using var process = ProcessTasks.StartProcess(toolSettings);
             process.AssertZeroExitCode();
             return process.Output;
@@ -663,14 +663,14 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesGetSettings.Environment"/></li>
-        ///     <li><c>--name</c> via <see cref="ConfixVariablesGetSettings.Name"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesGetSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li>
+        ///     <li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixVariablesGet(Configure<ConfixVariablesGetSettings> configurator)
+        public static IReadOnlyCollection<Output> ConfixVariableGet(Configure<ConfixVariableGetSettings> configurator)
         {
-            return ConfixVariablesGet(configurator(new ConfixVariablesGetSettings()));
+            return ConfixVariableGet(configurator(new ConfixVariableGetSettings()));
         }
         /// <summary>
         ///   <p>resolves a variable by name</p>
@@ -679,14 +679,14 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesGetSettings.Environment"/></li>
-        ///     <li><c>--name</c> via <see cref="ConfixVariablesGetSettings.Name"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesGetSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li>
+        ///     <li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IEnumerable<(ConfixVariablesGetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariablesGet(CombinatorialConfigure<ConfixVariablesGetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        public static IEnumerable<(ConfixVariableGetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariableGet(CombinatorialConfigure<ConfixVariableGetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
-            return configurator.Invoke(ConfixVariablesGet, ConfixLogger, degreeOfParallelism, completeOnFailure);
+            return configurator.Invoke(ConfixVariableGet, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
         ///   <p>sets a variable. Overrides existing value if any.</p>
@@ -695,15 +695,15 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesSetSettings.Environment"/></li>
-        ///     <li><c>--name</c> via <see cref="ConfixVariablesSetSettings.Name"/></li>
-        ///     <li><c>--value</c> via <see cref="ConfixVariablesSetSettings.Value"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesSetSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableSetSettings.Environment"/></li>
+        ///     <li><c>--name</c> via <see cref="ConfixVariableSetSettings.Name"/></li>
+        ///     <li><c>--value</c> via <see cref="ConfixVariableSetSettings.Value"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableSetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixVariablesSet(ConfixVariablesSetSettings toolSettings = null)
+        public static IReadOnlyCollection<Output> ConfixVariableSet(ConfixVariableSetSettings toolSettings = null)
         {
-            toolSettings = toolSettings ?? new ConfixVariablesSetSettings();
+            toolSettings = toolSettings ?? new ConfixVariableSetSettings();
             using var process = ProcessTasks.StartProcess(toolSettings);
             process.AssertZeroExitCode();
             return process.Output;
@@ -715,15 +715,15 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesSetSettings.Environment"/></li>
-        ///     <li><c>--name</c> via <see cref="ConfixVariablesSetSettings.Name"/></li>
-        ///     <li><c>--value</c> via <see cref="ConfixVariablesSetSettings.Value"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesSetSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableSetSettings.Environment"/></li>
+        ///     <li><c>--name</c> via <see cref="ConfixVariableSetSettings.Name"/></li>
+        ///     <li><c>--value</c> via <see cref="ConfixVariableSetSettings.Value"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableSetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixVariablesSet(Configure<ConfixVariablesSetSettings> configurator)
+        public static IReadOnlyCollection<Output> ConfixVariableSet(Configure<ConfixVariableSetSettings> configurator)
         {
-            return ConfixVariablesSet(configurator(new ConfixVariablesSetSettings()));
+            return ConfixVariableSet(configurator(new ConfixVariableSetSettings()));
         }
         /// <summary>
         ///   <p>sets a variable. Overrides existing value if any.</p>
@@ -732,15 +732,15 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesSetSettings.Environment"/></li>
-        ///     <li><c>--name</c> via <see cref="ConfixVariablesSetSettings.Name"/></li>
-        ///     <li><c>--value</c> via <see cref="ConfixVariablesSetSettings.Value"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesSetSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableSetSettings.Environment"/></li>
+        ///     <li><c>--name</c> via <see cref="ConfixVariableSetSettings.Name"/></li>
+        ///     <li><c>--value</c> via <see cref="ConfixVariableSetSettings.Value"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableSetSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IEnumerable<(ConfixVariablesSetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariablesSet(CombinatorialConfigure<ConfixVariablesSetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        public static IEnumerable<(ConfixVariableSetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariableSet(CombinatorialConfigure<ConfixVariableSetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
-            return configurator.Invoke(ConfixVariablesSet, ConfixLogger, degreeOfParallelism, completeOnFailure);
+            return configurator.Invoke(ConfixVariableSet, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
         ///   <p>list available variables</p>
@@ -749,14 +749,14 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesListSettings.Environment"/></li>
-        ///     <li><c>--provider</c> via <see cref="ConfixVariablesListSettings.Provider"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesListSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableListSettings.Environment"/></li>
+        ///     <li><c>--provider</c> via <see cref="ConfixVariableListSettings.Provider"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableListSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixVariablesList(ConfixVariablesListSettings toolSettings = null)
+        public static IReadOnlyCollection<Output> ConfixVariableList(ConfixVariableListSettings toolSettings = null)
         {
-            toolSettings = toolSettings ?? new ConfixVariablesListSettings();
+            toolSettings = toolSettings ?? new ConfixVariableListSettings();
             using var process = ProcessTasks.StartProcess(toolSettings);
             process.AssertZeroExitCode();
             return process.Output;
@@ -768,14 +768,14 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesListSettings.Environment"/></li>
-        ///     <li><c>--provider</c> via <see cref="ConfixVariablesListSettings.Provider"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesListSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableListSettings.Environment"/></li>
+        ///     <li><c>--provider</c> via <see cref="ConfixVariableListSettings.Provider"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableListSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixVariablesList(Configure<ConfixVariablesListSettings> configurator)
+        public static IReadOnlyCollection<Output> ConfixVariableList(Configure<ConfixVariableListSettings> configurator)
         {
-            return ConfixVariablesList(configurator(new ConfixVariablesListSettings()));
+            return ConfixVariableList(configurator(new ConfixVariableListSettings()));
         }
         /// <summary>
         ///   <p>list available variables</p>
@@ -784,14 +784,14 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesListSettings.Environment"/></li>
-        ///     <li><c>--provider</c> via <see cref="ConfixVariablesListSettings.Provider"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesListSettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableListSettings.Environment"/></li>
+        ///     <li><c>--provider</c> via <see cref="ConfixVariableListSettings.Provider"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableListSettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IEnumerable<(ConfixVariablesListSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariablesList(CombinatorialConfigure<ConfixVariablesListSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        public static IEnumerable<(ConfixVariableListSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariableList(CombinatorialConfigure<ConfixVariableListSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
-            return configurator.Invoke(ConfixVariablesList, ConfixLogger, degreeOfParallelism, completeOnFailure);
+            return configurator.Invoke(ConfixVariableList, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
         ///   <p>Copies a variable from one provider to another provider</p>
@@ -800,16 +800,16 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesCopySettings.Environment"/></li>
-        ///     <li><c>--from</c> via <see cref="ConfixVariablesCopySettings.From"/></li>
-        ///     <li><c>--to</c> via <see cref="ConfixVariablesCopySettings.To"/></li>
-        ///     <li><c>--to-environment</c> via <see cref="ConfixVariablesCopySettings.ToEnvironment"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesCopySettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableCopySettings.Environment"/></li>
+        ///     <li><c>--from</c> via <see cref="ConfixVariableCopySettings.From"/></li>
+        ///     <li><c>--to</c> via <see cref="ConfixVariableCopySettings.To"/></li>
+        ///     <li><c>--to-environment</c> via <see cref="ConfixVariableCopySettings.ToEnvironment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableCopySettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixVariablesCopy(ConfixVariablesCopySettings toolSettings = null)
+        public static IReadOnlyCollection<Output> ConfixVariableCopy(ConfixVariableCopySettings toolSettings = null)
         {
-            toolSettings = toolSettings ?? new ConfixVariablesCopySettings();
+            toolSettings = toolSettings ?? new ConfixVariableCopySettings();
             using var process = ProcessTasks.StartProcess(toolSettings);
             process.AssertZeroExitCode();
             return process.Output;
@@ -821,16 +821,16 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesCopySettings.Environment"/></li>
-        ///     <li><c>--from</c> via <see cref="ConfixVariablesCopySettings.From"/></li>
-        ///     <li><c>--to</c> via <see cref="ConfixVariablesCopySettings.To"/></li>
-        ///     <li><c>--to-environment</c> via <see cref="ConfixVariablesCopySettings.ToEnvironment"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesCopySettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableCopySettings.Environment"/></li>
+        ///     <li><c>--from</c> via <see cref="ConfixVariableCopySettings.From"/></li>
+        ///     <li><c>--to</c> via <see cref="ConfixVariableCopySettings.To"/></li>
+        ///     <li><c>--to-environment</c> via <see cref="ConfixVariableCopySettings.ToEnvironment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableCopySettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IReadOnlyCollection<Output> ConfixVariablesCopy(Configure<ConfixVariablesCopySettings> configurator)
+        public static IReadOnlyCollection<Output> ConfixVariableCopy(Configure<ConfixVariableCopySettings> configurator)
         {
-            return ConfixVariablesCopy(configurator(new ConfixVariablesCopySettings()));
+            return ConfixVariableCopy(configurator(new ConfixVariableCopySettings()));
         }
         /// <summary>
         ///   <p>Copies a variable from one provider to another provider</p>
@@ -839,16 +839,16 @@ namespace Confix.Nuke
         /// <remarks>
         ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
         ///   <ul>
-        ///     <li><c>--environment</c> via <see cref="ConfixVariablesCopySettings.Environment"/></li>
-        ///     <li><c>--from</c> via <see cref="ConfixVariablesCopySettings.From"/></li>
-        ///     <li><c>--to</c> via <see cref="ConfixVariablesCopySettings.To"/></li>
-        ///     <li><c>--to-environment</c> via <see cref="ConfixVariablesCopySettings.ToEnvironment"/></li>
-        ///     <li><c>--verbosity</c> via <see cref="ConfixVariablesCopySettings.Verbosity"/></li>
+        ///     <li><c>--environment</c> via <see cref="ConfixVariableCopySettings.Environment"/></li>
+        ///     <li><c>--from</c> via <see cref="ConfixVariableCopySettings.From"/></li>
+        ///     <li><c>--to</c> via <see cref="ConfixVariableCopySettings.To"/></li>
+        ///     <li><c>--to-environment</c> via <see cref="ConfixVariableCopySettings.ToEnvironment"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixVariableCopySettings.Verbosity"/></li>
         ///   </ul>
         /// </remarks>
-        public static IEnumerable<(ConfixVariablesCopySettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariablesCopy(CombinatorialConfigure<ConfixVariablesCopySettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        public static IEnumerable<(ConfixVariableCopySettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariableCopy(CombinatorialConfigure<ConfixVariableCopySettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
         {
-            return configurator.Invoke(ConfixVariablesCopy, ConfixLogger, degreeOfParallelism, completeOnFailure);
+            return configurator.Invoke(ConfixVariableCopy, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
         ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
@@ -1681,14 +1681,14 @@ namespace Confix.Nuke
         }
     }
     #endregion
-    #region ConfixVariablesGetSettings
+    #region ConfixVariableGetSettings
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
     [Serializable]
-    public partial class ConfixVariablesGetSettings : ToolSettings
+    public partial class ConfixVariableGetSettings : ToolSettings
     {
         /// <summary>
         ///   Path to the Confix executable.
@@ -1711,7 +1711,7 @@ namespace Confix.Nuke
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("variables get")
+              .Add("variable get")
               .Add("--environment {value}", Environment)
               .Add("--name {value}", Name)
               .Add("--verbosity {value}", Verbosity);
@@ -1719,14 +1719,14 @@ namespace Confix.Nuke
         }
     }
     #endregion
-    #region ConfixVariablesSetSettings
+    #region ConfixVariableSetSettings
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
     [Serializable]
-    public partial class ConfixVariablesSetSettings : ToolSettings
+    public partial class ConfixVariableSetSettings : ToolSettings
     {
         /// <summary>
         ///   Path to the Confix executable.
@@ -1753,7 +1753,7 @@ namespace Confix.Nuke
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("variables set")
+              .Add("variable set")
               .Add("--environment {value}", Environment)
               .Add("--name {value}", Name)
               .Add("--value {value}", Value)
@@ -1762,14 +1762,14 @@ namespace Confix.Nuke
         }
     }
     #endregion
-    #region ConfixVariablesListSettings
+    #region ConfixVariableListSettings
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
     [Serializable]
-    public partial class ConfixVariablesListSettings : ToolSettings
+    public partial class ConfixVariableListSettings : ToolSettings
     {
         /// <summary>
         ///   Path to the Confix executable.
@@ -1792,7 +1792,7 @@ namespace Confix.Nuke
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("variables list")
+              .Add("variable list")
               .Add("--environment {value}", Environment)
               .Add("--provider {value}", Provider)
               .Add("--verbosity {value}", Verbosity);
@@ -1800,14 +1800,14 @@ namespace Confix.Nuke
         }
     }
     #endregion
-    #region ConfixVariablesCopySettings
+    #region ConfixVariableCopySettings
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
     [Serializable]
-    public partial class ConfixVariablesCopySettings : ToolSettings
+    public partial class ConfixVariableCopySettings : ToolSettings
     {
         /// <summary>
         ///   Path to the Confix executable.
@@ -1838,7 +1838,7 @@ namespace Confix.Nuke
         protected override Arguments ConfigureProcessArguments(Arguments arguments)
         {
             arguments
-              .Add("variables copy")
+              .Add("variable copy")
               .Add("--environment {value}", Environment)
               .Add("--from {value}", From)
               .Add("--to {value}", To)
@@ -3275,32 +3275,32 @@ namespace Confix.Nuke
         #endregion
     }
     #endregion
-    #region ConfixVariablesGetSettingsExtensions
+    #region ConfixVariableGetSettingsExtensions
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
-    public static partial class ConfixVariablesGetSettingsExtensions
+    public static partial class ConfixVariableGetSettingsExtensions
     {
         #region Environment
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesGetSettings.Environment"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableGetSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixVariablesGetSettings
+        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixVariableGetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = environment;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesGetSettings.Environment"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableGetSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixVariablesGetSettings
+        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixVariableGetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = null;
@@ -3309,22 +3309,22 @@ namespace Confix.Nuke
         #endregion
         #region Name
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesGetSettings.Name"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableGetSettings.Name"/></em></p>
         ///   <p>The name of the variable</p>
         /// </summary>
         [Pure]
-        public static T SetName<T>(this T toolSettings, string name) where T : ConfixVariablesGetSettings
+        public static T SetName<T>(this T toolSettings, string name) where T : ConfixVariableGetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Name = name;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesGetSettings.Name"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableGetSettings.Name"/></em></p>
         ///   <p>The name of the variable</p>
         /// </summary>
         [Pure]
-        public static T ResetName<T>(this T toolSettings) where T : ConfixVariablesGetSettings
+        public static T ResetName<T>(this T toolSettings) where T : ConfixVariableGetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Name = null;
@@ -3333,22 +3333,22 @@ namespace Confix.Nuke
         #endregion
         #region Verbosity
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesGetSettings.Verbosity"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableGetSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariablesGetSettings
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariableGetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = verbosity;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesGetSettings.Verbosity"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableGetSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariablesGetSettings
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariableGetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = null;
@@ -3357,20 +3357,20 @@ namespace Confix.Nuke
         #endregion
         #region Framework
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesGetSettings.Framework"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableGetSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixVariablesGetSettings
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixVariableGetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = framework;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesGetSettings.Framework"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableGetSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T ResetFramework<T>(this T toolSettings) where T : ConfixVariablesGetSettings
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixVariableGetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = null;
@@ -3379,32 +3379,32 @@ namespace Confix.Nuke
         #endregion
     }
     #endregion
-    #region ConfixVariablesSetSettingsExtensions
+    #region ConfixVariableSetSettingsExtensions
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
-    public static partial class ConfixVariablesSetSettingsExtensions
+    public static partial class ConfixVariableSetSettingsExtensions
     {
         #region Environment
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesSetSettings.Environment"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableSetSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixVariablesSetSettings
+        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = environment;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesSetSettings.Environment"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableSetSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixVariablesSetSettings
+        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = null;
@@ -3413,22 +3413,22 @@ namespace Confix.Nuke
         #endregion
         #region Name
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesSetSettings.Name"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableSetSettings.Name"/></em></p>
         ///   <p>The name of the variable</p>
         /// </summary>
         [Pure]
-        public static T SetName<T>(this T toolSettings, string name) where T : ConfixVariablesSetSettings
+        public static T SetName<T>(this T toolSettings, string name) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Name = name;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesSetSettings.Name"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableSetSettings.Name"/></em></p>
         ///   <p>The name of the variable</p>
         /// </summary>
         [Pure]
-        public static T ResetName<T>(this T toolSettings) where T : ConfixVariablesSetSettings
+        public static T ResetName<T>(this T toolSettings) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Name = null;
@@ -3437,22 +3437,22 @@ namespace Confix.Nuke
         #endregion
         #region Value
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesSetSettings.Value"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableSetSettings.Value"/></em></p>
         ///   <p>The value of the variable</p>
         /// </summary>
         [Pure]
-        public static T SetValue<T>(this T toolSettings, string value) where T : ConfixVariablesSetSettings
+        public static T SetValue<T>(this T toolSettings, string value) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Value = value;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesSetSettings.Value"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableSetSettings.Value"/></em></p>
         ///   <p>The value of the variable</p>
         /// </summary>
         [Pure]
-        public static T ResetValue<T>(this T toolSettings) where T : ConfixVariablesSetSettings
+        public static T ResetValue<T>(this T toolSettings) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Value = null;
@@ -3461,22 +3461,22 @@ namespace Confix.Nuke
         #endregion
         #region Verbosity
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesSetSettings.Verbosity"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableSetSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariablesSetSettings
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = verbosity;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesSetSettings.Verbosity"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableSetSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariablesSetSettings
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = null;
@@ -3485,20 +3485,20 @@ namespace Confix.Nuke
         #endregion
         #region Framework
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesSetSettings.Framework"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableSetSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixVariablesSetSettings
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = framework;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesSetSettings.Framework"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableSetSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T ResetFramework<T>(this T toolSettings) where T : ConfixVariablesSetSettings
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixVariableSetSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = null;
@@ -3507,32 +3507,32 @@ namespace Confix.Nuke
         #endregion
     }
     #endregion
-    #region ConfixVariablesListSettingsExtensions
+    #region ConfixVariableListSettingsExtensions
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
-    public static partial class ConfixVariablesListSettingsExtensions
+    public static partial class ConfixVariableListSettingsExtensions
     {
         #region Environment
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesListSettings.Environment"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableListSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixVariablesListSettings
+        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixVariableListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = environment;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesListSettings.Environment"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableListSettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixVariablesListSettings
+        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixVariableListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = null;
@@ -3541,22 +3541,22 @@ namespace Confix.Nuke
         #endregion
         #region Provider
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesListSettings.Provider"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableListSettings.Provider"/></em></p>
         ///   <p>The name of the provider to resolve the variable from</p>
         /// </summary>
         [Pure]
-        public static T SetProvider<T>(this T toolSettings, string provider) where T : ConfixVariablesListSettings
+        public static T SetProvider<T>(this T toolSettings, string provider) where T : ConfixVariableListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Provider = provider;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesListSettings.Provider"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableListSettings.Provider"/></em></p>
         ///   <p>The name of the provider to resolve the variable from</p>
         /// </summary>
         [Pure]
-        public static T ResetProvider<T>(this T toolSettings) where T : ConfixVariablesListSettings
+        public static T ResetProvider<T>(this T toolSettings) where T : ConfixVariableListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Provider = null;
@@ -3565,22 +3565,22 @@ namespace Confix.Nuke
         #endregion
         #region Verbosity
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesListSettings.Verbosity"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableListSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariablesListSettings
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariableListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = verbosity;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesListSettings.Verbosity"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableListSettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariablesListSettings
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariableListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = null;
@@ -3589,20 +3589,20 @@ namespace Confix.Nuke
         #endregion
         #region Framework
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesListSettings.Framework"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableListSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixVariablesListSettings
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixVariableListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = framework;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesListSettings.Framework"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableListSettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T ResetFramework<T>(this T toolSettings) where T : ConfixVariablesListSettings
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixVariableListSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = null;
@@ -3611,32 +3611,32 @@ namespace Confix.Nuke
         #endregion
     }
     #endregion
-    #region ConfixVariablesCopySettingsExtensions
+    #region ConfixVariableCopySettingsExtensions
     /// <summary>
     ///   Used within <see cref="ConfixTasks"/>.
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
-    public static partial class ConfixVariablesCopySettingsExtensions
+    public static partial class ConfixVariableCopySettingsExtensions
     {
         #region Environment
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesCopySettings.Environment"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableCopySettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixVariablesCopySettings
+        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = environment;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesCopySettings.Environment"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableCopySettings.Environment"/></em></p>
         ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
         /// </summary>
         [Pure]
-        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixVariablesCopySettings
+        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Environment = null;
@@ -3645,22 +3645,22 @@ namespace Confix.Nuke
         #endregion
         #region From
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesCopySettings.From"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableCopySettings.From"/></em></p>
         ///   <p>The name of the new variable</p>
         /// </summary>
         [Pure]
-        public static T SetFrom<T>(this T toolSettings, string from) where T : ConfixVariablesCopySettings
+        public static T SetFrom<T>(this T toolSettings, string from) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.From = from;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesCopySettings.From"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableCopySettings.From"/></em></p>
         ///   <p>The name of the new variable</p>
         /// </summary>
         [Pure]
-        public static T ResetFrom<T>(this T toolSettings) where T : ConfixVariablesCopySettings
+        public static T ResetFrom<T>(this T toolSettings) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.From = null;
@@ -3669,22 +3669,22 @@ namespace Confix.Nuke
         #endregion
         #region To
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesCopySettings.To"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableCopySettings.To"/></em></p>
         ///   <p>The name of the new variable</p>
         /// </summary>
         [Pure]
-        public static T SetTo<T>(this T toolSettings, string to) where T : ConfixVariablesCopySettings
+        public static T SetTo<T>(this T toolSettings, string to) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.To = to;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesCopySettings.To"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableCopySettings.To"/></em></p>
         ///   <p>The name of the new variable</p>
         /// </summary>
         [Pure]
-        public static T ResetTo<T>(this T toolSettings) where T : ConfixVariablesCopySettings
+        public static T ResetTo<T>(this T toolSettings) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.To = null;
@@ -3693,22 +3693,22 @@ namespace Confix.Nuke
         #endregion
         #region ToEnvironment
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesCopySettings.ToEnvironment"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableCopySettings.ToEnvironment"/></em></p>
         ///   <p>The name of the environment you want to migrate the variable to</p>
         /// </summary>
         [Pure]
-        public static T SetToEnvironment<T>(this T toolSettings, string toEnvironment) where T : ConfixVariablesCopySettings
+        public static T SetToEnvironment<T>(this T toolSettings, string toEnvironment) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.ToEnvironment = toEnvironment;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesCopySettings.ToEnvironment"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableCopySettings.ToEnvironment"/></em></p>
         ///   <p>The name of the environment you want to migrate the variable to</p>
         /// </summary>
         [Pure]
-        public static T ResetToEnvironment<T>(this T toolSettings) where T : ConfixVariablesCopySettings
+        public static T ResetToEnvironment<T>(this T toolSettings) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.ToEnvironment = null;
@@ -3717,22 +3717,22 @@ namespace Confix.Nuke
         #endregion
         #region Verbosity
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesCopySettings.Verbosity"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableCopySettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariablesCopySettings
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = verbosity;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesCopySettings.Verbosity"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableCopySettings.Verbosity"/></em></p>
         ///   <p>Sets the verbosity level</p>
         /// </summary>
         [Pure]
-        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariablesCopySettings
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Verbosity = null;
@@ -3741,20 +3741,20 @@ namespace Confix.Nuke
         #endregion
         #region Framework
         /// <summary>
-        ///   <p><em>Sets <see cref="ConfixVariablesCopySettings.Framework"/></em></p>
+        ///   <p><em>Sets <see cref="ConfixVariableCopySettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixVariablesCopySettings
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = framework;
             return toolSettings;
         }
         /// <summary>
-        ///   <p><em>Resets <see cref="ConfixVariablesCopySettings.Framework"/></em></p>
+        ///   <p><em>Resets <see cref="ConfixVariableCopySettings.Framework"/></em></p>
         /// </summary>
         [Pure]
-        public static T ResetFramework<T>(this T toolSettings) where T : ConfixVariablesCopySettings
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixVariableCopySettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = null;

@@ -109,7 +109,7 @@ public partial class ConfixSolutionValidateSettings
     }
 }
 
-public partial class ConfixVariablesGetSettings
+public partial class ConfixVariableGetSettings
 {
     private string GetProcessToolPath()
     {
@@ -117,7 +117,7 @@ public partial class ConfixVariablesGetSettings
     }
 }
 
-public partial class ConfixVariablesSetSettings
+public partial class ConfixVariableSetSettings
 {
     private string GetProcessToolPath()
     {
@@ -125,7 +125,7 @@ public partial class ConfixVariablesSetSettings
     }
 }
 
-public partial class ConfixVariablesListSettings
+public partial class ConfixVariableListSettings
 {
     private string GetProcessToolPath()
     {
@@ -133,7 +133,7 @@ public partial class ConfixVariablesListSettings
     }
 }
 
-public partial class ConfixVariablesCopySettings
+public partial class ConfixVariableCopySettings
 {
     private string GetProcessToolPath()
     {
