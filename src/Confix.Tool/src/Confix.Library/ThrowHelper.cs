@@ -27,13 +27,13 @@ public static class ThrowHelper
     public static Exception VariableNotFound(string name) =>
         throw new ExitException($"Variable not found: {name}")
         {
-            Help = "Run [blue]confix variables list[/] to see all available variables."
+            Help = "Run [blue]confix variable list[/] to see all available variables."
         };
 
     public static Exception VariablesNotFound(string[] names) =>
         throw new ExitException($"Variables not found: {string.Join(", ", names)}")
         {
-            Help = "Run [blue]confix variables list[/] to see all available variables."
+            Help = "Run [blue]confix variable list[/] to see all available variables."
         };
 
     public static Exception CouldNotParseJsonFile(FileInfo file)
@@ -43,7 +43,7 @@ public static class ThrowHelper
         new ExitException("Secret does not exist in this provider.", innerException)
         {
             Help =
-                $"try running {"confix variables list".AsHighlighted()} to list all available variables"
+                $"try running {"confix variable list".AsHighlighted()} to list all available variables"
         };
 
     public static Exception AccessToKeyVaultFailed(Exception innerException) =>
