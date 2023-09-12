@@ -303,8 +303,8 @@
     },
     {
       "help": "resolves a variable by name",
-      "postfix": "VariablesGet",
-      "definiteArgument": "variables get",
+      "postfix": "VariableGet",
+      "definiteArgument": "variable get",
       "settingsClass": {
         "properties": [
           {
@@ -330,8 +330,8 @@
     },
     {
       "help": "sets a variable. Overrides existing value if any.",
-      "postfix": "VariablesSet",
-      "definiteArgument": "variables set",
+      "postfix": "VariableSet",
+      "definiteArgument": "variable set",
       "settingsClass": {
         "properties": [
           {
@@ -363,8 +363,8 @@
     },
     {
       "help": "list available variables",
-      "postfix": "VariablesList",
-      "definiteArgument": "variables list",
+      "postfix": "VariableList",
+      "definiteArgument": "variable list",
       "settingsClass": {
         "properties": [
           {
@@ -390,8 +390,8 @@
     },
     {
       "help": "Copies a variable from one provider to another provider",
-      "postfix": "VariablesCopy",
-      "definiteArgument": "variables copy",
+      "postfix": "VariableCopy",
+      "definiteArgument": "variable copy",
       "settingsClass": {
         "properties": [
           {
