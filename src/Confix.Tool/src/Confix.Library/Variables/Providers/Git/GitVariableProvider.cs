@@ -3,8 +3,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Utilities;
-using static System.Environment.SpecialFolder;
-using static System.Environment.SpecialFolderOption;
 using static Confix.Utilities.GitHelpers;
 
 namespace Confix.Variables;
@@ -108,11 +106,7 @@ public sealed class GitVariableProvider : IVariableProvider
     }
 
     private static string GetCloneDirectory(GitVariableProviderDefinition providerDefinition)
-        => Path.Combine(
-            Environment.GetFolderPath(ApplicationData, Create),
-            ".confix",
-            "git",
-            Guid.NewGuid().ToString());
+        => Path.Combine(Path.GetTempPath(), ".confix", "git", Guid.NewGuid().ToString());
 }
 
 file static class Extensions
