@@ -34,7 +34,7 @@ public sealed class LocalVariableProvider : IVariableProvider
         _localFile = new FileInfo(definition.Path);
         _parsedLocalFile = new(ParseConfiguration);
     }
-    
+
     public static string Type => "local";
 
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
@@ -44,7 +44,7 @@ public sealed class LocalVariableProvider : IVariableProvider
     {
         EnsureConfigFile();
 
-        if (_parsedLocalFile.Value.TryGetValue(path, out var value) && value is not null)
+        if (_parsedLocalFile.Value.TryGetValue(path, out JsonNode? value))
         {
             return Task.FromResult(value.Copy()!);
         }
@@ -101,7 +101,7 @@ public sealed class LocalVariableProvider : IVariableProvider
         if (!_localFile.Exists)
         {
             // If the file does not exist we just return an empty dictionary. This is needed
-            // for the case when the user does not have a local configuration file. 
+            // for the case when the user does not have a local configuration file.
             App.Log.ConfigFileNotFound(_localFile);
             return null;
         }
