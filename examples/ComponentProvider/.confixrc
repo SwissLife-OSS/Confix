@@ -1,0 +1,18 @@
+{
+  "project": {
+    "componentProviders": [
+      {
+        "name": "shared",
+        "type": "git",
+        "repositoryUrl": "https://github.com/SwissLife-OSS/Confix.git",
+        "path": "examples/ComponentRegistry"
+      }
+    ],
+    "configurationFiles": [
+      {
+        "type": "appsettings",
+        "useUserSecrets": true
+      }
+    ]
+  }
+}

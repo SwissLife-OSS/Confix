@@ -25,6 +25,11 @@ public sealed class LocalComponentProvider : IComponentProvider, IAsyncDisposabl
             .Where(x => x.Provider == Name && x.IsEnabled)
             .ToList();
 
+        if (!Directory.Exists(componentFolder.FullName))
+        {
+            return;
+        }
+
         foreach (var directory in componentFolder.GetDirectories())
         {
             var componentFile = directory.Append(FileNames.ConfixComponent);
@@ -65,7 +70,7 @@ public sealed class LocalComponentProvider : IComponentProvider, IAsyncDisposabl
                 name,
                 "latest",
                 reference?.IsEnabled ?? true,
-                reference?.MountingPoints ?? new List<string>(){name},
+                reference?.MountingPoints ?? new List<string>() { name },
                 schema));
 
             if (reference is not null)
