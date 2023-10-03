@@ -1,10 +1,6 @@
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Nodes;
+using Confix.Tool;
 using Confix.Utilities;
-using static System.Environment.SpecialFolder;
-using static System.Environment.SpecialFolderOption;
 using static Confix.Utilities.GitHelpers;
 
 namespace Confix.Variables;
@@ -81,10 +77,28 @@ public sealed class GitVariableProvider : IVariableProvider
     {
         if (Directory.Exists(_cloneDirectory))
         {
-            Directory.Delete(_cloneDirectory, true);
+            Directory
+                .EnumerateFiles(_cloneDirectory, "*", SearchOption.AllDirectories)
+                .ForEach(DeleteFile);
         }
 
         return ValueTask.CompletedTask;
+    }
+
+    private static void DeleteFile(string file)
+    {
+        var fileInfo = new FileInfo(file);
+        if (!fileInfo.Exists)
+        {
+            return;
+        }
+
+        if (fileInfo.IsReadOnly)
+        {
+            File.SetAttributes(file, FileAttributes.Normal);
+        }
+
+        File.Delete(file);
     }
 
     private async Task EnsureClonedAsync(bool forcePull, CancellationToken ct)
@@ -108,18 +122,5 @@ public sealed class GitVariableProvider : IVariableProvider
     }
 
     private static string GetCloneDirectory(GitVariableProviderDefinition providerDefinition)
-        => Path.Combine(
-            Environment.GetFolderPath(ApplicationData, Create),
-            ".confix",
-            "git",
-            Guid.NewGuid().ToString());
-}
-
-file static class Extensions
-{
-    public static string GetMd5Hash(this object obj)
-    {
-        var hash = MD5.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(obj)));
-        return Convert.ToHexString(hash);
-    }
+        => Path.Combine(Path.GetTempPath(), ".confix", "git", Guid.NewGuid().ToString());
 }
