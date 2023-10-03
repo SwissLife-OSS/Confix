@@ -1,0 +1,8 @@
+type Configuration {
+    Test: Test!
+    Example: String!
+}
+
+type Test {
+    ExampleProperty: String!
+}
