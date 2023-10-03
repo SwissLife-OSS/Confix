@@ -2,6 +2,7 @@ using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Entities.Components;
+using Confix.Tool.Entities.Components.Local;
 
 namespace Confix.Tool.Middlewares;
 
@@ -25,7 +26,7 @@ public sealed class ComponentProviderExecutor
 
     private readonly Dictionary<(ProjectDefinition, SolutionDefinition), IList<Component>> _cache =
         new();
-    
+
     public async Task<IList<Component>> LoadComponents(
         SolutionDefinition solution,
         ProjectDefinition project,
@@ -64,11 +65,7 @@ public sealed class ComponentProviderExecutor
             providers.Add(componentProviders.CreateProvider(configuration));
         }
 
-        if (providers.Count == 0)
-        {
-            App.Log.LoadedComponentProvider();
-        }
-
+        providers.Add(new LocalComponentProvider());
         providers.Add(new MergeComponentProvider());
 
         return new ComponentProviderExecutor(providers);
@@ -94,12 +91,6 @@ file static class Log
         console.Debug($"Component provider '{name}' loaded");
     }
 
-    public static void LoadedComponentProvider(this IConsoleLogger console)
-    {
-        console.Warning(
-            "No component providers loaded because no component providers were defined. You can define component providers in the 'confix.json' or the 'confix.solution' file.");
-    }
-
     public static void LogComponentsLoaded(
         this IConsoleLogger console,
         ICollection<Component> components)
@@ -107,7 +98,7 @@ file static class Log
         console.Success($"Loaded {components.Count} components");
         foreach (var component in components)
         {
-            console.Information($"-  @{component.Provider}/{component.ComponentName}");
+            console.Information($"-  {component.GetKey()}");
         }
     }
 }

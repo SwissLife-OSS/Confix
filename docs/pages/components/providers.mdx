@@ -1,0 +1,14 @@
+# Providers
+
+In Confix, it's essential to specify where the system should search for component references.
+This is done by defining **component providers**.
+These providers can point to various sources, such as component registries or .NET packages, to locate the related components.
+
+## Available Providers
+
+Here's a look at some available component providers and their descriptions:
+
+| Name             | Description                                        |
+| ---------------- | -------------------------------------------------- |
+| `dotnet-package` | Lets confix discover components from .NET packages |
+| `git`            | Defines a git repository with confix components    |

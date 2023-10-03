@@ -13,13 +13,12 @@ public sealed class EnvironmentMiddleware : IMiddleware
             return next(context);
         }
 
-        var activeEnvironment = ResolveFromArgument(context) ?? ResolveFromConfiguration(context);
+        var activeEnvironment = ResolveFromArgument(context) ??
+            ResolveFromConfiguration(context) ??
+            EnvironmentDefinition.Default;
 
-        if (activeEnvironment is not null)
-        {
-            context.Logger.EnvironmentResolved(activeEnvironment.Name);
-            context.Features.Set(new EnvironmentFeature(activeEnvironment));
-        }
+        context.Logger.EnvironmentResolved(activeEnvironment.Name);
+        context.Features.Set(new EnvironmentFeature(activeEnvironment));
 
         return next(context);
     }
@@ -49,20 +48,12 @@ public sealed class EnvironmentMiddleware : IMiddleware
             configurationFeature.Project?.Environments.Where(e => e.Enabled).ToArray()
             ?? Array.Empty<EnvironmentDefinition>();
 
-        if (enabledEnvironments.Length == 0)
-        {
-            context.Logger.EnvironmentNotSet();
-
-            return null;
-        }
-
-        if (enabledEnvironments.Length == 1)
+        if (enabledEnvironments.Length > 0)
         {
             return enabledEnvironments[0];
         }
 
-        context.Logger.MultipleActiveEnvironments();
-        throw InvalidEnvironmentConfiguration();
+        return null;
     }
 
     private static ExitException InvalidEnvironmentConfiguration()
@@ -79,8 +70,4 @@ file static class Log
 
     public static void MultipleActiveEnvironments(this IConsoleLogger console)
         => console.Error("Multiple Environments are marked as active");
-
-    public static void EnvironmentNotSet(this IConsoleLogger console)
-        => console.Inform(
-            $"No active environment set. Use --environment or set one environment in .confixrc as active");
 }

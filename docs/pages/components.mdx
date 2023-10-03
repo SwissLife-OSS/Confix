@@ -1,0 +1,104 @@
+import { Callout } from "nextra/components";
+import { FileTree } from "nextra-theme-docs";
+
+# Components
+
+## Understanding Components in Confix
+
+In Confix, every configuration is broken down into elements known as components. These components act as a blueprint, ensuring your configuration aligns with a defined structure or schema.
+
+### Reusability
+
+One of the great advantages of components is their reusability across different applications. You can easily share a component by distributing it through a component registry. This feature is especially beneficial when you package the component with its definition. For instance, when releasing a Nuget package that includes the component definition, you simply need to reference the package in your code. Confix will then automatically identify and integrate these components.
+
+### Local and Shared Components
+
+While it’s possible to define components locally beside the application you are configuring, the true power of components is realized when managing shared and repeated configurations across your applications. For example, if you have multiple applications using the same OpenId Connect authorization setup, you can consolidate the configuration code and components (like authority, scopes, and URLs) into a new package.
+
+### Structure of Components
+
+In essence, a component is a JSON schema that outlines the specific shape and details of your configuration. This schema acts as a guide, helping you effortlessly manage and validate your configuration setup, ensuring everything works seamlessly together.
+
+With Confix components, handle your configuration needs effectively, ensuring consistency and reusability across various applications, while simplifying the configuration process.
+
+In Confix, you have two key things to set up: component inputs and component providers.
+Think of component inputs as the settings that tell Confix all about the components you've created.
+They make sure Confix knows how to handle your custom components properly.
+On the other hand, component providers are the tools that help Confix find and use other components from different places like packages or registries.
+So, component inputs focus on your own components, while component providers deal with finding and using components from other sources.
+
+## Commands
+
+### `confix component init`
+
+Creates a new component in the `.confix.project`
+
+```bash
+confix component init my-component-name
+```
+
+### `confix component list`
+
+Lists all the components
+
+```bash
+confix component list
+```
+
+```ansi
+   - Security
+   - DataProtection
+   - Other
+```
+
+You can also define a `--format` to export the conmponent as json
+
+```bash
+confix component list --format json
+```
+
+```ansi
+{
+  "components": [
+    {
+      "provider": "dotnet-package",
+      "componentName": "Security",
+      "version": null,
+      "isEnabled": true,
+      "schema": { ... },
+      "mountingPoints": [ "Security" ]
+    },
+    {
+      "provider": "dotnet-package",
+      "componentName": "DataProtection",
+      "version": null,
+      "isEnabled": true,
+      "schema": { ... },
+      "mountingPoints": [ "DataProtection" ]
+    },
+    {
+      "provider": "dotnet-package",
+      "componentName": "Other",
+      "version": null,
+      "isEnabled": true,
+      "schema": { ... },
+      "mountingPoints": [ "Other" ]
+    }
+  ]
+```
+
+### `confix component build`
+
+Builds a component. This will generate the schema and the component definition
+
+```bash
+confix component build
+```
+
+### `confix component add`
+
+Adds a component to the project
+
+```bash
+confix component add @shared/ComponentName
+```

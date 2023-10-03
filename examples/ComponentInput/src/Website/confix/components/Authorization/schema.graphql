@@ -1,0 +1,5 @@
+type Configuration {
+  authority: String!
+  clientId: String!
+  clientSecret: String!
+}
