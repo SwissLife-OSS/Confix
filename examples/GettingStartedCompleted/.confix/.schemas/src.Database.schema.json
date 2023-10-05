@@ -1,0 +1,88 @@
+{
+  "$defs": {
+    "Database_Configuration": {
+      "type": "object",
+      "properties": {
+        "ConnectionString": {
+          "$ref": "#/$defs/Database_String",
+          "deprecated": false
+        },
+        "DatabaseName": {
+          "$ref": "#/$defs/Database_String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "ConnectionString",
+        "DatabaseName"
+      ],
+      "additionalProperties": false
+    },
+    "Database_String": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true,
+          "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
+        }
+      ]
+    },
+    "Database_Boolean": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "boolean",
+          "hasVariable": true,
+          "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
+        }
+      ]
+    },
+    "Database_JSON": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true
+        }
+      ]
+    },
+    "Database": {
+      "properties": {
+        "ConnectionString": {
+          "$ref": "#/$defs/Database_String",
+          "deprecated": false
+        },
+        "DatabaseName": {
+          "$ref": "#/$defs/Database_String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "ConnectionString",
+        "DatabaseName"
+      ],
+      "additionalProperties": false,
+      "examples": [],
+      "title": ""
+    },
+    "Confix_Variables": {
+      "type": "string",
+      "enum": []
+    }
+  },
+  "properties": {
+    "Database": {
+      "$ref": "#/$defs/Database"
+    }
+  },
+  "required": [
+    "Database"
+  ]
+}

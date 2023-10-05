@@ -44,13 +44,18 @@ public sealed class EnvironmentMiddleware : IMiddleware
     private static EnvironmentDefinition? ResolveFromConfiguration(IMiddlewareContext context)
     {
         var configurationFeature = context.Features.Get<ConfigurationFeature>();
-        var enabledEnvironments =
-            configurationFeature.Project?.Environments.Where(e => e.Enabled).ToArray()
-            ?? Array.Empty<EnvironmentDefinition>();
+        var environments = configurationFeature.Project?.Environments?.ToArray() ??
+            Array.Empty<EnvironmentDefinition>();
+        var enabledEnvironments = environments.Where(e => e.Enabled).ToArray();
 
         if (enabledEnvironments.Length > 0)
         {
             return enabledEnvironments[0];
+        }
+
+        if (environments.Length > 0)
+        {
+            return environments[0];
         }
 
         return null;

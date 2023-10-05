@@ -30,5 +30,5 @@ public sealed record EnvironmentDefinition(
         writer.WriteEndObject();
     }
 
-    public static EnvironmentDefinition Default { get; } = new("Prod", true);
+    public static EnvironmentDefinition Default { get; } = new("prod", true);
 }

@@ -1,0 +1,121 @@
+import { Callout } from "nextra/components";
+import { FileTree } from "nextra-theme-docs";
+
+# Deploying your App
+
+Confix is designed to integrate into any stage of your application deployment, providing you with
+the flexibility to replace variables in your configuration files when and how you see fit. Confix
+does not impose a specific approach to variable replacement in configuration files. Rather, it
+supports various methodologies, allowing you to choose one that best suits your deployment process,
+security and application requirements and taste.
+
+The following sections of the documentation
+provide more information about how you can utilize Confix during different stages of the deployment
+process: build time, deploy time, and runtime.
+
+## Build Time
+
+When building your application's configuration, Confix provides the `confix build` command to
+replace the variables in your configuration files with their actual values. Confix calls the
+variable providers to resolve these variables. You can specify the desired environment for your
+build by using the `--environment` flag.
+
+This strategy is particularly useful when you wish to create configuration files and deploy them
+directly to a web app or web server.
+
+<Callout type="warning">
+  **Caution for Container Deployment**:
+  <br />
+  If you intend to deploy your application within a container, take extra
+  precaution with this approach. It is important to first encrypt the
+  configuration files using a public key, and then decrypt them at runtime
+  within the container. If you not do this means your container image will
+  contain plaintext secrets, which could be accessed by anyone with access to
+  the container image.
+</Callout>
+
+**Pros:**
+
+1. Easy setup: The `confix build` command and the `--environment` flag are straightforward to use and it may be enough for your application's needs
+2. Consistent variables across deployments: If you need to rollback a deployment, the variables remain the same as the last time you deployed the app.
+
+**Cons:**
+
+1. Need for encryption in containers: When deploying your application within a container, you need to encrypt your configuration files to prevent exposing secrets in the container image.
+2. You need different container images for different environments: If you need to deploy your application to multiple environments, you need to build a separate container image for each environment.
+
+## Build Time (Encrypted)
+
+In containerized applications, you probably should not to embed secrets in your container image at build time.
+Doing so could expose these secrets to anyone who gains access to the container image.
+
+Confix has the ability to encrypt and decrypt configuration files using a asymetric key pair.
+
+This strategy captures the configuration on build time and then encrypts it using a public key.
+You get all the benefits of the build time strategy, but without having to worry about exposing
+secrets in your container image or as your pipeline artifacts.
+
+To get the decrypted config into the container you can mount it as a volume (e.g. Kubernetes secret) at deploy time.
+
+Encrypt:
+
+```bash
+confix build --environment=dev --output-file ./appsettings_dev.json.enc --encrypt
+# or
+confix encrypt ./appsettings_dev.json ./appsettings_dev.json.enc
+```
+
+Decrypt:
+
+```bash
+confix decrypt ./appsettings_dev.json.enc ./appsettings_dev.json
+```
+
+**Pros:**
+
+1. **Consistent container image across environments (when mounted as a volume):** This approach lets you use the same container image for all your environments.
+
+2. **Independence from variable providers:** The application does not need to have access to the variable providers at runtime.
+
+3. **Tolerant to provider downtime:** The variable providers can be down when you restart or rollback the app.
+
+4. **Consistent variables across deployments:** You can rollback a deployment and still have the same variables as the last time you deployed the app.
+
+**Cons:**
+
+1. **Increased complexity**: You need to encrypt and decrypt the configuration files.
+2. **Limited to infrastructure that supports mounting volumes**: You can only use this approach in environments that support mounting volumes (e.g. Kubernetes).
+
+## Deploy Time
+
+With a few adjustments to `Build Time+`, you can use Confix to replace variables in your variables in your configuration files at deploy time.
+
+Instead of encrypting the config in the release pipeline and then decrypt it on release and mount it
+as a volume, you can use the `confix build` on release of the container and then mount the config as a volume.
+
+**Pros:**
+
+1. **Consistent container image across environments (when mounted as a volume)**: This approach lets you use the same container image for all your environments.
+
+2. **More dynamic updates:** You can change the variables in the variable provider and then simply restart the deployment of the container to apply the new value.
+
+**Cons:**
+
+1. **Limited redeployments:** You cannot redeploy (but still rollback with e.g. Helm ) a deployment and get the same variables as the last time you deployed the app.
+2. **Limited to infrastructure that supports mounting volumes:** You can only use this approach in environments that support mounting volumes (e.g. Kubernetes).
+
+## Runtime
+
+In this strategy for managing configuration, variables are resolved when the container starts up.
+The `confix build` command is embedded within your Dockerfile, and at startup, this command attempts to resolve the variables.
+
+**Pros**:
+
+1. **Dynamic Updates:** This approach provides flexibility and allows you to change a variable and then simply restart the container to apply the new value. This is advantageous when variables need to be frequently updated.
+2. **Immediate Variable Changes:** All changes to the variables in the variable provider are immediately effective upon the next container startup, keeping your application configuration up-to-date.
+
+**Cons**:
+
+1. **Dependency on Variable Providers:** Your variable providers must be operational when you start the container. If they're down, the container will fail to start, causing service disruptions.
+2. **Container Access to Providers:** The container must have access to the variable providers, meaning you must ensure the necessary permissions and network access are set up. This adds complexity to your setup.
+3. **Rollback Inconsistencies:** When you roll back a deployment, you may not get the same variables as the ones used during the last deployment. Variables are retrieved at runtime, meaning changes to the variables in the providers after the initial deployment will be reflected in the rolled back version, potentially causing inconsistency issues.

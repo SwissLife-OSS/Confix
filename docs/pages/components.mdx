@@ -7,15 +7,9 @@ import { FileTree } from "nextra-theme-docs";
 
 In Confix, every configuration is broken down into elements known as components. These components act as a blueprint, ensuring your configuration aligns with a defined structure or schema.
 
-### Reusability
-
 One of the great advantages of components is their reusability across different applications. You can easily share a component by distributing it through a component registry. This feature is especially beneficial when you package the component with its definition. For instance, when releasing a Nuget package that includes the component definition, you simply need to reference the package in your code. Confix will then automatically identify and integrate these components.
 
-### Local and Shared Components
-
-While it’s possible to define components locally beside the application you are configuring, the true power of components is realized when managing shared and repeated configurations across your applications. For example, if you have multiple applications using the same OpenId Connect authorization setup, you can consolidate the configuration code and components (like authority, scopes, and URLs) into a new package.
-
-### Structure of Components
+While it's possible to define components locally beside the application you are configuring, the true power of components is realized when managing shared and repeated configurations across your applications. For example, if you have multiple applications using the same OpenId Connect authorization setup, you can consolidate the configuration code and components (like authority, scopes, and URLs) into a new package.
 
 In essence, a component is a JSON schema that outlines the specific shape and details of your configuration. This schema acts as a guide, helping you effortlessly manage and validate your configuration setup, ensuring everything works seamlessly together.
 
