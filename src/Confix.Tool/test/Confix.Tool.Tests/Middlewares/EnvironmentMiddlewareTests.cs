@@ -106,7 +106,7 @@ public class EnvironmentMiddlewareTests
         // assert
         isNextInvoked.Should().BeTrue();
         featureCollection.TryGet(out EnvironmentFeature? environmentFeature);
-        environmentFeature.Should().BeNull();
+        environmentFeature.Should().NotBeNull();
     }
 
     [Fact]
@@ -157,11 +157,14 @@ public class EnvironmentMiddlewareTests
         // assert
         isNextInvoked.Should().BeTrue();
         featureCollection.TryGet(out EnvironmentFeature? environmentFeature);
-        environmentFeature.Should().BeNull();
+        environmentFeature
+            .Should()
+            .NotBeNull()
+            .And.Match<EnvironmentFeature>(x => x.ActiveEnvironment == testEnvironment);
     }
 
     [Fact]
-    public async Task InvokeAsync_MultipleEnabledEnvironment_Throws()
+    public async Task InvokeAsync_MultipleEnabledEnvironment_FirstShouldBeReturned()
     {
         // arrange
         var testEnvironment1 = new EnvironmentDefinition(
@@ -206,9 +209,11 @@ public class EnvironmentMiddlewareTests
         };
 
         // act && assert
-        await Assert.ThrowsAsync<ExitException>(
-            () => middleware.InvokeAsync(middelwareContext.Object, next));
-        isNextInvoked.Should().BeFalse();
+        await middleware.InvokeAsync(middelwareContext.Object, next);
+        // assert
+        var environmentFeature = featureCollection.Get<EnvironmentFeature>();
+        Assert.NotNull(environmentFeature);
+        Assert.Equal(testEnvironment1, environmentFeature.ActiveEnvironment);
     }
 
     [Fact]
