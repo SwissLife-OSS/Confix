@@ -9,7 +9,7 @@
   Merged .confix.component from .confix.solution
 ✓ Running in scope Project
 ✓ Configuration loaded
-i No active environment set. Use --environment or set one environment in .confixrc as active
+✓ Active Environment is prod
   Component detected:test <</tmp>>/content/confix/components/test/.confix.component
   Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
   Configuration files of type .confix.solution located at <</tmp>>/content/.confix.solution
@@ -43,9 +43,10 @@ i No active environment set. Use --environment or set one environment in .confix
   Found manifest resource in assembly 'Confix.confix.components.test..confix.component': Confix
   Found manifest resource in assembly 'Confix.confix.components.test.schema.graphql': Confix
   Found manifest resource in assembly 'Confix.confix.components.test.schema.json': Confix
+  Found component test in provider __LOCAL
+  Skipped component test because it was already discovered by dotnet-package
   Start loading components from project '.'
 ✓ Loaded 1 components
   -  @dotnet-package/test
-   - test
   Skipping IntelliJ IDEA settings file as there is no .idea folder in the solution root. Expected location: <</tmp>>/content/.idea
 

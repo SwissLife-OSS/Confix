@@ -31,4 +31,7 @@ public class Component
     public JsonSchema Schema { get; set; }
 
     public IReadOnlyList<string> MountingPoints { get; set; }
+    
+    public string GetKey()
+        => ComponentHelpers.GetKey(Provider, ComponentName);
 }

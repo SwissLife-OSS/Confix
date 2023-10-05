@@ -1,13 +1,15 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using Confix.Tool;
 using Json.More;
 using Json.Schema;
+using Spectre.Console;
 
 namespace Confix.Utilities.Json;
 
-public static class JsonNodeExtensions
+public static partial class JsonNodeExtensions
 {
     public static bool TryGetNonNullPropertyValue(
         this JsonObject obj,
@@ -91,33 +93,102 @@ public static class JsonNodeExtensions
         string path,
         JsonNode value)
     {
-        var segments = path.Split('.');
+        var segments = new List<object>();
+        foreach (var segment in path.Split('.'))
+        {
+            var match = ParseSegmentRegex().Match(segment);
+            if (match.Success)
+            {
+                segments.Add(match.Groups["name"].Value);
+                segments.Add(int.Parse(match.Groups["index"].Value));
+            }
+            else
+            {
+                segments.Add(segment);
+            }
+        }
+
         var current = node;
         var currentPath = "/";
 
-        for (var i = 0; i < segments.Length - 1; i++)
+        for (var i = 0; i < segments.Count - 1; i++)
         {
             var segment = segments[i];
-
-            if (current is not JsonObject)
+            if (segment is string stringSegment)
             {
-                throw new ExitException(
-                    $"Could not set value in file because the path {path} is not an object");
+                if (current is not JsonObject)
+                {
+                    throw new ExitException(
+                        $"Could not set value in file because the path {path.EscapeMarkup()} is not an object");
+                }
+
+                current[stringSegment] ??= GetNextNode();
+
+                current = current[stringSegment];
+                currentPath = Path.Join(currentPath, stringSegment);
+            }
+            else if (segment is int indexSegment)
+            {
+                if (current is not JsonArray arr)
+                {
+                    throw new ExitException(
+                        $"Could not set value in file because the path {path.EscapeMarkup()} is not an array");
+                }
+
+                if (indexSegment >= arr.Count)
+                {
+                    var nextNode = GetNextNode();
+                    arr.Add(nextNode);
+                    current = nextNode;
+                }
+                else
+                {
+                    current = current[indexSegment];
+                }
+
+                currentPath = Path.Join(currentPath, indexSegment.ToString());
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unknown segment type {segment.GetType()}");
             }
 
-            current[segment] ??= new JsonObject();
+            continue;
 
-            current = current[segment];
-            currentPath = Path.Join(currentPath, segment);
+            JsonNode GetNextNode()
+            {
+                if (segments.Count == i + 1)
+                {
+                    return value;
+                }
+
+                var nextSegment = segments[i + 1];
+                if (nextSegment is string)
+                {
+                    return new JsonObject();
+                }
+
+                if (nextSegment is int)
+                {
+                    return new JsonArray();
+                }
+
+                return value;
+            }
         }
 
-        if (current is not JsonObject)
+        if (segments[^1] is string str && current is JsonObject)
         {
-            throw new ExitException(
-                $"Could not set value in file because the path {path} is not an object");
+            current[str] = value;
         }
-
-        current[segments[^1]] = value;
+        else if (segments[^1] is int index && current is JsonArray)
+        {
+            current[index] = value;
+        }
+        else
+        {
+            throw new InvalidOperationException($"Unknown segment type {segments[^1].GetType()}");
+        }
 
         return node;
     }
@@ -131,4 +202,7 @@ public static class JsonNodeExtensions
             node,
             new JsonSerializerOptions { WriteIndented = true },
             cancellationToken);
+
+    [GeneratedRegex(@"^(?<name>.+?)\[(?<index>\d+)]$")]
+    private static partial Regex ParseSegmentRegex();
 }

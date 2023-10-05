@@ -23,6 +23,8 @@ public sealed class VariableSetPipeline : Pipeline
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
+        context.Features.Get<ConfigurationFeature>().EnsureProjectScope();
+
         var resolver = context.Features.Get<VariableResolverFeature>().Resolver;
         if (!context.Parameter.TryGet(VariableNameOption.Instance, out string variableName))
         {

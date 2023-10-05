@@ -296,8 +296,19 @@ public class LocalVariableProviderTests : IDisposable
         LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
         // act & assert
-        await Assert.ThrowsAsync<ExitException>(()
-            => provider.SetAsync("foo.bar", JsonValue.Create("baz")!, default));
+        await provider.SetAsync("foo[0].bar", JsonValue.Create("qux"), default);
+
+        Assert.Equal(
+            """
+            {
+              "foo": [
+                {
+                  "bar": "qux"
+                }
+              ]
+            }
+            """,
+            await File.ReadAllTextAsync(tmpFilePath));
     }
 
     private Task PrepareFile(string content) => File.WriteAllTextAsync(tmpFilePath, content);

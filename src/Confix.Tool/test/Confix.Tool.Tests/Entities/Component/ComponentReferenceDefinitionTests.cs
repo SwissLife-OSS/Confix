@@ -7,7 +7,7 @@ namespace Confix.Entities.Component.Configuration;
 public class ComponentReferenceDefinitionTests
 {
     [Fact]
-    public void From_Should_Throw_When_ProviderIsNull()
+    public void From_Should_NotThrow_When_ProviderIsNull()
     {
         // Arrange
         var configuration = new ComponentReferenceConfiguration(
@@ -18,10 +18,10 @@ public class ComponentReferenceDefinitionTests
             new List<string>());
 
         // Act
-        var exception = Assert.Throws<ValidationException>(() => ComponentReferenceDefinition.From(configuration));
+        var definition = ComponentReferenceDefinition.From(configuration);
 
         // Assert
-        exception.Errors.Should().HaveCount(1);
+        Assert.Null(definition.Provider);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class ComponentReferenceDefinitionTests
         var exception = Assert.Throws<ValidationException>(() => ComponentReferenceDefinition.From(configuration));
 
         // Assert
-        exception.Errors.Should().HaveCount(2);
+        exception.Errors.Should().HaveCount(1);
     }
 
     [Fact]

@@ -1,0 +1,86 @@
+import { Callout } from "nextra/components";
+import { FileTree } from "nextra-theme-docs";
+
+# Providers
+
+In Confix, it's essential to specify where the system should search for component references.
+This is done by defining **component providers**.
+These providers can point to various sources, such as component registries or .NET packages, to locate the related components.
+
+# Getting Started
+
+In this example we will configure the `git` provider and fetch components from a git repository.
+
+<Callout type="info">
+  If you use the `dotnet-package` provider, you will not need to reference
+  components in the project file. This is all done over the package references!
+</Callout>
+
+Make sure you do have a repository that has defines a `.confixrc` a `.confix.solution` and a `.confix.project` file.
+For example like this:
+
+<FileTree>
+  <FileTree.Folder name="/" defaultOpen>
+    <FileTree.File name=".confixrc" active />
+    <FileTree.File name=".confix.solution" active />
+    <FileTree.Folder name="src" defaultOpen>
+      <FileTree.Folder name="Website" defaultOpen>
+        <FileTree.File name=".confix.project" active />
+        <FileTree.File name="appsettings.json" />
+        <FileTree.File name="Program.cs" />
+        <FileTree.File name="Website.csproj" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+To use a provider, you need to define them in the `project.componentProviders` section in your `.confixrc` file.
+We
+
+```json
+{
+  "project": {
+    "componentProviders": [
+      {
+        "name": "shared", // <-- this is the name of the provider that we will use later
+        "type": "git",
+        "repositoryUrl": "https://github.com/SwissLife-OSS/Confix.git",
+        "path": "examples/ComponentRegistry"
+      }
+    ],
+    "configurationFiles": [
+      {
+        "type": "appsettings",
+        "useUserSecrets": true
+      }
+    ]
+  }
+}
+```
+
+You can checkout the component registry here: https://github.com/SwissLife-OSS/Confix.git
+
+We can now add components to our project from the registry by calling
+
+```bash
+confix component add @shared/Example
+```
+
+```ascii
+✓ Running in scope Project
+✓ Configuration loaded
+✓ Component inputs loaded
+✓ Component '@shared/Example' was added
+```
+
+By executing this command the component provider `git` is invoked and checks the repository for the component `Example`.
+If found, the component is added to the `.confix.project`.
+
+## Available Providers
+
+Here's a look at some available component providers and their descriptions:
+
+| Name             | Description                                        |
+| ---------------- | -------------------------------------------------- |
+| `dotnet-package` | Lets confix discover components from .NET packages |
+| `git`            | Defines a git repository with confix components    |

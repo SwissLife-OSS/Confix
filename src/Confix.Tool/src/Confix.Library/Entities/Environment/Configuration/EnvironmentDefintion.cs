@@ -29,4 +29,6 @@ public sealed record EnvironmentDefinition(
         writer.WriteBoolean(EnvironmentConfiguration.FieldNames.Enabled, Enabled);
         writer.WriteEndObject();
     }
+
+    public static EnvironmentDefinition Default { get; } = new("prod", true);
 }

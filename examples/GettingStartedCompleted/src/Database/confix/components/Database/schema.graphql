@@ -1,0 +1,4 @@
+type Configuration {
+    ConnectionString: String!
+    DatabaseName: String!
+}

@@ -9,7 +9,7 @@
   Merged .confix.component from .confix.solution
 ✓ Running in scope Project
 ✓ Configuration loaded
-i No active environment set. Use --environment or set one environment in .confixrc as active
+✓ Active Environment is prod
   Component provider 'dotnet-package' loaded
 ✓ Component inputs loaded
   Start loading components from project '.'

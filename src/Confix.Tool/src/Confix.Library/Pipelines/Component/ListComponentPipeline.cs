@@ -47,12 +47,6 @@ public sealed class ListComponentPipeline : Pipeline
         if (components.Count == 0)
         {
             context.Logger.Information("No components found");
-            return;
-        }
-
-        foreach (var file in components)
-        {
-            context.Logger.Information(" - " + file.ComponentName);
         }
     }
 }

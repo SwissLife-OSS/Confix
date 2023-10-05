@@ -24,18 +24,17 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
 
         if (context.Project.Directory?.FindInPath(FileNames.AppSettings, false) is not { } input)
         {
-            // we create a appsettings.json file if we can find a csproj file. This will avoid
-            // the need to create a appsettings.json file in the project directory manually. 
+            // we cannot create a appsettings.json file because otherwise "component only" projects
+            // will be difficult to create. 
+            // We log a information though when we find a csproj file in the project directory that
+            // the project will be treated as a "component only" project.
             if (context.Project.Directory is { FullName: { } fullName } d &&
                 d.EnumerateFiles().Any(x => x.Extension == ".csproj"))
             {
-                input = new FileInfo(Path.Combine(fullName, FileNames.AppSettings));
-                await File.WriteAllTextAsync(input.FullName, "{}", ct);
+                context.Logger.ProjectTreatedAsComponentOnly(fullName);
             }
-            else
-            {
-                return Array.Empty<ConfigurationFile>();
-            }
+
+            return Array.Empty<ConfigurationFile>();
         }
 
         var output = input;
@@ -94,5 +93,13 @@ file static class Log
         FileInfo file)
     {
         console.Debug($"Use user secrets configuration file '{file}'");
+    }
+
+    public static void ProjectTreatedAsComponentOnly(
+        this IConsoleLogger console,
+        string projectDirectory)
+    {
+        console.Information(
+            $"The project directory '{projectDirectory}' will be treated as a component only project as it does not contain a {FileNames.AppSettings} file.");
     }
 }

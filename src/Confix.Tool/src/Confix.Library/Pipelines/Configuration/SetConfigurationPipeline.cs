@@ -43,7 +43,12 @@ public sealed class SetConfigurationPipeline : Pipeline
 
         closestConfixRc.Content.SetValue(path, node);
 
-        File.WriteAllText(closestConfixRc.File.FullName, closestConfixRc.Content.ToJsonString());
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
+        var json = closestConfixRc.Content.ToJsonString(options);
+        File.WriteAllText(closestConfixRc.File.FullName, json);
 
         return Task.CompletedTask;
     }

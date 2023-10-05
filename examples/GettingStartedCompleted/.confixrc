@@ -1,0 +1,49 @@
+{
+  "isRoot": true,
+  "component": {
+    "inputs": [
+      {
+        "type": "graphql"
+      },
+      {
+        "type": "dotnet"
+      }
+    ]
+  },
+  "project": {
+    "environments": [
+      {
+        "name": "dev"
+      },
+      {
+        "name": "prod"
+      }
+    ],
+    "configurationFiles": [
+      {
+        "type": "appsettings",
+        "useUserSecrets": false
+      }
+    ],
+    "componentProviders": [
+      {
+        "name": "dotnet",
+        "type": "dotnet-package"
+      }
+    ],
+    "variableProviders": [
+      {
+        "name": "example",
+        "type": "local",
+        "environmentOverride": {
+          "dev": {
+            "path": "/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Website/variables.dev.json"
+          },
+          "prod": {
+            "path": "/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Website/variables.prod.json"
+          }
+        }
+      }
+    ]
+  }
+}

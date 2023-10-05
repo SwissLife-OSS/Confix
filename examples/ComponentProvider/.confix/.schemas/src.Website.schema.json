@@ -1,0 +1,101 @@
+{
+  "$defs": {
+    "Example_Configuration": {
+      "type": "object",
+      "properties": {
+        "Test": {
+          "$ref": "#/$defs/Example_Test",
+          "deprecated": false
+        },
+        "Example": {
+          "$ref": "#/$defs/Example_String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "Test",
+        "Example"
+      ],
+      "additionalProperties": false
+    },
+    "Example_Test": {
+      "type": "object",
+      "properties": {
+        "ExampleProperty": {
+          "$ref": "#/$defs/Example_String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "ExampleProperty"
+      ],
+      "additionalProperties": false
+    },
+    "Example_String": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true,
+          "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
+        }
+      ]
+    },
+    "Example_Boolean": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "boolean",
+          "hasVariable": true,
+          "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
+        }
+      ]
+    },
+    "Example_JSON": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true
+        }
+      ]
+    },
+    "Example": {
+      "properties": {
+        "Test": {
+          "$ref": "#/$defs/Example_Test",
+          "deprecated": false
+        },
+        "Example": {
+          "$ref": "#/$defs/Example_String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "Test",
+        "Example"
+      ],
+      "additionalProperties": false,
+      "examples": [],
+      "title": ""
+    },
+    "Confix_Variables": {
+      "type": "string",
+      "enum": []
+    }
+  },
+  "properties": {
+    "Example": {
+      "$ref": "#/$defs/Example"
+    }
+  },
+  "required": [
+    "Example"
+  ]
+}

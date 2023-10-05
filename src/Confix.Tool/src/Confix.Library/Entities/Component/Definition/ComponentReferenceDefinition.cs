@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Confix.Tool.Entities.Components.Local;
 
 namespace Confix.Tool.Abstractions;
 
@@ -28,7 +29,8 @@ public sealed class ComponentReferenceDefinition
 
     public IReadOnlyList<string> MountingPoints { get; }
 
-    public string GetKey() => $"@{Provider}/{ComponentName}";
+    public string GetKey()
+        => ComponentHelpers.GetKey(Provider, ComponentName);
 
     public void WriteTo(Utf8JsonWriter writer)
     {
@@ -51,9 +53,10 @@ public sealed class ComponentReferenceDefinition
     public static ComponentReferenceDefinition From(ComponentReferenceConfiguration configuration)
     {
         List<string> validationErrors = new();
-        if (configuration.Provider is null)
+        var provider = configuration.Provider;
+        if (configuration.Provider is null or "")
         {
-            validationErrors.Add("Provider is not defined.");
+            provider = LocalComponentProvider.Name;
         }
 
         if (configuration.ComponentName is null)

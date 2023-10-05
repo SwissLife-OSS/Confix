@@ -1,0 +1,146 @@
+import { Callout } from "nextra/components";
+import { Steps, FileTree, Tabs, Tab } from "nextra-theme-docs";
+
+# Building Environments
+
+Now that we have a setup with working variables, it's time to tackle different requirements for each environment.
+For instance, the database connection string should vary between the development and production environments.
+
+In our example we want to replace the `$example:Website.Url` variable with different values for each environment.
+
+- For `dev`, use `http://localhost:5000`
+- For `prod`, use `https://mywebsite.com`
+
+We can define these environments in the `.confixrc` file.
+Without any specified environments, `prod` is implicitly added and is taken as the default.
+To address our needs, we'll list `dev` and `prod` environments in the `.confixrc`.
+
+```json filename=".confixrc" copy /environments/
+{
+  "component": { ...  },
+  "project": {
+    "environments": [
+      {
+        "name": "dev"
+      },
+      {
+        "name": "prod"
+      }
+    ],
+    "configurationFiles": [ ... ],
+    "componentProviders": [ ... ],
+    "variableProviders": [
+      {
+        "name": "example",
+        "type": "local",
+        "path": "$project:/variables.json"
+      }
+    ]
+  }
+}
+```
+
+One challenge is that we have only one `variables.json` file, but we need separate files for each environment.
+This is a common issue for all variable providers.
+For example, if using the `azure-keyvault` provider, you'd likely want different keyvaults for each environment.
+
+Confix configuration has a concept of `environmentOverride` to allow for settings to changes in each environment.
+In this scenario, we can set up `dev` and `prod` overrides for the `example` variable provider, specifically changing the `path` property.
+
+```json filename=".confixrc" copy /environmentOverride/
+{
+  "component": { ...  },
+  "project": {
+    "environments": [
+      {
+        "name": "dev"
+      },
+      {
+        "name": "prod"
+      }
+    ],
+    "configurationFiles": [ ... ],
+    "componentProviders": [ ... ],
+    "variableProviders": [
+      {
+        "name": "example",
+        "type": "local",
+        "environmentOverride": {
+          "dev": {
+            "path": "$project:/variables.dev.json"
+          },
+          "prod": {
+            "path": "$project:/variables.prod.json"
+          },
+        }
+      }
+    ]
+  }
+}
+```
+
+By default, the first listed environment is active unless specified otherwise.
+To change this, use the `--environment` flag when running confix.
+
+So, we need to rename the `variables.json` file to `variables.dev.json` to match the `dev` environment.
+
+```bash
+confix variable set --environment prod
+```
+
+```ansi
+[32m✓[22;39m Running in scope [1;94mProject
+[32m✓[22;39m Configuration loaded
+[1;32m✓[22;39m Active Environment is [1;94mprod
+[92m?[22;39m Variable name: $example:Website.Url
+[1;92m?[22;39m Variable value: [91m********
+[1;93m![22;39m The local variable file was not found at the expected location. Created empty file at: '/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Website/variables.prod.json'
+[1;32m✓[22;39m Variable [32m$example:Website.Url[39m set successfully.[m
+```
+
+With these adjustments, we now have a setup with different environments.
+To build a specific environment, simply use the `--environment` flag with `confix build`.
+
+The project structure now looks like this:
+
+<FileTree>
+  <FileTree.Folder name="/" defaultOpen>
+    <FileTree.File name=".confixrc" />
+    <FileTree.File name=".confix.solution" />
+    <FileTree.Folder name="src" defaultOpen>
+      <FileTree.Folder name="Database">
+        <FileTree.Folder name="confix" defaultOpen>
+          <FileTree.Folder name="components" defaultOpen>
+            <FileTree.Folder name="Database" defaultOpen>
+              <FileTree.File name=".confix.component" />
+              <FileTree.File name="schema.graphql" />
+              <FileTree.File name="schema.json" />
+            </FileTree.Folder>
+          </FileTree.Folder>
+        </FileTree.Folder>
+        <FileTree.File name=".confix.project" />
+        <FileTree.File name="DatabaseServiceCollectionExtensions.cs" />
+        <FileTree.File name="Database.csproj" />
+      </FileTree.Folder>
+      <FileTree.Folder name="Website" defaultOpen>
+        <FileTree.Folder name="confix">
+          <FileTree.Folder name="components" defaultOpen>
+            <FileTree.Folder name="Website" defaultOpen>
+              <FileTree.File name=".confix.component" />
+              <FileTree.File name="schema.graphql" />
+              <FileTree.File name="schema.json" />
+            </FileTree.Folder>
+          </FileTree.Folder>
+        </FileTree.Folder>
+        <FileTree.File name=".confix.project" />
+        <FileTree.File name="appsettings.json" />
+        <FileTree.File name="Program.cs" />
+        <FileTree.File name="variables.dev.json" active />
+        <FileTree.File name="variables.prod.json" active />
+        <FileTree.File name="Website.csproj" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+[Continue to the next section to learn about how you deploy your application.](/getting-started/6-deploying-your-application)

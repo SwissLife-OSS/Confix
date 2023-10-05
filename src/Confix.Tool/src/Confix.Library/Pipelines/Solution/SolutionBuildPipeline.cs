@@ -1,3 +1,4 @@
+using Confix.Tool.Commands.Component;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Project;
 using Confix.Tool.Commands.Temp;
@@ -23,6 +24,22 @@ public sealed class SolutionBuildPipeline : Pipeline
 
         var configuration = context.Features.Get<ConfigurationFeature>();
         var solution = configuration.EnsureSolution();
+
+        var components = solution.Directory!.FindAllInPath(FileNames.ConfixComponent);
+
+        // we build the components first, so that we make sure all embedded resources are up to date
+        // before we build the projects
+        context.Status.Message = "Building components...";
+        foreach (var component in components)
+        {
+            var componentDirectory = component.Directory!;
+            var pipeline = new ComponentBuildPipeline();
+            var componentContext = context
+                .WithExecutingDirectory(componentDirectory)
+                .WithFeatureCollection();
+
+            await pipeline.ExecuteAsync(componentContext);
+        }
 
         var projects = solution.Directory!.FindAllInPath(FileNames.ConfixProject);
 
