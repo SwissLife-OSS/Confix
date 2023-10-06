@@ -54,7 +54,7 @@ Further documentation can be accessed on our [documentation page](https://swissl
 
 ## Contributing
 
-We welcome contributions from the community. Please read our [contributing guide](CONTRIBUTING.md) to learn more about how to contribute to Confix.
+We welcome contributions from the community. Please open an issue or discussion with you idea/feature request and we will be happy to help you get started.
 
 ## License
 
