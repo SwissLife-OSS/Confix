@@ -11,9 +11,9 @@ security and application requirements and taste.
 
 The following sections of the documentation
 provide more information about how you can utilize Confix during different stages of the deployment
-process: build time, deploy time, and runtime.
+process: build, deploy, and runtime.
 
-## Build Time
+## Build
 
 When building your application's configuration, Confix provides the `confix build` command to
 replace the variables in your configuration files with their actual values. Confix calls the
@@ -44,7 +44,7 @@ directly to a web app or web server.
 1. Need for encryption in containers: When deploying your application within a container, you need to encrypt your configuration files to prevent exposing secrets in the container image.
 2. You need different container images for different environments: If you need to deploy your application to multiple environments, you need to build a separate container image for each environment.
 
-## Build Time (Encrypted)
+## Build (Encrypted)
 
 In containerized applications, you probably should not to embed secrets in your container image at build time.
 Doing so could expose these secrets to anyone who gains access to the container image.
@@ -86,9 +86,9 @@ confix decrypt ./appsettings_dev.json.enc ./appsettings_dev.json
 1. **Increased complexity**: You need to encrypt and decrypt the configuration files.
 2. **Limited to infrastructure that supports mounting volumes**: You can only use this approach in environments that support mounting volumes (e.g. Kubernetes).
 
-## Deploy Time
+## Deploy
 
-With a few adjustments to `Build Time+`, you can use Confix to replace variables in your variables in your configuration files at deploy time.
+With a few adjustments to `Build (Encrypted)`, you can use Confix to replace variables in your variables in your configuration files at deploy time.
 
 Instead of encrypting the config in the release pipeline and then decrypt it on release and mount it
 as a volume, you can use the `confix build` on release of the container and then mount the config as a volume.
