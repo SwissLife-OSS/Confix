@@ -1,0 +1,31 @@
+# Appsettings
+
+The `appsettings.json` file serves as a configuration source for .NET core projects. The
+appsettings configuration file is important for developers as it allows a standard JSON
+configuration while also [supporting user
+secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows),
+aiding in keeping sensitive data out of your
+repository securely.
+
+Conifx has a dedicated provider for the appsettings configuration file to provide support for user
+secrets in development.
+
+## Configuration
+
+| Field          | Value                                                                                                                     |
+| :------------- | :------------------------------------------------------------------------------------------------------------------------ |
+| useUserSecrets | When `true` the `confix build` command will not replace the variable in the configuration file but rather use use secrets |
+
+```json filename=".confixrc" copy
+{
+  "component": {},
+  "project": {
+    "configurationFiles": [
+      {
+        "type": "appsettings",
+        "useUserSecrets": true
+      }
+    ]
+  }
+}
+```

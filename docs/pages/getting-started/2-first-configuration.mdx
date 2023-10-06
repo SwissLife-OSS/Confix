@@ -2,13 +2,18 @@ import { FileTree } from "nextra-theme-docs";
 
 # Your First Configuration
 
-This guide will walk you through setting up a simple [.net core project](https://dotnet.microsoft.com) to show you how to work with Confix.
-Confix is versatile and can work with any language or framework, making it a handy tool for your project aswell.
+This guide will walk you through setting up a simple
+[.net core project](https://dotnet.microsoft.com) to show you how to work with Confix. Confix is
+versatile and
+can work with any language or framework, making it a handy tool for your project aswell.
 
-There might be some limitations depending on your particular needs. Feel free to get in touch with us if you're keen on using Confix with your preferred framework, and we'll be happy to help. [Open an issue](https://github.com/SwissLife-OSS/Confix/issues)
+There might be some limitations depending on your particular needs. Feel free to get in touch with
+us if you're keen on using Confix with your preferred framework, and we'll be happy to help.
+[Open an issue](https://github.com/SwissLife-OSS/Confix/issues)
 
-In this guide, we'll be building on the same project step by step, introducing new features as we go along.
-To kick things off, you can find the starting point of the guide here: [starting point](https://github.com/SwissLife-OSS/Confix/tree/main/examples/GettingStarted)
+In this guide, we'll be building on the same project step by step, introducing new features as we go
+along. To kick things off, you can find the starting point of the guide here:
+[starting point](https://github.com/SwissLife-OSS/Confix/tree/main/examples/GettingStarted)
 
 <FileTree>
   <FileTree.Folder name="/" defaultOpen>
@@ -22,19 +27,21 @@ To kick things off, you can find the starting point of the guide here: [starting
   </FileTree.Folder>
 </FileTree>
 
-Confix operates as a modular configuration system, meant to adapt to diverse needs with the potential for expansion to cover new requirements.
-Like with other modular systems, a bit of initial setup is required to align Confix with your project's needs.
+Confix operates as a modular configuration system, meant to adapt to diverse needs with the
+potential for expansion to cover new requirements. Like with other modular systems, a bit of
+initial setup is required to align Confix with your project's needs.
 
-The configuration details for Confix are in a file named `.confixrc`.
-This file is organized into two main sections; namley "component" and "project".
+The configuration details for Confix are in a file named `.confixrc`. This file is organized into
+two main sections; namley "component" and "project".
 
-- The "component" section defines configuration for Confix `Components`
+- The "component" section defines configuration for Confix [Components](/components)
 - In the "project" section, you can define configuration for your project
 
-As we navigate through this guide, we'll delve into various configuration options to give you a good grasp of what's possible.
+As we navigate through this guide, we'll delve into various configuration options to give you a good
+grasp of what's possible.
 
-Getting started with Confix is straightforward.
-Simply create a `.confixrc` file in the root directory of your project and fill it with the following content:
+Getting started with Confix is straightforward. Simply create a `.confixrc` file in the root
+directory of your project and fill it with the following content:
 
 <FileTree>
   <FileTree.Folder name="/" defaultOpen>
@@ -56,10 +63,12 @@ Simply create a `.confixrc` file in the root directory of your project and fill 
 }
 ```
 
-As we are configuring a .NET application, we want to use `appsettings.json` as our configuration source.
-Confix has a way to understand different types of "configurationFiles".
-In the example of a .NET application, we can define a configuration file with the type "appsettings".
-The nice thing about this is that additionally to just a json file, we also get support for user secrets, which is a great way to keep sensitive data out of your repository.
+As we are configuring a .NET application, we want to use `appsettings.json` as our configuration
+source. Confix has a way to understand different types of "configurationFiles" ([Configuration
+Files](/configuration-files)). In the example of a
+.NET application, we can define a configuration file with the type "appsettings". The nice thing
+about this is that additionally to just a json file, we also get support for user secrets, which is
+a great way to keep sensitive data out of your repository.
 
 ```json filename=".confixrc" copy
 {
@@ -75,14 +84,14 @@ The nice thing about this is that additionally to just a json file, we also get 
 }
 ```
 
-Now that we've established a configuration file, it's time to specify the root of our project and its location.
+Now that we've established a configuration file, it's time to specify the root of our project and
+its location.
 
-In Confix terminology, the project root is referred to as the `solution`.
-A `solution` can encompass one or more `projects`.
-Typically, if you have a git repository, the `solution` is the root of the project.
-However, in a monorepo setup, you might have multiple solutions.
-A good rule of thumb is to set up the `solution` in the folder you usually open in your editor.
-This way, the intellisense for variables and schema will function properly.
+In Confix terminology, the project root is referred to as the `solution`. A `solution` can encompass
+one or more `projects`. Typically, if you have a git repository, the `solution` is the root of the
+project. However, in a monorepo setup, you might have multiple solutions. A good rule of thumb is to
+set up the `solution` in the folder you usually open in your editor. This way, the intellisense for
+variables and schema will function properly.
 
 Initiating a `solution` is done with a simple command in the root:
 

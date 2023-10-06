@@ -1,0 +1,365 @@
+{
+  "type": "object",
+  "properties": {
+    "requiredField": {
+      "$ref": "#/$defs/String",
+      "deprecated": false
+    },
+    "optionalField": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/String"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    },
+    "nestedType": {
+      "$ref": "#/$defs/NestedType",
+      "deprecated": false
+    },
+    "enumSupport": {
+      "$ref": "#/$defs/Kind",
+      "deprecated": false
+    },
+    "interfaceSupport": {
+      "$ref": "#/$defs/ExampleInterface",
+      "deprecated": false
+    },
+    "unionSupport": {
+      "$ref": "#/$defs/ExampleUnion",
+      "deprecated": false
+    },
+    "date": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Date"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    },
+    "uuid": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/UUID"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    },
+    "regex": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Regex"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false
+    },
+    "withDefault": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/String"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false,
+      "default": "default value"
+    },
+    "withVariableDefault": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/String"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false,
+      "default": "$shared:common.authority"
+    },
+    "propertyWithDescription": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/String"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "deprecated": false,
+      "description": "This is a description"
+    }
+  },
+  "required": [
+    "requiredField",
+    "nestedType",
+    "enumSupport",
+    "interfaceSupport",
+    "unionSupport"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Regex": {
+      "type": "string",
+      "format": "regex",
+      "hasVariable": true
+    },
+    "Configuration": {
+      "type": "object",
+      "properties": {
+        "requiredField": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "optionalField": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "nestedType": {
+          "$ref": "#/$defs/NestedType",
+          "deprecated": false
+        },
+        "enumSupport": {
+          "$ref": "#/$defs/Kind",
+          "deprecated": false
+        },
+        "interfaceSupport": {
+          "$ref": "#/$defs/ExampleInterface",
+          "deprecated": false
+        },
+        "unionSupport": {
+          "$ref": "#/$defs/ExampleUnion",
+          "deprecated": false
+        },
+        "date": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Date"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "uuid": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UUID"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "regex": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Regex"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "withDefault": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false,
+          "default": "default value"
+        },
+        "withVariableDefault": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false,
+          "default": "$shared:common.authority"
+        },
+        "propertyWithDescription": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false,
+          "description": "This is a description"
+        }
+      },
+      "required": [
+        "requiredField",
+        "nestedType",
+        "enumSupport",
+        "interfaceSupport",
+        "unionSupport"
+      ],
+      "additionalProperties": false
+    },
+    "NestedType": {
+      "type": "object",
+      "properties": {
+        "nestedValue": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "nestedValue"
+      ],
+      "additionalProperties": false
+    },
+    "Kind": {
+      "type": "string",
+      "enum": [
+        "KindA",
+        "KindB"
+      ]
+    },
+    "ExampleInterface": {
+      "type": "object",
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExampleA"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExampleB"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      ]
+    },
+    "ExampleA": {
+      "type": "object",
+      "properties": {
+        "interfaceField": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "typeAField": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "interfaceField",
+        "typeAField"
+      ],
+      "additionalProperties": false
+    },
+    "ExampleB": {
+      "type": "object",
+      "properties": {
+        "interfaceField": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        },
+        "typeBField": {
+          "$ref": "#/$defs/String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "interfaceField",
+        "typeBField"
+      ],
+      "additionalProperties": false
+    },
+    "ExampleUnion": {
+      "type": "object",
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExampleA"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExampleB"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      ]
+    },
+    "String": {
+      "type": "string",
+      "hasVariable": true,
+      "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
+    },
+    "Boolean": {
+      "type": "boolean",
+      "hasVariable": true,
+      "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
+    },
+    "Date": {
+      "type": "string",
+      "format": "date",
+      "hasVariable": true,
+      "description": "The \u0060Date\u0060 scalar represents an ISO-8601 compliant date type."
+    },
+    "UUID": {
+      "type": "string",
+      "format": "uuid",
+      "hasVariable": true
+    },
+    "JSON": {
+      "type": "string",
+      "hasVariable": true
+    }
+  }
+}

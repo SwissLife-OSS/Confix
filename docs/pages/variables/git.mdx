@@ -11,20 +11,20 @@ This might be useful to share variables across multiple repositories without hav
 | FilePath      | The Path to the file within the repository. The file must be compatible with the [Local VariableProvider](./local.mdx) |
 | Arguments     | An optional array of arguments passed to `git clone`.These can be used to define the `branch` for example              |
 
-**Credentials** The default credentials are used to clone the repository.
-
 **Sample**
 
 ```json copy filename=".confixrc"
 {
-  "variableProviders": [
-    {
-      "name": "git",
-      "type": "git",
-      "repositoryUrl": "https://github.com/SwissLife-OSS/Confix-Variables.git",
-      "filePath": "./variables.json",
-      "arguments": ["--branch=main", "--depth=1"]
-    }
-  ]
+  "project": {
+    "variableProviders": [
+      {
+        "name": "git",
+        "type": "git",
+        "repositoryUrl": "https://github.com/SwissLife-OSS/Confix-Variables.git",
+        "filePath": "./variables.json",
+        "arguments": ["--branch=main", "--depth=1"]
+      }
+    ]
+  }
 }
 ```

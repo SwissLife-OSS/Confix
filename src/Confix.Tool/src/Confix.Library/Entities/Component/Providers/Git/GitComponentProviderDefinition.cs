@@ -22,7 +22,7 @@ public sealed record GitComponentProviderDefinition(
 
         if (string.IsNullOrWhiteSpace(configuration.Path))
         {
-            validationErrors.Add("FilePath is required");
+            validationErrors.Add("Path is required");
         }
 
         if (validationErrors.Any())

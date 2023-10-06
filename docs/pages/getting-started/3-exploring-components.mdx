@@ -3,8 +3,9 @@ import { Steps, FileTree, Tabs, Tab } from "nextra-theme-docs";
 
 # Exploring Components
 
-In Confix, every configuration is broken down into elements known as components.
-These components act as a blueprint, ensuring your configuration aligns with a defined structure or schema.
+In Confix, every configuration is broken down into elements known as [components](/components).
+These components act as a blueprint, ensuring your configuration aligns with a defined structure or
+schema.
 
 <Callout type="info">
   You technically don't need components. You can also create a configuration and
@@ -16,7 +17,8 @@ Components can be defined per application but also can be shared between project
 
 ## Defining a local component
 
-Let's start by defining a component that's specific to our application. First, navigate to the `Website` folder and execute the following command:
+Let's start by defining a component that's specific to our application. First, navigate to the
+`Website` folder and execute the following command:
 
 ```bash copy
 confix component init Website
@@ -47,7 +49,8 @@ confix component init Website
 This command will create a new folder in `Website` called `confix/components/Website`.
 At the moment this folder only contains one file, the `.confix.component` file.
 
-Now, let's create a schema for our component. This schema will define the structure of our component and give us autocompletion and validation.
+Now, let's create a schema for our component. This schema will define the structure of our component
+and give us autocompletion and validation.
 
 ```json copy
 {
@@ -89,7 +92,8 @@ Now, let's create a schema for our component. This schema will define the struct
   </FileTree.Folder>
 </FileTree>
 
-When we run the command `confix build` in the `Website` folder we now see that our component is loaded and that the configuration we have is applied.
+When we run the command `confix build` in the `Website` folder we now see that our component is
+loaded and that the configuration we have is applied.
 
 ```bash copy
 confix build
@@ -118,16 +122,17 @@ Output:
 [22;39m  [91mThe configuration files are invalid.[m
 ```
 
-When we open the `appsettings.json` file we see that the configuration was initialized and `Url` is set to `null`.
-The intelisense tells us that the `Url` cannot be empty and has to have a value.
+When we open the `appsettings.json` file we see that the configuration was initialized and `Url` is
+set to `null`. The intelisense tells us that the `Url` cannot be empty and has to have a value.
 
 ![VSCode](./assets/exploring-components-1.png)
 
 ## Using input providers
 
-Defining JSON schemas is a pain. It's a lot of work and it's easy to make mistakes. Confix has a features called `Component Inputs`.
-These allow you to process components and generate a schema based on the result.
-We will use the `graphql` provider to generate a schema based on a GraphQL file.
+Defining JSON schemas is a pain. It's a lot of work and it's easy to make mistakes. Confix has a
+features called `Component Inputs`. These allow you to process components and generate a schema
+based on the result. We will use the `graphql` provider to generate a schema based on a GraphQL
+file.
 
 For this we first need to configure the input in the `.confixrc`.
 

@@ -1,0 +1,31 @@
+# Dotnet
+
+The `dotnet` input is a special input that you require to add then you want to distribute your
+components in a package.
+
+This provider ensures that the embedded resources are added to the package.
+
+## Configuration
+
+```json copy filename=".confixrc"
+{
+  "component": {
+    "inputs": [
+      {
+        "type": "dotnet"
+      }
+    ]
+  }
+}
+```
+
+## Example
+
+When we add this input to a project that contains a `.csproj`, the following will be added to the
+project file:
+
+```xml
+<ItemGroup>
+    <EmbeddedResource Include="$(MSBuildProjectDirectory)/Components/**/*.*" />
+</ItemGroup>
+```

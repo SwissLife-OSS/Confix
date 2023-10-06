@@ -1,0 +1,201 @@
+import { FileTree } from "nextra-theme-docs";
+
+# File Structure
+
+A Confix solution (`.confix.solution`) closely align with the "scope" of a Git repository. Meaning
+that usually you have one solution per git repository. In a typical solution, you might find various
+projects, modules, or packages. These can be backend services, workers, shared libraries, frontend
+applications, etc., each with could have separate configuration.
+
+Every project, module, or package that has configuration files, should contain a `.confix.project`
+file at its root, which serves as the project's main configuration. The repository's root folder
+should contain a `.confix.solution` file, providing an overarching configuration for the entire
+repository.
+
+Confix generates a configuration for Visual Studio Code or Rider in the `.vscode` folder at the solution
+level. This means that when you need to configure your services config files, you have to open the
+solution root in IDE. Otherwise you do not have the intellisense and validation (as the correct json
+schema is not loaded).
+
+For larger structures, such as mono-repos, you may define multiple `.confix.solution` files. In this
+case, the repository should be opened in IDE from the folder containing the relevant
+`.confix.solution` file.
+
+To share the setup across solutions in a monorepo, you can create a `.confixrc` file at the root.
+When doing so, remember to set `"isRoot": false` in the configuration, prompting Confix to continue
+looking for the root `.confixrc` file.
+
+## Setting Defaults
+
+In `.confixrc` or `.confix.solution`, you can predefine defaults for your `.confix.project` files
+using the `project` property. This feature promotes consistency and reduces redundancy by ensuring
+standard configurations across different projects.
+
+Similarly, if you wish to establish default configurations for all components, use the `component`
+property.
+
+## File Structure
+
+### Normal
+
+<FileTree>
+  <FileTree.Folder name="/" defaultOpen>
+    <FileTree.Folder name=".vscode" />
+    <FileTree.Folder name="backend" defaultOpen>
+      <FileTree.File name=".confix.project" />
+      <FileTree.File name="appsettings.json" />
+    </FileTree.Folder>
+    <FileTree.Folder name="worker" defaultOpen>
+      <FileTree.File name=".confix.project" />
+      <FileTree.File name="appsettings.json" />
+    </FileTree.Folder>
+    <FileTree.Folder name="shared_lib" />
+    <FileTree.Folder name="frontend" />
+    <FileTree.File name=".confixrc" />
+    <FileTree.File name=".confix.solution" />
+  </FileTree.Folder>
+</FileTree>
+
+### Monorepo
+
+<FileTree>
+    <FileTree.Folder name="monorepo_root" defaultOpen>
+        <FileTree.File name=".confixrc" />
+        <FileTree.Folder name="repo_1" defaultOpen>
+            <FileTree.File name=".confix.solution" />
+            <FileTree.Folder name=".vscode" />
+            <FileTree.Folder name="backend" defaultOpen>
+                <FileTree.File name=".confix.project" />
+                <FileTree.File name="appsettings.json" />
+            </FileTree.Folder>
+            <FileTree.Folder name="worker" defaultOpen>
+                <FileTree.File name=".confix.project" />
+                <FileTree.File name="appsettings.json" />
+            </FileTree.Folder>
+        </FileTree.Folder>
+
+        <FileTree.Folder name="repo_2" defaultOpen>
+            <FileTree.File name=".confix.solution" />
+            <FileTree.Folder name=".vscode" />
+            <FileTree.Folder name="shared_lib" />
+            <FileTree.Folder name="frontend" defaultOpen>
+                <FileTree.File name=".confix.project" />
+                <FileTree.File name="appsettings.json" />
+            </FileTree.Folder>
+        </FileTree.Folder>
+    </FileTree.Folder>
+
+</FileTree>
+
+## Files
+
+Confix provides a set of configuration files that allow you to manage settings on global,
+repository, project, and component. These files include: `.confixrc`,
+`.confix.solution`, `.confix.project`, and `.confix.component` .
+
+Each configuration file serves a unique purpose in the overall Confix configuration process:
+
+### 1. `.confixrc`
+
+This global configuration file is located in the reopository root or the user's home directory.
+The `.confixrc` files are inherited by all subfolders and projects.
+
+1. ~/.confixrc
+2. ./.confixrc
+3. ./subfolder/.confixrc
+
+It is used to define global settings that are applied across all solutions and projects.
+Settings defined here are inherited by the `.confix.solution`, `.confix.component`, and `.confix.project` files.
+
+You can override project-specific settings by using the `project` field in the `.confixrc` file. In
+case of multiple `.confixrc` files, settings can be overridden in the parent folder's `.confixrc`
+files. To signal Confix to look for further `.confixrc` files in parent folders and the home
+directory, you need to specify `isRoot: false`.
+
+```json
+{
+  "isRoot": false,
+  "project": {
+    // default project config like in .confix.project,
+  },
+  "component": {
+    // default component config like in .confix.component
+  }
+}
+```
+
+### 2. `.confix.solution`
+
+This configuration file is defined at the root of the repository. It is used to specify
+repository-specific settings applicable across all projects within the repository. Settings defined
+here are inherited by the `.confix.component` and `.confix.project` files.
+
+Project-specific settings can be overridden by using the `project` field in the `.confix.solution`
+file.
+
+```json
+{
+  "project": {
+    // default project config like in .confix.project,
+  },
+  "component": {
+    // default component config like in .confix.component
+  }
+}
+```
+
+### 3. `.confix.project`
+
+This file is used to configure a specific project.
+
+```json
+{
+  "name": "MyProject",
+  "environments": [
+    {
+      "name": "dev"
+    },
+    {
+      "name": "prod"
+    }
+  ],
+  "components": {
+    "@shared-components/Example": "latest"
+  },
+  "configurationFiles": [
+    {
+      "type": "appsettings",
+      "useUserSecrets": true
+    }
+  ],
+  "componentProviders": [
+    {
+      "name": "dotnet",
+      "type": "dotnet-package"
+    }
+  ],
+  "variableProviders": [
+    {
+      "name": "local",
+      "type": "local",
+      "path": "$project:/variables.A.json"
+    }
+  ]
+}
+```
+
+### 4. `.confix.component`
+
+The `.confix.component` file is used for configuring individual components.
+More about this can be found in the [Components](/components) section.
+
+```json
+{
+  "name": "MyComponent",
+  "inputs": [
+    {
+      "type": "graphql"
+    }
+  ]
+}
+```

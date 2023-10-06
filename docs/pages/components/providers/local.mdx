@@ -1,0 +1,34 @@
+import { Callout } from "nextra/components";
+import { FileTree } from "nextra-theme-docs";
+
+# Local
+
+The local provider is implicity added to the list of providers without the need for any configuration.
+It provides the project will all components that are available in the current project.
+
+## Example
+
+The local provider adds the `Website` component to the list of available components.
+
+<FileTree>
+  <FileTree.Folder name="/" defaultOpen>
+    <FileTree.File name=".confixrc" />
+    <FileTree.File name=".confix.solution" />
+    <FileTree.Folder name="src" defaultOpen>
+      <FileTree.Folder name="Website" defaultOpen>
+        <FileTree.Folder name="confix" defaultOpen active>
+          <FileTree.Folder name="components" defaultOpen active>
+            <FileTree.Folder name="Website" defaultOpen active>
+              <FileTree.File name=".confix.component" active />
+              <FileTree.File name="schema.json" active />
+            </FileTree.Folder>
+          </FileTree.Folder>
+        </FileTree.Folder>
+        <FileTree.File name=".confix.project" />
+        <FileTree.File name="appsettings.json" />
+        <FileTree.File name="Program.cs" />
+        <FileTree.File name="Website.csproj" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>

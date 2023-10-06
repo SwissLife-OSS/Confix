@@ -1,0 +1,29 @@
+# Configuration Files
+
+Confix allows you to specify the configuration files used by your project setup using the
+`configurationFiles` property. Essentially, it lets you identify which JSON files in your project
+should be validated against the compiled schema.
+
+One key feature of Confix is its capability to automatically modify the `settings.json` of Visual
+Studio Code (or Rider) in the repository root, mapping a JSON schema to the specified files. For instance, in
+ASP.NET core projects, these configuration files would typically be the `appsettings.json` files.
+
+At the moment the configuration file is optimized for `appsettings.json` from .NET Core,
+but it can easily be extended to other configuration files.
+
+Let us now when you want to use it in e.g. Node.js or Java projects, so we now the requirements.
+
+Below is an example of defining these settings in a `.confixrc` JSON file:
+
+```json filename=".confixrc" copy
+{
+  "project": {
+    "configurationFiles": [
+      {
+        "type": "appsettings",
+        "useUserSecrets": true
+      }
+    ]
+  }
+}
+```
