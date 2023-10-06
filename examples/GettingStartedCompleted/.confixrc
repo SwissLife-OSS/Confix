@@ -37,10 +37,10 @@
         "type": "local",
         "environmentOverride": {
           "dev": {
-            "path": "/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Website/variables.dev.json"
+            "path": "$project:/variables.json"
           },
           "prod": {
-            "path": "/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Website/variables.prod.json"
+            "path": "$project:/variables.prod.json"
           }
         }
       }

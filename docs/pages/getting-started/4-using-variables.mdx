@@ -27,13 +27,13 @@ To build our Confix configuration, execute the `confix build` command and confir
 [1;32m✓[22;39m Component inputs loaded
   Building component...
   Building component completed
-  Project detected: Database [2m/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Database/.confix.project
+  Project detected: Database [2m/Users/ex/GettingStarted/src/Database/.confix.project
 [1;32m✓[22;39m Running in scope [1;94mProject
 [32m✓[22;39m Configuration loaded
-  The project directory '/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Database' will be treated as a component only project as it does not contain a appsettings.json file.
+  The project directory '/Users/ex/GettingStarted/src/Database' will be treated as a component only project as it does not contain a appsettings.json file.
 [1;32m✓[22;39m Active Environment is [1;94mprod
 [22;39m  Skipped command execution build because no configuration files were found.
-  Project detected: Website [2m/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Website/.confix.project
+  Project detected: Website [2m/Users/ex/GettingStarted/src/Website/.confix.project
 [1;32m✓[22;39m Running in scope [1;94mProject
 [32m✓[22;39m Configuration loaded
 [1;32m✓[22;39m Active Environment is [1;94mprod
@@ -42,13 +42,13 @@ To build our Confix configuration, execute the `confix build` command and confir
   -  @dotnet-package/Website
   -  @dotnet-package/Database
 [1;32m✓[22;39m Schema composition completed for project src.Website
-[1;32m✓[22;39m Schema is stored at '/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/.confix/.schemas/src.Website.schema.json'
-[1;32m✓[22;39m IntelliJ IDEA settings file updated: /Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/.idea/.idea.GettingStarted/.idea/jsonSchemas.xml
+[1;32m✓[22;39m Schema is stored at '/Users/ex/GettingStarted/.confix/.schemas/src.Website.schema.json'
+[1;32m✓[22;39m IntelliJ IDEA settings file updated: /Users/ex/GettingStarted/.idea/.idea.GettingStarted/.idea/jsonSchemas.xml
 [1;94mi[22;39m Loaded schema from [1mcache[22m for project src.Website
-  Persisting configuration file '/Users/pascalsenn/.microsoft/usersecrets/f736895a-96b8-471a-8502-09b0e07dfdb8/secrets.json'
+  Persisting configuration file '/Users/ex/.microsoft/usersecrets/f736895a-96b8-471a-8502-09b0e07dfdb8/secrets.json'
   Detected [1;94m0[22;39m variables
-[1;32m✓[22;39m The configuration file '/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Website/appsettings.json' is valid.
-  Persisting configuration file '/Users/pascalsenn/.microsoft/usersecrets/f736895a-96b8-471a-8502-09b0e07dfdb8/secrets.json'[m
+[1;32m✓[22;39m The configuration file '/Users/ex/GettingStarted/src/Website/appsettings.json' is valid.
+  Persisting configuration file '/Users/ex/.microsoft/usersecrets/f736895a-96b8-471a-8502-09b0e07dfdb8/secrets.json'[m
 ```
 
 However, we want to avoid embedding a `ConnectionString` directly in our source code, and we'd like the flexibility to set different `Url` s for various environments (we'll introduce this shortly).
@@ -133,7 +133,7 @@ confix variable set
 [1;32m✓[22;39m Active Environment is [1;94mprod
 [92m?[22;39m Variable name: $example:Website.Url
 [1;92m?[22;39m Variable value: [91m*************
-[1;93m![22;39m The local variable file was not found at the expected location. Created empty file at: '/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/src/Website/variables.json'
+[1;93m![22;39m The local variable file was not found at the expected location. Created empty file at: '/Users/ex/GettingStarted/src/Website/variables.json'
 [1;32m✓[22;39m Variable [32m$example:Website.Url[39m set successfully.[m
 ```
 
@@ -234,8 +234,8 @@ confix restore
   -  @dotnet-package/Website
   -  @dotnet-package/Database
 [1;32m✓[22;39m Schema composition completed for project src.Website
-[1;32m✓[22;39m Schema is stored at '/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/.confix/.schemas/src.Website.schema.json'
-[1;32m✓[22;39m IntelliJ IDEA settings file updated: /Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/.idea/.idea.GettingStarted/.idea/jsonSchemas.xml[m
+[1;32m✓[22;39m Schema is stored at '/Users/ex/GettingStarted/.confix/.schemas/src.Website.schema.json'
+[1;32m✓[22;39m IntelliJ IDEA settings file updated: /Users/ex/GettingStarted/.idea/.idea.GettingStarted/.idea/jsonSchemas.xml[m
     ```
   </Tab>
 </Tabs>
@@ -308,8 +308,8 @@ confix restore
   -  @dotnet-package/Website
   -  @dotnet-package/Database
 [1;32m✓[22;39m Schema composition completed for project src.Website
-[1;32m✓[22;39m Schema is stored at '/Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/.confix/.schemas/src.Website.schema.json'
-[1;32m✓[22;39m IntelliJ IDEA settings file updated: /Users/pascalsenn/kot/Confix-Reloaded/examples/GettingStarted/.idea/.idea.GettingStarted/.idea/jsonSchemas.xml[m
+[1;32m✓[22;39m Schema is stored at '/Users/ex/GettingStarted/.confix/.schemas/src.Website.schema.json'
+[1;32m✓[22;39m IntelliJ IDEA settings file updated: /Users/ex/GettingStarted/.idea/.idea.GettingStarted/.idea/jsonSchemas.xml[m
     ```
   </Tab>
 </Tabs>
