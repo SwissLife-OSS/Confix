@@ -5,21 +5,163 @@ import { FileTree } from "nextra-theme-docs";
 
 ## Understanding Components in Confix
 
-In Confix, every configuration is broken down into elements known as components. These components act as a blueprint, ensuring your configuration aligns with a defined structure or schema.
+In Confix, every configuration is broken down into elements known as components. These components
+act as a blueprint, ensuring your configuration aligns with a defined structure or schema.
 
-One of the great advantages of components is their reusability across different applications. You can easily share a component by distributing it through a component registry. This feature is especially beneficial when you package the component with its definition. For instance, when releasing a Nuget package that includes the component definition, you simply need to reference the package in your code. Confix will then automatically identify and integrate these components.
+One of the great advantages of components is their reusability across different applications. You
+can easily share a component by distributing it through a component registry. This feature is
+especially beneficial when you package the component with its definition. For instance, when
+releasing a Nuget package that includes the component definition, you simply need to reference the
+package in your code. Confix will then automatically identify and integrate these components.
 
-While it's possible to define components locally beside the application you are configuring, the true power of components is realized when managing shared and repeated configurations across your applications. For example, if you have multiple applications using the same OpenId Connect authorization setup, you can consolidate the configuration code and components (like authority, scopes, and URLs) into a new package.
+While it's possible to define components locally beside the application you are configuring, the
+true power of components is realized when managing shared and repeated configurations across your
+applications. For example, if you have multiple applications using the same OpenId Connect
+authorization setup, you can consolidate the configuration code and components (like authority,
+scopes, and URLs) into a new package.
 
-In essence, a component is a JSON schema that outlines the specific shape and details of your configuration. This schema acts as a guide, helping you effortlessly manage and validate your configuration setup, ensuring everything works seamlessly together.
-
-With Confix components, handle your configuration needs effectively, ensuring consistency and reusability across various applications, while simplifying the configuration process.
+In essence, a component is a JSON schema that outlines the specific shape and details of your
+configuration. This schema acts as a guide, helping you effortlessly manage and validate your
+configuration setup, ensuring everything works seamlessly together.
 
 In Confix, you have two key things to set up: component inputs and component providers.
 Think of component inputs as the settings that tell Confix all about the components you've created.
 They make sure Confix knows how to handle your custom components properly.
-On the other hand, component providers are the tools that help Confix find and use other components from different places like packages or registries.
-So, component inputs focus on your own components, while component providers deal with finding and using components from other sources.
+On the other hand, component providers are the tools that help Confix find and use other components
+from different places like packages or registries.
+So, component inputs focus on your own components, while component providers deal with finding and
+using components from other sources.
+
+```json
+{
+  "name": "Logging",
+  "inputs": [
+    {
+      "type": "graphql"
+      // additional properties specific to the graphql compiler
+    }
+  ]
+}
+```
+
+## Component Inputs
+
+A Confix component can have one or multiple 'inputs'. These inputs function as schema compilers,
+which create new `schema.json` files or update existing ones based on the input provided. Inputs are
+executed in the sequence they are defined in the `.confix.component` file.
+
+Examples of inputs are the GraphQL compiler, which generates a JSON schema based on a GraphQL file,
+and the .NET annotations compiler, which produces a schema derived from the configuration.
+
+You can read more about the available inputs in [Inputs](/components/inputs).
+
+## File Structure
+
+All components are saved in the `confix/Components` folder, situated next to a project. Each
+`.confix.component` file is a JSON file that encapsulates the details of the component's
+configuration. This file must contain a 'name' property specifying the component's name.
+
+<FileTree>
+  <FileTree.Folder name="/" defaultOpen>
+    <FileTree.File name=".confixrc" />
+    <FileTree.File name=".confix.solution" />
+    <FileTree.Folder name="src" defaultOpen>
+      <FileTree.Folder name="Website" defaultOpen>
+        <FileTree.Folder name="confix" defaultOpen active>
+          <FileTree.Folder name="components" defaultOpen active>
+            <FileTree.Folder name="Website" defaultOpen active>
+              <FileTree.File name=".confix.component" active />
+              <FileTree.File name="schema.json" active />
+            </FileTree.Folder>
+          </FileTree.Folder>
+        </FileTree.Folder>
+        <FileTree.File name=".confix.project" />
+        <FileTree.File name="appsettings.json" />
+        <FileTree.File name="Program.cs" />
+        <FileTree.File name="Website.csproj" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+## Package Distribution
+
+Confix has different methods for distributing packages. The most common method is to bundle the
+schema with the package itself. When you distribute your package, whether through NuGet, NPM, or
+Azure DevOps, the corresponding schema is included within the package itself. This practice
+automatically versions your component schema together with your code. For example, when you
+reference version 1.20.4 of your package, you also obtain the matching version of the schema.
+
+1. **Discovery:** This is the preferred method for component distribution. Here, you bundle the
+   components directly with your package. This approach facilitates seamless integration of the
+   components with your project, eliminating the need for additional retrieval or loading operations.
+
+2. **Repositories:** Alternatively, you can utilize repositories to load components from
+   storage providers. This method offers flexibility and can be particularly useful in scenarios where
+   the components are stored externally or need to be versioned independently of the primary project.
+
+For efficient component management, we recommend configuring the component provider settings
+globally in the `.confixrc` file. While it's possible to make project-specific adjustments in the
+`.confix.project` file, we suggest this approach only when absolutely necessary. Sharing
+configurations across projects helps maintain consistency, reduces duplication, and allows for
+easier maintenance.
+
+### Component Discovery
+
+You can specify how your projects discover the components used in your configuration by defining the
+`componentProviders`. Component providers are responsible for loading the components used by your
+project whenever you 'restore' the project. As you bundle the code/binaries of the component together
+with the component on build time, you guarantee that you configuration always matches the used
+version of the component.
+
+There is currenlty only one component provider available, `dotnet-package`, which scans the
+project's assemblies for embedded resources describing a Confix component.
+But we are open to add more component providers in the future, such as `node-modules`, which checks
+the node-modules used by the project for Confix components.
+Please give us feedback on what component providers you would like to see in the future.
+
+```json
+{
+  "componentProviders": [
+    {
+      "name": "dotnet",
+      "type": "dotnet-package"
+    }
+  ]
+}
+```
+
+## Component Repositories
+
+Component repositories is a variation of a `componentProvider` that come into play when you're
+unable to bundle a schema with your code or when components need separate versioning (for instance,
+in build pipeline configuration).
+
+Confix currently supports only one type of component repository, `git`, which loads components from
+a git repository.
+
+We are open to add more component repositories in the future, such as `blob`, which loads components
+from a blob storage, or `helm`, which loads components from a Helm repository.
+Please give us feedback on what component repositories you would like to see in the future.
+
+```json
+{
+  "componentProviders": [
+    {
+      "name": "oss-components",
+      "type": "git",
+      "url": "git@github.com:SwissLife-OSS/template.git",
+      "path": "Components"
+    }
+  ]
+}
+```
+
+You can then add components from the repository to your project by using the following command:
+
+```bash copy
+confix component add @oss-components/ComponentName
+```
 
 ## Commands
 

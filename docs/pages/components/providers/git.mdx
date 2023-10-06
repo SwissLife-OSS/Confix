@@ -1,0 +1,38 @@
+# Git
+
+Use this provider to access components that located in a separate repository.
+This is useful to share compone across multiple repositories without having to
+distribute them as a package.
+
+Components can be added to a project by executing:
+
+```bash copy
+confix component add @shared-components/ComponentName
+```
+
+## Configuration
+
+| Field         | Value                                                                                                     |
+| :------------ | :-------------------------------------------------------------------------------------------------------- |
+| Name          | The name of the provider                                                                                  |
+| RepositoryUrl | The Url to clone the repository                                                                           |
+| Path          | The Path to the folder within the repository that contains the components                                 |
+| Arguments     | An optional array of arguments passed to `git clone`.These can be used to define the `branch` for example |
+
+**Sample**
+
+```json copy filename=".confixrc"
+{
+  "project": {
+    "componentProviders": [
+      {
+        "name": "shared-components",
+        "type": "git",
+        "repositoryUrl": "https://github.com/SwissLife-OSS/Confix-Components.git",
+        "path": "Components",
+        "arguments": ["--branch=main", "--depth=1"]
+      }
+    ]
+  }
+}
+```

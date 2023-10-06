@@ -1,0 +1,17 @@
+{
+  "component": {
+    "inputs": [
+      {
+        "type": "graphql"
+      }
+    ]
+  },
+  "project": {
+    "configurationFiles": [
+      {
+        "type": "appsettings",
+        "useUserSecrets": true
+      }
+    ]
+  }
+}

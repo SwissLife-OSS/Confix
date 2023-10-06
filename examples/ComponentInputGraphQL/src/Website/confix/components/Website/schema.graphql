@@ -1,0 +1,32 @@
+type Configuration {
+  requiredField: String!
+  optionalField: String
+  nestedType: NestedType!
+  enumSupport: Kind!
+  interfaceSupport: ExampleInterface!
+  unionSupport: ExampleUnion!
+  date: Date
+  uuid: UUID
+  regex: Regex
+  withDefault: String @defaultValue(value: "default value")
+  withVariableDefault: String @defaultValue(value: "$shared:common.authority")
+}
+type NestedType {
+  nestedValue: String!
+}
+enum Kind {
+  KindA
+  KindB
+}
+interface ExampleInterface {
+  interfaceField: String!
+}
+type ExampleA implements ExampleInterface {
+  interfaceField: String!
+  typeAField: String!
+}
+type ExampleB implements ExampleInterface {
+  interfaceField: String!
+  typeBField: String!
+}
+union ExampleUnion = ExampleA | ExampleB

@@ -1,7 +1,10 @@
 {
   "index": "Introduction",
   "getting-started": "Getting Started",
-  "environments": "Environments",
   "deployments": "Deployments",
-  "variables": "Variables"
+  "environments": "Environments",
+  "variables": "Variables",
+  "components": "Components",
+  "configuration-files": "Configuration Files",
+  "file-structure": "File Structure"
 }

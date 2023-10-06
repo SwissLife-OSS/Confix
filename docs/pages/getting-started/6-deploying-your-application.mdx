@@ -6,7 +6,7 @@ import { Steps, FileTree, Tabs, Tab } from "nextra-theme-docs";
 There are many ways how you can deploy your application with confix.
 As the configuration in the end it will just be a JSON file.
 How and when you build this file is up to you.
-This guide will shouw you some options how you can do this, but after all, do it the way it fits your devops process.
+This guide will show you some options how you can do this, but after all, do it the way it fits your devops process.
 
 We recommend you to have a look at the [Deployments](/deployements) to find the best way for you.
 
@@ -36,11 +36,10 @@ B --> C[Test]
 
 The release pipeline should run the `confix build` command to build your configuration files and have different stages for each environment to deploy.
 e.g.
-// build app & build config & publish -> Deploy to dev -> Deploy to prod
 
 ```mermaid
 graph LR
-A[Build App & Build Config & Publish Artifacts] -> B[Publish]
+A[Build App & Build Config & Publish Artifacts] --> B[Publish]
 B --> C[Deploy to Dev]
 C --> D[Deploy to Prod]
 ```

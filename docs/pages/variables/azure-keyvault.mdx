@@ -19,13 +19,15 @@ Use this provider to store your variables as a `Secret` in Azure Key Vault.
 
 ```json copy filename=".confixrc"
 {
-  "variableProviders": [
-    {
-      "name": "keyvault",
-      "type": "azure-keyvault",
-      "uri": "https://mykeyvault-dev.vault.azure.net"
-    }
-  ]
+  "project": {
+    "variableProviders": [
+      {
+        "name": "keyvault",
+        "type": "azure-keyvault",
+        "uri": "https://mykeyvault-dev.vault.azure.net"
+      }
+    ]
+  }
 }
 ```
 

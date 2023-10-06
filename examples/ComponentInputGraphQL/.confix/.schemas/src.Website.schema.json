@@ -1,0 +1,428 @@
+{
+  "$defs": {
+    "Website_Regex": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "format": "regex",
+          "hasVariable": true
+        }
+      ]
+    },
+    "Website_Configuration": {
+      "type": "object",
+      "properties": {
+        "requiredField": {
+          "$ref": "#/$defs/Website_String",
+          "deprecated": false
+        },
+        "optionalField": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "nestedType": {
+          "$ref": "#/$defs/Website_NestedType",
+          "deprecated": false
+        },
+        "enumSupport": {
+          "$ref": "#/$defs/Website_Kind",
+          "deprecated": false
+        },
+        "interfaceSupport": {
+          "$ref": "#/$defs/Website_ExampleInterface",
+          "deprecated": false
+        },
+        "unionSupport": {
+          "$ref": "#/$defs/Website_ExampleUnion",
+          "deprecated": false
+        },
+        "date": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_Date"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "uuid": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_UUID"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "regex": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_Regex"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "withDefault": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false,
+          "default": "default value"
+        },
+        "withVariableDefault": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false,
+          "default": "$shared:common.authority"
+        },
+        "propertyWithDescription": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false,
+          "description": "This is a description"
+        }
+      },
+      "required": [
+        "requiredField",
+        "nestedType",
+        "enumSupport",
+        "interfaceSupport",
+        "unionSupport"
+      ],
+      "additionalProperties": false
+    },
+    "Website_NestedType": {
+      "type": "object",
+      "properties": {
+        "nestedValue": {
+          "$ref": "#/$defs/Website_String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "nestedValue"
+      ],
+      "additionalProperties": false
+    },
+    "Website_Kind": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "enum": [
+            "KindA",
+            "KindB"
+          ]
+        }
+      ]
+    },
+    "Website_ExampleInterface": {
+      "type": "object",
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_ExampleA"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_ExampleB"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      ]
+    },
+    "Website_ExampleA": {
+      "type": "object",
+      "properties": {
+        "interfaceField": {
+          "$ref": "#/$defs/Website_String",
+          "deprecated": false
+        },
+        "typeAField": {
+          "$ref": "#/$defs/Website_String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "interfaceField",
+        "typeAField"
+      ],
+      "additionalProperties": false
+    },
+    "Website_ExampleB": {
+      "type": "object",
+      "properties": {
+        "interfaceField": {
+          "$ref": "#/$defs/Website_String",
+          "deprecated": false
+        },
+        "typeBField": {
+          "$ref": "#/$defs/Website_String",
+          "deprecated": false
+        }
+      },
+      "required": [
+        "interfaceField",
+        "typeBField"
+      ],
+      "additionalProperties": false
+    },
+    "Website_ExampleUnion": {
+      "type": "object",
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_ExampleA"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_ExampleB"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      ]
+    },
+    "Website_String": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true,
+          "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
+        }
+      ]
+    },
+    "Website_Boolean": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "boolean",
+          "hasVariable": true,
+          "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
+        }
+      ]
+    },
+    "Website_Date": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "format": "date",
+          "hasVariable": true,
+          "description": "The \u0060Date\u0060 scalar represents an ISO-8601 compliant date type."
+        }
+      ]
+    },
+    "Website_UUID": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "format": "uuid",
+          "hasVariable": true
+        }
+      ]
+    },
+    "Website_JSON": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Confix_Variables"
+        },
+        {
+          "type": "string",
+          "hasVariable": true
+        }
+      ]
+    },
+    "Website": {
+      "properties": {
+        "requiredField": {
+          "$ref": "#/$defs/Website_String",
+          "deprecated": false
+        },
+        "optionalField": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "nestedType": {
+          "$ref": "#/$defs/Website_NestedType",
+          "deprecated": false
+        },
+        "enumSupport": {
+          "$ref": "#/$defs/Website_Kind",
+          "deprecated": false
+        },
+        "interfaceSupport": {
+          "$ref": "#/$defs/Website_ExampleInterface",
+          "deprecated": false
+        },
+        "unionSupport": {
+          "$ref": "#/$defs/Website_ExampleUnion",
+          "deprecated": false
+        },
+        "date": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_Date"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "uuid": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_UUID"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "regex": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_Regex"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false
+        },
+        "withDefault": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false,
+          "default": "default value"
+        },
+        "withVariableDefault": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false,
+          "default": "$shared:common.authority"
+        },
+        "propertyWithDescription": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Website_String"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "deprecated": false,
+          "description": "This is a description"
+        }
+      },
+      "required": [
+        "requiredField",
+        "nestedType",
+        "enumSupport",
+        "interfaceSupport",
+        "unionSupport"
+      ],
+      "additionalProperties": false,
+      "examples": [],
+      "title": ""
+    },
+    "Confix_Variables": {
+      "type": "string",
+      "enum": []
+    }
+  },
+  "properties": {
+    "Website": {
+      "$ref": "#/$defs/Website"
+    }
+  },
+  "required": [
+    "Website"
+  ]
+}

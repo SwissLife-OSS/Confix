@@ -1,0 +1,20 @@
+# Dotnet Package
+
+This provider reads components that are embeded in a .NET package and distributed through a package
+repository.
+
+You can read more about components in [Components](./components)
+
+## Configuration
+
+```json copy filename=".confixrc"
+{
+  "project": {
+    "componentProviders": [
+      {
+        "type": "dotnet-package"
+      }
+    ]
+  }
+}
+```

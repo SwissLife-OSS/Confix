@@ -12,13 +12,15 @@ This provider allows you to access variable defined in a different `json` file.
 
 ```json copy filename=".confixrc"
 {
-  "variableProviders": [
-    {
-      "name": "local",
-      "type": "local",
-      "path": "./variables.json"
-    }
-  ]
+  "project": {
+    "variableProviders": [
+      {
+        "name": "local",
+        "type": "local",
+        "path": "./variables.json"
+      }
+    ]
+  }
 }
 ```
 

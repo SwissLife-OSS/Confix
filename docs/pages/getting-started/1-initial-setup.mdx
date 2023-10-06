@@ -1,10 +1,20 @@
+import { Callout } from "nextra/components";
+
 # Initial Setup
 
-Confix can be installed in two different ways: globally on your machine, or bound to a specific project. Below are the instructions for both methods of installation.
+Confix can be installed in two different ways: globally on your machine, or bound to a specific
+project. Below are the instructions for both methods of installation.
+
+<Callout type="info">
+  Reach out to us if this is not a option for you. Confix could also be
+  distributed through a package manager like brew or be downloaded as a binary.
+  We are open to suggestions.
+</Callout>
 
 ## Prerequisites
 
-- Ensure you have the [.NET SDK](https://dotnet.microsoft.com/download) (version 7.0 or later) installed on your machine.
+- Ensure you have the [.NET SDK](https://dotnet.microsoft.com/download) (version 7.0 or later)
+  installed on your machine.
 
 ## Global Installation
 
@@ -18,10 +28,11 @@ This will make Confix available globally on your machine, allowing you to use it
 
 ## Project-Specific Installation
 
-If you prefer to bind Confix to a specific project, you'll need to leverage the tool manifest provided by .NET Core. Here’s how you do it:
+If you prefer to bind Confix to a specific project, you'll need to leverage the tool manifest
+provided by .NET Core. Here's how you do it:
 
 1. Navigate to your project directory in the terminal.
-2. Run the following command to create a tool manifest file if you don’t have one already:
+2. Run the following command to create a tool manifest file if you don't have one already:
 
 ```bash
 dotnet new tool-manifest
