@@ -1,11 +1,11 @@
 ![Logo](./images/logo.svg)
-# Confix - Seamless Application Configuration
+# Confix 
 
 _Your Companion for Seamless Application Configuration_
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-- [Confix - Seamless Application Configuration](#confix---seamless-application-configuration)
+- [Confix](#confix)
   - [Introduction](#introduction)
     - [Why Choose Confix?](#why-choose-confix)
   - [Documentation](#documentation)
