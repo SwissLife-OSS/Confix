@@ -21,7 +21,7 @@ to simplify and streamline the process for you. With Confix, say goodbye to the 
 complexities and hello to a more straightforward, secure, and efficient application setup and
 deployment.
 
-**What if you could just use a simple JSON file to manage your application configurations?**
+**What if you could just use a simple JSON file to manage your application configuration?**
 
 <p align="center">
 <img src="images/intro-0.png">
