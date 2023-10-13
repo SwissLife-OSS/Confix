@@ -12,13 +12,13 @@ public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewr
     protected override JsonNode Rewrite(JsonValue value, JsonVariableRewriterContext context)
         => value.GetSchemaValueType() switch
         {
-            SchemaValueType.String => RewriteVariable((string)value!, context)!,
+            SchemaValueType.String => RewriteVariable((string) value!, context),
             _ => value.Deserialize<JsonNode>()!
         };
 
-    private JsonNode RewriteVariable(string key, JsonVariableRewriterContext context)
+    private static JsonNode RewriteVariable(string key, JsonVariableRewriterContext context)
     {
-        if (VariablePath.TryParse(key, out VariablePath? parsed))
+        if (VariablePath.TryParse(key, out var parsed))
         {
             return context.VariableLookup[parsed.Value].Copy()!;
         }
@@ -26,6 +26,4 @@ public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewr
         var replacedString = key.ReplaceVariables(v => context.VariableLookup[v].ToString());
         return JsonValue.Create(replacedString)!;
     }
-
-  
 }

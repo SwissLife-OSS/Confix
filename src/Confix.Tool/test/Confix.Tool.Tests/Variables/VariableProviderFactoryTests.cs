@@ -1,20 +1,36 @@
 using System.Text.Json.Nodes;
+using Confix.Tool.Middlewares;
+using Confix.Utilities;
 using Confix.Variables;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 
 namespace Confix.Tool.Tests;
 
 public class VariableProviderFactoryTests
 {
+    private readonly Mock<IGitService> _gitServiceMock;
+    private readonly IServiceProvider _serviceProvider;
+
+    public VariableProviderFactoryTests()
+    {
+        _gitServiceMock = new Mock<IGitService>();
+        _serviceProvider = new ServiceCollection()
+            .AddSingleton(_ => _gitServiceMock.Object)
+            .BuildServiceProvider();
+    }
+
     [Fact]
     public void CreateProvider_KnownProviderType_CreatesProvider()
     {
         // Arrange
         string providerType = "test";
         var factory = new VariableProviderFactory(
-            new Dictionary<string, Func<JsonNode, IVariableProvider>>()
+            _serviceProvider,
+            new Dictionary<string, Factory<IVariableProvider>>()
             {
-                { providerType, (c) => new LocalVariableProvider(c) },
+                { providerType, (_, c) => new LocalVariableProvider(c) },
             });
 
         VariableProviderConfiguration configuration = new()
@@ -22,10 +38,10 @@ public class VariableProviderFactoryTests
             Name = "irrelevant",
             Type = providerType,
             Configuration = JsonNode.Parse("""
-            {
-                "path": "/path/to/file.json"
-            }
-            """)!
+                {
+                    "path": "/path/to/file.json"
+                }
+                """)!
         };
         // Act
         var provider = factory.CreateProvider(configuration);
@@ -40,20 +56,21 @@ public class VariableProviderFactoryTests
     {
         // Arrange
         var factory = new VariableProviderFactory(
-             new Dictionary<string, Func<JsonNode, IVariableProvider>>()
-             {
-                { "NOT-the-one-we-are-looking-for", (c) => new LocalVariableProvider(c) },
-             });
+            _serviceProvider,
+            new Dictionary<string, Factory<IVariableProvider>>()
+            {
+                { "NOT-the-one-we-are-looking-for", (_, c) => new LocalVariableProvider(c) },
+            });
 
         VariableProviderConfiguration configuration = new()
         {
             Name = "irrelevant",
             Type = "the-one-we-are-looking-for",
             Configuration = JsonNode.Parse("""
-            {
-                "path": "/path/to/file.json"
-            }
-            """)!
+                {
+                    "path": "/path/to/file.json"
+                }
+                """)!
         };
 
         // Act & Assert

@@ -1,7 +1,6 @@
 using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Utilities;
-using static Confix.Utilities.GitHelpers;
 
 namespace Confix.Variables;
 
@@ -10,27 +9,35 @@ public sealed class GitVariableProvider : IVariableProvider
     private readonly GitVariableProviderDefinition _definition;
     private readonly LocalVariableProvider _localVariableProvider;
     private readonly string _cloneDirectory;
+    private readonly IGitService _git;
 
-    public GitVariableProvider(JsonNode configuration)
-        : this(GitVariableProviderConfiguration.Parse(configuration))
+    public GitVariableProvider(
+        IGitService git,
+        JsonNode configuration)
+        : this(git, GitVariableProviderConfiguration.Parse(configuration))
     {
     }
 
-    public GitVariableProvider(GitVariableProviderConfiguration configuration)
-        : this(GitVariableProviderDefinition.From(configuration))
+    public GitVariableProvider(
+        IGitService git,
+        GitVariableProviderConfiguration configuration)
+        : this(git, GitVariableProviderDefinition.From(configuration))
     {
     }
 
-    public GitVariableProvider(GitVariableProviderDefinition definition)
+    public GitVariableProvider(
+        IGitService git,
+        GitVariableProviderDefinition definition)
     {
+        _git = git;
         _definition = definition;
-        _cloneDirectory = GetCloneDirectory(_definition);
+        _cloneDirectory = GetCloneDirectory();
 
         var tempPath = Path.Combine(_cloneDirectory, _definition.FilePath);
         var localDefinition = new LocalVariableProviderDefinition(tempPath);
         _localVariableProvider = new LocalVariableProvider(localDefinition);
     }
-    
+
     public static string Type => "git";
 
     public async Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
@@ -61,14 +68,14 @@ public sealed class GitVariableProvider : IVariableProvider
         await EnsureClonedAsync(true, ct);
         var result = await _localVariableProvider.SetAsync(path, value, ct);
 
-        await AddAsync(new GitAddConfiguration(_cloneDirectory, _definition.Arguments), ct);
+        await _git.AddAsync(new GitAddConfiguration(_cloneDirectory, _definition.Arguments), ct);
 
         var commitMessage = $"Update {path} in {_definition.FilePath}";
-        await CommitAsync(
+        await _git.CommitAsync(
             new GitCommitConfiguration(_cloneDirectory, commitMessage, _definition.Arguments),
             ct);
 
-        await PushAsync(new GitPushConfiguration(_cloneDirectory, _definition.Arguments), ct);
+        await _git.PushAsync(new GitPushConfiguration(_cloneDirectory, _definition.Arguments), ct);
 
         return result;
     }
@@ -110,17 +117,17 @@ public sealed class GitVariableProvider : IVariableProvider
                 return;
             }
 
-            await PullAsync(new GitPullConfiguration(_cloneDirectory, _definition.Arguments), ct);
+            await _git.PullAsync(new(_cloneDirectory, _definition.Arguments), ct);
         }
         else
         {
             GitCloneConfiguration configuration =
                 new(_definition.RepositoryUrl, _cloneDirectory, _definition.Arguments);
 
-            await CloneAsync(configuration, ct);
+            await _git.CloneAsync(configuration, ct);
         }
     }
 
-    private static string GetCloneDirectory(GitVariableProviderDefinition providerDefinition)
+    private static string GetCloneDirectory()
         => Path.Combine(Path.GetTempPath(), ".confix", "git", Guid.NewGuid().ToString());
 }

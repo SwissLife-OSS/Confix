@@ -1,5 +1,7 @@
 using System.CommandLine.Builder;
 using Confix.Tool.Entities.Components.DotNet;
+using Confix.Tool.Reporting;
+using Confix.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Middlewares.Project;
@@ -16,5 +18,6 @@ public static class ProjectMiddlewareExtensions
                 new InitializeConfigurationDefaultValues(sp.GetRequiredService<ISchemaStore>()))
             .AddTransient<BuildComponentsOfProjectMiddleware>()
             .AddTransient<InitProjectMiddleware>()
-            .AddTransient<BuildProjectMiddleware>();
+            .AddTransient<BuildProjectMiddleware>()
+            .AddTransient(sp => new ProjectReportMiddleware(sp.GetRequiredService<IGitService>()));
 }

@@ -17,19 +17,27 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
     private readonly string _repositoryUrl;
     private readonly string[] _arguments;
     private readonly string _path;
+    private readonly IGitService _git;
 
-    public GitComponentProvider(JsonNode node)
-        : this(GitComponentProviderConfiguration.Parse(node))
+    public GitComponentProvider(
+        IGitService git,
+        JsonNode node)
+        : this(git, GitComponentProviderConfiguration.Parse(node))
     {
     }
 
-    public GitComponentProvider(GitComponentProviderConfiguration configuration)
-        : this(GitComponentProviderDefinition.From(configuration))
+    public GitComponentProvider(
+        IGitService git,
+        GitComponentProviderConfiguration configuration)
+        : this(git, GitComponentProviderDefinition.From(configuration))
     {
     }
 
-    public GitComponentProvider(GitComponentProviderDefinition definition)
+    public GitComponentProvider(
+        IGitService git,
+        GitComponentProviderDefinition definition)
     {
+        _git = git;
         _name = definition.Name;
         _repositoryUrl = definition.RepositoryUrl;
         _arguments = definition.Arguments;
@@ -82,10 +90,10 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
 
         var sparseConfig =
             new GitSparseCheckoutConfiguration(_repositoryUrl, directory.FullName, _arguments);
-        await GitHelpers.SparseCheckoutAsync(sparseConfig, cancellationToken);
+        await _git.SparseCheckoutAsync(sparseConfig, cancellationToken);
 
         var showRefConfig = new GitShowRefsConfiguration(directory.FullName, _arguments);
-        var refsOutput = await GitHelpers.ShowRefsAsync(showRefConfig, cancellationToken);
+        var refsOutput = await _git.ShowRefsAsync(showRefConfig, cancellationToken);
 
         foreach (var line in refsOutput.Split('\n'))
         {
@@ -122,12 +130,12 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
 
             var cloneArgument = _arguments.ToList();
 
-            var cloneConfiguration =
-                new GitCloneConfiguration(_repositoryUrl,
-                    directory.FullName,
-                    cloneArgument.ToArray());
+            var cloneConfiguration = new GitCloneConfiguration(
+                _repositoryUrl,
+                directory.FullName,
+                cloneArgument.ToArray());
 
-            await GitHelpers.CloneAsync(cloneConfiguration, cancellationToken);
+            await _git.CloneAsync(cloneConfiguration, cancellationToken);
 
             if (version is not "latest")
             {
@@ -137,7 +145,7 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
                         $"Could not find component {componentName} ({version}) in git repository");
                 }
 
-                await GitHelpers.CheckoutAsync(
+                await _git.CheckoutAsync(
                     new GitCheckoutConfiguration(directory.FullName, hash, cloneArgument.ToArray()),
                     cancellationToken);
             }

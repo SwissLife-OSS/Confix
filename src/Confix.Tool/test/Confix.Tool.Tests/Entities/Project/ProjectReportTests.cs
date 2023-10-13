@@ -6,7 +6,7 @@ using Moq;
 
 namespace Confix.Entities.Component.Configuration.Middlewares;
 
-public class ProjectReportTests : IAsyncLifetime
+public sealed class ProjectReportTests : IAsyncLifetime
 {
     private readonly Mock<IGitService> _git;
     private readonly TestConfixCommandline _cli;
@@ -24,6 +24,294 @@ public class ProjectReportTests : IAsyncLifetime
         _cli.Directories.Home.CreateConfixRc(_confixRc);
         _cli.Directories.Content
             .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitBranch();
+        _git.SetupGitTags();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+
+        // act
+        await _cli.RunAsync("project report");
+
+        // assert
+        SnapshotBuilder.New()
+            .AddOutput(_cli)
+            .RemoveDateTimes()
+            .MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_OutputReportToFile_When_Specified()
+    {
+        // arrange
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitBranch();
+        _git.SetupGitTags();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+        var outFile = _cli.Directories.Content
+            .Append("src")
+            .Append("project")
+            .AppendFile("report.json");
+
+        // act
+        await _cli.RunAsync($"project report --output-file {outFile.FullName}");
+
+        // assert
+        SnapshotBuilder.New()
+            .AddOutput(_cli)
+            .AddFile(outFile)
+            .RemoveDateTimes()
+            .MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_SkipInitialization_When_InputFile()
+    {
+        // arrange
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitBranch();
+        _git.SetupGitTags();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+
+        var inFile = _cli.Directories.Content
+            .Append("src")
+            .Append("project")
+            .AppendFile("test.json");
+
+        var outFile = _cli.Directories.Content
+            .Append("src")
+            .Append("project")
+            .AppendFile("report.json");
+
+        // act
+        await _cli.RunAsync(
+            $"project report --output-file {outFile.FullName} --input-file {inFile.FullName}");
+
+        // assert
+        SnapshotBuilder.New()
+            .AddOutput(_cli)
+            .AddFile(outFile)
+            .RemoveDateTimes()
+            .MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_ErrorWhen_MultipleConfigurationFile_But_InputFileSpecified()
+    {
+        // arrange
+
+        const string confixRc = """
+                {
+                    "isRoot": true,
+                    "component":
+                    {
+                         "inputs": [
+                              {
+                                "type": "graphql"
+                              }
+                            ]
+                    },
+                    "project": {
+                         "componentProviders": [],
+                         "configurationFiles": ["$project:/test2.json", "$project:/test.json"]
+                    }
+                }
+            """;
+
+        _cli.Directories.Home.CreateConfixRc(confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitBranch();
+        _git.SetupGitTags();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+
+        var inFile = _cli.Directories.Content
+            .Append("src")
+            .Append("project")
+            .AppendFile("test.json");
+
+        var outFile = _cli.Directories.Content
+            .Append("src")
+            .Append("project")
+            .AppendFile("report.json");
+
+        // act
+        await _cli.RunAsync(
+            $"project report --output-file {outFile.FullName} --input-file {inFile.FullName}");
+
+        // assert
+        SnapshotBuilder.New()
+            .AddOutput(_cli)
+            .RemoveDateTimes()
+            .MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_ErrorWhen_GetGitRoot_Fails()
+    {
+        // arrange
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitBranch();
+        _git.SetupGitTags();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+
+        // act
+        await _cli.RunAsync("project report");
+
+        // assert
+        SnapshotBuilder.New().AddOutput(_cli).MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_ErrorWhen_GetGitBranch_Fails()
+    {
+        // arrange
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitTags();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+
+        // act
+        await _cli.RunAsync("project report");
+
+        // assert
+        SnapshotBuilder.New().AddOutput(_cli).MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_ErrorWhen_GetGitTags_Fails()
+    {
+        // arrange
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitBranch();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+
+        // act
+        await _cli.RunAsync("project report");
+
+        // assert
+        SnapshotBuilder.New().AddOutput(_cli).MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_ErrorWhen_GetGitRepoInfo_Fails()
+    {
+        // arrange
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitBranch();
+        _git.SetupGitTags();
+        _git.SetupOriginUrl();
+
+        // act
+        await _cli.RunAsync("project report");
+
+        // assert
+        SnapshotBuilder.New().AddOutput(_cli).MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_ErrorWhen_GetGitOriginUrl_Fails()
+    {
+        // arrange
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
         _cli.Directories.Content.CreateConfixSolution();
         _cli.ExecutionContext = _cli.ExecutionContext with
         {
@@ -65,19 +353,12 @@ public class ProjectReportTests : IAsyncLifetime
                      "inputs": [
                           {
                             "type": "graphql"
-                          },
-                          {
-                            "type": "dotnet"
                           }
                         ]
                 },
                 "project": {
-                     "componentProviders": [
-                          {
-                            "name": "dotnet-package",
-                            "type": "dotnet-package"
-                          }
-                        ]
+                     "componentProviders": [],
+                     "configurationFiles": ["$project:/test.json"]
                 }
             }
         """;
@@ -130,4 +411,13 @@ file static class Extensions
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => new GitGetRepoInfoResult(hash, message, author, email));
     }
+
+    public static void SetupOriginUrl(
+        this Mock<IGitService> service,
+        string url = "https://foobar.com")
+        => service.Setup(
+                x => x.GetOriginUrlAsync(
+                    It.IsAny<GitGetOriginUrlConfiguration>(),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => url);
 }

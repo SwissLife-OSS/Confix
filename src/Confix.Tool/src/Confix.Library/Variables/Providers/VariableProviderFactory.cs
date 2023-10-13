@@ -1,17 +1,20 @@
-using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
+using Confix.Tool.Middlewares;
 
 namespace Confix.Variables;
 
 public sealed class VariableProviderFactory : IVariableProviderFactory
 {
-    private readonly IReadOnlyDictionary<string, Func<JsonNode, IVariableProvider>> _providers;
+    private readonly IReadOnlyDictionary<string, Factory<IVariableProvider>> _providers;
+    private readonly IServiceProvider _services;
 
     public VariableProviderFactory(
-        IReadOnlyDictionary<string, Func<JsonNode, IVariableProvider>> providers)
+        IServiceProvider services,
+        IReadOnlyDictionary<string, Factory<IVariableProvider>> providers)
     {
         _providers = providers;
+        _services = services;
     }
 
     public IVariableProvider CreateProvider(VariableProviderConfiguration providerConfiguration)
@@ -25,7 +28,9 @@ public sealed class VariableProviderFactory : IVariableProviderFactory
                 Help = "Check the documentation for a list of supported VariableProviders"
             };
         }
-        return providerFactory(providerConfiguration.Configuration);
-    }
 
+        return providerFactory(
+            _services,
+            providerConfiguration.Configuration);
+    }
 }

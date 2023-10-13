@@ -3,6 +3,7 @@ using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
+using Confix.Tool.Schema;
 using Confix.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,13 @@ namespace Confix.Tool.Reporting;
 
 public sealed class ProjectReportMiddleware : IMiddleware
 {
+    private readonly IGitService _git;
+
+    public ProjectReportMiddleware(IGitService git)
+    {
+        _git = git;
+    }
+
     /// <inheritdoc />
     public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
@@ -25,7 +33,7 @@ public sealed class ProjectReportMiddleware : IMiddleware
         await next(context);
     }
 
-    private static async Task PrintResultAsync(
+    private async Task PrintResultAsync(
         IMiddlewareContext context,
         List<Report> reports,
         CancellationToken ct)
@@ -35,17 +43,17 @@ public sealed class ProjectReportMiddleware : IMiddleware
 
         if (context.Parameter.TryGet(ReportOutputFileOption.Instance, out FileInfo file))
         {
-            Reporting.Log.ReportOutputFileWasWritten(App.Log, file.FullName);
+            App.Log.ReportOutputFileWasWritten(file.FullName);
             await File.WriteAllTextAsync(file.FullName, formattedOutput, ct);
         }
         else
         {
             await using var _ = await context.Status.PauseAsync(ct);
-            context.Console.WriteJson(formattedOutput);
+            context.Logger.WriteJson(formattedOutput);
         }
     }
 
-    private static async Task<List<Report>> CreateReportsAsync(
+    private async Task<List<Report>> CreateReportsAsync(
         IMiddlewareContext context,
         CancellationToken ct)
     {
@@ -58,16 +66,16 @@ public sealed class ProjectReportMiddleware : IMiddleware
         var project = configuration.EnsureProject();
 
         var commitReport = await GetCommitReportAsync(project.Directory!, ct);
-        Reporting.Log.CommitReported(log, commitReport);
+        log.CommitReported(commitReport);
 
         var repositoryReport = await GetRepositoryReport(project.Directory!, ct);
-        Reporting.Log.RepositoryReported(log, repositoryReport);
+        log.RepositoryReported(repositoryReport);
 
         var solutionReport = GetSolutionReport(configuration.Solution, repositoryReport);
-        Reporting.Log.SolutionReported(log, solutionReport);
+        log.SolutionReported(solutionReport);
 
         var projectReport = GetProjectReport(project, repositoryReport);
-        Reporting.Log.ProjectReported(log, projectReport);
+        log.ProjectReported(projectReport);
 
         await PrepareInputFileAsync(context, fileFeature, ct);
 
@@ -84,7 +92,7 @@ public sealed class ProjectReportMiddleware : IMiddleware
                 repositoryReport,
                 commitReport);
 
-            Reporting.Log.ReportCreated(log, report);
+            log.ReportCreated(report);
 
             reports.Add(report);
         }
@@ -92,7 +100,7 @@ public sealed class ProjectReportMiddleware : IMiddleware
         return reports;
     }
 
-    private static async Task PrepareInputFileAsync(
+    private async Task PrepareInputFileAsync(
         IMiddlewareContext context,
         ConfigurationFileFeature fileFeature,
         CancellationToken ct)
@@ -122,11 +130,11 @@ public sealed class ProjectReportMiddleware : IMiddleware
         fileFeature.Files[0].Content = JsonNode.Parse(content);
     }
 
-    private static async Task<CommitReport> GetCommitReportAsync(
+    private async Task<CommitReport> GetCommitReportAsync(
         FileSystemInfo directory,
         CancellationToken ct)
     {
-        var branch = await GitHelpers.GetBranchAsync(new(directory.FullName, null), ct);
+        var branch = await _git.GetBranchAsync(new(directory.FullName, null), ct);
         if (branch is null)
         {
             throw new ExitException(
@@ -136,7 +144,7 @@ public sealed class ProjectReportMiddleware : IMiddleware
             };
         }
 
-        var tags = await GitHelpers.GetTagsAsync(new(directory.FullName, null), ct);
+        var tags = await _git.GetTagsAsync(new(directory.FullName, null), ct);
         if (tags is null)
         {
             throw new ExitException(
@@ -146,7 +154,7 @@ public sealed class ProjectReportMiddleware : IMiddleware
             };
         }
 
-        var info = await GitHelpers.GetRepoInfoAsync(new(directory.FullName, null), ct);
+        var info = await _git.GetRepoInfoAsync(new(directory.FullName, null), ct);
         if (info is null)
         {
             throw new ExitException(
@@ -159,11 +167,11 @@ public sealed class ProjectReportMiddleware : IMiddleware
         return new CommitReport(info.Hash, info.Message, info.Author, info.Email, branch, tags);
     }
 
-    private static async Task<RepositoryReport> GetRepositoryReport(
+    private async Task<RepositoryReport> GetRepositoryReport(
         FileSystemInfo directory,
         CancellationToken ct)
     {
-        var path = await GitHelpers.GetRootAsync(new(directory.FullName, null), ct);
+        var path = await _git.GetRootAsync(new(directory.FullName, null), ct);
         if (path is null)
         {
             throw new ExitException(
@@ -183,7 +191,7 @@ public sealed class ProjectReportMiddleware : IMiddleware
             };
         }
 
-        var originUrl = await GitHelpers.GetOriginUrlAsync(new(directory.FullName, null), ct);
+        var originUrl = await _git.GetOriginUrlAsync(new(directory.FullName, null), ct);
         if (originUrl is null)
         {
             throw new ExitException(
@@ -217,5 +225,62 @@ public sealed class ProjectReportMiddleware : IMiddleware
         var path = Path.GetRelativePath(repositoryReport.Path, project.Directory!.FullName);
 
         return new ProjectReport(project.Name, path);
+    }
+}
+
+file static class Log
+{
+    public static void CommitReported(
+        this IConsoleLogger console,
+        CommitReport report)
+    {
+        console.Debug(
+            $"Commit: {report.Hash} by {report.Author} on {report.Branch} [dim]{report.Message}[/]");
+    }
+
+    public static void RepositoryReported(
+        this IConsoleLogger console,
+        RepositoryReport report)
+    {
+        console.Debug(
+            $"Repository: {report.Name} [dim]{report.Path}[/]");
+    }
+
+    public static void SolutionReported(
+        this IConsoleLogger console,
+        SolutionReport? report)
+    {
+        if (report is null)
+        {
+            console.Debug("Solution: [dim]None[/]");
+            return;
+        }
+
+        console.Debug(
+            $"Solution: {report.Name} [dim]{report.Path}[/]");
+    }
+
+    public static void ProjectReported(
+        this IConsoleLogger console,
+        ProjectReport report)
+    {
+        console.Debug(
+            $"Project: {report.Name} [dim]{report.Path}[/]");
+    }
+
+    public static void ReportCreated(
+        this IConsoleLogger console,
+        Report report)
+    {
+        console.Debug(
+            $"Report: {report.ConfigurationPath} [dim]{report.Environment}[/]");
+    }
+
+    public static void ReportOutputFileWasWritten(
+        this IConsoleLogger console,
+        string path)
+    {
+        var fileName = Path.GetFileName(path);
+        console.Success($"Report was written to {fileName.ToLink(path)} [dim]{path}[/]");
     }
 }

@@ -1,9 +1,11 @@
+using Confix.Tool.Reporting;
+
 namespace Confix.Tool.Commands.Project;
 
 public sealed class ProjectReportCommand : PipelineCommand<ProjectReportPipeline>
 {
-    public ProjectReportCommand() : base("build")
+    public ProjectReportCommand() : base("report")
     {
-        Description = "Replaces all variables in the project files with their values";
+        Description = "Generates a report for the project";
     }
 }

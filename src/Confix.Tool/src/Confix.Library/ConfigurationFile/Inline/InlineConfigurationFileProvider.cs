@@ -22,12 +22,18 @@ public sealed class InlineConfigurationFileProvider : IConfigurationFileProvider
 
         var files = new List<ConfigurationFile>();
 
-        foreach (var file in directory.FindAllInPath(path, false))
+        if (!Path.IsPathFullyQualified(path))
         {
-            context.Logger.FoundAInlineConfigurationFile(file);
-
-            files.Add(new ConfigurationFile { InputFile = file, OutputFile = file });
+            path = Path.Combine(directory.FullName, path);
         }
+
+        context.Logger.FoundAInlineConfigurationFile(path);
+
+        files.Add(new ConfigurationFile
+        {
+            InputFile = new FileInfo(path),
+            OutputFile = new FileInfo(path)
+        });
 
         return Task.FromResult<IReadOnlyList<ConfigurationFile>>(files);
     }
@@ -35,7 +41,7 @@ public sealed class InlineConfigurationFileProvider : IConfigurationFileProvider
 
 file static class Log
 {
-    public static void FoundAInlineConfigurationFile(this IConsoleLogger console, FileInfo file)
+    public static void FoundAInlineConfigurationFile(this IConsoleLogger console, string file)
     {
         console.Debug($"Found a inline configuration file '{file}'");
     }

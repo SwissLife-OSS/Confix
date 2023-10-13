@@ -10,6 +10,7 @@ public static class OutputFormattersConfigurationFilesExtensions
         builder.AddOutputFormatter<ComponentListOutputFormatter>();
         builder.AddOutputFormatter<ConfigurationFeatureOutputFormatter>();
         builder.AddOutputFormatter<ConfigurationFileOutputFormatter>();
+        builder.AddOutputFormatter<ReportListOutputFormatter>();
         return builder;
     }
 }

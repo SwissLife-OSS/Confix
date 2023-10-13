@@ -35,4 +35,8 @@
         <PackageReference Include="Microsoft.Extensions.Http" />
         <PackageReference Include="System.Reactive" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Reporting\" />
+    </ItemGroup>
 </Project>

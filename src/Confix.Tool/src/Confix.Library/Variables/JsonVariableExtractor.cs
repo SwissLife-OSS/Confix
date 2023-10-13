@@ -6,16 +6,16 @@ using Json.Schema;
 
 namespace Confix.Variables;
 
-public sealed class JsonVariableExtractor : JsonDocumentRewriter<JsonVariableRewriterContext>
+public sealed class JsonVariableExtractor : JsonDocumentRewriter<JsonVariableExtractorContext>
 {
-    protected override JsonNode Rewrite(JsonValue value, JsonVariableRewriterContext context)
+    protected override JsonNode Rewrite(JsonValue value, JsonVariableExtractorContext context)
         => value.GetSchemaValueType() switch
         {
             SchemaValueType.String => RewriteVariable((string) value!, context),
             _ => value.Deserialize<JsonNode>()!
         };
 
-    private static JsonNode RewriteVariable(string key, JsonVariableRewriterContext context)
+    private static JsonNode RewriteVariable(string key, JsonVariableExtractorContext context)
     {
         if (VariablePath.TryParse(key, out var parsed))
         {
@@ -26,3 +26,6 @@ public sealed class JsonVariableExtractor : JsonDocumentRewriter<JsonVariableRew
         return JsonValue.Create(replacedString)!;
     }
 }
+
+public sealed record JsonVariableExtractorContext(
+    IReadOnlyDictionary<VariablePath, JsonNode> VariableLookup);

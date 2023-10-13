@@ -60,4 +60,7 @@ public static class FileInfoExtensions
 
     public static string ToLink(this string str, FileSystemInfo fileInfo)
         => $"[link='{Uri.EscapeDataString(fileInfo.FullName)}']{str}[/]";
+
+    public static string ToLink(this string str, string fileInfo)
+        => str.ToLink(new FileInfo(fileInfo));
 }

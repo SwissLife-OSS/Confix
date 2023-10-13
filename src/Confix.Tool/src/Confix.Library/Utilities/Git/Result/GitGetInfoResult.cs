@@ -1,6 +1,6 @@
 namespace Confix.Utilities;
 
-public sealed record GitGetRepoInfoConfiguration(
+public sealed record GitGetRepoInfoResult(
     string Hash,
     string Message,
     string Author,

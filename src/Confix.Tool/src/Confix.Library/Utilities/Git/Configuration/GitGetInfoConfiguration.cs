@@ -1,5 +1,5 @@
 namespace Confix.Utilities;
 
-public sealed record GitGetInfoConfiguration(
+public sealed record GitGetRepoInfoConfiguration(
     string Location,
     string[]? Arguments);

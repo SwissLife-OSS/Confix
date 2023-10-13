@@ -1,9 +1,9 @@
-namespace Confix.Tool.Commands.Solution;
+namespace Confix.Tool.Reporting;
 
 public sealed record CommitReport(
     string Hash,
     string Message,
     string Author,
+    string Email,
     string Branch,
-    IReadOnlyList<string> Tags,
-    DateTimeOffset Timestamp);
+    IReadOnlyList<string> Tags);

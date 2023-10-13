@@ -1,4 +1,4 @@
-namespace Confix.Tool.Commands.Solution;
+namespace Confix.Tool.Reporting;
 
 public sealed record Report(
     string ConfigurationPath,

@@ -1,9 +1,3 @@
-using System.Diagnostics;
-using System.Globalization;
-using System.Text.Json;
-using Confix.Tool.Commands.Logging;
-using Spectre.Console;
-
 namespace Confix.Utilities;
 
 public interface IGitService
@@ -40,8 +34,8 @@ public interface IGitService
         GitPushConfiguration configuration,
         CancellationToken cancellationToken);
 
-    Task<GitGetInfoResult?> GetRepoInfoAsync(
-        GitGetInfoConfiguration configuration,
+    Task<GitGetRepoInfoResult?> GetRepoInfoAsync(
+        GitGetRepoInfoConfiguration configuration,
         CancellationToken cancellationToken);
 
     Task<string?> GetBranchAsync(
@@ -49,7 +43,7 @@ public interface IGitService
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<string>?> GetTagsAsync(
-        GitGetTagConfiguration configuration,
+        GitGetTagsConfiguration configuration,
         CancellationToken cancellationToken);
 
     Task<string?> GetRootAsync(
