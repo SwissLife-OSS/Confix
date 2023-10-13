@@ -61,6 +61,8 @@ file static class Extensions
         value.Commit.WriteTo(writer);
         writer.WritePropertyName("variables");
         value.Variables.WriteTo(writer);
+        writer.WritePropertyName("components");
+        value.Components.WriteTo(writer);
 
         writer.WriteEndObject();
     }
@@ -136,6 +138,37 @@ file static class Extensions
         writer.WriteString("name", value.VariableName);
         writer.WriteString("hash", value.Hash);
         writer.WriteString("path", value.Path);
+
+        writer.WriteEndObject();
+    }
+
+    private static void WriteTo(this IEnumerable<ComponentReport> values, Utf8JsonWriter writer)
+    {
+        writer.WriteStartArray();
+        foreach (var component in values)
+        {
+            component.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+    }
+
+    private static void WriteTo(this ComponentReport value, Utf8JsonWriter writer)
+    {
+        writer.WriteStartObject();
+
+        writer.WriteString("providerName", value.ProviderName);
+        writer.WriteString("name", value.ComponentName);
+        writer.WriteString("version", value.Version);
+        writer.WritePropertyName("mountingPoints");
+
+        writer.WriteStartArray();
+        foreach (var mountingPoint in value.MountingPoints)
+        {
+            writer.WriteStringValue(mountingPoint);
+        }
+
+        writer.WriteEndArray();
 
         writer.WriteEndObject();
     }

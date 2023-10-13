@@ -13,10 +13,13 @@
 ✓ Configuration loaded
   Found a inline configuration file '<</tmp>>/content/src/project/test.json'
 ✓ Active Environment is prod
+✓ Component inputs loaded
   Commit: 1234567890 by John Doe on master Initial commit
   Repository: <</tmp>> <</tmp>>/content
   Solution: content .
   Project: src.project src/project
+  Start loading components from project 'src.project'
+✓ Loaded 0 components
   Detected 3 variables
   Resolving 3 variables from foo
   Report: <</tmp>>/content/src/project/test.json prod
@@ -70,6 +73,8 @@
             "hash": "7A38BF81F383F69433AD6E900D35B3E2385593F76A7B7AB5D4355B8BA41EE24B",
             "path": "$['root']['nested']['object']"
          }
+      ],
+      "components": [
       ]
    }
 ]

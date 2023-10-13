@@ -78,6 +78,8 @@ public sealed class ProjectReportMiddleware : IMiddleware
         var projectReport = GetProjectReport(project, repositoryReport);
         log.ProjectReported(projectReport);
 
+        var components = await GetComponentsAsync(context, context.CancellationToken);
+
         var reports = new List<Report>();
 
         foreach (var file in fileFeature.Files)
@@ -92,7 +94,8 @@ public sealed class ProjectReportMiddleware : IMiddleware
                 solutionReport,
                 repositoryReport,
                 commitReport,
-                variables);
+                variables, 
+                components);
 
             log.ReportCreated(report);
 
@@ -222,6 +225,31 @@ public sealed class ProjectReportMiddleware : IMiddleware
         }
 
         return variables;
+    }
+
+    private static async Task<List<ComponentReport>> GetComponentsAsync(
+        IMiddlewareContext context,
+        CancellationToken ct)
+    {
+        var configuration = context.Features.Get<ConfigurationFeature>();
+        var solution = configuration.EnsureSolution();
+        var project = configuration.EnsureProject();
+        var componentsFeature = context.Features.Get<ComponentProviderExecutorFeature>().Executor;
+        var reports = new List<ComponentReport>();
+
+        var components = await componentsFeature.LoadComponents(solution, project, ct);
+        foreach (var component in components)
+        {
+            var report = new ComponentReport(
+                component.Provider,
+                component.ComponentName,
+                component.Version,
+                component.MountingPoints);
+
+            reports.Add(report);
+        }
+
+        return reports;
     }
 }
 

@@ -8,4 +8,5 @@ public sealed record Report(
     SolutionReport? Solution,
     RepositoryReport Repository,
     CommitReport Commit,
-    IReadOnlyList<VariableReport> Variables);
+    IReadOnlyList<VariableReport> Variables,
+    List<ComponentReport> Components);

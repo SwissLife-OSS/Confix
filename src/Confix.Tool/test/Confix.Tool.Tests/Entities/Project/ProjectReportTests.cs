@@ -89,6 +89,43 @@ public sealed class ProjectReportTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task Should_ReadComponentsAndPrintThem()
+    {
+        // arrange
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        await _cli.Directories.Content
+            .CreateConfixComponent("Test", "src/project")
+            .Directory!
+            .AppendFile(FileNames.Schema)
+            .WriteAllTextAsync(_componentSchema);
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitBranch();
+        _git.SetupGitTags();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+
+        // act
+        await _cli.RunAsync("project report");
+
+        // assert
+        SnapshotBuilder.New()
+            .AddOutput(_cli)
+            .RemoveDateTimes()
+            .MatchSnapshot();
+    }
+
+    [Fact]
     public async Task Should_ReadVariablesAndPrintThem()
     {
         // arrange
@@ -398,6 +435,62 @@ public sealed class ProjectReportTests : IAsyncLifetime
                      "componentProviders": [],
                      "configurationFiles": ["$project:/test.json"]
                 }
+            }
+        """;
+
+    private const string _componentSchema = """
+            {
+              "type": "object",
+              "properties": {
+                "str": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/String"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "deprecated": false
+                }
+              },
+              "required": [],
+              "additionalProperties": false,
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$defs": {
+                "Query": {
+                  "type": "object",
+                  "properties": {
+                    "str": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/String"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "deprecated": false
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                },
+                "String": {
+                  "type": "string",
+                  "hasVariable": true,
+                  "description": "The \u0060String\u0060 scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
+                },
+                "Boolean": {
+                  "type": "boolean",
+                  "hasVariable": true,
+                  "description": "The \u0060Boolean\u0060 scalar type represents \u0060true\u0060 or \u0060false\u0060."
+                },
+                "JSON": {
+                  "type": "string",
+                  "hasVariable": true
+                }
+              }
             }
         """;
 }

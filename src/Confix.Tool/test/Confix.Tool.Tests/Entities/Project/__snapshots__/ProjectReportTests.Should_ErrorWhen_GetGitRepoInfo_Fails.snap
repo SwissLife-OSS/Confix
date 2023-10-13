@@ -12,6 +12,7 @@
 ✓ Configuration loaded
   Found a inline configuration file '<</tmp>>/content/src/project/test.json'
 ✓ Active Environment is prod
+✓ Component inputs loaded
 ✕ Confix failed.
   Could not determine repository info for directory <</tmp>>/content/src/project
 Exception of type ExitException was thrown.

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
@@ -77,7 +78,9 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
 
             foreach (var resources in byAssembly)
             {
-                components.Add(await LoadComponent(resources.ToArray(), component));
+                var fvi = FileVersionInfo.GetVersionInfo(resources.Key.Location);
+                var version = fvi.FileVersion;
+                components.Add(await LoadComponent(version, resources.ToArray(), component));
             }
         }
 
@@ -85,6 +88,7 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
     }
 
     private static async Task<Component> LoadComponent(
+        string? version,
         IReadOnlyList<DiscoveredResource> resources,
         string component)
     {
@@ -113,7 +117,7 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
         return new Component(
             Type,
             componentConfiguration.Name,
-            null,
+            version,
             true,
             new[] { componentConfiguration.Name },
             schema);
@@ -178,8 +182,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                 assembly
                     .GetReferencedAssemblies()
                     .Where(x => !string.IsNullOrWhiteSpace(x.Name) &&
-                                !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
-                                !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
+                        !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
+                        !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
                     .ForEach(x => assembliesToScan.Enqueue(x.Name!));
 
                 foreach (var resourceName in assembly.GetManifestResourceNames())
@@ -200,8 +204,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
     private record DiscoveredResource(Assembly Assembly, string ResourceName)
     {
         public Stream GetStream() => Assembly.GetManifestResourceStream(ResourceName) ??
-                                     throw new ExitException(
-                                         $"Could not find resource: {ResourceName}");
+            throw new ExitException(
+                $"Could not find resource: {ResourceName}");
     }
 }
 
@@ -250,7 +254,8 @@ file static class Log
 
     public static void CouldNotLoadAssembly(
         this IConsoleLogger logger,
-        FileSystemInfo assembly, Exception ex)
+        FileSystemInfo assembly,
+        Exception ex)
     {
         logger.Debug($"Could not load assembly: {assembly.FullName}. {ex.Message}");
     }

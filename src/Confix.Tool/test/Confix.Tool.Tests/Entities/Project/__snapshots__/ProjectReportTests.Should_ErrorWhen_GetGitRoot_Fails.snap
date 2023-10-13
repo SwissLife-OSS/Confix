@@ -12,6 +12,7 @@
 ✓ Configuration loaded
   Found a inline configuration file '<</tmp>>/content/src/project/test.json'
 ✓ Active Environment is prod
+✓ Component inputs loaded
   Commit: 1234567890 by John Doe on master Initial commit
 ✕ Confix failed.
   Could not determine repository root for directory <</tmp>>/content/src/project

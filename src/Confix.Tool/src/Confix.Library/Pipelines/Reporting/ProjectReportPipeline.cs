@@ -20,6 +20,7 @@ public sealed class ProjectReportPipeline : Pipeline
             .UseBuildComponentsOfProject()
             .UseCompleteWhenNoConfigurationFiles()
             .Use<VariableMiddleware>()
+            .Use<BuildComponentProviderMiddleware>()
             .Use<ProjectReportMiddleware>();
     }
 }

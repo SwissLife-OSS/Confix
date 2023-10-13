@@ -92,4 +92,15 @@ public static class DirectoryExtensions
 
     public static FileInfo AppendFile(this DirectoryInfo directory, string path)
         => new(Path.Join(directory.FullName, path));
+
+    public static async Task WriteAllTextAsync(
+        this FileInfo file,
+        string content,
+        CancellationToken cancellationToken = default)
+    {
+        await using var stream = file.OpenWrite();
+        await using var writer = new StreamWriter(stream);
+        await writer.WriteAsync(content);
+        await writer.FlushAsync();
+    }
 }

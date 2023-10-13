@@ -12,10 +12,13 @@
 ✓ Configuration loaded
   Found a inline configuration file '<</tmp>>/content/src/project/test.json'
 ✓ Active Environment is prod
+✓ Component inputs loaded
   Commit: 1234567890 by John Doe on master Initial commit
   Repository: <</tmp>> <</tmp>>/content
   Solution: content .
   Project: src.project src/project
+  Start loading components from project 'src.project'
+✓ Loaded 0 components
   Detected 0 variables
   Report: <</tmp>>/content/src/project/test.json prod
 [
@@ -47,6 +50,8 @@
          ]
       },
       "variables": [
+      ],
+      "components": [
       ]
    }
 ]
