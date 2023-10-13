@@ -11,6 +11,7 @@ public class ComponentListCommandTests
     public async Task Should_OutputComponentList_When_Empty()
     {
         // Arrange
+        Environment.SetEnvironmentVariable("VERSION", "1.0.0");
         using var cli = new TestConfixCommandline();
         cli.Directories.Home.CreateConfixRc(_confixRc);
         cli.Directories.Content.CreateConfixProject();
@@ -33,6 +34,7 @@ public class ComponentListCommandTests
     public async Task Should_OutputComponentList_When_Provider()
     {
         // Arrange
+        Environment.SetEnvironmentVariable("VERSION", "1.0.0");
         using var cli = new TestConfixCommandline();
         cli.Directories.Home.CreateConfixRc(_confixRc);
         cli.Directories.Content.CreateConfixComponent("test");
@@ -63,6 +65,7 @@ public class ComponentListCommandTests
     public async Task Should_OutputComponentList_When_OutputAsJson()
     {
         // Arrange
+        Environment.SetEnvironmentVariable("VERSION", "1.0.0");
         using var cli = new TestConfixCommandline();
         cli.Directories.Home.CreateConfixRc(_confixRc);
         cli.Directories.Content.CreateConfixComponent("test");
