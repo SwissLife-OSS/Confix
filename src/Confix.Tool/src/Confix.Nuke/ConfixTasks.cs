@@ -212,3 +212,11 @@ public partial class ConfixConfigListSettings
         return ConfixTasks.GetToolPath(Framework);
     }
 }
+
+public partial class ConfixProjectReportSettings
+{
+    private string GetProcessToolPath()
+    {
+        return ConfixTasks.GetToolPath(Framework);
+    }
+}

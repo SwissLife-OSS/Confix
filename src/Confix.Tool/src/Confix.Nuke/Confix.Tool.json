@@ -242,6 +242,45 @@
       }
     },
     {
+      "help": "Generates a report for the project",
+      "postfix": "ProjectReport",
+      "definiteArgument": "project report",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "NoRestore",
+            "type": "string",
+            "format": "--no-restore {value}",
+            "help": "Disables restoring of schemas"
+          },
+          {
+            "name": "Environment",
+            "type": "string",
+            "format": "--environment {value}",
+            "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
+          },
+          {
+            "name": "OutputFile",
+            "type": "string",
+            "format": "--output-file {value}",
+            "help": "The path to the report file. If not specified, the report will be written to the console."
+          },
+          {
+            "name": "OnlyComponents",
+            "type": "string",
+            "format": "--only-components {value}",
+            "help": "If you specify this option, only the components will be built."
+          },
+          {
+            "name": "Verbosity",
+            "type": "string",
+            "format": "--verbosity {value}",
+            "help": "Sets the verbosity level"
+          }
+        ]
+      }
+    },
+    {
       "help": "Reloads the schema of all the projects in the solution",
       "postfix": "SolutionRestore",
       "definiteArgument": "solution restore",

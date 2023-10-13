@@ -1,0 +1,82 @@
+# Reporting
+
+When you're working with multiple services in Confix that use shared variables, it can be
+challenging to determine the exact version of a variable that's deployed. For instance, if you're
+rotating secrets and only creating configurations during the build phase, you'll want to identify
+which deployed service still operates on the old secret. You might also want to know which service
+uses a specific component and its version.
+
+To assist with this, Confix provides a reporting feature. Execute the following command within your
+Confix project, and it will generate a detailed report on all project information, variables, and
+components:
+
+```bash copy
+confix project report —out-file report.json
+```
+
+Add this JSON report to your build pipeline. When releasing the service in your release pipeline,
+send it to your logging system or a custom service for storage. This approach lets you easily track
+which secret version is in use in different deployments.
+
+**Example Report**
+
+```json
+[
+  {
+    "configurationPath": "<</tmp>>/ExampleRepo/src/Host/appsettings.json",
+    "environment": "prod",
+    "timestamp": "2023-01-01T12:00:00.000Z",
+    "project": {
+      "name": "src.Host",
+      "path": "src/Host"
+    },
+    "solution": {
+      "name": "ExampleRepo",
+      "path": "."
+    },
+    "repository": {
+      "name": "Confix",
+      "originUrl": "https://github.com/SwissLife-OSS/Confix/_git"
+    },
+    "commit": {
+      "hash": "025dc307ec300295f563d83af4de34f04e891a5a",
+      "message": "This is an example",
+      "author": "Max",
+      "email": "Sam.Sampleman@gmail.com",
+      "branch": "master",
+      "tags": ["1.0.0", "1.1.0"]
+    },
+    "variables": [
+      {
+        "providerName": "foo",
+        "providerType": "local",
+        "name": "test.bool",
+        "hash": "B5BEA41B6C623F7C09F1BF24DCAE58EBAB3C0CDD90AD966BC43A45B44867E12B",
+        "path": "$['root']['nested']['bool']"
+      },
+      {
+        "providerName": "foo",
+        "providerType": "local",
+        "name": "test.string",
+        "hash": "9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08",
+        "path": "$['root']['nested']['string']"
+      },
+      {
+        "providerName": "foo",
+        "providerType": "local",
+        "name": "test.object",
+        "hash": "7A38BF81F383F69433AD6E900D35B3E2385593F76A7B7AB5D4355B8BA41EE24B",
+        "path": "$['root']['nested']['object']"
+      }
+    ],
+    "components": [
+      {
+        "providerName": "__LOCAL",
+        "name": "Test",
+        "version": "latest",
+        "mountingPoints": ["Test"]
+      }
+    ]
+  }
+]
+```

@@ -458,6 +458,63 @@ namespace Confix.Nuke
             return configurator.Invoke(ConfixProjectValidate, ConfixLogger, degreeOfParallelism, completeOnFailure);
         }
         /// <summary>
+        ///   <p>Generates a report for the project</p>
+        ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
+        /// </summary>
+        /// <remarks>
+        ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--environment</c> via <see cref="ConfixProjectReportSettings.Environment"/></li>
+        ///     <li><c>--no-restore</c> via <see cref="ConfixProjectReportSettings.NoRestore"/></li>
+        ///     <li><c>--only-components</c> via <see cref="ConfixProjectReportSettings.OnlyComponents"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixProjectReportSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectReportSettings.Verbosity"/></li>
+        ///   </ul>
+        /// </remarks>
+        public static IReadOnlyCollection<Output> ConfixProjectReport(ConfixProjectReportSettings toolSettings = null)
+        {
+            toolSettings = toolSettings ?? new ConfixProjectReportSettings();
+            using var process = ProcessTasks.StartProcess(toolSettings);
+            process.AssertZeroExitCode();
+            return process.Output;
+        }
+        /// <summary>
+        ///   <p>Generates a report for the project</p>
+        ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
+        /// </summary>
+        /// <remarks>
+        ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--environment</c> via <see cref="ConfixProjectReportSettings.Environment"/></li>
+        ///     <li><c>--no-restore</c> via <see cref="ConfixProjectReportSettings.NoRestore"/></li>
+        ///     <li><c>--only-components</c> via <see cref="ConfixProjectReportSettings.OnlyComponents"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixProjectReportSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectReportSettings.Verbosity"/></li>
+        ///   </ul>
+        /// </remarks>
+        public static IReadOnlyCollection<Output> ConfixProjectReport(Configure<ConfixProjectReportSettings> configurator)
+        {
+            return ConfixProjectReport(configurator(new ConfixProjectReportSettings()));
+        }
+        /// <summary>
+        ///   <p>Generates a report for the project</p>
+        ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
+        /// </summary>
+        /// <remarks>
+        ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
+        ///   <ul>
+        ///     <li><c>--environment</c> via <see cref="ConfixProjectReportSettings.Environment"/></li>
+        ///     <li><c>--no-restore</c> via <see cref="ConfixProjectReportSettings.NoRestore"/></li>
+        ///     <li><c>--only-components</c> via <see cref="ConfixProjectReportSettings.OnlyComponents"/></li>
+        ///     <li><c>--output-file</c> via <see cref="ConfixProjectReportSettings.OutputFile"/></li>
+        ///     <li><c>--verbosity</c> via <see cref="ConfixProjectReportSettings.Verbosity"/></li>
+        ///   </ul>
+        /// </remarks>
+        public static IEnumerable<(ConfixProjectReportSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectReport(CombinatorialConfigure<ConfixProjectReportSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
+        {
+            return configurator.Invoke(ConfixProjectReport, ConfixLogger, degreeOfParallelism, completeOnFailure);
+        }
+        /// <summary>
         ///   <p>Reloads the schema of all the projects in the solution</p>
         ///   <p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p>
         /// </summary>
@@ -1563,6 +1620,54 @@ namespace Confix.Nuke
               .Add("project validate")
               .Add("--output-file {value}", OutputFile)
               .Add("--environment {value}", Environment)
+              .Add("--only-components {value}", OnlyComponents)
+              .Add("--verbosity {value}", Verbosity);
+            return base.ConfigureProcessArguments(arguments);
+        }
+    }
+    #endregion
+    #region ConfixProjectReportSettings
+    /// <summary>
+    ///   Used within <see cref="ConfixTasks"/>.
+    /// </summary>
+    [PublicAPI]
+    [ExcludeFromCodeCoverage]
+    [Serializable]
+    public partial class ConfixProjectReportSettings : ToolSettings
+    {
+        /// <summary>
+        ///   Path to the Confix executable.
+        /// </summary>
+        public override string ProcessToolPath => base.ProcessToolPath ?? GetProcessToolPath();
+        public override Action<OutputType, string> ProcessCustomLogger => base.ProcessCustomLogger ?? ConfixTasks.ConfixLogger;
+        /// <summary>
+        ///   Disables restoring of schemas
+        /// </summary>
+        public virtual string NoRestore { get; internal set; }
+        /// <summary>
+        ///   The name of the environment to run the command in. Overrules the active environment set in .confixrc
+        /// </summary>
+        public virtual string Environment { get; internal set; }
+        /// <summary>
+        ///   The path to the report file. If not specified, the report will be written to the console.
+        /// </summary>
+        public virtual string OutputFile { get; internal set; }
+        /// <summary>
+        ///   If you specify this option, only the components will be built.
+        /// </summary>
+        public virtual string OnlyComponents { get; internal set; }
+        /// <summary>
+        ///   Sets the verbosity level
+        /// </summary>
+        public virtual string Verbosity { get; internal set; }
+        public virtual string Framework { get; internal set; }
+        protected override Arguments ConfigureProcessArguments(Arguments arguments)
+        {
+            arguments
+              .Add("project report")
+              .Add("--no-restore {value}", NoRestore)
+              .Add("--environment {value}", Environment)
+              .Add("--output-file {value}", OutputFile)
               .Add("--only-components {value}", OnlyComponents)
               .Add("--verbosity {value}", Verbosity);
             return base.ConfigureProcessArguments(arguments);
@@ -3043,6 +3148,158 @@ namespace Confix.Nuke
         /// </summary>
         [Pure]
         public static T ResetFramework<T>(this T toolSettings) where T : ConfixProjectValidateSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Framework = null;
+            return toolSettings;
+        }
+        #endregion
+    }
+    #endregion
+    #region ConfixProjectReportSettingsExtensions
+    /// <summary>
+    ///   Used within <see cref="ConfixTasks"/>.
+    /// </summary>
+    [PublicAPI]
+    [ExcludeFromCodeCoverage]
+    public static partial class ConfixProjectReportSettingsExtensions
+    {
+        #region NoRestore
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectReportSettings.NoRestore"/></em></p>
+        ///   <p>Disables restoring of schemas</p>
+        /// </summary>
+        [Pure]
+        public static T SetNoRestore<T>(this T toolSettings, string noRestore) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.NoRestore = noRestore;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectReportSettings.NoRestore"/></em></p>
+        ///   <p>Disables restoring of schemas</p>
+        /// </summary>
+        [Pure]
+        public static T ResetNoRestore<T>(this T toolSettings) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.NoRestore = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Environment
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectReportSettings.Environment"/></em></p>
+        ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
+        /// </summary>
+        [Pure]
+        public static T SetEnvironment<T>(this T toolSettings, string environment) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Environment = environment;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectReportSettings.Environment"/></em></p>
+        ///   <p>The name of the environment to run the command in. Overrules the active environment set in .confixrc</p>
+        /// </summary>
+        [Pure]
+        public static T ResetEnvironment<T>(this T toolSettings) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Environment = null;
+            return toolSettings;
+        }
+        #endregion
+        #region OutputFile
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectReportSettings.OutputFile"/></em></p>
+        ///   <p>The path to the report file. If not specified, the report will be written to the console.</p>
+        /// </summary>
+        [Pure]
+        public static T SetOutputFile<T>(this T toolSettings, string outputFile) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OutputFile = outputFile;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectReportSettings.OutputFile"/></em></p>
+        ///   <p>The path to the report file. If not specified, the report will be written to the console.</p>
+        /// </summary>
+        [Pure]
+        public static T ResetOutputFile<T>(this T toolSettings) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OutputFile = null;
+            return toolSettings;
+        }
+        #endregion
+        #region OnlyComponents
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectReportSettings.OnlyComponents"/></em></p>
+        ///   <p>If you specify this option, only the components will be built.</p>
+        /// </summary>
+        [Pure]
+        public static T SetOnlyComponents<T>(this T toolSettings, string onlyComponents) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OnlyComponents = onlyComponents;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectReportSettings.OnlyComponents"/></em></p>
+        ///   <p>If you specify this option, only the components will be built.</p>
+        /// </summary>
+        [Pure]
+        public static T ResetOnlyComponents<T>(this T toolSettings) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.OnlyComponents = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Verbosity
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectReportSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T SetVerbosity<T>(this T toolSettings, string verbosity) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = verbosity;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectReportSettings.Verbosity"/></em></p>
+        ///   <p>Sets the verbosity level</p>
+        /// </summary>
+        [Pure]
+        public static T ResetVerbosity<T>(this T toolSettings) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Verbosity = null;
+            return toolSettings;
+        }
+        #endregion
+        #region Framework
+        /// <summary>
+        ///   <p><em>Sets <see cref="ConfixProjectReportSettings.Framework"/></em></p>
+        /// </summary>
+        [Pure]
+        public static T SetFramework<T>(this T toolSettings, string framework) where T : ConfixProjectReportSettings
+        {
+            toolSettings = toolSettings.NewInstance();
+            toolSettings.Framework = framework;
+            return toolSettings;
+        }
+        /// <summary>
+        ///   <p><em>Resets <see cref="ConfixProjectReportSettings.Framework"/></em></p>
+        /// </summary>
+        [Pure]
+        public static T ResetFramework<T>(this T toolSettings) where T : ConfixProjectReportSettings
         {
             toolSettings = toolSettings.NewInstance();
             toolSettings.Framework = null;
