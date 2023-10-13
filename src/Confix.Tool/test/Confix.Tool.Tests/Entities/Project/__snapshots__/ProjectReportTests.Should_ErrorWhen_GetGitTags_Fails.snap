@@ -1,0 +1,20 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.solution
+  Configuration files of type .confix.solution located at <</tmp>>/content/src/project/.confix.project
+  Replaced magic path $project:/test.json with <</tmp>>/content/src/project/test.json.
+  Merged .confix.solution from .confixrc
+  Merged .confix.project from .confix.solution
+  Merged .confix.component from .confix.solution
+✓ Running in scope Project
+✓ Configuration loaded
+  Found a inline configuration file '<</tmp>>/content/src/project/test.json'
+✓ Active Environment is prod
+✓ Component inputs loaded
+✕ Confix failed.
+  Could not determine tags for directory <</tmp>>/content/src/project
+Exception of type ExitException was thrown.
+  
+

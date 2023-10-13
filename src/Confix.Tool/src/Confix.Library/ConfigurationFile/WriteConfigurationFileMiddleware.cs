@@ -12,6 +12,13 @@ public sealed class WriteConfigurationFileMiddleware : IMiddleware
     /// <inheritdoc />
     public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
+        if (context.ContextData
+                .TryGetValue(Context.DisableConfigurationWrite, out var disabled) && disabled)
+        {
+            await next(context);
+            return;
+        }
+
         context.SetStatus("Persisting configuration changes");
 
         var configurationFeature = context.Features.Get<ConfigurationFileFeature>();

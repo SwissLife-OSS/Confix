@@ -1,0 +1,80 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.solution
+  Configuration files of type .confix.solution located at <</tmp>>/content/src/project/.confix.project
+  Replaced magic path $project:/test.json with <</tmp>>/content/src/project/test.json.
+  Replaced magic path $project:/vars.json with <</tmp>>/content/src/project/vars.json.
+  Merged .confix.solution from .confixrc
+  Merged .confix.project from .confix.solution
+  Merged .confix.component from .confix.solution
+✓ Running in scope Project
+✓ Configuration loaded
+  Found a inline configuration file '<</tmp>>/content/src/project/test.json'
+✓ Active Environment is prod
+✓ Component inputs loaded
+  Commit: 1234567890 by John Doe on master Initial commit
+  Repository: <</tmp>> <</tmp>>/content
+  Solution: content .
+  Project: src.project src/project
+  Start loading components from project 'src.project'
+✓ Loaded 0 components
+  Detected 3 variables
+  Resolving 3 variables from foo
+  Report: <</tmp>>/content/src/project/test.json prod
+[
+   {
+      "configurationPath": "<</tmp>>/content/src/project/test.json",
+      "environment": "prod",
+      "timestamp": <<date>>,
+      "project": {
+         "name": "src.project",
+         "path": "src/project"
+      },
+      "solution": {
+         "name": "content",
+         "path": "."
+      },
+      "repository": {
+         "name": "<</tmp>>",
+         "originUrl": "https://foobar.com"
+      },
+      "commit": {
+         "hash": "1234567890",
+         "message": "Initial commit",
+         "author": "John Doe",
+         "email": "jd@gmail.com",
+         "branch": "master",
+         "tags": [
+            "1.0.0",
+            "1.1.0"
+         ]
+      },
+      "variables": [
+         {
+            "providerName": "foo",
+            "providerType": "local",
+            "name": "test.bool",
+            "hash": "B5BEA41B6C623F7C09F1BF24DCAE58EBAB3C0CDD90AD966BC43A45B44867E12B",
+            "path": "$['root']['nested']['bool']"
+         },
+         {
+            "providerName": "foo",
+            "providerType": "local",
+            "name": "test.string",
+            "hash": "9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08",
+            "path": "$['root']['nested']['string']"
+         },
+         {
+            "providerName": "foo",
+            "providerType": "local",
+            "name": "test.object",
+            "hash": "7A38BF81F383F69433AD6E900D35B3E2385593F76A7B7AB5D4355B8BA41EE24B",
+            "path": "$['root']['nested']['object']"
+         }
+      ],
+      "components": [
+      ]
+   }
+]

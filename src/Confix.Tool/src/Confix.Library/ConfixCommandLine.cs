@@ -6,6 +6,7 @@ using Confix.Tool.Commands.Configuration;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
+using Confix.Utilities;
 using ExecutionContext = Confix.Tool.Common.Pipelines.ExecutionContext;
 
 namespace Confix.Tool;
@@ -20,6 +21,7 @@ public sealed class ConfixCommandLine : CommandLineBuilder
             .AddSchemaServices()
             .AddOutputFormatters()
             .RegisterMiddlewares()
+            .AddGit()
             .AddSingleton(DefaultConsole.Create())
             .AddSingleton<IServiceProvider>(sp => sp)
             .AddSingleton<IExecutionContext>(_ => ExecutionContext.Create())

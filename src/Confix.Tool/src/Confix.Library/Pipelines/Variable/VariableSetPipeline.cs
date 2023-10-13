@@ -25,7 +25,7 @@ public sealed class VariableSetPipeline : Pipeline
     {
         context.Features.Get<ConfigurationFeature>().EnsureProjectScope();
 
-        var resolver = context.Features.Get<VariableResolverFeature>().Resolver;
+        var resolver = context.Features.Get<VariablesFeature>().Resolver;
         if (!context.Parameter.TryGet(VariableNameOption.Instance, out string variableName))
         {
             variableName = await context.AskAsync<string>("Variable name: ");

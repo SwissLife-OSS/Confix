@@ -12,5 +12,6 @@ public sealed class ProjectCommand : Command
         AddCommand(new ProjectBuildCommand());
         AddCommand(new ProjectInitCommand());
         AddCommand(new ProjectValidateCommand());
+        AddCommand(new ProjectReportCommand());
     }
 }

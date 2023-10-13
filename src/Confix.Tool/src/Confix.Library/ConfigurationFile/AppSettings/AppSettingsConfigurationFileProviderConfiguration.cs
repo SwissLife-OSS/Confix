@@ -4,9 +4,7 @@ using Confix.Extensions;
 
 namespace Confix.ConfigurationFiles;
 
-public sealed record AppSettingsConfigurationFileProviderConfiguration(
-    bool? UseUserSecrets
-)
+public sealed record AppSettingsConfigurationFileProviderConfiguration(bool? UseUserSecrets)
 {
     public static AppSettingsConfigurationFileProviderConfiguration Parse(JsonNode node)
     {

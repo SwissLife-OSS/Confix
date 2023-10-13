@@ -18,7 +18,7 @@ public sealed class BuildProjectMiddleware : IMiddleware
         configuration.EnsureProjectScope();
 
         var variableReplacer =
-            context.Features.Get<VariableResolverFeature>().Replacer;
+            context.Features.Get<VariablesFeature>().Replacer;
 
         foreach (var file in files)
         {

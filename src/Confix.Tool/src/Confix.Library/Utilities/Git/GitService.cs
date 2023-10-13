@@ -1,12 +1,13 @@
 using System.Diagnostics;
 using Confix.Tool.Commands.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
 namespace Confix.Utilities;
 
-public static class GitHelpers
+public sealed class GitService : IGitService
 {
-    public static async Task SparseCheckoutAsync(
+    public async Task SparseCheckoutAsync(
         GitSparseCheckoutConfiguration configuration,
         CancellationToken cancellationToken)
     {
@@ -37,7 +38,7 @@ public static class GitHelpers
         }
     }
 
-    public static async Task<string> ShowRefsAsync(
+    public async Task<string> ShowRefsAsync(
         GitShowRefsConfiguration configuration,
         CancellationToken cancellationToken)
     {
@@ -70,7 +71,7 @@ public static class GitHelpers
         return string.Empty;
     }
 
-    public static async Task CheckoutAsync(
+    public async Task CheckoutAsync(
         GitCheckoutConfiguration configuration,
         CancellationToken cancellationToken)
     {
@@ -100,7 +101,7 @@ public static class GitHelpers
         }
     }
 
-    public static async Task CloneAsync(
+    public async Task CloneAsync(
         GitCloneConfiguration configuration,
         CancellationToken cancellationToken)
     {
@@ -130,7 +131,7 @@ public static class GitHelpers
         }
     }
 
-    public static async Task PullAsync(
+    public async Task PullAsync(
         GitPullConfiguration configuration,
         CancellationToken cancellationToken)
     {
@@ -159,7 +160,7 @@ public static class GitHelpers
         }
     }
 
-    public static async Task AddAsync(
+    public async Task AddAsync(
         GitAddConfiguration configuration,
         CancellationToken cancellationToken)
     {
@@ -188,7 +189,7 @@ public static class GitHelpers
         }
     }
 
-    public static async Task CommitAsync(
+    public async Task CommitAsync(
         GitCommitConfiguration configuration,
         CancellationToken cancellationToken)
     {
@@ -219,7 +220,7 @@ public static class GitHelpers
         }
     }
 
-    public static async Task PushAsync(
+    public async Task PushAsync(
         GitPushConfiguration configuration,
         CancellationToken cancellationToken)
     {
@@ -248,7 +249,193 @@ public static class GitHelpers
         }
     }
 
-    private static async Task<string> ExecuteAsync(
+    public async Task<GitGetRepoInfoResult?> GetRepoInfoAsync(
+        GitGetRepoInfoConfiguration configuration,
+        CancellationToken cancellationToken)
+    {
+        var arguments = new List<string>()
+        {
+            "-C",
+            $"\"{configuration.Location}\"",
+            "log",
+            "-1",
+            "--decorate=full",
+            "--pretty=format:'hash:%H\nmessage:%s\nauthor:%an\nemail:%ae\ntimestamp:%ai'"
+        };
+
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+
+        try
+        {
+            App.Log.GitGetInfoStarted(configuration.Location);
+
+            var output = await ExecuteAsync(arguments, cancellationToken);
+
+            var lines = output.Split(Environment.NewLine);
+            var hash = lines[0].Split(':', 2, StringSplitOptions.TrimEntries)[1];
+            var message = lines[1].Split(':', 2, StringSplitOptions.TrimEntries)[1];
+            var author = lines[2].Split(':', 2, StringSplitOptions.TrimEntries)[1];
+            var email = lines[3].Split(':', 2, StringSplitOptions.TrimEntries)[1];
+
+            App.Log.GitGetInfoOutput(output);
+            return new GitGetRepoInfoResult(hash, message, author, email);
+        }
+        catch (Exception ex)
+        {
+            App.Log.GitGetInfoFailed(ex);
+            return null;
+        }
+    }
+
+    public async Task<string?> GetBranchAsync(
+        GitGetBranchConfiguration configuration,
+        CancellationToken cancellationToken)
+    {
+        var arguments = new List<string>
+        {
+            "-C",
+            $"\"{configuration.Location}\"",
+            "rev-parse",
+            "--abbrev-ref",
+            "HEAD"
+        };
+
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+
+        try
+        {
+            App.Log.GitGetBranchStarted(configuration.Location);
+
+            var output = await ExecuteAsync(arguments, cancellationToken);
+
+            App.Log.GitGetBranchOutput(output);
+
+            output = output.TrimNewLine();
+
+            return output;
+        }
+        catch (Exception ex)
+        {
+            App.Log.GitGetBranchFailed(ex);
+            return null;
+        }
+    }
+
+    public async Task<IReadOnlyList<string>?> GetTagsAsync(
+        GitGetTagsConfiguration configuration,
+        CancellationToken cancellationToken)
+    {
+        var arguments = new List<string>()
+        {
+            "-C",
+            $"\"{configuration.Location}\"",
+            "tag",
+            "--points-at",
+            "HEAD"
+        };
+
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+
+        try
+        {
+            App.Log.GitGetTagStarted(configuration.Location);
+
+            var output = await ExecuteAsync(arguments, cancellationToken);
+
+            App.Log.GitGetTagOutput(output);
+
+            return output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        }
+        catch (Exception ex)
+        {
+            App.Log.GitGetTagFailed(ex);
+            return null;
+        }
+    }
+
+    public async Task<string?> GetRootAsync(
+        GitGetRootConfiguration configuration,
+        CancellationToken cancellationToken)
+    {
+        var arguments = new List<string>()
+        {
+            "-C",
+            $"\"{configuration.Location}\"",
+            "rev-parse",
+            "--show-toplevel"
+        };
+
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+
+        try
+        {
+            App.Log.GitGetRootStarted(configuration.Location);
+
+            var output = await ExecuteAsync(arguments, cancellationToken);
+
+            App.Log.GitGetRootOutput(output);
+
+            output = output.TrimNewLine();
+
+            return output;
+        }
+        catch (Exception ex)
+        {
+            App.Log.GitGetRootFailed(ex);
+            return null;
+        }
+    }
+
+    public async Task<string?> GetOriginUrlAsync(
+        GitGetOriginUrlConfiguration configuration,
+        CancellationToken cancellationToken)
+    {
+        var arguments = new List<string>()
+        {
+            "-C",
+            $"\"{configuration.Location}\"",
+            "config",
+            "--get",
+            "remote.origin.url"
+        };
+
+        if (configuration.Arguments?.Length > 0)
+        {
+            arguments.AddRange(configuration.Arguments);
+        }
+
+        try
+        {
+            App.Log.GitGetOriginUrlStarted(configuration.Location);
+
+            var output = await ExecuteAsync(arguments, cancellationToken);
+
+            App.Log.GitGetOriginUrlOutput(output);
+
+            output = output.TrimNewLine();
+
+            return output;
+        }
+        catch (Exception ex)
+        {
+            App.Log.GitGetOriginUrlFailed(ex);
+            return null;
+        }
+    }
+
+    private async Task<string> ExecuteAsync(
         IEnumerable<string> arguments,
         CancellationToken cancellationToken)
     {
@@ -265,9 +452,8 @@ public static class GitHelpers
                 Arguments = argumentsString
             }
         };
-        
-        App.Log.Debug($"Executing `git {argumentsString}`");
 
+        App.Log.Debug("Executing `git`");
         process.Start();
 
         await process.WaitForExitAsync(cancellationToken);
@@ -280,41 +466,13 @@ public static class GitHelpers
     }
 }
 
-public record GitCloneConfiguration(
-    string RepositoryUrl,
-    string Location,
-    string[]? Arguments);
-
-public record GitCheckoutConfiguration(
-    string Location,
-    string Ref,
-    string[]? Arguments);
-
-public record GitShowRefsConfiguration(
-    string Location,
-    string[]? Arguments);
-
-public record GitSparseCheckoutConfiguration(
-    string RepositoryUrl,
-    string Location,
-    string[]? Arguments);
-
-public record GitPullConfiguration(
-    string Location,
-    string[]? Arguments);
-
-public record GitAddConfiguration(
-    string Location,
-    string[]? Arguments);
-
-public record GitCommitConfiguration(
-    string Location,
-    string Message,
-    string[]? Arguments);
-
-public record GitPushConfiguration(
-    string Location,
-    string[]? Arguments);
+file static class Extensions
+{
+    public static string TrimNewLine(this string value)
+    {
+        return value.TrimEnd('\r', '\n');
+    }
+}
 
 file static class LogExtensions
 {
@@ -457,5 +615,80 @@ file static class LogExtensions
     public static void GitCheckoutFailed(this IConsoleLogger log, Exception ex)
     {
         log.Exception("Git checkout failed", ex);
+    }
+
+    public static void GitGetInfoStarted(this IConsoleLogger log, string location)
+    {
+        log.Debug($"Get info in {location}");
+    }
+
+    public static void GitGetInfoOutput(this IConsoleLogger log, string output)
+    {
+        log.Debug(output.EscapeMarkup());
+    }
+
+    public static void GitGetInfoFailed(this IConsoleLogger log, Exception ex)
+    {
+        log.Exception("Git get info failed", ex);
+    }
+
+    public static void GitGetBranchStarted(this IConsoleLogger log, string location)
+    {
+        log.Debug($"Get branch in {location}");
+    }
+
+    public static void GitGetBranchOutput(this IConsoleLogger log, string output)
+    {
+        log.Debug(output.EscapeMarkup());
+    }
+
+    public static void GitGetBranchFailed(this IConsoleLogger log, Exception ex)
+    {
+        log.Exception("Git get branch failed", ex);
+    }
+
+    public static void GitGetTagStarted(this IConsoleLogger log, string location)
+    {
+        log.Debug($"Get tag in {location}");
+    }
+
+    public static void GitGetTagOutput(this IConsoleLogger log, string output)
+    {
+        log.Debug(output.EscapeMarkup());
+    }
+
+    public static void GitGetTagFailed(this IConsoleLogger log, Exception ex)
+    {
+        log.Exception("Git get tag failed", ex);
+    }
+
+    public static void GitGetRootStarted(this IConsoleLogger log, string location)
+    {
+        log.Debug($"Get repository root in {location}");
+    }
+
+    public static void GitGetRootOutput(this IConsoleLogger log, string output)
+    {
+        log.Debug(output.EscapeMarkup());
+    }
+
+    public static void GitGetRootFailed(this IConsoleLogger log, Exception ex)
+    {
+        log.Exception("Git get repository root failed", ex);
+    }
+
+    public static void GitGetOriginUrlStarted(this IConsoleLogger log, string location)
+    {
+        log.Debug($"Get origin url in {location}");
+    }
+
+    public static void GitGetOriginUrlOutput(this IConsoleLogger log, string output)
+    {
+        log.Debug(output.EscapeMarkup());
+    }
+
+    public static void GitGetOriginUrlFailed(this IConsoleLogger log, Exception ex)
+    {
+        log.Exception("Git get origin url failed", ex);
     }
 }

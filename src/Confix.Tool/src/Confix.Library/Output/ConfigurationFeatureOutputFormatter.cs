@@ -1,5 +1,4 @@
 using System.Buffers;
-using System.CommandLine.Invocation;
 using System.Text;
 using System.Text.Json;
 using Confix.Tool.Commands.Logging;
@@ -15,7 +14,6 @@ public sealed class ConfigurationFeatureOutputFormatter : IOutputFormatter<Confi
 
     /// <inheritdoc />
     public Task<string> FormatAsync(
-        InvocationContext context,
         OutputFormat format,
         ConfigurationFeature value)
     {

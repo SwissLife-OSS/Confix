@@ -2,13 +2,12 @@ using Confix.Tool;
 
 namespace Confix.Variables;
 
-public sealed record LocalVariableProviderDefinition(
-    string Path
-)
+public sealed record LocalVariableProviderDefinition(string Path)
 {
-    public static LocalVariableProviderDefinition From(LocalVariableProviderConfiguration configuration)
+    public static LocalVariableProviderDefinition From(
+        LocalVariableProviderConfiguration configuration)
     {
-        List<string> validationErrors = new();
+        var validationErrors = new List<string>();
         if (string.IsNullOrWhiteSpace(configuration.Path))
         {
             validationErrors.Add("Path is required");

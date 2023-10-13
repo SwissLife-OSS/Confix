@@ -4,7 +4,7 @@ using Confix.Tool.Schema;
 
 namespace ConfiX.Commands.Config;
 
-public class ConfigListCommandTests
+public class ConfigListCommandTests : IAsyncLifetime
 {
     private readonly TestConfixCommandline _cli = new();
 
@@ -12,13 +12,11 @@ public class ConfigListCommandTests
     public async Task Should_ListFiles_Project()
     {
         // Arrange
-        using var cli = _cli;
-
-        cli.Directories.Home.CreateConfixRc(_confixRc);
-        cli.Directories.Content.CreateConfixProject();
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content.CreateConfixProject();
 
         // Act
-        await cli.RunAsync("config list");
+        await _cli.RunAsync("config list");
 
         // Assert
         SnapshotBuilder
@@ -33,18 +31,16 @@ public class ConfigListCommandTests
     public async Task Should_ListFiles_Project_FormatJson()
     {
         // Arrange
-        using var cli = _cli;
-
-        cli.Directories.Home.CreateConfixRc(_confixRc);
-        cli.Directories.Content.CreateConfixProject();
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Content.CreateConfixProject();
 
         // Act
-        await cli.RunAsync("config list --format json");
+        await _cli.RunAsync("config list --format json");
 
         // Assert
         SnapshotBuilder
             .New()
-            .Append("output", cli.Console.Output)
+            .Append("output", _cli.Console.Output)
             .AddReplacement(_cli.Directories.Home.FullName, "HOME")
             .AddReplacement(_cli.Directories.Content.FullName, "CONTENT")
             .MatchSnapshot();
@@ -54,15 +50,13 @@ public class ConfigListCommandTests
     public async Task Should_ListFiles_Component()
     {
         // Arrange
-        using var cli = _cli;
-
-        cli.Directories.Home.CreateConfixRc(_confixRc);
-        cli.Directories.Home.CreateFileInPath(
-            Path.Combine(cli.Directories.Content.FullName, FileNames.ConfixComponent),
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Home.CreateFileInPath(
+            Path.Combine(_cli.Directories.Content.FullName, FileNames.ConfixComponent),
             """ { "name": "foo" } """);
 
         // Act
-        await cli.RunAsync("config list");
+        await _cli.RunAsync("config list");
 
         // Assert
         SnapshotBuilder
@@ -148,4 +142,17 @@ public class ConfigListCommandTests
           }
         }
         """;
+
+    /// <inheritdoc />
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task DisposeAsync()
+    {
+        _cli.Dispose();
+        return Task.CompletedTask;
+    }
 }

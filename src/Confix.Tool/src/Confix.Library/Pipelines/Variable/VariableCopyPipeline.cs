@@ -25,7 +25,7 @@ public sealed class VariableCopyPipeline : Pipeline
     {
         var cancellationToken = context.CancellationToken;
 
-        var variableFeature = context.Features.Get<VariableResolverFeature>();
+        var variableFeature = context.Features.Get<VariablesFeature>();
 
         var fromResolver = variableFeature.Resolver;
         var providers = fromResolver.ListProviders().ToArray();
@@ -58,7 +58,7 @@ public sealed class VariableCopyPipeline : Pipeline
     private static IVariableResolver? ResolveToVariableResolver(IMiddlewareContext context)
     {
         var configFeature = context.Features.Get<ConfigurationFeature>();
-        var variableFeature = context.Features.Get<VariableResolverFeature>();
+        var variableFeature = context.Features.Get<VariablesFeature>();
         if (!context.Parameter.TryGet(ToEnvironmentOption.Instance, out string toEnvironment))
         {
             return null;

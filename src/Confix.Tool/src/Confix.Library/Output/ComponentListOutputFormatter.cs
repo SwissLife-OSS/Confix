@@ -1,5 +1,4 @@
 using System.Buffers;
-using System.CommandLine.Invocation;
 using System.Text;
 using System.Text.Json;
 using Confix.Tool.Commands.Logging;
@@ -16,7 +15,6 @@ public sealed class ComponentListOutputFormatter
 
     /// <inheritdoc />
     public Task<string> FormatAsync(
-        InvocationContext context,
         OutputFormat format,
         IEnumerable<Abstractions.Component> value)
     {

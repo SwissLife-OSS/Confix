@@ -83,7 +83,7 @@ public static class ConsoleLoggerExtensions
 
         logger.Log(ref loggerMessage);
     }
-    
+
     public static void Inform(
         this IConsoleLogger logger,
         [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message,
@@ -136,7 +136,7 @@ public static class ConsoleLoggerExtensions
         logger.Log(ref loggerMessage);
     }
 
-     public static void TraceException(
+    public static void TraceException(
         this IConsoleLogger logger,
         Exception exception,
         params object[] arguments)
@@ -148,6 +148,24 @@ public static class ConsoleLoggerExtensions
             Verbosity = Verbosity.Diagnostic,
             Style = Styles.Error,
             Exception = exception
+        };
+
+        logger.Log(ref loggerMessage);
+    }
+
+    public static void WriteJson(
+        this IConsoleLogger logger,
+        string json)
+    {
+        if (json is null)
+        {
+            throw new ArgumentNullException(nameof(json));
+        }
+
+        ILoggerMessage loggerMessage = new JsonLoggerMessage
+        {
+            Message = json,
+            Verbosity = Verbosity.Normal
         };
 
         logger.Log(ref loggerMessage);

@@ -17,6 +17,8 @@ public interface IVariableResolver
 
     IEnumerable<string> ListProviders();
 
+    string GetProviderType(string name);
+
     Task<JsonNode> ResolveVariable(VariablePath key, CancellationToken cancellationToken);
 
     Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(

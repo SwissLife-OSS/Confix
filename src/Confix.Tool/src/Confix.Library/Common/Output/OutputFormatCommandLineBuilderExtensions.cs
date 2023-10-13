@@ -12,6 +12,8 @@ public static class OutputFormatCommandLineBuilderExtensions
         where T : IOutputFormatter, new()
     {
         builder.GetOutputFormatters().Add(new T());
+        builder.AddSingleton<IOutputFormatter>(_
+            => new CombinedOutputFormatter(builder.GetOutputFormatters()));
         return builder;
     }
 
@@ -47,7 +49,7 @@ public static class OutputFormatCommandLineBuilderExtensions
                         }
 
                         formattedValue =
-                            await outputFormatter.FormatAsync(context, format.Value, output);
+                            await outputFormatter.FormatAsync(format.Value, output);
 
                         break;
                     }
@@ -70,5 +72,29 @@ public static class OutputFormatCommandLineBuilderExtensions
     private static object? GetOutput(this CommandLineBuilder context)
     {
         return context.GetContextData().Get(Context.Output);
+    }
+}
+
+file sealed class CombinedOutputFormatter : IOutputFormatter
+{
+    private readonly List<IOutputFormatter> _formatters;
+
+    public CombinedOutputFormatter(List<IOutputFormatter> formatters)
+    {
+        _formatters = formatters;
+    }
+
+    /// <inheritdoc />
+    public bool CanHandle(OutputFormat format, object value)
+    {
+        return _formatters.Any(f => f.CanHandle(format, value));
+    }
+
+    /// <inheritdoc />
+    public Task<string> FormatAsync(OutputFormat format, object value)
+    {
+        return _formatters
+            .First(f => f.CanHandle(format, value))
+            .FormatAsync(format, value);
     }
 }
