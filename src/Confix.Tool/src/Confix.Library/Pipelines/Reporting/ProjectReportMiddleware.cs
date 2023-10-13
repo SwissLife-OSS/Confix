@@ -77,8 +77,6 @@ public sealed class ProjectReportMiddleware : IMiddleware
         var projectReport = GetProjectReport(project, repositoryReport);
         log.ProjectReported(projectReport);
 
-        await PrepareInputFileAsync(context, fileFeature, ct);
-
         var reports = new List<Report>();
 
         foreach (var file in fileFeature.Files)
@@ -98,36 +96,6 @@ public sealed class ProjectReportMiddleware : IMiddleware
         }
 
         return reports;
-    }
-
-    private async Task PrepareInputFileAsync(
-        IMiddlewareContext context,
-        ConfigurationFileFeature fileFeature,
-        CancellationToken ct)
-    {
-        if (!context.Parameter.TryGet(ReportInputFileOption.Instance, out FileInfo inputFile))
-        {
-            return;
-        }
-
-        if (fileFeature.Files.Count == 0)
-        {
-            return;
-        }
-
-        if (fileFeature.Files.Count > 1)
-        {
-            throw new ExitException(
-                "Cannot create report for multiple configuration files when a single configuration file is specified")
-            {
-                Help =
-                    $"Please run {"confix project report".AsCommand()} without the {"--input-file".AsCommand()} option"
-            };
-        }
-
-        fileFeature.Files[0].OutputFile = inputFile;
-        var content = await File.ReadAllTextAsync(inputFile.FullName, ct);
-        fileFeature.Files[0].Content = JsonNode.Parse(content);
     }
 
     private async Task<CommitReport> GetCommitReportAsync(

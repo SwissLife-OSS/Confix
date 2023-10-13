@@ -14,15 +14,9 @@ public sealed class ProjectReportPipeline : Pipeline
             .AddOption(NoRestoreOptions.Instance)
             .AddOption(ActiveEnvironmentOption.Instance)
             .AddOption(ReportOutputFileOption.Instance)
-            .AddOption(ReportInputFileOption.Instance)
             .Use<LoadConfigurationMiddleware>()
             .AddContextData(Context.DisableConfigurationWrite, true)
-            .When(x => !x.Parameter.HasInputFile(), x => x.Use(BuildProject))
-            .When(x => x.Parameter.HasInputFile(),
-                x => x.UseReadConfigurationFiles()
-                    .UseEnvironment()
-                    .UseBuildComponentsOfProject()
-                    .Use<VariableMiddleware>())
+            .Use(BuildProject)
             .Use<ProjectReportMiddleware>();
     }
 
@@ -45,10 +39,4 @@ public sealed class ProjectReportPipeline : Pipeline
 
         await next(context);
     }
-}
-
-file static class Extensions
-{
-    public static bool HasInputFile(this IParameterCollection collection)
-        => collection.TryGet(ReportInputFileOption.Instance, out FileInfo file) && file.Exists;
 }
