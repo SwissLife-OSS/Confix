@@ -1,4 +1,5 @@
-using System.Text.Json.Nodes;
+using System.Security.Cryptography;
+using System.Text;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
@@ -33,7 +34,7 @@ public sealed class ProjectReportMiddleware : IMiddleware
         await next(context);
     }
 
-    private async Task PrintResultAsync(
+    private static async Task PrintResultAsync(
         IMiddlewareContext context,
         List<Report> reports,
         CancellationToken ct)
@@ -81,6 +82,8 @@ public sealed class ProjectReportMiddleware : IMiddleware
 
         foreach (var file in fileFeature.Files)
         {
+            var variables = await GetVariablesAsync(context, file, context.CancellationToken);
+
             var report = new Report(
                 file.InputFile.FullName,
                 envFeature.ActiveEnvironment.Name,
@@ -88,7 +91,8 @@ public sealed class ProjectReportMiddleware : IMiddleware
                 projectReport,
                 solutionReport,
                 repositoryReport,
-                commitReport);
+                commitReport,
+                variables);
 
             log.ReportCreated(report);
 
@@ -193,6 +197,31 @@ public sealed class ProjectReportMiddleware : IMiddleware
         var path = Path.GetRelativePath(repositoryReport.Path, project.Directory!.FullName);
 
         return new ProjectReport(project.Name, path);
+    }
+
+    private static async Task<List<VariableReport>> GetVariablesAsync(
+        IMiddlewareContext context,
+        ConfigurationFile file,
+        CancellationToken ct)
+    {
+        var variablesFeature = context.Features.Get<VariablesFeature>();
+        var variables = new List<VariableReport>();
+
+        var content = await file.TryLoadContentAsync(ct);
+        foreach (var variable in await variablesFeature.Extractor.ExtractAsync(content, ct))
+        {
+            var hash = SHA256.HashData(Encoding.UTF8.GetBytes(variable.VariableValue));
+
+            var report = new VariableReport(
+                variable.VariableName,
+                variable.ProviderName,
+                variable.ProviderType,
+                Convert.ToHexString(hash),
+                variable.Path);
+            variables.Add(report);
+        }
+
+        return variables;
     }
 }
 

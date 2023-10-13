@@ -7,4 +7,5 @@ public sealed record Report(
     ProjectReport Project,
     SolutionReport? Solution,
     RepositoryReport Repository,
-    CommitReport Commit);
+    CommitReport Commit,
+    IReadOnlyList<VariableReport> Variables);

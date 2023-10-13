@@ -41,7 +41,7 @@ public class RestoreProjectMiddleware : IMiddleware
             .Executor.LoadComponents(solution, project, cancellationToken);
 
         context.SetStatus("Loading variables...");
-        var variableResolver = context.Features.Get<VariableResolverFeature>().Resolver;
+        var variableResolver = context.Features.Get<VariablesFeature>().Resolver;
         var variables = await variableResolver.ListVariables(cancellationToken);
 
         context.SetStatus("Composing the schema...");

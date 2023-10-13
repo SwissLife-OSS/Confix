@@ -1,4 +1,3 @@
-using Confix.Tool.Commands.Project;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Middlewares.Project;
@@ -16,27 +15,11 @@ public sealed class ProjectReportPipeline : Pipeline
             .AddOption(ReportOutputFileOption.Instance)
             .Use<LoadConfigurationMiddleware>()
             .AddContextData(Context.DisableConfigurationWrite, true)
-            .Use(BuildProject)
+            .Use<ReadConfigurationFileMiddleware>()
+            .UseEnvironment()
+            .UseBuildComponentsOfProject()
+            .UseCompleteWhenNoConfigurationFiles()
+            .Use<VariableMiddleware>()
             .Use<ProjectReportMiddleware>();
-    }
-
-    /// <summary>
-    /// Executes the whole build pipeline for a project. This way components are loaded and
-    /// variables are resolved.
-    /// </summary>
-    private static async Task BuildProject(IMiddlewareContext context, MiddlewareDelegate next)
-    {
-        var configuration = context.Features.Get<ConfigurationFeature>();
-        var project = configuration.EnsureProject();
-
-        var projectDirectory = project.Directory!;
-        var pipeline = new ProjectBuildPipeline();
-
-        var projectContext = context
-            .WithExecutingDirectory(projectDirectory);
-
-        await pipeline.ExecuteAsync(projectContext);
-
-        await next(context);
     }
 }

@@ -9,30 +9,23 @@ using Snapshooter.Xunit;
 
 namespace ConfiX.Commands.Config;
 
-public class ConfigShowCommandTests
+public class ConfigShowCommandTests : IAsyncLifetime
 {
-    private readonly TestConfixCommandline _cli;
-
-    public ConfigShowCommandTests()
-    {
-        _cli = new TestConfixCommandline();
-    }
+    private readonly TestConfixCommandline _cli = new();
 
     [Fact]
     public async Task Should_PrintConfig()
     {
         // Arrange
-        using var cli = _cli;
-
-        cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
-        await cli.RunAsync("config show");
+        await _cli.RunAsync("config show");
 
         // Assert
         SnapshotBuilder
             .New()
-            .Append("parsed", cli.Console.Output)
+            .Append("parsed", _cli.Console.Output)
             .AddReplacement(_cli.Directories.Home.FullName, "HOME")
             .MatchSnapshot();
     }
@@ -41,15 +34,13 @@ public class ConfigShowCommandTests
     public async Task Should_Output_Should_Be_Parsable()
     {
         // Arrange
-        using var cli = _cli;
-
-        cli.Directories.Home.CreateConfixRc(_confixRc);
+        _cli.Directories.Home.CreateConfixRc(_confixRc);
 
         // Act
-        await cli.RunAsync("config show");
+        await _cli.RunAsync("config show");
 
         // Assert
-        var output = cli.Console.Output;
+        var output = _cli.Console.Output;
         var outputConfig = RuntimeConfiguration.Parse(JsonNode.Parse(output));
         SnapshotBuilder
             .New()
@@ -135,4 +126,17 @@ public class ConfigShowCommandTests
           }
         }
         """;
+
+    /// <inheritdoc />
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task DisposeAsync()
+    {
+        _cli.Dispose();
+        return Task.CompletedTask;
+    }
 }

@@ -1,4 +1,3 @@
-using Confix.Tool.Abstractions;
 using Confix.Tool.Common.Pipelines;
 using Confix.Variables;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,23 +21,23 @@ public sealed class VariableMiddleware : IMiddleware
 
         var environmentName = environmentFeature.ActiveEnvironment.Name;
         var variableListCache = context.Services.GetRequiredService<VariableListCache>();
-        var variableResolver = CreateResolver(environmentName, variableListCache);
 
-        var replacerService = new VariableReplacerService(variableResolver);
+        var resolver = CreateResolver(environmentName, variableListCache);
+        var replacer = new VariableReplacerService(resolver);
+        var extractor = new VariableExtractorService(resolver);
 
-        var feature =
-            new VariableResolverFeature(CreateResolver, variableResolver, replacerService);
+        var feature = new VariablesFeature(CreateResolver, resolver, replacer, extractor);
 
         context.Features.Set(feature);
 
         return next(context);
 
-        IVariableResolver CreateResolver(string environment, VariableListCache variableListCache)
+        IVariableResolver CreateResolver(string environment, VariableListCache cache)
         {
             var configurations =
                 GetProviderConfiguration(configurationFeature, environment).ToArray();
 
-            return new VariableResolver(_variableProviderFactory, variableListCache, configurations);
+            return new VariableResolver(_variableProviderFactory, cache, configurations);
         }
     }
 

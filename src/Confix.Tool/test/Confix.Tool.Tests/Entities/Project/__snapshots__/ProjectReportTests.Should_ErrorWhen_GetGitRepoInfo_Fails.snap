@@ -12,30 +12,6 @@
 ✓ Configuration loaded
   Found a inline configuration file '<</tmp>>/content/src/project/test.json'
 ✓ Active Environment is prod
-! The schema of the project was not found. Initiating schema reload for project:src.project
-  Found a inline configuration file '<</tmp>>/content/src/project/test.json'
-✓ Component inputs loaded
-  Start loading components from project 'src.project'
-✓ Loaded 0 components
-✓ Schema composition completed for project src.project
-✓ Schema is stored at '<</tmp>>/content/.confix/.schemas/src.project.schema.json'
-   -> <</tmp>>/content/.confix/.schemas/src.project.schema.json
-  Skipping IntelliJ IDEA settings file as there is no .idea folder in the solution root. Expected location: <</tmp>>/content/.idea
-  Persisting configuration file '<</tmp>>/content/src/project/test.json'
-   -> <</tmp>>/content/src/project/test.json
-  Replacing variables in configuration file 'test.json'
-  Detected 0 variables
-  Registering subschemas.
-  Beginning evaluation.
-  Processing $defs...
-  $defs complete: valid
-  Processing properties...
-  properties complete: valid
-  Processing required...
-  required complete: valid
-  Transforming output.
-  Evaluation complete: valid
-✓ The configuration file '<</tmp>>/content/src/project/test.json' is valid.
 ✕ Confix failed.
   Could not determine repository info for directory <</tmp>>/content/src/project
 Exception of type ExitException was thrown.

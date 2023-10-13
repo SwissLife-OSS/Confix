@@ -52,16 +52,16 @@ public sealed class VariableResolver : IVariableResolver
         CancellationToken cancellationToken)
     {
         var configuration = GetProviderConfiguration(providerName);
-        
+
         if (_variableListCache.TryGet(configuration, out var cachedList))
         {
             return cachedList;
         }
-        
+
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
         var variableKeys = await provider.ListAsync(cancellationToken);
 
-        var items =  variableKeys.Select(k => new VariablePath(providerName, k)).ToArray();
+        var items = variableKeys.Select(k => new VariablePath(providerName, k)).ToArray();
         _variableListCache.TryAdd(configuration, items);
 
         return items;
@@ -70,6 +70,13 @@ public sealed class VariableResolver : IVariableResolver
     /// <inheritdoc />
     public IEnumerable<string> ListProviders()
         => _configurations.Select(c => c.Name);
+
+    /// <inheritdoc />
+    public string GetProviderType(string name)
+    {
+        var configuration = GetProviderConfiguration(name);
+        return configuration.Type;
+    }
 
     public async Task<JsonNode> ResolveVariable(
         VariablePath key,
@@ -144,8 +151,8 @@ public sealed class VariableResolver : IVariableResolver
 
     private VariableProviderConfiguration GetProviderConfiguration(string providerName)
         => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
-           ?? throw new ExitException(
-               $"No VariableProvider with name '{providerName.AsHighlighted()}' configured.");
+            ?? throw new ExitException(
+                $"No VariableProvider with name '{providerName.AsHighlighted()}' configured.");
 }
 
 public static class Extension
@@ -155,7 +162,7 @@ public static class Extension
         [NotNullWhen(true)] out VariablePath? variablePath)
     {
         if (node.GetSchemaValueType() == SchemaValueType.String
-            && VariablePath.TryParse((string)node!, out var parsed))
+            && VariablePath.TryParse((string) node!, out var parsed))
         {
             variablePath = parsed;
             return true;

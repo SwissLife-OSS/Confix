@@ -1,25 +1,4 @@
 ﻿--------------------------------------------------
 ### CLI Output
 --------------------------------------------------
-  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
-  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.solution
-  Configuration files of type .confix.solution located at <</tmp>>/content/src/project/.confix.project
-  Replaced magic path $project:/test2.json with <</tmp>>/content/src/project/test2.json.
-  Replaced magic path $project:/test.json with <</tmp>>/content/src/project/test.json.
-  Merged .confix.solution from .confixrc
-  Merged .confix.project from .confix.solution
-  Merged .confix.component from .confix.solution
-✓ Running in scope Project
-✓ Configuration loaded
-  Found a inline configuration file '<</tmp>>/content/src/project/test2.json'
-  Found a inline configuration file '<</tmp>>/content/src/project/test.json'
-✓ Active Environment is prod
-  Commit: 1234567890 by John Doe on master Initial commit
-  Repository: <</tmp>> <</tmp>>/content
-  Solution: content .
-  Project: src.project src/project
-✕ Confix failed.
-  Cannot create report for multiple configuration files when a single configuration file is specified
-Exception of type ExitException was thrown.
-  
 

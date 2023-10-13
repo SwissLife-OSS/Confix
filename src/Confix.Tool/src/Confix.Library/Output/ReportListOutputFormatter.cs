@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Reporting;
@@ -20,7 +21,8 @@ public sealed class ReportListOutputFormatter
     {
         var options = new JsonWriterOptions
         {
-            Indented = true
+            Indented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
 
         var buffer = new ArrayBufferWriter<byte>();
@@ -57,6 +59,8 @@ file static class Extensions
         value.Repository.WriteTo(writer);
         writer.WritePropertyName("commit");
         value.Commit.WriteTo(writer);
+        writer.WritePropertyName("variables");
+        value.Variables.WriteTo(writer);
 
         writer.WriteEndObject();
     }
@@ -108,6 +112,30 @@ file static class Extensions
         }
 
         writer.WriteEndArray();
+
+        writer.WriteEndObject();
+    }
+
+    private static void WriteTo(this IEnumerable<VariableReport> values, Utf8JsonWriter writer)
+    {
+        writer.WriteStartArray();
+        foreach (var variable in values)
+        {
+            variable.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
+    }
+
+    private static void WriteTo(this VariableReport value, Utf8JsonWriter writer)
+    {
+        writer.WriteStartObject();
+
+        writer.WriteString("providerName", value.ProviderName);
+        writer.WriteString("providerType", value.ProviderType);
+        writer.WriteString("name", value.VariableName);
+        writer.WriteString("hash", value.Hash);
+        writer.WriteString("path", value.Path);
 
         writer.WriteEndObject();
     }

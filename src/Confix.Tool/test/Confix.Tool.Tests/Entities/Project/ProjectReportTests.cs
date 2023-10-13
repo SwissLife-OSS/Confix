@@ -1,7 +1,9 @@
 using Confix.Inputs;
 using Confix.Tool.Commands.Temp;
+using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Confix.Utilities;
+using Confix.Variables;
 using Moq;
 
 namespace Confix.Entities.Component.Configuration.Middlewares;
@@ -82,6 +84,148 @@ public sealed class ProjectReportTests : IAsyncLifetime
         SnapshotBuilder.New()
             .AddOutput(_cli)
             .AddFile(outFile)
+            .RemoveDateTimes()
+            .MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_ReadVariablesAndPrintThem()
+    {
+        // arrange
+        const string confixRc = """
+                {
+                    "isRoot": true,
+                    "component":
+                    {
+                         "inputs": [
+                              {
+                                "type": "graphql"
+                              }
+                            ]
+                    },
+                    "project": {
+                         "componentProviders": [],
+                         "configurationFiles": ["$project:/test.json"],
+                         "variableProviders": [
+                            {
+                                "type": "local",
+                                "name": "foo",
+                                "path": "$project:/vars.json"
+                            }
+                         ]
+                    }
+                }
+            """;
+
+        _cli.Directories.Home.CreateConfixRc(confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json",
+            """
+            {
+              "root": {
+                "nested": {
+                  "bool": "$foo:test.bool",
+                  "string": "$foo:test.string",
+                  "object": "$foo:test.object"
+                }
+              }
+            }
+            """);
+        _cli.Directories.Content.CreateFileInPath("src/project/vars.json",
+            """
+            {
+              "test": {
+                "bool": true,
+                "string": "test",
+                "object": {
+                  "foo": "bar"
+                }
+              }
+            }
+            """);
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitBranch();
+        _git.SetupGitTags();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+
+        // act
+        await _cli.RunAsync("project report");
+
+        // assert
+        SnapshotBuilder.New()
+            .AddOutput(_cli)
+            .RemoveDateTimes()
+            .MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task Should_ErrorWhen_MultipleConfigurationFile_But_InputFileSpecified()
+    {
+        // arrange
+
+        const string confixRc = """
+                {
+                    "isRoot": true,
+                    "component":
+                    {
+                         "inputs": [
+                              {
+                                "type": "graphql"
+                              }
+                            ]
+                    },
+                    "project": {
+                         "componentProviders": [],
+                         "configurationFiles": ["$project:/test2.json", "$project:/test.json"]
+                    }
+                }
+            """;
+
+        _cli.Directories.Home.CreateConfixRc(confixRc);
+        _cli.Directories.Content
+            .CreateConfixProject(path: $"src/project/{FileNames.ConfixProject}");
+        _cli.Directories.Content.CreateFileInPath("src/project/test.json", "{}");
+        _cli.Directories.Content.CreateConfixSolution();
+        _cli.ExecutionContext = _cli.ExecutionContext with
+        {
+            CurrentDirectory = _cli.Directories.Content
+                .Append("src")
+                .Append("project")
+        };
+
+        _git.SetupGitRoot(_cli.Directories.Content);
+        _git.SetupGitBranch();
+        _git.SetupGitTags();
+        _git.SetupGitRepoInfo();
+        _git.SetupOriginUrl();
+
+        var inFile = _cli.Directories.Content
+            .Append("src")
+            .Append("project")
+            .AppendFile("test.json");
+
+        var outFile = _cli.Directories.Content
+            .Append("src")
+            .Append("project")
+            .AppendFile("report.json");
+
+        // act
+        await _cli.RunAsync(
+            $"project report --output-file {outFile.FullName} --input-file {inFile.FullName}");
+
+        // assert
+        SnapshotBuilder.New()
+            .AddOutput(_cli)
             .RemoveDateTimes()
             .MatchSnapshot();
     }

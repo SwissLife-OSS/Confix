@@ -21,7 +21,7 @@ public sealed class VariableListPipeline : Pipeline
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
-        var resolver = context.Features.Get<VariableResolverFeature>().Resolver;
+        var resolver = context.Features.Get<VariablesFeature>().Resolver;
 
         IEnumerable<VariablePath> variables;
 

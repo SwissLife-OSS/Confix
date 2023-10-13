@@ -71,7 +71,7 @@ public class VariableMiddlewareTests
 
         // assert
         isNextInvoked.Should().BeTrue();
-        var variableResolverFeature = featureCollection.Get<VariableResolverFeature>();
+        var variableResolverFeature = featureCollection.Get<VariablesFeature>();
         variableResolverFeature.Should().NotBeNull();
         variableResolverFeature.Resolver.Should().NotBeNull();
     }
