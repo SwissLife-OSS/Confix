@@ -1,0 +1,146 @@
+import { Callout } from "nextra/components";
+
+# Dependency Tracking
+
+Confix's reporting offers insights into your project's dependencies, allowing for a deeper
+understanding and management of configurations that involve elements like database names, URLs,
+connection strings, and more.
+
+<Callout type="error" emoji="️🚨">
+  Please note, this feature is currently in an **experimental phase.**
+</Callout>
+
+Dependency tracking in Confix enables you to monitor and report on configuration dependencies.
+Whether it's tracking variables, components, database configurations, or client
+identifiers, you can get a clear picture of all dependencies in your project.
+
+### Example Scenarios:
+
+1. **Identifying Database Usage**: If multiple services connect to various databases, by tracking
+   the database names or URLs, you can pinpoint which service links to a particular database.
+
+2. **Monitoring Third-party Integrations**: For instance, if using Auth0 for authentication,
+   tracking ensures you know which service uses a specific Auth0 client ID.
+
+## Report Structure
+
+When executing the `confix project report` command, the report will include a section for
+dependencies:
+
+```json filename="report.json"
+{
+   ...
+  "dependencies": [
+    {
+      "kind": "client_id",
+      "path": "/test/value",
+      ...
+    }
+  ]
+}
+```
+
+- **kind**: Defines the dependency kind, for example `mongodb.database`, `mongodb.url`,
+  `auth0.clientId`, etc. The kind is a string value that you specify. This categorization can be
+  used by your processing and management of the dependencies.
+
+- **path**: Shows the location in the JSON configuration where the dependency is used.
+
+## Dependency Extraction Providers
+
+Confix has two built in providers to extract and track these dependencies:
+
+### 1. Regex Provider
+
+By defining a regular expression pattern with named capture groups in the regex provider, values
+matching these groups in your configurations will be extracted and logged.
+
+You can specify multiple regex patterns to extract different dependency kinds.
+
+**Example**: To extract and log database URLs from a configuration value, create a regex pattern
+that identifies and captures the URL.
+
+```json filename=".confixrc"
+{
+  "reporting": {
+    "dependencies": {
+      "providers": [
+        {
+          "kind": "mongodb.url",
+          "type": "regex",
+          "regex": "mongodb://(?<host>[^/]+)"
+        }
+      ]
+    }
+  }
+}
+```
+
+**Output**
+
+```json filename="report.json"
+{
+  "dependencies": [
+    {
+      "kind": "mongodb.url",
+      "path": "/database/connectionString",
+      "data": [
+        {
+          "name": "host",
+          "value": "yourdb.mongodb.com"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 2. GraphQL Provider
+
+For JSON configurations based on a GraphQL schema, there is also the GraphQL provider. Fields in the
+GraphQL schema can be annotated with the `@dependency` directive, and Confix will log those fields
+as dependencies.
+
+**Example**: Annotating a field for a MongoDB database in a GraphQL schema with
+`@dependency(kind: "mongodb.database")` will let Confix extract the field's value as depndency
+of kind `mongodb.database`.
+
+```json filename=".confixrc"
+{
+  "reporting": {
+    "dependencies": {
+      "providers": [
+        {
+          "type": "graphql"
+        }
+      ]
+    }
+  }
+}
+```
+
+```graphql filename="/src/project/.confix/components/auth/schema.graphql"
+type Authentication {
+  clientId: String! @dependency(kind: "auth0.clientId")
+  clientSecret: String!
+}
+```
+
+**Output**
+
+```json filename="report.json"
+{
+  "dependencies": [
+    {
+      "kind": "auth0.clientId",
+      "path": "/database/connectionString",
+      "value": "123456-1234-1234-123456"
+    }
+  ]
+}
+```
+
+## Extensibility
+
+We welcome feedback (and contributions) to enhance this capabilities. If existing extraction
+providers don't align with your needs, open a issue. We'd love to hear from you.
