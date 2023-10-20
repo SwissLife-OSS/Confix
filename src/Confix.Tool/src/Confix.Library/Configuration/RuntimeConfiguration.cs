@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Middlewares;
+using Confix.Tool.Reporting;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 
@@ -14,6 +15,7 @@ public sealed class RuntimeConfiguration
         public const string Component = "component";
         public const string Project = "project";
         public const string Encryption = "encryption";
+        public const string Reporting = "reporting";
     }
 
     public RuntimeConfiguration(
@@ -21,12 +23,14 @@ public sealed class RuntimeConfiguration
         ProjectConfiguration? project,
         ComponentConfiguration? component,
         EncryptionConfiguration? encryption,
+        ReportingConfiguration? reporting,
         IReadOnlyList<JsonFile> sourceFiles)
     {
         IsRoot = isRoot;
         Project = project;
         Component = component;
         Encryption = encryption;
+        Reporting = reporting;
         SourceFiles = sourceFiles;
     }
 
@@ -38,6 +42,8 @@ public sealed class RuntimeConfiguration
 
     public EncryptionConfiguration? Encryption { get; }
 
+    public ReportingConfiguration? Reporting { get; }
+
     public IReadOnlyList<JsonFile> SourceFiles { get; }
 
     public static RuntimeConfiguration Parse(JsonNode? node)
@@ -45,7 +51,7 @@ public sealed class RuntimeConfiguration
         return Parse(node, Array.Empty<JsonFile>());
     }
 
-    public static RuntimeConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> sourceFiles)
+    public static RuntimeConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> files)
     {
         var obj = node.ExpectObject();
 
@@ -65,12 +71,12 @@ public sealed class RuntimeConfiguration
                 ? EncryptionConfiguration.Parse(encryptionNode.ExpectObject())
                 : null;
 
-        return new RuntimeConfiguration(
-            isRoot,
-            project,
-            component,
-            encryption,
-            sourceFiles);
+        var reporting =
+            obj.TryGetNonNullPropertyValue(FieldNames.Reporting, out var reportingNode)
+                ? ReportingConfiguration.Parse(reportingNode.ExpectObject())
+                : null;
+
+        return new RuntimeConfiguration(isRoot, project, component, encryption, reporting, files);
     }
 
     public RuntimeConfiguration Merge(RuntimeConfiguration? other)
@@ -88,14 +94,17 @@ public sealed class RuntimeConfiguration
 
         var encryption = Encryption?.Merge(other.Encryption) ?? other.Encryption;
 
-        var sourceFiles = SourceFiles.Concat(other.SourceFiles).ToArray();
+        var files = SourceFiles.Concat(other.SourceFiles).ToArray();
 
-        return new RuntimeConfiguration(isRoot, project, component, encryption, sourceFiles);
+        var reporting = Reporting?.Merge(other.Reporting) ?? other.Reporting;
+
+        return new RuntimeConfiguration(isRoot, project, component, encryption, reporting, files);
     }
 
     public static RuntimeConfiguration LoadFromFiles(IEnumerable<JsonFile> files)
     {
-        var config = new RuntimeConfiguration(true, null, null, null, Array.Empty<JsonFile>());
+        var config =
+            new RuntimeConfiguration(true, null, null, null, null, Array.Empty<JsonFile>());
 
         foreach (var file in files.Where(x => x.File.Name == FileNames.ConfixRc))
         {

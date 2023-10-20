@@ -19,5 +19,7 @@ public static class ProjectMiddlewareExtensions
             .AddTransient<BuildComponentsOfProjectMiddleware>()
             .AddTransient<InitProjectMiddleware>()
             .AddTransient<BuildProjectMiddleware>()
-            .AddTransient(sp => new ProjectReportMiddleware(sp.GetRequiredService<IGitService>()));
+            .AddTransient(sp => new ProjectReportMiddleware(
+                sp.GetRequiredService<IGitService>(),
+                sp.GetRequiredService<ISchemaStore>()));
 }

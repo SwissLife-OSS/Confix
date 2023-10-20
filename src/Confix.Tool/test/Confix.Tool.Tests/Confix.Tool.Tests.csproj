@@ -14,5 +14,6 @@
     <Folder Include="GraphQL\__snapshots__\__mismatch__\" />
     <Folder Include="Inputs\__snapshots__\" />
     <Folder Include="Inputs\__snapshots__\__mismatch__\" />
+    <Folder Include="Reporting\__snapshots__\__mismatch__\" />
   </ItemGroup>
 </Project>

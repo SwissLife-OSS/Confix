@@ -1,0 +1,103 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.solution
+  Configuration files of type .confix.solution located at <</tmp>>/content/src/project/.confix.project
+  Replaced magic path $project:/test.json with <</tmp>>/content/src/project/test.json.
+  Merged .confix.solution from .confixrc
+  Merged .confix.project from .confix.solution
+  Merged .confix.component from .confix.solution
+✓ Running in scope Project
+✓ Configuration loaded
+  Found a inline configuration file '<</tmp>>/content/src/project/test.json'
+✓ Active Environment is prod
+✓ Component inputs loaded
+  Dependency provider 'regex' loaded
+✓ Dependency providers loaded
+  Commit: 1234567890 by John Doe on master Initial commit
+  Repository: <</tmp>> <</tmp>>/content
+  Solution: content .
+  Project: src.project src/project
+  Start loading components from project 'src.project'
+✓ Loaded 0 components
+  Detected 0 variables
+  Report: <</tmp>>/content/src/project/test.json prod
+[
+   {
+      "configurationPath": "<</tmp>>/content/src/project/test.json",
+      "environment": "prod",
+      "timestamp": <<date>>,
+      "project": {
+         "name": "src.project",
+         "path": "src/project"
+      },
+      "solution": {
+         "name": "content",
+         "path": "."
+      },
+      "repository": {
+         "name": "<</tmp>>",
+         "originUrl": "https://foobar.com"
+      },
+      "commit": {
+         "hash": "1234567890",
+         "message": "Initial commit",
+         "author": "John Doe",
+         "email": "jd@gmail.com",
+         "branch": "master",
+         "tags": [
+            "1.0.0",
+            "1.1.0"
+         ]
+      },
+      "variables": [
+      ],
+      "components": [
+      ],
+      "dependencies": [
+         {
+            "kind": "example",
+            "path": "/nested/first",
+            "data": [
+               {
+                  "name": "year",
+                  "value": "2023"
+               },
+               {
+                  "name": "day",
+                  "value": "19"
+               }
+            ]
+         },
+         {
+            "kind": "example",
+            "path": "/arr/0/second",
+            "data": [
+               {
+                  "name": "year",
+                  "value": "2023"
+               },
+               {
+                  "name": "day",
+                  "value": "19"
+               }
+            ]
+         },
+         {
+            "kind": "example",
+            "path": "/arr/1/deep/third",
+            "data": [
+               {
+                  "name": "year",
+                  "value": "2023"
+               },
+               {
+                  "name": "day",
+                  "value": "19"
+               }
+            ]
+         }
+      ]
+   }
+]

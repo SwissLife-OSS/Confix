@@ -13,6 +13,7 @@
   Found a inline configuration file '<</tmp>>/content/src/project/test.json'
 ✓ Active Environment is prod
 ✓ Component inputs loaded
+✓ Dependency providers loaded
   Commit: 1234567890 by John Doe on master Initial commit
 ✕ Confix failed.
   Could not determine repository origin url for directory <</tmp>>/content/src/project

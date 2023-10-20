@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Json.More;
+using Json.Pointer;
 using Json.Schema;
 
 namespace Confix.Variables;
@@ -49,7 +50,7 @@ public sealed class VariableExtractorService
                     SchemaValueType.Null => "null",
                     _ => resolvedValue.ToJsonString()
                 },
-                variable.Node.GetPathFromRoot());
+                variable.Node.GetPointerFromRoot());
 
             infos.Add(info);
         }

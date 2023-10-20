@@ -6,7 +6,7 @@ using static HotChocolate.Types.DirectiveLocation;
 namespace Confix.Tool.Schema;
 
 [DirectiveType(Name, InputFieldDefinition | FieldDefinition)]
-public sealed class DefaultValue
+public sealed class DefaultValueDirective
 {
     internal const string Name = "defaultValue";
 

@@ -13,6 +13,7 @@
   Found a inline configuration file '<</tmp>>/content/src/project/test.json'
 ✓ Active Environment is prod
 ✓ Component inputs loaded
+✓ Dependency providers loaded
   Commit: 1234567890 by John Doe on master Initial commit
   Repository: <</tmp>> <</tmp>>/content
   Solution: content .
@@ -52,6 +53,8 @@
       "variables": [
       ],
       "components": [
+      ],
+      "dependencies": [
       ]
    }
 ]

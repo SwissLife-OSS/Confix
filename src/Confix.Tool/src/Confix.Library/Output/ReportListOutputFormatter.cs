@@ -63,7 +63,8 @@ file static class Extensions
         value.Variables.WriteTo(writer);
         writer.WritePropertyName("components");
         value.Components.WriteTo(writer);
-
+        writer.WritePropertyName("dependencies");
+        value.Dependencies.WriteTo(writer);
         writer.WriteEndObject();
     }
 
@@ -171,5 +172,16 @@ file static class Extensions
         writer.WriteEndArray();
 
         writer.WriteEndObject();
+    }
+
+    private static void WriteTo(this IEnumerable<IDependency> values, Utf8JsonWriter writer)
+    {
+        writer.WriteStartArray();
+        foreach (var dependency in values)
+        {
+            dependency.WriteTo(writer);
+        }
+
+        writer.WriteEndArray();
     }
 }

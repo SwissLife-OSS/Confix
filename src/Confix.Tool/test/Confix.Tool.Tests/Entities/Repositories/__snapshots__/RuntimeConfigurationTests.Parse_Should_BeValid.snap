@@ -27,5 +27,21 @@
       }
     }
   },
+  "Reporting": {
+    "Dependencies": {
+      "Providers": [
+        {
+          "Kind": "test",
+          "Type": "bar",
+          "Configuration": {
+            "kind": "test",
+            "type": "bar",
+            "x": "x",
+            "y": "y"
+          }
+        }
+      ]
+    }
+  },
   "SourceFiles": []
 }

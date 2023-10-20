@@ -5,6 +5,7 @@ using Confix.Tool;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Abstractions.Configuration;
 using Confix.Tool.Middlewares;
+using Confix.Tool.Reporting;
 
 namespace Confix.Inputs;
 
@@ -98,7 +99,8 @@ public sealed class TestHelpers
         ProjectDefinition? project = null,
         ComponentDefinition? component = null,
         SolutionDefinition? solution = null,
-        EncryptionDefinition? encryption = null)
+        EncryptionDefinition? encryption = null,
+        ReportingDefinition? reporting = null)
     {
         return new ConfigurationFeature(
             scope,
@@ -106,6 +108,7 @@ public sealed class TestHelpers
             project,
             component,
             solution,
-            encryption);
+            encryption, 
+            reporting);
     }
 }

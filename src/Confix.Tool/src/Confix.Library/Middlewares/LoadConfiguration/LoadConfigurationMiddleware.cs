@@ -7,6 +7,7 @@ using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
 using System.Runtime.CompilerServices;
 using Confix.Extensions;
+using Confix.Tool.Reporting;
 
 namespace Confix.Tool.Middlewares;
 
@@ -24,7 +25,7 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
         context.SetStatus("Loading configuration...");
 
         var configurationFeature = await LoadConfiguration(context);
-        
+
         context.Features.Set(configurationFeature);
 
         context.Logger.ConfigurationLoaded();
@@ -68,13 +69,18 @@ public sealed class LoadConfigurationMiddleware : IMiddleware
             ? EncryptionDefinition.From(fileCollection.RuntimeConfiguration.Encryption)
             : null;
 
+        var reportingDefinition = fileCollection.RuntimeConfiguration?.Reporting is not null
+            ? ReportingDefinition.From(fileCollection.RuntimeConfiguration.Reporting)
+            : null;
+
         return new ConfigurationFeature(
             scope,
             fileCollection,
             projectDefinition,
             componentDefinition,
             solutionDefinition,
-            encryptionDefinition);
+            encryptionDefinition,
+            reportingDefinition);
     }
 
     private static IConfigurationFileCollection CreateFileCollection(

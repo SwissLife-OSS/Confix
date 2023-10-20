@@ -2,7 +2,7 @@ using System.Text.Json;
 
 namespace Confix.Tool.Abstractions;
 
-public record EncryptionDefinition(EncryptionProviderDefinition Provider)
+public sealed record EncryptionDefinition(EncryptionProviderDefinition Provider)
 {
     public void WriteTo(Utf8JsonWriter writer)
     {

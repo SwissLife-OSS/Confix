@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Confix.Extensions;
 using Confix.Tool.Abstractions;
+using Confix.Tool.Reporting;
 
 namespace Confix.Tool.Middlewares;
 
@@ -10,7 +11,8 @@ public sealed record ConfigurationFeature(
     ProjectDefinition? Project,
     ComponentDefinition? Component,
     SolutionDefinition? Solution,
-    EncryptionDefinition? Encryption)
+    EncryptionDefinition? Encryption,
+    ReportingDefinition? Reporting)
 {
     public void WriteTo(Utf8JsonWriter writer)
     {
@@ -35,6 +37,12 @@ public sealed record ConfigurationFeature(
         {
             writer.WritePropertyName(RuntimeConfiguration.FieldNames.Encryption);
             Encryption.WriteTo(writer);
+        }
+
+        if (Reporting is not null)
+        {
+            writer.WritePropertyName(RuntimeConfiguration.FieldNames.Reporting);
+            Reporting.WriteTo(writer);
         }
 
         writer.WriteEndObject();
