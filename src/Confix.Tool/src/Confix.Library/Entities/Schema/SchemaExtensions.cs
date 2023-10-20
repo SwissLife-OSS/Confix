@@ -86,7 +86,7 @@ public static class SchemaExtensions
         var dependencies = field.Directives
             .Where(x => x.Type.Name == DependencyDirective.Name)
             .Select(x => x.AsValue<DependencyDirective>())
-            .Select(x => new JsonObject { ["type"] = "dependency", ["kind"] = x.Kind })
+            .Select(x => new JsonObject { ["type"] = MetadataTypes.Dependency, ["kind"] = x.Kind })
             .OfType<JsonNode>();
 
         var result = metadata.Concat(dependencies).ToArray();

@@ -53,7 +53,7 @@ public sealed class GraphQLDependencyProvider : IDependencyProvider
     private static bool IsDependency(JsonNode obj)
     {
         return obj.TryGetPropertyValue("type", out string? type) &&
-            type == "dependency" &&
+            type == MetadataTypes.Dependency &&
             obj.TryGetPropertyValue("kind", out string? kind) &&
             !string.IsNullOrEmpty(kind);
     }
