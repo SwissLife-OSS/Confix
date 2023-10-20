@@ -17,13 +17,14 @@ public class OptionalEncryptionMiddlewareTests
 
         var featureCollection = new FeatureCollection();
         ConfigurationFeature configurationFeature = new(
-           ConfigurationScope.None,
-           Mock.Of<IConfigurationFileCollection>(),
-           null,
-           null,
-           null,
-           null
-       );
+            ConfigurationScope.None,
+            Mock.Of<IConfigurationFileCollection>(),
+            null,
+            null,
+            null,
+            null,
+            null
+        );
         featureCollection.Set(configurationFeature);
         contextMock.SetupGet(x => x.Features).Returns(featureCollection);
 
@@ -50,13 +51,13 @@ public class OptionalEncryptionMiddlewareTests
         // Arrange
         var featureCollection = new FeatureCollection();
         ConfigurationFeature configurationFeature = new(
-           ConfigurationScope.None,
-           Mock.Of<IConfigurationFileCollection>(),
-           null,
-           null,
-           null,
-           new(new("testProvider", new Dictionary<string, JsonObject>(), new()))
-       );
+            ConfigurationScope.None,
+            Mock.Of<IConfigurationFileCollection>(),
+            null,
+            null,
+            null,
+            new(new("testProvider", new Dictionary<string, JsonObject>(), new())),
+            null);
         featureCollection.Set(configurationFeature);
 
         var environmentFeature = new EnvironmentFeature(new("test", true));

@@ -31,6 +31,7 @@
   GraphQL Schema was not found. Skipping GraphQL provider
   Building component completed
 ✓ Component inputs loaded
+✓ Dependency providers loaded
   Commit: 1234567890 by John Doe on master Initial commit
   Repository: <</tmp>> <</tmp>>/content
   Solution: content .
@@ -80,6 +81,8 @@
                "Test"
             ]
          }
+      ],
+      "dependencies": [
       ]
    }
 ]

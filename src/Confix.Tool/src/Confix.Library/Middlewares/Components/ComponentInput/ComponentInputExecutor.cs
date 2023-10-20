@@ -37,7 +37,7 @@ public sealed class ComponentInputExecutor
 
         if (inputs.Count == 0)
         {
-            App.Log.LoadedComponentInput();
+            App.Log.NoComponentInputsFound();
         }
 
         return new ComponentInputExecutor(inputs);
@@ -51,7 +51,7 @@ file static class Log
         console.Debug($"Component input '{name}' loaded");
     }
 
-    public static void LoadedComponentInput(this IConsoleLogger console)
+    public static void NoComponentInputsFound(this IConsoleLogger console)
     {
         console.Warning(
             "No component inputs loaded because no component inputs were defined. You can define component inputs in the 'confix.json' or the 'confix.solution' file.");

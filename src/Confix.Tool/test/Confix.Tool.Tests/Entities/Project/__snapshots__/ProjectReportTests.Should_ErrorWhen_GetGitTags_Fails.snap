@@ -13,6 +13,7 @@
   Found a inline configuration file '<</tmp>>/content/src/project/test.json'
 ✓ Active Environment is prod
 ✓ Component inputs loaded
+✓ Dependency providers loaded
 ✕ Confix failed.
   Could not determine tags for directory <</tmp>>/content/src/project
 Exception of type ExitException was thrown.

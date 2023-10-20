@@ -10,7 +10,7 @@ namespace Confix.Inputs;
 
 public class TestConfixCommandline : IDisposable
 {
-    private readonly InMemoryConsoleLogger _consoleLogger;
+    private InMemoryConsoleLogger _consoleLogger;
 
     public TestConfixCommandline() : this(_ => { })
     {
@@ -47,6 +47,8 @@ public class TestConfixCommandline : IDisposable
     public async Task RunAsync(string args) => await Parser.InvokeAsync(args.Split(" "), Console);
 
     public async Task RunAsync(params string[] args) => await Parser.InvokeAsync(args, Console);
+
+    public void ResetConsole() => _consoleLogger = new InMemoryConsoleLogger();
 
     /// <inheritdoc />
     public void Dispose()

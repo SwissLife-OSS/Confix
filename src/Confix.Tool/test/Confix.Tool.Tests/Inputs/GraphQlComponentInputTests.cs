@@ -98,6 +98,40 @@ public class GraphQlComponentInputTests
             .MatchSnapshot();
     }
 
+    [Fact]
+    public async Task Should_Should_AddMetadata()
+    {
+        // Arrange
+        using var cli = new TestConfixCommandline();
+        cli.Directories.Home.CreateConfixRc(_confixRc);
+        cli.Directories.Content.CreateConfixComponent("test");
+        var componentDirectory = cli.Directories.Content
+            .Append(FolderNames.Confix)
+            .Append(FolderNames.Components)
+            .Append("test");
+        componentDirectory.CreateFileInPath("schema.graphql",
+            """
+            type Query {
+                str: String @metadata(value: { key: "test", value: "test" })
+                dependency: String @dependency(kind: "foogaloo")
+                multiple: String @metadata(value: { key: "test", value: "test" }) @dependency(kind: "foogaloo")
+            }
+            """);
+        cli.ExecutionContext = cli.ExecutionContext with
+        {
+            CurrentDirectory = componentDirectory
+        };
+
+        // Act
+        await cli.RunAsync("component build");
+
+        // Assert
+        SnapshotBuilder.New()
+            .AddOutput(cli)
+            .AddFile(componentDirectory.Append("schema.json").FullName)
+            .MatchSnapshot();
+    }
+
     private const string _confixRc = """
             {
                 "component":

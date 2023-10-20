@@ -4,6 +4,7 @@ using Confix.ConfigurationFiles;
 using Confix.Tool.Entities.Components.Git;
 using Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
 using Confix.Tool.Middlewares.Encryption.Providers.Aes;
+using Confix.Tool.Reporting;
 using Confix.Variables;
 
 namespace Confix.Extensions;
@@ -17,6 +18,7 @@ namespace Confix.Extensions;
 [JsonSerializable(typeof(AppSettingsConfigurationFileProviderConfiguration))]
 [JsonSerializable(typeof(AzureKeyVaultEncryptionProviderConfiguration))]
 [JsonSerializable(typeof(AesEncryptionProviderConfiguration))]
+[JsonSerializable(typeof(RegexDependencyProviderConfiguration))]
 public partial class JsonSerialization : JsonSerializerContext
 {
     private static readonly JsonSerializerOptions options = new()

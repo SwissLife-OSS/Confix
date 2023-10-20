@@ -22,7 +22,8 @@ public sealed class ComponentProviderDefinition
 
     public static ComponentProviderDefinition From(ComponentProviderConfiguration configuration)
     {
-        List<string> validationErrors = new();
+        var validationErrors = new List<string>();
+
         if (configuration.Name is null)
         {
             validationErrors.Add("Name is not defined.");

@@ -25,12 +25,17 @@ public class VariableMiddlewareTests
                 Array.Empty<EnvironmentDefinition>(),
                 Array.Empty<ComponentReferenceDefinition>(),
                 Array.Empty<ComponentRepositoryDefinition>(),
-                new VariableProviderDefinition[]{
-                    new (
+                new VariableProviderDefinition[]
+                {
+                    new(
                         "test",
                         "test",
-                        new Dictionary<string, JsonObject>(){
-                            {"test", JsonNode.Parse("""{"path": "./override.json"}""")!.AsObject()}
+                        new Dictionary<string, JsonObject>()
+                        {
+                            {
+                                "test",
+                                JsonNode.Parse("""{"path": "./override.json"}""")!.AsObject()
+                            }
                         },
                         JsonNode.Parse("""{"path": "./test.json"}""")!.AsObject()
                     )
@@ -43,6 +48,7 @@ public class VariableMiddlewareTests
             ),
             null,
             null,
+            null,
             null
         );
 
@@ -50,7 +56,7 @@ public class VariableMiddlewareTests
         serviceProviderMock
             .Setup(p => p.GetService(typeof(VariableListCache)))
             .Returns(new VariableListCache());
-        
+
         featureCollection.Set(configurationFeature);
         EnvironmentFeature environmentFeature = new(new EnvironmentDefinition("test", true));
         featureCollection.Set(environmentFeature);

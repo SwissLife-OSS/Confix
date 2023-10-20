@@ -4,6 +4,7 @@ using Confix.Extensions;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Schema;
 using Confix.Tool.Middlewares;
+using Confix.Tool.Reporting;
 
 namespace Confix.Entities.Component.Configuration;
 
@@ -25,6 +26,16 @@ public class RuntimeConfigurationTests : ParserTestBase
                 "encryption": {
                     "provider": {
                         "type": "TestProvider"
+                    }
+                },
+                "reporting": {
+                    "dependencies": {
+                        "providers": [{
+                            "kind": "test",
+                            "type": "bar",
+                            "x": "x",
+                            "y": "y"
+                        }]
                     }
                 }
             }
@@ -53,10 +64,10 @@ public class RuntimeConfigurationTests : ParserTestBase
     {
         ExpectInvalid(
             """
-        {
-            "component": "component"
-        }
-        """);
+            {
+                "component": "component"
+            }
+            """);
     }
 
     [Fact]
@@ -64,10 +75,10 @@ public class RuntimeConfigurationTests : ParserTestBase
     {
         ExpectInvalid(
             """
-        {
-            "isRoot": "true"
-        }
-        """);
+            {
+                "isRoot": "true"
+            }
+            """);
     }
 
     [Fact]
@@ -77,6 +88,7 @@ public class RuntimeConfigurationTests : ParserTestBase
         var original = new RuntimeConfiguration(
             true,
             ProjectConfiguration.Empty,
+            null,
             null,
             null,
             Array.Empty<JsonFile>());
@@ -103,8 +115,12 @@ public class RuntimeConfigurationTests : ParserTestBase
             new EncryptionConfiguration(
                 new EncryptionProviderConfiguration(
                     "test",
-                    new Dictionary<string, JsonObject>(), 
+                    new Dictionary<string, JsonObject>(),
                     JsonNode.Parse("""{}""")!.AsObject())),
+            new ReportingConfiguration(new ReportingDependencyConfiguration(new[]
+            {
+                new DependencyProviderConfiguration("test", JsonNode.Parse("{}").AsObject())
+            })),
             Array.Empty<JsonFile>());
         var other = new RuntimeConfiguration(
             false,
@@ -122,6 +138,7 @@ public class RuntimeConfigurationTests : ParserTestBase
                 new List<ComponentInputConfiguration>(),
                 new List<ComponentOutputConfiguration>(),
                 Array.Empty<JsonFile>()),
+            null,
             null,
             Array.Empty<JsonFile>());
 
@@ -158,6 +175,16 @@ public class RuntimeConfigurationTests : ParserTestBase
                 },
                 "project": {
                     "name": "TestProject"
+                },
+                "reporting": {
+                    "dependencies": {
+                        "providers": [{
+                            "kind": "test",
+                            "type": "bar",
+                            "x": "x",
+                            "y": "y"
+                        }]
+                    }
                 }
             }
             """);
@@ -172,6 +199,16 @@ public class RuntimeConfigurationTests : ParserTestBase
                 },
                 "project": {
                     "name": "MergedProject"
+                },
+                "reporting": {
+                    "dependencies": {
+                        "providers": [{
+                            "kind": "test",
+                            "type": "bar",
+                            "x": "m",
+                            "z": "z"
+                        }]
+                    }
                 }
             }
             """);

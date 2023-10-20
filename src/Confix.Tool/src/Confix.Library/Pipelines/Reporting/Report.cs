@@ -9,4 +9,5 @@ public sealed record Report(
     RepositoryReport Repository,
     CommitReport Commit,
     IReadOnlyList<VariableReport> Variables,
-    List<ComponentReport> Components);
+    List<ComponentReport> Components,
+    List<IDependency> Dependencies);

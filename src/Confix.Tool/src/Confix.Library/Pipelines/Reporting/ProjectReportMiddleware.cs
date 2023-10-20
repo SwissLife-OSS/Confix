@@ -3,7 +3,10 @@ using System.Text;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
+using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares;
+using Confix.Tool.Middlewares.JsonSchemas;
+using Confix.Tool.Middlewares.Reporting;
 using Confix.Tool.Schema;
 using Confix.Utilities;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,10 +16,12 @@ namespace Confix.Tool.Reporting;
 public sealed class ProjectReportMiddleware : IMiddleware
 {
     private readonly IGitService _git;
+    private readonly ISchemaStore _schemaStore;
 
-    public ProjectReportMiddleware(IGitService git)
+    public ProjectReportMiddleware(IGitService git, ISchemaStore schemaStore)
     {
         _git = git;
+        _schemaStore = schemaStore;
     }
 
     /// <inheritdoc />
@@ -64,6 +69,7 @@ public sealed class ProjectReportMiddleware : IMiddleware
         var fileFeature = context.Features.Get<ConfigurationFileFeature>();
         var envFeature = context.Features.Get<EnvironmentFeature>();
 
+        var solution = configuration.EnsureSolution();
         var project = configuration.EnsureProject();
 
         var commitReport = await GetCommitReportAsync(project.Directory!, ct);
@@ -78,13 +84,14 @@ public sealed class ProjectReportMiddleware : IMiddleware
         var projectReport = GetProjectReport(project, repositoryReport);
         log.ProjectReported(projectReport);
 
-        var components = await GetComponentsAsync(context, context.CancellationToken);
+        var components = await GetComponentsAsync(context, ct);
 
         var reports = new List<Report>();
 
         foreach (var file in fileFeature.Files)
         {
-            var variables = await GetVariablesAsync(context, file, context.CancellationToken);
+            var variables = await GetVariablesAsync(context, file, ct);
+            var dependencies = await GetDependenciesAsync(solution, project, context, file, ct);
 
             var report = new Report(
                 file.InputFile.FullName,
@@ -94,8 +101,9 @@ public sealed class ProjectReportMiddleware : IMiddleware
                 solutionReport,
                 repositoryReport,
                 commitReport,
-                variables, 
-                components);
+                variables,
+                components,
+                dependencies.ToList());
 
             log.ReportCreated(report);
 
@@ -225,6 +233,37 @@ public sealed class ProjectReportMiddleware : IMiddleware
         }
 
         return variables;
+    }
+
+    private async Task<IEnumerable<IDependency>> GetDependenciesAsync(
+        SolutionDefinition solution,
+        ProjectDefinition project,
+        IMiddlewareContext context,
+        ConfigurationFile file,
+        CancellationToken ct)
+    {
+        var analyzer =
+            context.Features.Get<DependencyAnalyzerFeature>().Analyzer;
+
+        if (!analyzer.HasProviders())
+        {
+            return Array.Empty<IDependency>();
+        }
+
+        _schemaStore.TryLoad(solution, project, out var schema);
+
+        var content = await file.TryLoadContentAsync(ct);
+        if (content is null)
+        {
+            return Array.Empty<IDependency>();
+        }
+
+        var ctx = new DependencyAnalyzerContext(schema, content);
+
+        LeafJsonDocumentVisitor
+            .Visit(content, value => analyzer.Analyze(ctx, value));
+
+        return ctx.GetDependencies();
     }
 
     private static async Task<List<ComponentReport>> GetComponentsAsync(

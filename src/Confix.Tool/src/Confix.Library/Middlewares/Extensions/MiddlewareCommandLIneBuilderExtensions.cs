@@ -5,6 +5,7 @@ using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares.Encryption;
 using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Middlewares.Project;
+using Confix.Tool.Reporting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Middlewares;
@@ -22,7 +23,9 @@ public static class MiddlewareCommandLineBuilderExtensions
             .RegisterComponentProviders()
             .RegisterConfigurationAdapters()
             .RegisterJsonSchemaCollectionMiddleware()
+            .RegisterDependencyAnalyzerMiddleware()
             .RegisterVariableMiddleware()
+            .RegisterDependencyProviders()
             .RegisterEncryptionMiddleware();
 
         return builder;

@@ -1,8 +1,7 @@
-using System.Text;
+using Confix.Entities.Schema;
 using HotChocolate;
 using HotChocolate.Language;
 using HotChocolate.Types;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Schema;
 
@@ -53,7 +52,9 @@ public static class SchemaHelpers
         var builder = SchemaBuilder.New()
             .AddDocument(schemaDoc)
             .Use(next => next)
-            .AddType<DefaultValue>()
+            .AddType<DefaultValueDirective>()
+            .AddType<MetadataDirective>()
+            .AddType<DependencyDirective>()
             .ModifyOptions(c =>
             {
                 c.PreserveSyntaxNodes = true;

@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Entities.Schema;
 using HotChocolate;
 using HotChocolate.Types;
 using Json.More;
@@ -62,15 +63,39 @@ public static class SchemaExtensions
             .ToTypeReferenceBuilder()
             .Deprecated(field.IsDeprecated)
             .WithDefault(field.DefaultValueNode())
+            .WithMetadata(field.GetMetadata())
             .WithDescription(field.Description);
 
     private static JsonNode? DefaultValueNode(this IOutputField field)
     {
-        var defaultValue = field.Directives.Where(x => x.Type.Name == DefaultValue.Name)
-            .Select(x => x.AsValue<DefaultValue>())
+        var defaultValue = field.Directives.Where(x => x.Type.Name == DefaultValueDirective.Name)
+            .Select(x => x.AsValue<DefaultValueDirective>())
             .FirstOrDefault();
 
         return defaultValue?.Value.AsNode();
+    }
+
+    private static JsonArray? GetMetadata(this IOutputField field)
+    {
+        var metadata = field.Directives
+            .Where(x => x.Type.Name == MetadataDirective.Name)
+            .Select(x => x.AsValue<MetadataDirective>())
+            .Select(x => x.Value.AsNode())
+            .OfType<JsonNode>();
+
+        var dependencies = field.Directives
+            .Where(x => x.Type.Name == DependencyDirective.Name)
+            .Select(x => x.AsValue<DependencyDirective>())
+            .Select(x => new JsonObject { ["type"] = MetadataTypes.Dependency, ["kind"] = x.Kind })
+            .OfType<JsonNode>();
+
+        var result = metadata.Concat(dependencies).ToArray();
+        if (result.Length == 0)
+        {
+            return null;
+        }
+
+        return new JsonArray(result);
     }
 
     private static JsonSchemaBuilder ToTypeReference(this IType type, bool required = false)
@@ -157,7 +182,7 @@ public static class SchemaExtensions
         throw new ExitException("Input object types are not supported.")
         {
             Help = $"""
-                You probably want to use an object type instead. 
+                You probably want to use an object type instead.
                 Check the type {t.Name} on ({t.SyntaxNode?.Location?.Line},{t.SyntaxNode?.Location?.Column})
                 """
         };

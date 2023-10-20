@@ -1,0 +1,91 @@
+﻿--------------------------------------------------
+### CLI Output
+--------------------------------------------------
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.solution
+  Configuration files of type .confix.solution located at <</tmp>>/content/src/project/.confix.project
+  Replaced magic path $project:/test.json with <</tmp>>/content/src/project/test.json.
+  Merged .confix.solution from .confixrc
+  Merged .confix.project from .confix.solution
+  Merged .confix.component from .confix.solution
+✓ Running in scope Project
+✓ Configuration loaded
+  Found a inline configuration file '<</tmp>>/content/src/project/test.json'
+✓ Active Environment is prod
+  Component detected:test <</tmp>>/content/src/project/confix/components/test/.confix.component
+  Configuration files of type .confixrc located at <</tmp>>/home/.confixrc
+  Configuration files of type .confix.solution located at <</tmp>>/content/.confix.solution
+  Configuration files of type .confix.solution located at <</tmp>>/content/src/project/.confix.project
+  Configuration files of type .confix.component located at <</tmp>>/content/src/project/confix/components/test/.confix.component
+  Replaced magic path $project:/test.json with <</tmp>>/content/src/project/test.json.
+  Merged .confix.solution from .confixrc
+  Merged .confix.project from .confix.solution
+  Merged .confix.component from .confix.solution
+✓ Running in scope Component
+✓ Configuration loaded
+  Component input 'graphql' loaded
+✓ Component inputs loaded
+  Building component...
+  Searching in '<</tmp>>/content/src/project/confix/components/test/schema.graphql' for GraphQL Schema
+   -> <</tmp>>/content/src/project/confix/components/test/schema.graphql
+  GraphQL Schema was found: '<</tmp>>/content/src/project/confix/components/test/schema.graphql' <</tmp>>/content/src/project/confix/components/test/schema.graphql
+  Replacing existing schema.json file: '<</tmp>>/content/src/project/confix/components/test/schema.json' <</tmp>>/content/src/project/confix/components/test/schema.json
+  Generated schema based on GraphQL Schema:'<</tmp>>/content/src/project/confix/components/test/schema.json' <</tmp>>/content/src/project/confix/components/test/schema.json
+  Building component completed
+✓ Component inputs loaded
+  Dependency provider 'graphql' loaded
+✓ Dependency providers loaded
+  Commit: 1234567890 by John Doe on master Initial commit
+  Repository: <</tmp>> <</tmp>>/content
+  Solution: content .
+  Project: src.project src/project
+  Found component test in provider __LOCAL
+  Start loading components from project 'src.project'
+✓ Loaded 1 components
+  -  test
+  Detected 0 variables
+  Report: <</tmp>>/content/src/project/test.json prod
+[
+   {
+      "configurationPath": "<</tmp>>/content/src/project/test.json",
+      "environment": "prod",
+      "timestamp": <<date>>,
+      "project": {
+         "name": "src.project",
+         "path": "src/project"
+      },
+      "solution": {
+         "name": "content",
+         "path": "."
+      },
+      "repository": {
+         "name": "<</tmp>>",
+         "originUrl": "https://foobar.com"
+      },
+      "commit": {
+         "hash": "1234567890",
+         "message": "Initial commit",
+         "author": "John Doe",
+         "email": "jd@gmail.com",
+         "branch": "master",
+         "tags": [
+            "1.0.0",
+            "1.1.0"
+         ]
+      },
+      "variables": [
+      ],
+      "components": [
+         {
+            "providerName": "__LOCAL",
+            "name": "test",
+            "version": "latest",
+            "mountingPoints": [
+               "test"
+            ]
+         }
+      ],
+      "dependencies": [
+      ]
+   }
+]
