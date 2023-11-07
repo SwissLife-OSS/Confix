@@ -16,9 +16,9 @@
     <PackageVersion Include="Microsoft.Extensions.Http" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-    <PackageVersion Include="Nuke.Build" Version="6.3.0" />
-    <PackageVersion Include="Nuke.CodeGeneration" Version="6.3.0" />
-    <PackageVersion Include="Nuke.Common" Version="6.3.0" />
+    <PackageVersion Include="Nuke.Build" Version="7.0.6" />
+    <PackageVersion Include="Nuke.Tooling.Generator" Version="7.0.6" />
+    <PackageVersion Include="Nuke.Common" Version="7.0.6" />
     <PackageVersion Include="Spectre.Console" Version="0.46.0" />
     <PackageVersion Include="Spectre.Console.Json" Version="0.46.0" />
     <PackageVersion Include="Spectre.Console.Testing" Version="0.47.0" />
