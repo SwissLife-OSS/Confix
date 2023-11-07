@@ -14,7 +14,7 @@ public static partial class ConfixTasks
 
     internal static string GetToolPath(string? framework = null)
     {
-        return ToolPathResolver.GetPackageExecutable(
+        return NuGetToolPathResolver.GetPackageExecutable(
             packageId: "Confix",
             packageExecutable: "Confix.dll",
             framework: framework);
