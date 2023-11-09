@@ -14,6 +14,7 @@ public sealed class ProjectRestorePipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseReadConfigurationFiles()
             .UseEnvironment()
+            .UseBuildComponentsOfProject()
             .Use<VariableMiddleware>()
             .Use<JsonSchemaCollectionMiddleware>()
             .Use<ConfigurationAdapterMiddleware>()
