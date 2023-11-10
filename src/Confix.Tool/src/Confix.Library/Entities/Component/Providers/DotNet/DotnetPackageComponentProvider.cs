@@ -94,33 +94,83 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
     {
         var componentConfig = resources
             .FirstOrDefault(x => x.ResourceName.EndsWith(FileNames.ConfixComponent));
-        var jsonSchema = resources
-            .FirstOrDefault(x => x.ResourceName.EndsWith(FileNames.Schema));
 
-        if (componentConfig == null || jsonSchema == null)
+        if (componentConfig == null)
         {
             throw new ExitException(
-                $"[red]Could not find component definition or schema for component[/]: {component}");
+                $"[red]Could not find component definition for component[/]: {component}");
         }
 
         App.Log.ParsingComponent(componentConfig.Assembly, componentConfig.ResourceName);
         var componentConfiguration = await LoadComponentConfigurationFromAssembly(componentConfig);
-
-        await using var schemaStream = jsonSchema.GetStream();
-        var schema = await JsonSchema.FromStream(schemaStream);
 
         if (componentConfiguration.Name is null)
         {
             throw new ExitException($"Component definition is missing name: {component}");
         }
 
+        var jsonSchema = await GetJsonSchema(resources, componentConfiguration.Name);
+
         return new Component(
             Type,
             componentConfiguration.Name,
             version,
             true,
-            new[] { componentConfiguration.Name },
-            schema);
+            new[]
+            {
+                componentConfiguration.Name
+            },
+            jsonSchema);
+    }
+
+    private static async Task<JsonSchema> GetJsonSchema(
+        IReadOnlyList<DiscoveredResource> resources,
+        string component)
+    {
+        var jsonSchema = await TryGetEmbeddedJsonSchema(resources) ??
+                         await TryBuildJsonSchemaFromGraphQL(resources);
+
+        if (jsonSchema == null)
+        {
+            throw new ExitException(
+                $"[red]Could not find/build schema for component[/]: {component}");
+        }
+
+        return jsonSchema;
+    }
+
+    private static async Task<JsonSchema?> TryBuildJsonSchemaFromGraphQL(
+        IReadOnlyList<DiscoveredResource> resources)
+    {
+        var resource = resources
+            .FirstOrDefault(x => x.ResourceName.EndsWith(FileNames.SchemaGraphQL));
+
+        if (resource != null)
+        {
+            await using var graphQLSchema = resource.GetStream();
+
+            var graphqlSchema =
+                await SchemaHelpers.LoadSchemaAsync(graphQLSchema);
+
+            return graphqlSchema.ToJsonSchema().Build();
+        }
+
+        return null;
+    }
+
+    private static async Task<JsonSchema?> TryGetEmbeddedJsonSchema(
+        IReadOnlyList<DiscoveredResource> resources)
+    {
+        var resource = resources
+            .FirstOrDefault(x => x.ResourceName.EndsWith(FileNames.Schema));
+
+        if (resource != null)
+        {
+            await using var schemaStream = resource.GetStream();
+            return await JsonSchema.FromStream(schemaStream);
+        }
+
+        return null;
     }
 
     private static async ValueTask<ComponentConfiguration> LoadComponentConfigurationFromAssembly(
@@ -182,8 +232,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                 assembly
                     .GetReferencedAssemblies()
                     .Where(x => !string.IsNullOrWhiteSpace(x.Name) &&
-                        !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
-                        !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
+                                !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
+                                !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
                     .ForEach(x => assembliesToScan.Enqueue(x.Name!));
 
                 foreach (var resourceName in assembly.GetManifestResourceNames())
@@ -204,8 +254,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
     private record DiscoveredResource(Assembly Assembly, string ResourceName)
     {
         public Stream GetStream() => Assembly.GetManifestResourceStream(ResourceName) ??
-            throw new ExitException(
-                $"Could not find resource: {ResourceName}");
+                                     throw new ExitException(
+                                         $"Could not find resource: {ResourceName}");
     }
 }
 

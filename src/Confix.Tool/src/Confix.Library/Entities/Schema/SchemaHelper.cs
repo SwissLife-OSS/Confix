@@ -1,4 +1,4 @@
-using Confix.Entities.Schema;
+using System.Text;
 using HotChocolate;
 using HotChocolate.Language;
 using HotChocolate.Types;
@@ -24,9 +24,19 @@ public static class SchemaHelpers
         }
 
         var sdl = await File.ReadAllTextAsync(schemaPath, cancellationToken);
-        var schema = BuildSchema(sdl);
 
-        return schema;
+        return BuildSchema(sdl);
+    }
+
+    public static async Task<ISchema> LoadSchemaAsync(
+        Stream schemaStream,
+        CancellationToken cancellationToken = default)
+    {
+        schemaStream.Position = 0;
+
+        using var schemaReader = new StreamReader(schemaStream, Encoding.UTF8);
+
+        return BuildSchema(await schemaReader.ReadToEndAsync(cancellationToken));
     }
 
     public static ISchema BuildSchema(string schema)

@@ -11,6 +11,8 @@ public static class FileNames
 
     public const string ConfixComponent = ".confix.component";
 
+    public const string SchemaGraphQL = "schema.graphql";
+
     public const string ConfixProject = ".confix.project";
 
     public const string ConfixSolution = ".confix.solution";
