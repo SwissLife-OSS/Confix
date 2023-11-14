@@ -252,6 +252,7 @@ public partial class ConfixTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li>
+    ///     <li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li>
     ///     <li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li>
     ///     <li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li>
     ///   </ul>
@@ -271,6 +272,7 @@ public partial class ConfixTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li>
+    ///     <li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li>
     ///     <li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li>
     ///     <li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li>
     ///   </ul>
@@ -287,6 +289,7 @@ public partial class ConfixTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li>
+    ///     <li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li>
     ///     <li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li>
     ///     <li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li>
     ///   </ul>
@@ -1487,6 +1490,10 @@ public partial class ConfixProjectRestoreSettings : ToolSettings
     /// </summary>
     public virtual string Environment { get; internal set; }
     /// <summary>
+    ///   If you specify this option, only the components will be built.
+    /// </summary>
+    public virtual string OnlyComponents { get; internal set; }
+    /// <summary>
     ///   Sets the verbosity level
     /// </summary>
     public virtual string Verbosity { get; internal set; }
@@ -1497,6 +1504,7 @@ public partial class ConfixProjectRestoreSettings : ToolSettings
           .Add("project restore")
           .Add("--output-file {value}", OutputFile)
           .Add("--environment {value}", Environment)
+          .Add("--only-components {value}", OnlyComponents)
           .Add("--verbosity {value}", Verbosity);
         return base.ConfigureProcessArguments(arguments);
     }
@@ -2110,7 +2118,7 @@ public partial class ConfixEncryptSettings : ToolSettings
     /// </summary>
     public virtual string InputFile { get; internal set; }
     /// <summary>
-    ///   The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.
+    ///   The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.
     /// </summary>
     public virtual string OutFile { get; internal set; }
     public virtual string Framework { get; internal set; }
@@ -2154,7 +2162,7 @@ public partial class ConfixDecryptSettings : ToolSettings
     /// </summary>
     public virtual string InputFile { get; internal set; }
     /// <summary>
-    ///   The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.
+    ///   The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.
     /// </summary>
     public virtual string OutFile { get; internal set; }
     public virtual string Framework { get; internal set; }
@@ -2746,6 +2754,30 @@ public static partial class ConfixProjectRestoreSettingsExtensions
     {
         toolSettings = toolSettings.NewInstance();
         toolSettings.Environment = null;
+        return toolSettings;
+    }
+    #endregion
+    #region OnlyComponents
+    /// <summary>
+    ///   <p><em>Sets <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></em></p>
+    ///   <p>If you specify this option, only the components will be built.</p>
+    /// </summary>
+    [Pure]
+    public static T SetOnlyComponents<T>(this T toolSettings, string onlyComponents) where T : ConfixProjectRestoreSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.OnlyComponents = onlyComponents;
+        return toolSettings;
+    }
+    /// <summary>
+    ///   <p><em>Resets <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></em></p>
+    ///   <p>If you specify this option, only the components will be built.</p>
+    /// </summary>
+    [Pure]
+    public static T ResetOnlyComponents<T>(this T toolSettings) where T : ConfixProjectRestoreSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.OnlyComponents = null;
         return toolSettings;
     }
     #endregion
@@ -4416,7 +4448,7 @@ public static partial class ConfixEncryptSettingsExtensions
     #region OutFile
     /// <summary>
     ///   <p><em>Sets <see cref="ConfixEncryptSettings.OutFile"/></em></p>
-    ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
+    ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
     /// </summary>
     [Pure]
     public static T SetOutFile<T>(this T toolSettings, string outFile) where T : ConfixEncryptSettings
@@ -4427,7 +4459,7 @@ public static partial class ConfixEncryptSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Resets <see cref="ConfixEncryptSettings.OutFile"/></em></p>
-    ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
+    ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
     /// </summary>
     [Pure]
     public static T ResetOutFile<T>(this T toolSettings) where T : ConfixEncryptSettings
@@ -4544,7 +4576,7 @@ public static partial class ConfixDecryptSettingsExtensions
     #region OutFile
     /// <summary>
     ///   <p><em>Sets <see cref="ConfixDecryptSettings.OutFile"/></em></p>
-    ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
+    ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
     /// </summary>
     [Pure]
     public static T SetOutFile<T>(this T toolSettings, string outFile) where T : ConfixDecryptSettings
@@ -4555,7 +4587,7 @@ public static partial class ConfixDecryptSettingsExtensions
     }
     /// <summary>
     ///   <p><em>Resets <see cref="ConfixDecryptSettings.OutFile"/></em></p>
-    ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
+    ///   <p>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</p>
     /// </summary>
     [Pure]
     public static T ResetOutFile<T>(this T toolSettings) where T : ConfixDecryptSettings

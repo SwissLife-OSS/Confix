@@ -133,6 +133,12 @@
             "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
           },
           {
+            "name": "OnlyComponents",
+            "type": "string",
+            "format": "--only-components {value}",
+            "help": "If you specify this option, only the components will be built."
+          },
+          {
             "name": "Verbosity",
             "type": "string",
             "format": "--verbosity {value}",
@@ -566,7 +572,7 @@
             "name": "OutFile",
             "type": "string",
             "format": "{value}",
-            "help": "The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten."
+            "help": "The file to write the encrypted or decrypted data to. \r If not provided the input file will be overwritten. \r Existing files will be overwritten."
           }
         ]
       }
@@ -599,7 +605,7 @@
             "name": "OutFile",
             "type": "string",
             "format": "{value}",
-            "help": "The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten."
+            "help": "The file to write the encrypted or decrypted data to. \r If not provided the input file will be overwritten. \r Existing files will be overwritten."
           }
         ]
       }
