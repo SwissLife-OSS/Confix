@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -200,7 +201,11 @@ public static partial class JsonNodeExtensions
         => await JsonSerializer.SerializeAsync(
             stream,
             node,
-            new JsonSerializerOptions { WriteIndented = true },
+            new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            },
             cancellationToken);
 
     [GeneratedRegex(@"^(?<name>.+?)\[(?<index>\d+)]$")]
