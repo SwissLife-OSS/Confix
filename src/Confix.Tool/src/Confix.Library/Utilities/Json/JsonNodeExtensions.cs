@@ -42,10 +42,10 @@ public static partial class JsonNodeExtensions
 
             (_, JsonValue nodeValue) => nodeValue,
             _ => throw new InvalidOperationException($"""
-                                                          Cannot merge nodes of different types:
-                                                          Source: {source.GetSchemaValueType()}
-                                                          Node: {node.GetSchemaValueType()}
-                                                      """)
+                    Cannot merge nodes of different types:
+                    Source: {source.GetSchemaValueType()}
+                    Node: {node.GetSchemaValueType()}
+                """)
         };
 
     private static JsonArray Merge(this JsonArray source, JsonArray node)
@@ -203,7 +203,8 @@ public static partial class JsonNodeExtensions
             node,
             new JsonSerializerOptions
             {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             },
             cancellationToken);
 
