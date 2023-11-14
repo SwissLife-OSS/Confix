@@ -74,7 +74,7 @@ file static class LogExtensions
     {
         logger.Error("Confix failed.");
         logger.Information($"[red]{exception.Message}[/]");
-        logger.TraceException(exception);
+        logger.TraceException(exception.InnerException ?? exception);
     }
 
     public static void PrintHelp(this IAnsiConsole console, ExitException exception)

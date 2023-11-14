@@ -21,7 +21,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     }
 
     public AzureKeyVaultProvider(AzureKeyVaultProviderDefinition definition)
-        : this(new SecretClient(new Uri(definition.Uri), new DefaultAzureCredential()))
+        : this(new SecretClient(new Uri(definition.Uri), new AzureCliCredential()))
     {
     }
 
