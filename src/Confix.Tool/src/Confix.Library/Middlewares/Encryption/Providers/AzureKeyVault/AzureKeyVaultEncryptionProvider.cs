@@ -27,7 +27,7 @@ public sealed class AzureKeyVaultEncryptionProvider : IEncryptionProvider
     }
 
     public AzureKeyVaultEncryptionProvider(AzureKeyVaultEncryptionProviderDefinition definition)
-        : this(new KeyClient(new Uri(definition.Uri), new DefaultAzureCredential())
+        : this(new KeyClient(new Uri(definition.Uri), new AzureCliCredential())
             .GetCryptographyClient(definition.KeyName, definition.KeyVersion))
     {
     }
