@@ -14,7 +14,6 @@ public sealed class VariableReplacerService : IVariableReplacerService
         _variableResolver = variableResolver;
     }
 
-
     public async Task<JsonNode?> RewriteAsync(JsonNode? node, CancellationToken cancellationToken)
     {
         if (node is null)
@@ -24,7 +23,6 @@ public sealed class VariableReplacerService : IVariableReplacerService
 
         return await RewriteAsync(node, ImmutableHashSet<VariablePath>.Empty, cancellationToken);
     }
-
 
     private async Task<JsonNode> RewriteAsync(
         JsonNode node,
@@ -60,6 +58,7 @@ public sealed class VariableReplacerService : IVariableReplacerService
         {
             return ImmutableDictionary<VariablePath, JsonNode>.Empty;
         }
+        App.Log.DetectedVariables(variables.Length);
         if (resolvedPaths.Overlaps(variables))
         {
             throw new CircularVariableReferenceException(variables.First(v => resolvedPaths.Contains(v)));
