@@ -22,13 +22,16 @@ public sealed class VariableReplacerService : IVariableReplacerService
             return null;
         }
 
-        return await RewriteAsyncInternal(node, cancellationToken);
+        return await RewriteAsync(node, ImmutableHashSet<VariablePath>.Empty, cancellationToken);
     }
 
 
-    private async Task<JsonNode> RewriteAsyncInternal(JsonNode node, CancellationToken cancellationToken)
+    private async Task<JsonNode> RewriteAsync(
+        JsonNode node,
+        IReadOnlySet<VariablePath> resolvedPaths,
+        CancellationToken cancellationToken)
     {
-        var resolvedVariables = await ResolveVariables(node, cancellationToken);
+        var resolvedVariables = await ResolveVariables(node, resolvedPaths, cancellationToken);
 
         return new JsonVariableRewriter().Rewrite(node, new(resolvedVariables));
     }
@@ -49,6 +52,7 @@ public sealed class VariableReplacerService : IVariableReplacerService
 
     private async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
         JsonNode node,
+        IReadOnlySet<VariablePath> resolvedPaths,
         CancellationToken cancellationToken)
     {
         var variables = GetVariables(node).ToArray();
@@ -56,13 +60,22 @@ public sealed class VariableReplacerService : IVariableReplacerService
         {
             return ImmutableDictionary<VariablePath, JsonNode>.Empty;
         }
+        if (resolvedPaths.Overlaps(variables))
+        {
+            throw new CircularVariableReferenceException(variables.First(v => resolvedPaths.Contains(v)));
+        }
 
         var resolvedVariables = await _variableResolver.ResolveVariables(variables, cancellationToken);
 
         var resolved = new Dictionary<VariablePath, JsonNode>();
         foreach (var variable in resolvedVariables)
         {
-            resolved[variable.Key] = await RewriteAsyncInternal(variable.Value, cancellationToken);
+            var currentPath = new HashSet<VariablePath>() { variable.Key };
+            currentPath.UnionWith(resolvedPaths);
+            resolved[variable.Key] = await RewriteAsync(
+                variable.Value,
+                currentPath,
+                cancellationToken);
         }
 
         return resolved;

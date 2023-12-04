@@ -209,7 +209,7 @@ public class VariableReplacerServiceTests
     }
 
     [Fact]
-    public async Task RewriteAsync_RecursiveVariablesWithDirectLoop_ThrowsRecuriveVariableException()
+    public async Task RewriteAsync_RecursiveVariablesWithDirectLoop_ThrowCircularVariableReferenceException()
     {
         // arrange
         JsonNode node = JsonNode.Parse("""
@@ -242,11 +242,11 @@ public class VariableReplacerServiceTests
         VariableReplacerService service = new(variableResolverMock.Object);
 
         // act && assert
-        await Assert.ThrowsAsync<RecuriveVariableException>(() => service.RewriteAsync(node, default));
+        await Assert.ThrowsAsync<CircularVariableReferenceException>(() => service.RewriteAsync(node, default));
     }
 
     [Fact]
-    public async Task RewriteAsync_RecursiveVariablesWithindirectLoop_ThrowsRecuriveVariableException()
+    public async Task RewriteAsync_RecursiveVariablesWithindirectLoop_ThrowsCircularVariableReferenceException()
     {
         // arrange
         JsonNode node = JsonNode.Parse("""
@@ -283,6 +283,6 @@ public class VariableReplacerServiceTests
         VariableReplacerService service = new(variableResolverMock.Object);
 
         // act && assert
-        await Assert.ThrowsAsync<RecuriveVariableException>(() => service.RewriteAsync(node, default));
+        await Assert.ThrowsAsync<CircularVariableReferenceException>(() => service.RewriteAsync(node, default));
     }
 }
