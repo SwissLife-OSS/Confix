@@ -1,10 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Linq;
 using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Middlewares;
-using Json.Schema;
 
 namespace Confix.Variables;
 

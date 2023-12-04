@@ -100,7 +100,8 @@ public class VariableReplacerServiceTests
                             ]
                         """)!;
                     }
-                    else if(key.Path == "variable.string_nested"){
+                    else if (key.Path == "variable.string_nested")
+                    {
                         result[key] = JsonValue.Create("$test:variable.string")!;
                     }
                     else
@@ -147,7 +148,8 @@ public class VariableReplacerServiceTests
                             }
                         """)!;
                     }
-                    else if(key.Path == "variable.string_nested"){
+                    else if (key.Path == "variable.string_nested")
+                    {
                         result[key] = JsonValue.Create("$test:variable.string")!;
                     }
                     else
@@ -164,5 +166,123 @@ public class VariableReplacerServiceTests
 
         // assert
         result?.ToString().MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task RewriteAsync_RecursiveVariables_CorrectlyResolve()
+    {
+        // arrange
+        JsonNode node = JsonNode.Parse("""
+            {
+                "var1": "$test:variable.string",
+                "var2": "$test:variable.string_nested"
+            }
+        """)!;
+
+        Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
+        variableResolverMock.Setup(x => x.ResolveVariables(
+                It.IsAny<IReadOnlyList<VariablePath>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+            {
+                var result = new Dictionary<VariablePath, JsonNode>();
+                foreach (var key in keys)
+                {
+                    if (key.Path == "variable.string_nested")
+                    {
+                        result[key] = JsonValue.Create("$test:variable.string")!;
+                    }
+                    else if (key.Path == "variable.string")
+                    {
+                        result[key] = JsonValue.Create("ReplacedValue")!;
+                    }
+                }
+                return result;
+            });
+        VariableReplacerService service = new(variableResolverMock.Object);
+
+        // act
+        var result = await service.RewriteAsync(node, default);
+
+        // assert
+        result?.ToString().MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task RewriteAsync_RecursiveVariablesWithDirectLoop_ThrowsRecuriveVariableException()
+    {
+        // arrange
+        JsonNode node = JsonNode.Parse("""
+            {
+                "var1": "$test:variable.string",
+                "var2": "$test:variable.string_nested"
+            }
+        """)!;
+
+        Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
+        variableResolverMock.Setup(x => x.ResolveVariables(
+                It.IsAny<IReadOnlyList<VariablePath>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+            {
+                var result = new Dictionary<VariablePath, JsonNode>();
+                foreach (var key in keys)
+                {
+                    if (key.Path == "variable.string_nested")
+                    {
+                        result[key] = JsonValue.Create("$test:variable.string_nested")!;
+                    }
+                    else if (key.Path == "variable.string")
+                    {
+                        result[key] = JsonValue.Create("ReplacedValue")!;
+                    }
+                }
+                return result;
+            });
+        VariableReplacerService service = new(variableResolverMock.Object);
+
+        // act && assert
+        await Assert.ThrowsAsync<RecuriveVariableException>(() => service.RewriteAsync(node, default));
+    }
+
+    [Fact]
+    public async Task RewriteAsync_RecursiveVariablesWithindirectLoop_ThrowsRecuriveVariableException()
+    {
+        // arrange
+        JsonNode node = JsonNode.Parse("""
+            {
+                "var1": "$test:variable.string",
+                "var2": "$test:variable.string_nested"
+            }
+        """)!;
+
+        Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
+        variableResolverMock.Setup(x => x.ResolveVariables(
+                It.IsAny<IReadOnlyList<VariablePath>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+            {
+                var result = new Dictionary<VariablePath, JsonNode>();
+                foreach (var key in keys)
+                {
+                    if (key.Path == "variable.string_nested")
+                    {
+                        result[key] = JsonValue.Create("$test:variable.intermediate")!;
+                    }
+                    else if (key.Path == "variable.intermediate")
+                    {
+                        result[key] = JsonValue.Create("$test:variable.string_nested")!;
+                    }
+                    else if (key.Path == "variable.string")
+                    {
+                        result[key] = JsonValue.Create("ReplacedValue")!;
+                    }
+                }
+                return result;
+            });
+        VariableReplacerService service = new(variableResolverMock.Object);
+
+        // act && assert
+        await Assert.ThrowsAsync<RecuriveVariableException>(() => service.RewriteAsync(node, default));
     }
 }
