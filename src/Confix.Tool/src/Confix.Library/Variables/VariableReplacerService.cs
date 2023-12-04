@@ -1,4 +1,4 @@
-using System.Text.Json;
+using System.Collections.Immutable;
 using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Json.Schema;
@@ -20,21 +20,68 @@ public sealed class VariableReplacerService : IVariableReplacerService
         {
             return null;
         }
-        var variables = GetVariables(node).ToArray();
-        App.Log.DetectedVariables(variables.Length);
 
-        var resolved = await _variableResolver.ResolveVariables(variables, cancellationToken);
+        return await RewriteAsync(node, ImmutableHashSet<VariablePath>.Empty, cancellationToken);
+    }
 
-        return new JsonVariableRewriter().Rewrite(node, new(resolved));
+    private async Task<JsonNode> RewriteAsync(
+        JsonNode node,
+        IReadOnlySet<VariablePath> resolvedPaths,
+        CancellationToken cancellationToken)
+    {
+        var resolvedVariables = await ResolveVariables(node, resolvedPaths, cancellationToken);
+
+        return new JsonVariableRewriter().Rewrite(node, new(resolvedVariables));
     }
 
     private static IEnumerable<VariablePath> GetVariables(JsonNode node)
-        => JsonParser.ParseNode(node).Values
-            .Where(v => v.GetSchemaValueType() == SchemaValueType.String)
-            .SelectMany(v => v!.ToString().GetVariables());
+    {
+        if (node is JsonValue value)
+        {
+            return value.GetSchemaValueType() == SchemaValueType.String
+                ? value.ToString().GetVariables()
+                : Enumerable.Empty<VariablePath>();
+        }
+
+        return JsonParser.ParseNode(node).Values
+                    .Where(v => v.GetSchemaValueType() == SchemaValueType.String)
+                    .SelectMany(v => v!.ToString().GetVariables());
+    }
+
+    private async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
+        JsonNode node,
+        IReadOnlySet<VariablePath> resolvedPaths,
+        CancellationToken cancellationToken)
+    {
+        var variables = GetVariables(node).ToArray();
+        if (variables.Length == 0)
+        {
+            return ImmutableDictionary<VariablePath, JsonNode>.Empty;
+        }
+        App.Log.DetectedVariables(variables.Length);
+        if (resolvedPaths.Overlaps(variables))
+        {
+            throw new CircularVariableReferenceException(variables.First(v => resolvedPaths.Contains(v)));
+        }
+
+        var resolvedVariables = await _variableResolver.ResolveVariables(variables, cancellationToken);
+
+        var resolved = new Dictionary<VariablePath, JsonNode>();
+        foreach (var variable in resolvedVariables)
+        {
+            var currentPath = new HashSet<VariablePath>() { variable.Key };
+            currentPath.UnionWith(resolvedPaths);
+            resolved[variable.Key] = await RewriteAsync(
+                variable.Value,
+                currentPath,
+                cancellationToken);
+        }
+
+        return resolved;
+    }
 }
 
-file static class LogExtensionts
+file static class LogExtensions
 {
     public static void DetectedVariables(this IConsoleLogger log, int count)
     {
