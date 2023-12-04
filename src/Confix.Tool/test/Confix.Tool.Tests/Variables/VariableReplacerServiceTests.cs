@@ -43,4 +43,32 @@ public class VariableReplacerServiceTests
         // assert
         result?.ToString().MatchSnapshot();
     }
+
+    [Fact]
+    public async Task RewriteAsync_JsonValue_()
+    {
+        // arrange
+        JsonNode node = JsonValue.Create("$test:variable.number")!;
+
+        Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
+        variableResolverMock.Setup(x => x.ResolveVariables(
+                It.IsAny<IReadOnlyList<VariablePath>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+            {
+                var result = new Dictionary<VariablePath, JsonNode>();
+                foreach (var key in keys)
+                {
+                    result[key] = JsonValue.Create("Replaced")!;
+                }
+                return result;
+            });
+        VariableReplacerService service = new(variableResolverMock.Object);
+
+        // act
+        var result = await service.RewriteAsync(node, default);
+
+        // assert
+        Assert.Equal("Replaced", result?.ToString());
+    }
 }

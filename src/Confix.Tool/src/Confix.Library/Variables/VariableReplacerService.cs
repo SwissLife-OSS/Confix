@@ -29,9 +29,18 @@ public sealed class VariableReplacerService : IVariableReplacerService
     }
 
     private static IEnumerable<VariablePath> GetVariables(JsonNode node)
-        => JsonParser.ParseNode(node).Values
-            .Where(v => v.GetSchemaValueType() == SchemaValueType.String)
-            .SelectMany(v => v!.ToString().GetVariables());
+    {
+        if (node is JsonValue value)
+        {
+            return value.GetSchemaValueType() == SchemaValueType.String
+                ? value.ToString().GetVariables()
+                : Enumerable.Empty<VariablePath>();
+        }
+
+        return JsonParser.ParseNode(node).Values
+                    .Where(v => v.GetSchemaValueType() == SchemaValueType.String)
+                    .SelectMany(v => v!.ToString().GetVariables());
+    }
 }
 
 file static class LogExtensions
