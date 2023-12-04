@@ -1,8 +1,8 @@
 ﻿{
   "foo": {
     "bar": "baz",
-    "test": "Replaced Value of $test:variable.number",
-    "interpolated": "prefix-Replaced Value of $test:variable.string1-suffix",
-    "interpolatedMultiple": "asterix-Replaced Value of $test:variable.string2-midefix-Replaced Value of $test:variable.string3-suffix"
+    "test": "Replaced Value of variable.number",
+    "interpolated": "prefix-Replaced Value of variable.string1-suffix",
+    "interpolatedMultiple": "asterix-Replaced Value of variable.string2-midefix-Replaced Value of variable.string3-suffix"
   }
 }

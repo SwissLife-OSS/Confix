@@ -31,7 +31,7 @@ public class VariableReplacerServiceTests
                 var result = new Dictionary<VariablePath, JsonNode>();
                 foreach (var key in keys)
                 {
-                    result[key] = JsonValue.Create("Replaced Value of " + key)!;
+                    result[key] = JsonValue.Create("Replaced Value of " + key.Path)!;
                 }
                 return result;
             });
