@@ -1,0 +1,6 @@
+﻿{
+  "foo": {
+    "notAVariable": "notAVariable",
+    "string_nested": "Replaced Value of variable.string"
+  }
+}
