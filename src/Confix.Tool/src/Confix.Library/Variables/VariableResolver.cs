@@ -85,14 +85,8 @@ public sealed class VariableResolver : IVariableResolver
         App.Log.ResolvingVariable(key);
         var configuration = GetProviderConfiguration(key.ProviderName);
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
-        var resolvedValue = await provider.ResolveAsync(key.Path, cancellationToken);
-
-        if (resolvedValue.IsVariable(out VariablePath? variablePath))
-        {
-            return await ResolveVariable(variablePath.Value, cancellationToken);
-        }
-
-        return resolvedValue;
+        
+        return await provider.ResolveAsync(key.Path, cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
@@ -120,30 +114,14 @@ public sealed class VariableResolver : IVariableResolver
     {
         App.Log.ResolvingVariables(providerName, paths.Count);
         var resolvedVariables = new Dictionary<VariablePath, JsonNode>();
-        var nestedVariables = new Dictionary<VariablePath, string>();
-
+     
         var providerConfiguration = GetProviderConfiguration(providerName);
         await using var provider = _variableProviderFactory.CreateProvider(providerConfiguration);
 
         var resolvedValues = await provider.ResolveManyAsync(paths, cancellationToken);
         foreach (var (key, value) in resolvedValues)
         {
-            if (value.IsVariable(out var variablePath))
-            {
-                nestedVariables.Add(variablePath.Value, key);
-            }
-            else
-            {
-                resolvedVariables.Add(new(providerName, key), value);
-            }
-        }
-
-        var resolvedNestedVariables =
-            await ResolveVariables(nestedVariables.Keys.ToList(), cancellationToken);
-
-        foreach (var (key, value) in resolvedNestedVariables)
-        {
-            resolvedVariables.Add(new(providerName, nestedVariables[key]), value);
+            resolvedVariables.Add(new(providerName, key), value);
         }
 
         return resolvedVariables;
@@ -153,24 +131,6 @@ public sealed class VariableResolver : IVariableResolver
         => _configurations.FirstOrDefault(c => c.Name.Equals(providerName))
             ?? throw new ExitException(
                 $"No VariableProvider with name '{providerName.AsHighlighted()}' configured.");
-}
-
-public static class Extension
-{
-    public static bool IsVariable(
-        this JsonNode node,
-        [NotNullWhen(true)] out VariablePath? variablePath)
-    {
-        if (node.GetSchemaValueType() == SchemaValueType.String
-            && VariablePath.TryParse((string) node!, out var parsed))
-        {
-            variablePath = parsed;
-            return true;
-        }
-
-        variablePath = default;
-        return false;
-    }
 }
 
 file static class Log

@@ -34,7 +34,7 @@ public sealed class VariableReplacerService : IVariableReplacerService
             .SelectMany(v => v!.ToString().GetVariables());
 }
 
-file static class LogExtensionts
+file static class LogExtensions
 {
     public static void DetectedVariables(this IConsoleLogger log, int count)
     {
