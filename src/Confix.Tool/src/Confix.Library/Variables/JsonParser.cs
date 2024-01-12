@@ -5,12 +5,13 @@ namespace Confix.Variables;
 
 public static class JsonParser
 {
-    public static Dictionary<string, JsonNode?> ParseNode(JsonNode node)
+    public static Dictionary<string, JsonNode?> ParseNode(JsonNode? node)
         => node switch
         {
             JsonArray array => ParseArray(array).ToDictionary(),
             JsonObject obj => ParseObject(obj).ToDictionary(),
             JsonValue => throw new JsonParserException("Node must be an JsonObject or JsonArray"),
+            null => new Dictionary<string, JsonNode?>{ {"", null} },
             _ => throw new JsonParserException($"Cant parse type {node.GetType().Name}")
         };
 
