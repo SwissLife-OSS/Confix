@@ -252,6 +252,7 @@ public partial class ConfixTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li>
+    ///     <li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li>
     ///     <li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li>
     ///     <li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li>
     ///   </ul>
@@ -271,6 +272,7 @@ public partial class ConfixTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li>
+    ///     <li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li>
     ///     <li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li>
     ///     <li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li>
     ///   </ul>
@@ -287,6 +289,7 @@ public partial class ConfixTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li>
+    ///     <li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li>
     ///     <li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li>
     ///     <li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li>
     ///   </ul>
@@ -702,6 +705,7 @@ public partial class ConfixTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li>
+    ///     <li><c>--format</c> via <see cref="ConfixVariableGetSettings.Format"/></li>
     ///     <li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li>
     ///     <li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li>
     ///   </ul>
@@ -721,6 +725,7 @@ public partial class ConfixTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li>
+    ///     <li><c>--format</c> via <see cref="ConfixVariableGetSettings.Format"/></li>
     ///     <li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li>
     ///     <li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li>
     ///   </ul>
@@ -737,6 +742,7 @@ public partial class ConfixTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li>
+    ///     <li><c>--format</c> via <see cref="ConfixVariableGetSettings.Format"/></li>
     ///     <li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li>
     ///     <li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li>
     ///   </ul>
@@ -1487,6 +1493,10 @@ public partial class ConfixProjectRestoreSettings : ToolSettings
     /// </summary>
     public virtual string Environment { get; internal set; }
     /// <summary>
+    ///   If you specify this option, only the components will be built.
+    /// </summary>
+    public virtual string OnlyComponents { get; internal set; }
+    /// <summary>
     ///   Sets the verbosity level
     /// </summary>
     public virtual string Verbosity { get; internal set; }
@@ -1497,6 +1507,7 @@ public partial class ConfixProjectRestoreSettings : ToolSettings
           .Add("project restore")
           .Add("--output-file {value}", OutputFile)
           .Add("--environment {value}", Environment)
+          .Add("--only-components {value}", OnlyComponents)
           .Add("--verbosity {value}", Verbosity);
         return base.ConfigureProcessArguments(arguments);
     }
@@ -1823,6 +1834,10 @@ public partial class ConfixVariableGetSettings : ToolSettings
     /// </summary>
     public virtual string Name { get; internal set; }
     /// <summary>
+    ///   Sets the output format
+    /// </summary>
+    public virtual string Format { get; internal set; }
+    /// <summary>
     ///   Sets the verbosity level
     /// </summary>
     public virtual string Verbosity { get; internal set; }
@@ -1833,6 +1848,7 @@ public partial class ConfixVariableGetSettings : ToolSettings
           .Add("variable get")
           .Add("--environment {value}", Environment)
           .Add("--name {value}", Name)
+          .Add("--format {value}", Format)
           .Add("--verbosity {value}", Verbosity);
         return base.ConfigureProcessArguments(arguments);
     }
@@ -2749,6 +2765,30 @@ public static partial class ConfixProjectRestoreSettingsExtensions
         return toolSettings;
     }
     #endregion
+    #region OnlyComponents
+    /// <summary>
+    ///   <p><em>Sets <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></em></p>
+    ///   <p>If you specify this option, only the components will be built.</p>
+    /// </summary>
+    [Pure]
+    public static T SetOnlyComponents<T>(this T toolSettings, string onlyComponents) where T : ConfixProjectRestoreSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.OnlyComponents = onlyComponents;
+        return toolSettings;
+    }
+    /// <summary>
+    ///   <p><em>Resets <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></em></p>
+    ///   <p>If you specify this option, only the components will be built.</p>
+    /// </summary>
+    [Pure]
+    public static T ResetOnlyComponents<T>(this T toolSettings) where T : ConfixProjectRestoreSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.OnlyComponents = null;
+        return toolSettings;
+    }
+    #endregion
     #region Verbosity
     /// <summary>
     ///   <p><em>Sets <see cref="ConfixProjectRestoreSettings.Verbosity"/></em></p>
@@ -3610,6 +3650,30 @@ public static partial class ConfixVariableGetSettingsExtensions
     {
         toolSettings = toolSettings.NewInstance();
         toolSettings.Name = null;
+        return toolSettings;
+    }
+    #endregion
+    #region Format
+    /// <summary>
+    ///   <p><em>Sets <see cref="ConfixVariableGetSettings.Format"/></em></p>
+    ///   <p>Sets the output format</p>
+    /// </summary>
+    [Pure]
+    public static T SetFormat<T>(this T toolSettings, string format) where T : ConfixVariableGetSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.Format = format;
+        return toolSettings;
+    }
+    /// <summary>
+    ///   <p><em>Resets <see cref="ConfixVariableGetSettings.Format"/></em></p>
+    ///   <p>Sets the output format</p>
+    /// </summary>
+    [Pure]
+    public static T ResetFormat<T>(this T toolSettings) where T : ConfixVariableGetSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.Format = null;
         return toolSettings;
     }
     #endregion

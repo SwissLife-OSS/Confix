@@ -133,6 +133,12 @@
             "help": "The name of the environment to run the command in. Overrules the active environment set in .confixrc"
           },
           {
+            "name": "OnlyComponents",
+            "type": "string",
+            "format": "--only-components {value}",
+            "help": "If you specify this option, only the components will be built."
+          },
+          {
             "name": "Verbosity",
             "type": "string",
             "format": "--verbosity {value}",
@@ -356,6 +362,12 @@
             "type": "string",
             "format": "--name {value}",
             "help": "The name of the variable"
+          },
+          {
+            "name": "Format",
+            "type": "string",
+            "format": "--format {value}",
+            "help": "Sets the output format"
           },
           {
             "name": "Verbosity",
