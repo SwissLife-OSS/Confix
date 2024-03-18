@@ -1,4 +1,5 @@
 using System.CommandLine.Builder;
+using System.CommandLine.IO;
 using Spectre.Console;
 
 namespace Confix.Tool.Commands.Logging;
@@ -55,6 +56,7 @@ public static class OutputFormatCommandLineBuilderExtensions
                     }
 
                     context.Console.Out.Write(formattedValue);
+                    context.Console.Out.WriteLine();
                 }
             }
             else

@@ -14,6 +14,7 @@ public sealed class VariableGetPipeline : Pipeline
             .UseEnvironment()
             .Use<VariableMiddleware>()
             .AddOption(VariableNameOption.Instance)
+            .AddOption(FormatOption.Instance)
             .UseHandler(InvokeAsync);
     }
 
@@ -34,6 +35,8 @@ public sealed class VariableGetPipeline : Pipeline
             .ResolveOrThrowAsync(variablePath, context.CancellationToken);
 
         context.Logger.PrintVariableResolved(variablePath, result.ToJsonString());
+
+        context.SetOutput(result);
     }
 }
 
