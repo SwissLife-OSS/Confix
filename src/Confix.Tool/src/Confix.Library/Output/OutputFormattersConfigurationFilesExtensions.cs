@@ -11,6 +11,7 @@ public static class OutputFormattersConfigurationFilesExtensions
         builder.AddOutputFormatter<ConfigurationFeatureOutputFormatter>();
         builder.AddOutputFormatter<ConfigurationFileOutputFormatter>();
         builder.AddOutputFormatter<ReportListOutputFormatter>();
+        builder.AddOutputFormatter<JsonNodeOutputFormatter>();
         return builder;
     }
 }
