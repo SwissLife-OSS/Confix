@@ -165,7 +165,7 @@ file static class Extensions
         {
             throw new ExitException(
                 $"The schema for the project '{project.Name}' could not be found. " +
-                $"Call 'confix reload' to generate the schema.");
+                $"Call 'confix restore' to generate the schema.");
         }
 
         return schema;

@@ -125,7 +125,7 @@ public class ValidationMiddlewareTests : IDisposable
         // 
         var exitException = Assert.IsType<ExitException>(ex);
         Assert.Equal(
-            "The schema for the project '__Default' could not be found. Call 'confix reload' to generate the schema.",
+            "The schema for the project '__Default' could not be found. Call 'confix restore' to generate the schema.",
             exitException.Message);
     }
 
