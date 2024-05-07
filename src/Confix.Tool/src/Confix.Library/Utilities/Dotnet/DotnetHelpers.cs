@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -32,7 +34,7 @@ public static class DotnetHelpers
         return new ProcessExecutionResult(process.ExitCode == 0, output);
     }
 
-    public static FileInfo? GetAssemblyFileFromCsproj(FileInfo projectFile)
+    public static string GetAssemblyNameFromCsproj(FileInfo projectFile)
     {
         // Load the .csproj file as an XDocument
         var csprojDoc = XDocument.Load(projectFile.FullName, LoadOptions.PreserveWhitespace);
@@ -45,8 +47,7 @@ public static class DotnetHelpers
                 ?.Value ??
             Path.GetFileNameWithoutExtension(projectFile.FullName);
 
-        // Construct the path to where the assembly should be built
-        return GetAssemblyInPathByName(projectFile.Directory!, propertyGroup);
+        return propertyGroup;
     }
 
     public static async Task<string> EnsureUserSecretsIdAsync(
@@ -88,7 +89,7 @@ public static class DotnetHelpers
             propertyGroup.Add(new XElement(Xml.UserSecretsId, userSecretsId));
 
             App.Log.AddedUserSecretsIdToTheCsprojFile(userSecretsId);
-            
+
             await csprojDoc.PrettifyAndSaveAsync(csprojFile.FullName, ct);
         }
         else
@@ -100,7 +101,7 @@ public static class DotnetHelpers
     }
 
     public static async Task EnsureEmbeddedResourceAsync(
-        FileInfo csprojFile, 
+        FileInfo csprojFile,
         string path,
         CancellationToken ct)
     {
@@ -144,9 +145,7 @@ public static class DotnetHelpers
         }
     }
 
-    public static FileInfo? GetAssemblyInPathByName(
-        DirectoryInfo projectDirectory,
-        string assemblyName)
+    public static PathAssemblyResolver CreateAssemblyResolver(DirectoryInfo projectDirectory)
     {
         var binDirectory = Path.Join(projectDirectory.FullName, "bin");
         if (!Directory.Exists(binDirectory))
@@ -155,11 +154,14 @@ public static class DotnetHelpers
                 $"The directory '{binDirectory}' was not found. Make sure to build the project first.");
         }
 
-        var firstMatch = Directory
-            .EnumerateFiles(binDirectory, assemblyName + ".dll", SearchOption.AllDirectories)
-            .FirstOrDefault();
+        var appAssembly = Directory
+            .EnumerateFiles(binDirectory, "*.dll", SearchOption.AllDirectories)
+            .DistinctBy(Path.GetFileName);
 
-        return firstMatch is null ? null : new FileInfo(firstMatch);
+        var runtimeAssemblies = Directory
+            .GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll");
+
+        return new PathAssemblyResolver(appAssembly.Concat(runtimeAssemblies));
     }
 
     public static FileInfo? FindProjectFileInPath(DirectoryInfo directory)
@@ -177,7 +179,7 @@ public static class DotnetHelpers
         settings.Indent = true;
         settings.Async = true;
         settings.OmitXmlDeclaration = true;
-            
+
         var formattedCsproj = new StringBuilder();
         await using var writer = XmlWriter.Create(formattedCsproj, settings);
         await xDocument.WriteToAsync(writer, ct);

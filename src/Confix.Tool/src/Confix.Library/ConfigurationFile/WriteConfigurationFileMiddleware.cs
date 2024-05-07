@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares.Encryption;

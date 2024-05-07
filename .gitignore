@@ -485,3 +485,5 @@ $RECYCLE.BIN/
 #nextjs
 .next/
 out/
+
+.mono
