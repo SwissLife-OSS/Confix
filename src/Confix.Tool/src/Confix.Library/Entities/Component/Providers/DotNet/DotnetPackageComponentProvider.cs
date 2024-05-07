@@ -84,7 +84,11 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                 }
 
                 var isComponentRoot = assembly.IsComponentRoot();
-                if (!isComponentRoot)
+                if (isComponentRoot)
+                {
+                    logger.DetectedComponentRoot(assemblyName);
+                }
+                else
                 {
                     var referencedAssemblies = assembly
                         .GetReferencedAssemblies()
@@ -94,10 +98,6 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                         .ToArray();
 
                     referencedAssemblies.ForEach(x => assembliesToScan.Enqueue(x.Name!));
-                }
-                else if (assembly.IsComponentRoot())
-                {
-                    logger.DetectedComponentRoot(assemblyName);
                 }
 
                 foreach (var resourceName in assembly.GetManifestResourceNames())
