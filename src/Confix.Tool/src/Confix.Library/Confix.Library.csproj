@@ -35,6 +35,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Http" />
         <PackageReference Include="System.Reactive" />
+        <PackageReference Include="System.Reflection.MetadataLoadContext" />
     </ItemGroup>
 
     <ItemGroup>

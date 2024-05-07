@@ -40,22 +40,79 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
             throw new ExitException($"Failed to build project:\n{output}");
         }
 
-        var projectAssembly = DotnetHelpers.GetAssemblyFileFromCsproj(csproj);
-
-        if (projectAssembly is not { Exists: true })
-        {
-            context.Logger.ProjectNotFoundInDirectory(projectDirectory);
-            context.Logger.DotnetProjectWasNotDetected();
-            return;
-        }
-
-        var resources =
-            DiscoverResources(context.Logger, projectAssembly, projectDirectory);
-        var components = await LoadComponents(resources);
+        var projectAssembly = DotnetHelpers.GetAssemblyNameFromCsproj(csproj);
+        var components = await DiscoverResources(context.Logger, projectAssembly, projectDirectory);
         foreach (var component in components)
         {
             context.Components.Add(component);
         }
+    }
+
+    private static async Task<IReadOnlyList<Component>> DiscoverResources(
+        IConsoleLogger logger,
+        string rootAssemblyName,
+        DirectoryInfo directory)
+    {
+        var discoveredResources = new List<DiscoveredResource>();
+
+        logger.FoundAssembly(rootAssemblyName);
+
+        var assembliesToScan = new Queue<string>();
+        var processedAssemblies = new HashSet<string>();
+
+        assembliesToScan.Enqueue(rootAssemblyName);
+
+        var assemblyResolver = DotnetHelpers.CreateAssemblyResolver(directory);
+        using var metadataLoadContext = new MetadataLoadContext(assemblyResolver);
+
+        while (assembliesToScan.TryDequeue(out var assemblyName))
+        {
+            if (!processedAssemblies.Add(assemblyName))
+            {
+                continue;
+            }
+
+            logger.ScanningAssembly(assemblyName);
+
+            try
+            {
+                var assembly = metadataLoadContext.TryLoadAssembly(assemblyName);
+                if (assembly is null)
+                {
+                    logger.AssemblyFileNotFound(assemblyName);
+                    continue;
+                }
+
+                var isComponentRoot = assembly.IsComponentRoot();
+                if (!isComponentRoot)
+                {
+                    var referencedAssemblies = assembly
+                        .GetReferencedAssemblies()
+                        .Where(x => !string.IsNullOrWhiteSpace(x.Name) &&
+                            !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
+                            !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
+                        .ToArray();
+
+                    referencedAssemblies.ForEach(x => assembliesToScan.Enqueue(x.Name!));
+                }
+                else if (assembly.IsComponentRoot())
+                {
+                    logger.DetectedComponentRoot(assemblyName);
+                }
+
+                foreach (var resourceName in assembly.GetManifestResourceNames())
+                {
+                    logger.FoundManifestResourceInAssembly(resourceName, assemblyName);
+                    discoveredResources.Add(new DiscoveredResource(assembly, resourceName));
+                }
+            }
+            catch (BadImageFormatException ex)
+            {
+                logger.CouldNotLoadAssembly(assemblyName, ex);
+            }
+        }
+
+        return await LoadComponents(discoveredResources);
     }
 
     private static async Task<IReadOnlyList<Component>> LoadComponents(
@@ -142,65 +199,6 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
         }
     }
 
-    private static IReadOnlyList<DiscoveredResource> DiscoverResources(
-        IConsoleLogger logger,
-        FileSystemInfo assemblyFile,
-        DirectoryInfo directory)
-    {
-        var discoveredResources = new List<DiscoveredResource>();
-
-        logger.FoundAssembly(assemblyFile);
-
-        var assembliesToScan = new Queue<string>();
-        var processedAssemblies = new HashSet<string>();
-
-        assembliesToScan.Enqueue(assemblyFile.Name[..^assemblyFile.Extension.Length]);
-
-        while (assembliesToScan.TryDequeue(out var assemblyName))
-        {
-            if (!processedAssemblies.Add(assemblyName))
-            {
-                continue;
-            }
-
-            logger.ScanningAssembly(assemblyName);
-
-            var assemblyFilePath = DotnetHelpers
-                .GetAssemblyInPathByName(directory, assemblyName);
-
-            if (assemblyFilePath is not { Exists: true })
-            {
-                logger.AssemblyFileNotFound(assemblyName);
-                continue;
-            }
-
-            try
-            {
-                logger.FoundAssemblyFile(assemblyFilePath);
-                var assembly = Assembly.LoadFile(assemblyFilePath.FullName);
-
-                assembly
-                    .GetReferencedAssemblies()
-                    .Where(x => !string.IsNullOrWhiteSpace(x.Name) &&
-                        !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
-                        !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
-                    .ForEach(x => assembliesToScan.Enqueue(x.Name!));
-
-                foreach (var resourceName in assembly.GetManifestResourceNames())
-                {
-                    logger.FoundManifestResourceInAssembly(resourceName, assemblyName);
-                    discoveredResources.Add(new DiscoveredResource(assembly, resourceName));
-                }
-            }
-            catch (BadImageFormatException ex)
-            {
-                logger.CouldNotLoadAssembly(assemblyFile, ex);
-            }
-        }
-
-        return discoveredResources;
-    }
-
     private record DiscoveredResource(Assembly Assembly, string ResourceName)
     {
         public Stream GetStream() => Assembly.GetManifestResourceStream(ResourceName) ??
@@ -211,6 +209,45 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
 
 file static class Extensions
 {
+    public static Assembly? TryLoadAssembly(this MetadataLoadContext context, string assemblyName)
+    {
+        try
+        {
+            return context
+                    .GetAssemblies()
+                    .FirstOrDefault(x => x.FullName == assemblyName) ??
+                context.LoadFromAssemblyName(assemblyName);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public static bool IsComponentRoot(this Assembly assembly)
+    {
+        return assembly
+            .GetCustomAttributesData()
+            .Any(x =>
+            {
+                try
+                {
+                    // even though both are assembly metadata attributes, they are not of the equal
+                    // type, so we need to compare the full name
+                    return x.AttributeType.FullName ==
+                        typeof(AssemblyMetadataAttribute).FullName &&
+                        x.ConstructorArguments is
+                        [
+                            { Value: "IsConfixComponentRoot" }, { Value: "true" }
+                        ];
+                }
+                catch
+                {
+                    return false;
+                }
+            });
+    }
+
     public static void EnsureSolution(this IComponentProviderContext context)
     {
         if (context.Solution.Directory is not { Exists: true })
@@ -237,9 +274,14 @@ file static class Log
         logger.Debug($"Start loading components from project '{name}'");
     }
 
-    public static void FoundAssembly(this IConsoleLogger logger, FileSystemInfo assembly)
+    public static void AssemblyFileNotFound(this IConsoleLogger logger, string assembly)
     {
-        logger.Debug($"Found assembly: {assembly.Name}");
+        logger.Debug($"Assembly file not found for assembly: {assembly}");
+    }
+
+    public static void FoundAssembly(this IConsoleLogger logger, string assemblyName)
+    {
+        logger.Debug($"Found assembly: {assemblyName}");
     }
 
     public static void ScanningAssembly(this IConsoleLogger logger, string assembly)
@@ -247,22 +289,12 @@ file static class Log
         logger.Debug($"Scanning assembly: {assembly}");
     }
 
-    public static void FoundAssemblyFile(this IConsoleLogger logger, FileSystemInfo assembly)
-    {
-        logger.Debug($"Found assembly file: {assembly.FullName}");
-    }
-
     public static void CouldNotLoadAssembly(
         this IConsoleLogger logger,
-        FileSystemInfo assembly,
+        string assembly,
         Exception ex)
     {
-        logger.Debug($"Could not load assembly: {assembly.FullName}. {ex.Message}");
-    }
-
-    public static void AssemblyFileNotFound(this IConsoleLogger logger, string assembly)
-    {
-        logger.Debug($"Assembly file not found for assembly: {assembly}");
+        logger.Debug($"Could not load assembly: {assembly}. {ex.Message}");
     }
 
     public static void FoundDotnetProject(this IConsoleLogger logger, FileSystemInfo csproj)
@@ -297,5 +329,13 @@ file static class Log
     {
         logger.Debug(
             $"Parsing component from resource '{resourceName}' in assembly '{assembly.FullName}'");
+    }
+
+    public static void DetectedComponentRoot(
+        this IConsoleLogger logger,
+        string assembly)
+    {
+        logger.Inform(
+            $"Detected component root in assembly '{assembly}'. Skipping scanning referenced assemblies.");
     }
 }
