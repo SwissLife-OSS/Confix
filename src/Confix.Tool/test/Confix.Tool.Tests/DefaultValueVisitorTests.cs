@@ -631,7 +631,7 @@ public class DefaultValueVisitorTests
               },
               "wrongType": null,
               "required": null,
-              "array": null
+              "array": []
             }
             """);
     }
