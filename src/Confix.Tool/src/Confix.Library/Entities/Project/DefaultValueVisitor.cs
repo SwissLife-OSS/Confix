@@ -68,16 +68,17 @@ public sealed class DefaultValueVisitor : JsonDocumentRewriter<DefaultValueVisit
             }
 
             // when the field is null and we have a required field, initialize it
-            if (obj.ContainsKey(field) && obj[field] is null)
+            if (obj.ContainsKey(field) &&
+                obj[field] is null &&
+                requiredProperties?.Contains(field) is true)
             {
-                var hasSchemaOrDefaults = possiblePropertySchemas
-                    .Where(x => x.GetRequired() is { Count: > 0 })
-                    .SingleOrNone() is not null;
-
-                if (hasSchemaOrDefaults)
-                {
-                    obj[field] = new JsonObject();
-                }
+                obj[field] = propertySchema.IsArray()
+                    ? new JsonArray()
+                    : possiblePropertySchemas
+                        .Where(x => x.GetRequired() is { Count: > 0 })
+                        .SingleOrNone() is not null
+                        ? new JsonObject()
+                        : null;
             }
 
             if (obj[field] is { } elm)

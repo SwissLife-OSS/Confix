@@ -38,7 +38,7 @@ public sealed class InitProjectMiddleware : IMiddleware
 
         // restart the pipeline after the project is created. This way we guarantee that the
         // context is fresh. We could also just reload the configuration, but this is more
-        // future proof.
+        // future-proof.
         var pipeline = new ProjectInitPipeline();
         var projectContext = context
             .WithFeatureCollection()

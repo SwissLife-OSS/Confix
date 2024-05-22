@@ -14,9 +14,8 @@
 ✓ Component inputs loaded
   Start loading components from project '.'
   Found .NET project:'<</tmp>>/content/Confix.csproj' <</tmp>>/content/Confix.csproj
-  Found assembly: Confix.dll
+  Found assembly: Confix
   Scanning assembly: Confix
-  Found assembly file: <</tmp>>/content/bin/Debug/net8.0/Confix.dll
   Start loading components from project '.'
 ✓ Loaded 0 components
   No components found
