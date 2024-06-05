@@ -7,6 +7,7 @@ using Confix.Tool.Commands.Temp;
 using Confix.Tool.Schema;
 using Json.Schema;
 using Spectre.Console;
+using Exception = System.Exception;
 
 namespace Confix.Tool.Entities.Components.DotNet;
 
@@ -93,9 +94,9 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                     var referencedAssemblies = assembly
                         .GetReferencedAssemblies()
                         .Where(x => !string.IsNullOrWhiteSpace(x.Name) &&
-                            !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
-                            !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture) &&
-                            !x.Name.StartsWith("mscorlib", StringComparison.InvariantCulture))
+                                    !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
+                                    !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture) &&
+                                    !x.Name.StartsWith("mscorlib", StringComparison.InvariantCulture))
                         .ToArray();
 
                     referencedAssemblies.ForEach(x => assembliesToScan.Enqueue(x.Name!));
@@ -107,7 +108,7 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                     discoveredResources.Add(new DiscoveredResource(assembly, resourceName));
                 }
             }
-            catch (BadImageFormatException ex)
+            catch (Exception ex)
             {
                 logger.CouldNotLoadAssembly(assemblyName, ex);
             }
