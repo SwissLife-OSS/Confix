@@ -93,9 +93,9 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                     var referencedAssemblies = assembly
                         .GetReferencedAssemblies()
                         .Where(x => !string.IsNullOrWhiteSpace(x.Name) &&
-                                    !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
-                                    !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture) &&
-                                    !x.Name.StartsWith("mscorlib", StringComparison.InvariantCulture))
+                            !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
+                            !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture) &&
+                            !x.Name.StartsWith("mscorlib", StringComparison.InvariantCulture))
                         .ToArray();
 
                     referencedAssemblies.ForEach(x => assembliesToScan.Enqueue(x.Name!));
@@ -203,8 +203,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
     private record DiscoveredResource(Assembly Assembly, string ResourceName)
     {
         public Stream GetStream() => Assembly.GetManifestResourceStream(ResourceName) ??
-                                     throw new ExitException(
-                                         $"Could not find resource: {ResourceName}");
+            throw new ExitException(
+                $"Could not find resource: {ResourceName}");
     }
 }
 
@@ -215,9 +215,9 @@ file static class Extensions
         try
         {
             return context
-                       .GetAssemblies()
-                       .FirstOrDefault(x => x.FullName == assemblyName) ??
-                   context.LoadFromAssemblyName(assemblyName);
+                    .GetAssemblies()
+                    .FirstOrDefault(x => x.FullName == assemblyName) ??
+                context.LoadFromAssemblyName(assemblyName);
         }
         catch
         {
@@ -236,11 +236,11 @@ file static class Extensions
                     // even though both are assembly metadata attributes, they are not of the equal
                     // type, so we need to compare the full name
                     return x.AttributeType.FullName ==
-                           typeof(AssemblyMetadataAttribute).FullName &&
-                           x.ConstructorArguments is
-                           [
-                               { Value: "IsConfixComponentRoot" }, { Value: "true" }
-                           ];
+                        typeof(AssemblyMetadataAttribute).FullName &&
+                        x.ConstructorArguments is
+                        [
+                            { Value: "IsConfixComponentRoot" }, { Value: "true" }
+                        ];
                 }
                 catch
                 {
