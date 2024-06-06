@@ -161,7 +161,11 @@ public static class DotnetHelpers
         var runtimeAssemblies = Directory
             .GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll");
 
-        return new PathAssemblyResolver(appAssembly.Concat(runtimeAssemblies));
+        return new PathAssemblyResolver(
+            appAssembly.Concat(runtimeAssemblies)
+            .GroupBy(Path.GetFileName)
+            .Select(p=>p.First())
+            .ToArray());
     }
 
     public static FileInfo? FindProjectFileInPath(DirectoryInfo directory)
