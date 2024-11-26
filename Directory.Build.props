@@ -6,7 +6,7 @@
     <Import Condition="Exists($(PropsAbove))" Project="$(PropsAbove)"/>
 
     <PropertyGroup>
-        <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <RootNamespace>Confix</RootNamespace>
         <Nullable>enable</Nullable>
         <LangVersion>11</LangVersion>
