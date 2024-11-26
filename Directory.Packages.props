@@ -9,9 +9,9 @@
     <PackageVersion Include="HotChocolate" Version="13.1.0" />
     <PackageVersion Include="JsonPointer.Net" Version="3.0.3" />
     <PackageVersion Include="JsonSchema.Net" Version="4.1.1" />
-    <PackageVersion Include="Nuke.Build" Version="9.0.1" />
-    <PackageVersion Include="Nuke.Tooling.Generator" Version="9.0.1" />
-    <PackageVersion Include="Nuke.Common" Version="9.0.1" />
+    <PackageVersion Include="Nuke.Build" Version="8.1.4" />
+    <PackageVersion Include="Nuke.Tooling.Generator" Version="8.1.4" />
+    <PackageVersion Include="Nuke.Common" Version="8.1.4" />
     <PackageVersion Include="Spectre.Console" Version="0.46.0" />
     <PackageVersion Include="Spectre.Console.Json" Version="0.46.0" />
     <PackageVersion Include="Spectre.Console.Testing" Version="0.47.0" />
