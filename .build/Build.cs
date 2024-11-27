@@ -4,7 +4,6 @@ using System.Text.Json;
 using Confix.Tool;
 using Nuke.Common;
 using Nuke.Common.IO;
-using Nuke.Common.Utilities.Collections;
 using static Nuke.CodeGeneration.CodeGenerator;
 
 public class Build : NukeBuild

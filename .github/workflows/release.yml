@@ -12,15 +12,15 @@ jobs:
         working-directory: ./src/Confix.Tool
     env:
       VERSION: ${{ github.event.release.tag_name }}
-      NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
+      NUGET_TOKEN: ${{ secrets.NUGET_API_KEY }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: |
-            7.0.x
             8.0.x
+            9.0.x
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
