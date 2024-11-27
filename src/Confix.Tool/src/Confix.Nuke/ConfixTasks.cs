@@ -2,6 +2,7 @@ using Nuke.Common.Tooling;
 
 namespace Confix.Nuke;
 
+[NuGetTool(Id = "Confix", Executable = "Confix.dll")]
 public partial class ConfixTasks
 {
     public static void CustomLogger(OutputType outputType, string message)
