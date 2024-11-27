@@ -2,9 +2,12 @@ using Nuke.Common.Tooling;
 
 namespace Confix.Nuke;
 
-[NuGetTool(Id = "Confix", Executable = "Confix.dll")]
+[NuGetTool(Id = PackageId, Executable = Executable)]
 public partial class ConfixTasks
 {
+    public const string PackageId = "Confix";
+    public const string Executable = "Confix.dll";
+
     public static void CustomLogger(OutputType outputType, string message)
     {
         if (!string.IsNullOrWhiteSpace(message))
@@ -16,8 +19,8 @@ public partial class ConfixTasks
     internal string GetToolPath(string? framework = null)
     {
         return NuGetToolPathResolver.GetPackageExecutable(
-            packageId: "Confix",
-            packageExecutable: "Confix.dll",
+            packageId: PackageId,
+            packageExecutable: Executable,
             framework: framework);
     }
 }
