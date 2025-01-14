@@ -57,7 +57,7 @@ confix validate --environment=dev
 
 To build a configuration in a CI/CD pipeline you can use the `confix build` command.
 This will replace all the placeholders in your configuration files with the values from the variables.
-In case you want to build more than one enviromnet file, you can use the `--output-file` parameter to specify the output file to avoid overriding each other.
+In case you want to build more than one environment file, you can use the `--output-file` parameter to specify the output file to avoid overriding each other.
 
 ```bash
 confix build --environment=dev --output-file ./appsettings_dev.json
