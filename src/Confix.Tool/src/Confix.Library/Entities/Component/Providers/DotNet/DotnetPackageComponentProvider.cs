@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
+using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
 using Json.Schema;
 using Spectre.Console;
@@ -34,7 +35,11 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
 
         context.Logger.FoundDotnetProject(csproj);
 
-        var buildResult = await DotnetHelpers.BuildProjectAsync(csproj, context.CancellationToken);
+        var buildResult = await DotnetHelpers.BuildProjectAsync(
+            csproj,
+            GetConfiguration(context),
+            context.CancellationToken);
+
         if (!buildResult.Succeeded)
         {
             var output = buildResult.Output.EscapeMarkup();
@@ -42,11 +47,22 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
         }
 
         var projectAssembly = DotnetHelpers.GetAssemblyNameFromCsproj(csproj);
-        var components = await DiscoverResources(context.Logger, projectAssembly, projectDirectory);
+        var components = await DiscoverResources(
+            context.Logger,
+            projectAssembly,
+            projectDirectory);
+
         foreach (var component in components)
         {
             context.Components.Add(component);
         }
+    }
+
+    private string GetConfiguration(IComponentProviderContext context)
+    {
+        context.Parameter.TryGet(ConfigurationOption.Instance, out string configuration);
+
+        return configuration;
     }
 
     private static async Task<IReadOnlyList<Component>> DiscoverResources(

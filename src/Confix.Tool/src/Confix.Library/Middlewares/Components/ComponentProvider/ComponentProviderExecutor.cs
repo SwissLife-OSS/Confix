@@ -10,10 +10,14 @@ public sealed class ComponentProviderExecutor
     : IComponentProviderExecutor, IAsyncDisposable
 {
     private readonly IReadOnlyList<IComponentProvider> _providers;
+    private readonly IParameterCollection _parameters;
 
-    public ComponentProviderExecutor(IReadOnlyList<IComponentProvider> providers)
+    public ComponentProviderExecutor(
+        IReadOnlyList<IComponentProvider> providers,
+        IParameterCollection parameters)
     {
         _providers = providers;
+        _parameters = parameters;
     }
 
     public async Task ExecuteAsync(IComponentProviderContext context)
@@ -42,6 +46,7 @@ public sealed class ComponentProviderExecutor
             cancellationToken,
             project,
             solution,
+            _parameters,
             project.Components);
 
         await ExecuteAsync(providerContext);
@@ -55,7 +60,8 @@ public sealed class ComponentProviderExecutor
 
     public static IComponentProviderExecutor FromDefinitions(
         IComponentProviderFactory componentProviders,
-        IEnumerable<ComponentProviderDefinition> configurations)
+        IEnumerable<ComponentProviderDefinition> configurations,
+        IParameterCollection parameters)
     {
         var providers = new List<IComponentProvider>();
 
@@ -68,7 +74,8 @@ public sealed class ComponentProviderExecutor
         providers.Add(new LocalComponentProvider());
         providers.Add(new MergeComponentProvider());
 
-        return new ComponentProviderExecutor(providers);
+
+        return new ComponentProviderExecutor(providers, parameters);
     }
 
     /// <inheritdoc />

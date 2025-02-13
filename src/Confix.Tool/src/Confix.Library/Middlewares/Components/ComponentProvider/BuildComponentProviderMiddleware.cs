@@ -22,7 +22,10 @@ public sealed class BuildComponentProviderMiddleware : IMiddleware
         var definitions = configuration.Project?.ComponentProviders ??
             Array.Empty<ComponentProviderDefinition>();
 
-        var executor = ComponentProviderExecutor.FromDefinitions(_factory, definitions);
+        var executor = ComponentProviderExecutor.FromDefinitions(
+            _factory,
+            definitions,
+            context.Parameter);
 
         context.Features.Set(new ComponentProviderExecutorFeature(executor));
 
