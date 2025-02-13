@@ -515,6 +515,12 @@
       "settingsClass": {
         "properties": [
           {
+            "name": "Configuration",
+            "type": "string",
+            "format": "--configuration {value}",
+            "help": "The name of the configuration that would be passed to dotnet build command. Default is Debug."
+          },
+          {
             "name": "Environment",
             "type": "string",
             "format": "--environment {value}",
