@@ -44,7 +44,7 @@ One challenge is that we have only one `variables.json` file, but we need separa
 This is a common issue for all variable providers.
 For example, if using the `azure-keyvault` provider, you'd likely want different keyvaults for each environment.
 
-Confix configuration has a concept of `environmentOverride` to allow for settings to changes in each environment.
+Confix configuration has a concept of `environmentOverride` to allow for settings to change in each environment.
 In this scenario, we can set up `dev` and `prod` overrides for the `example` variable provider, specifically changing the `path` property.
 
 ```json filename=".confixrc" copy /environmentOverride/
