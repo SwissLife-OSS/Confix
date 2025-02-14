@@ -12,7 +12,7 @@ public sealed class RestoreCommandPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddOption(ConfigurationOption.Instance)
+            .AddOption(DotnetConfigurationOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .UseHandler(InvokeAsync);

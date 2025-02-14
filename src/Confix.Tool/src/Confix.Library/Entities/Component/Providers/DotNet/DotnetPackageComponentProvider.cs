@@ -60,10 +60,10 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
 
     private string GetConfiguration(IComponentProviderContext context)
     {
-        context.Parameter.TryGet(ConfigurationOption.Instance, out string? configuration);
+        context.Parameter.TryGet(DotnetConfigurationOptions.Instance, out string? configuration);
 
         return string.IsNullOrEmpty(configuration)
-            ? ConfigurationOption.Default
+            ? DotnetConfigurationOptions.Default
             : configuration;
     }
 
