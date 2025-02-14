@@ -188,13 +188,13 @@ public partial class ConfixTasks : ToolTasks
     /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
     public static IEnumerable<(ConfixBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixBuild(CombinatorialConfigure<ConfixBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixBuild, degreeOfParallelism, completeOnFailure);
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixRestore(ConfixRestoreSettings options = null) => new ConfixTasks().Run(options);
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixRestore(Configure<ConfixRestoreSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixRestoreSettings()));
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
     public static IEnumerable<(ConfixRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixRestore(CombinatorialConfigure<ConfixRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixRestore, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Validates the schema of all the projects</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
     /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li></ul></remarks>
@@ -570,6 +570,8 @@ public partial class ConfixBuildSettings : ToolOptions
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixRestore), Arguments = "restore")]
 public partial class ConfixRestoreSettings : ToolOptions
 {
+    /// <summary>The configuration passed to dotnet commands. Defaults to 'Debug'.</summary>
+    [Argument(Format = "--dotnet-configuration {value}")] public string DotnetConfiguration => Get<string>(() => DotnetConfiguration);
     /// <summary>The name of the environment to run the command in. Overrules the active environment set in .confixrc</summary>
     [Argument(Format = "--environment {value}")] public string Environment => Get<string>(() => Environment);
     /// <summary>Sets the verbosity level</summary>
@@ -1428,6 +1430,14 @@ public static partial class ConfixBuildSettingsExtensions
 [ExcludeFromCodeCoverage]
 public static partial class ConfixRestoreSettingsExtensions
 {
+    #region DotnetConfiguration
+    /// <inheritdoc cref="ConfixRestoreSettings.DotnetConfiguration"/>
+    [Pure] [Builder(Type = typeof(ConfixRestoreSettings), Property = nameof(ConfixRestoreSettings.DotnetConfiguration))]
+    public static T SetDotnetConfiguration<T>(this T o, string v) where T : ConfixRestoreSettings => o.Modify(b => b.Set(() => o.DotnetConfiguration, v));
+    /// <inheritdoc cref="ConfixRestoreSettings.DotnetConfiguration"/>
+    [Pure] [Builder(Type = typeof(ConfixRestoreSettings), Property = nameof(ConfixRestoreSettings.DotnetConfiguration))]
+    public static T ResetDotnetConfiguration<T>(this T o) where T : ConfixRestoreSettings => o.Modify(b => b.Remove(() => o.DotnetConfiguration));
+    #endregion
     #region Environment
     /// <inheritdoc cref="ConfixRestoreSettings.Environment"/>
     [Pure] [Builder(Type = typeof(ConfixRestoreSettings), Property = nameof(ConfixRestoreSettings.Environment))]

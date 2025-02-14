@@ -21,4 +21,6 @@ public interface IComponentProviderContext
     IList<Component> Components { get; }
 
     IReadOnlyList<ComponentReferenceDefinition> ComponentReferences { get; }
+
+    IParameterCollection Parameter { get; }
 }

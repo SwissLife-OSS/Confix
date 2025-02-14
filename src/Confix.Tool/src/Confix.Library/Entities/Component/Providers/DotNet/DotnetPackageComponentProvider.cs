@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
+using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
 using Json.Schema;
 using Spectre.Console;
@@ -34,7 +35,11 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
 
         context.Logger.FoundDotnetProject(csproj);
 
-        var buildResult = await DotnetHelpers.BuildProjectAsync(csproj, context.CancellationToken);
+        var buildResult = await DotnetHelpers.BuildProjectAsync(
+            csproj,
+            GetConfiguration(context),
+            context.CancellationToken);
+
         if (!buildResult.Succeeded)
         {
             var output = buildResult.Output.EscapeMarkup();
@@ -42,11 +47,24 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
         }
 
         var projectAssembly = DotnetHelpers.GetAssemblyNameFromCsproj(csproj);
-        var components = await DiscoverResources(context.Logger, projectAssembly, projectDirectory);
+        var components = await DiscoverResources(
+            context.Logger,
+            projectAssembly,
+            projectDirectory);
+
         foreach (var component in components)
         {
             context.Components.Add(component);
         }
+    }
+
+    private string GetConfiguration(IComponentProviderContext context)
+    {
+        context.Parameter.TryGet(DotnetConfigurationOptions.Instance, out string? configuration);
+
+        return string.IsNullOrEmpty(configuration)
+            ? DotnetConfigurationOptions.Default
+            : configuration;
     }
 
     private static async Task<IReadOnlyList<Component>> DiscoverResources(
@@ -94,8 +112,10 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
                     var referencedAssemblies = assembly
                         .GetReferencedAssemblies()
                         .Where(x => !string.IsNullOrWhiteSpace(x.Name) &&
-                                    !x.Name.StartsWith("System", StringComparison.InvariantCulture) &&
-                                    !x.Name.StartsWith("Microsoft", StringComparison.InvariantCulture))
+                                    !x.Name.StartsWith("System",
+                                        StringComparison.InvariantCulture) &&
+                                    !x.Name.StartsWith("Microsoft",
+                                        StringComparison.InvariantCulture))
                         .ToArray();
 
                     referencedAssemblies.ForEach(x => assembliesToScan.Enqueue(x.Name!));
@@ -203,8 +223,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
     private record DiscoveredResource(Assembly Assembly, string ResourceName)
     {
         public Stream GetStream() => Assembly.GetManifestResourceStream(ResourceName) ??
-            throw new ExitException(
-                $"Could not find resource: {ResourceName}");
+                                     throw new ExitException(
+                                         $"Could not find resource: {ResourceName}");
     }
 }
 
@@ -215,9 +235,9 @@ file static class Extensions
         try
         {
             return context
-                    .GetAssemblies()
-                    .FirstOrDefault(x => x.FullName == assemblyName) ??
-                context.LoadFromAssemblyName(assemblyName);
+                       .GetAssemblies()
+                       .FirstOrDefault(x => x.FullName == assemblyName) ??
+                   context.LoadFromAssemblyName(assemblyName);
         }
         catch
         {
@@ -236,11 +256,11 @@ file static class Extensions
                     // even though both are assembly metadata attributes, they are not of the equal
                     // type, so we need to compare the full name
                     return x.AttributeType.FullName ==
-                        typeof(AssemblyMetadataAttribute).FullName &&
-                        x.ConstructorArguments is
-                        [
-                            { Value: "IsConfixComponentRoot" }, { Value: "true" }
-                        ];
+                           typeof(AssemblyMetadataAttribute).FullName &&
+                           x.ConstructorArguments is
+                           [
+                               { Value: "IsConfixComponentRoot" }, { Value: "true" }
+                           ];
                 }
                 catch
                 {
