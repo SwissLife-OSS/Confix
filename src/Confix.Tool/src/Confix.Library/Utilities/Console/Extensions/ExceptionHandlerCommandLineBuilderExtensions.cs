@@ -55,6 +55,7 @@ file static class LogExtensions
             case ExitException exitException:
                 logger.ExitException(exitException);
                 console.PrintHelp(exitException);
+                console.PrintDetails(exitException);
                 break;
 
             case ValidationException validationException:
@@ -88,7 +89,19 @@ file static class LogExtensions
             console.Write(panel);
         }
     }
-
+    
+    public static void PrintDetails(this IAnsiConsole console, ExitException exception)
+    {
+        if (exception.Details is not null)
+        {
+            var panel = new Panel(exception.Details)
+            {
+                Header = new PanelHeader($"{Emoji.Known.Detective} Details", Justify.Left),
+            };
+            console.Write(panel);
+        }
+    }
+    
     public static void ValidationException(
         this IConsoleLogger logger,
         ValidationException exception)

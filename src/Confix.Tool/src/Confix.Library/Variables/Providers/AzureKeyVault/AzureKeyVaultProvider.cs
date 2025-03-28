@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Confix.Tool.Commands.Logging;
 using Confix.Utilities.Azure;
 using Json.Schema;
 
@@ -36,6 +37,8 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
         => KeyVaultExtension.HandleKeyVaultException<IReadOnlyList<string>>(async () =>
         {
+            App.Log.ListSecrets(_client.VaultUri);
+            
             var secrets = new List<string>();
             await foreach (var secret in _client.GetPropertiesOfSecretsAsync(cancellationToken))
             {
@@ -82,4 +85,12 @@ file static class Extensions
     public static string ToConfixPath(this string path) => path.Replace('-', '.');
 
     public static string ToKeyVaultCompatiblePath(this string path) => path.Replace('.', '-');
+}
+
+file static class LogExtensions
+{
+    public static void ListSecrets(this IConsoleLogger log, Uri vaultUri)
+    {
+        log.Information($"List all secrets from Azure Kev Vault '{vaultUri}'");
+    }
 }
