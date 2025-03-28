@@ -19,6 +19,10 @@ public static class KeyVaultExtension
         }
         catch (RequestFailedException ex)
         {
+            Console.Error.WriteLine(
+                $"Error: {ex.Message} (Status code: {ex.Status}, Error code: {ex.ErrorCode})");
+            Console.WriteLine(ex);
+            
             throw ThrowHelper.AccessToKeyVaultFailed(ex);
         }
         catch (AuthenticationFailedException ex)
