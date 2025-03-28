@@ -2,7 +2,6 @@ using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
 using Confix.Tool.Commands.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
 namespace Confix.Tool;
@@ -94,11 +93,7 @@ file static class LogExtensions
     {
         if (exception.Details is not null)
         {
-            var panel = new Panel(exception.Details)
-            {
-                Header = new PanelHeader($"{Emoji.Known.Detective} Details", Justify.Left),
-            };
-            console.Write(panel);
+            console.MarkupLine($"[yellow]{exception.Details.EscapeMarkup()}[/]");
         }
     }
     
