@@ -2,7 +2,6 @@ using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
 using Confix.Tool.Commands.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Spectre.Console;
 
 namespace Confix.Tool;
@@ -55,6 +54,7 @@ file static class LogExtensions
             case ExitException exitException:
                 logger.ExitException(exitException);
                 console.PrintHelp(exitException);
+                console.PrintDetails(exitException);
                 break;
 
             case ValidationException validationException:
@@ -88,7 +88,15 @@ file static class LogExtensions
             console.Write(panel);
         }
     }
-
+    
+    public static void PrintDetails(this IAnsiConsole console, ExitException exception)
+    {
+        if (exception.Details is not null)
+        {
+            console.MarkupLine($"[yellow]{exception.Details.EscapeMarkup()}[/]");
+        }
+    }
+    
     public static void ValidationException(
         this IConsoleLogger logger,
         ValidationException exception)
