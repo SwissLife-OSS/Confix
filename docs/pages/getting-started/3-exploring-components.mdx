@@ -93,7 +93,7 @@ and give us autocompletion and validation.
 </FileTree>
 
 When we run the command `confix build` in the `Website` folder we now see that our component is
-loaded and that the configuration we have is applied.
+loaded and that the configuration we have created is applied.
 
 ```bash copy
 confix build
@@ -123,14 +123,14 @@ Output:
 ```
 
 When we open the `appsettings.json` file we see that the configuration was initialized and `Url` is
-set to `null`. The intelisense tells us that the `Url` cannot be empty and has to have a value.
+set to `null`. The intellisense tells us that the `Url` cannot be empty and has to have a value.
 
 ![VSCode](./assets/exploring-components-1.png)
 
 ## Using input providers
 
 Defining JSON schemas is a pain. It's a lot of work and it's easy to make mistakes. Confix has a
-features called `Component Inputs`. These allow you to process components and generate a schema
+feature called `Component Inputs`. These allow you to process components and generate a schema
 based on the result. We will use the `graphql` provider to generate a schema based on a GraphQL
 file.
 
@@ -251,11 +251,11 @@ You can ship the component together with the package and confix automatically re
 
 This has some advantages:
 
-- The component is versioned together with the source code. This means that you can evolve the shape of the configuration together with the component. If you decide to introduce a breaking change in the configuration, once you upgrade the package to theis version, confix will tell you that the configuration is invalid.
+- The component is versioned together with the source code. This means that you can evolve the shape of the configuration together with the component. If you decide to introduce a breaking change in the configuration, once you upgrade the package to this version, confix will tell you that the configuration is invalid.
 - There is no external component needed (like a git repository). You just reference the package and you are good to go.
 
 First, to make the components discoverable in .NET, we need a special "component input".
-This input will registry the component as a embedded resource in the package.
+This input will register the component as a embedded resource in the package.
 
 Secondly, we need to tell confix to look for components in the package. For this we use a "component provider".
 Component providers are responsible for loading components from different sources e.g. `git` or packages
@@ -299,7 +299,7 @@ Lets create a shared database component.
 <Steps>
 ### Creating the package
 
-Naviagate to the /src folder and execute the following command:
+Navigate to the /src folder and execute the following command:
 
 ```bash copy
 cd src
@@ -308,9 +308,9 @@ cd Database
 dotnet add package Microsoft.Extensions.DependencyInjection
 ```
 
-### Add a extension method
+### Add an extension method
 
-Add a extension method to the class library that registers the component.
+Add an extension method to the class library that registers the component.
 
 ```csharp filename="src/Database/DatabaseServiceCollectionExtensions.cs" copy
 using Microsoft.Extensions.DependencyInjection;
