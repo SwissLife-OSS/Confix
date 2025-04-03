@@ -13,12 +13,13 @@ public static class DotnetHelpers
 {
     public static async Task<ProcessExecutionResult> BuildProjectAsync(
         FileInfo path,
+        string configuration,
         CancellationToken cancellationToken)
     {
         var startInfo = new ProcessStartInfo
         {
             FileName = "dotnet", // The dotnet CLI
-            Arguments = $"build {path}", // The command to build your project
+            Arguments = $"build {path} --configuration {configuration}", // The command to build your project
             RedirectStandardOutput = true, // Redirect output so we can read it
             UseShellExecute = false // Don't use the shell to execute the command
         };

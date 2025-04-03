@@ -13,4 +13,5 @@ internal sealed class ExitException : Exception
     }
 
     public string? Help { get; init; }
+    public string? Details { get; init; }
 }

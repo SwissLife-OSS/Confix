@@ -101,6 +101,7 @@ public sealed class AddComponentPipeline : Pipeline
                 ct,
                 project,
                 solution,
+                context.Parameter,
                 new[] { reference });
 
         var executor = context.Features.Get<ComponentProviderExecutorFeature>().Executor;

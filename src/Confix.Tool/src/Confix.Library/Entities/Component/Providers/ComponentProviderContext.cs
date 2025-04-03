@@ -1,5 +1,6 @@
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
+using Confix.Tool.Common.Pipelines;
 
 namespace Confix.Tool.Entities.Components;
 
@@ -11,12 +12,14 @@ public class ComponentProviderContext
         CancellationToken cancellationToken,
         ProjectDefinition project,
         SolutionDefinition solution,
+        IParameterCollection parameter,
         IReadOnlyList<ComponentReferenceDefinition> componentReferences)
     {
         Logger = logger;
         CancellationToken = cancellationToken;
         Project = project;
         Solution = solution;
+        Parameter = parameter;
         ComponentReferences = componentReferences;
     }
 
@@ -36,4 +39,6 @@ public class ComponentProviderContext
 
     /// <inheritdoc />
     public IList<Component> Components { get; } = new List<Component>();
+
+    public IParameterCollection Parameter { get; }
 }

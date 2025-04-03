@@ -1,3 +1,5 @@
+using System.Text;
+using Azure;
 using Confix.Tool.Commands.Logging;
 
 namespace Confix.Tool;
@@ -42,15 +44,22 @@ public static class ThrowHelper
     public static Exception SecretNotFound(Exception innerException) =>
         new ExitException("Secret does not exist in this provider.", innerException)
         {
-            Help =
-                $"try running {"confix variable list".AsHighlighted()} to list all available variables"
+            Help = $"try running {"confix variable list".AsHighlighted()} to list all available variables"
         };
 
-    public static Exception AccessToKeyVaultFailed(Exception innerException) =>
-        new ExitException("Access to Key Vault failed", innerException)
+    public static Exception AccessToKeyVaultFailed(RequestFailedException innerException)
+    {
+        var details = new StringBuilder();
+        details.AppendLine($"Message: {innerException.Message}");
+        details.AppendLine($"Error code: {innerException.ErrorCode}");
+        details.AppendLine($"Status code: {innerException.Status}");
+        
+        return new ExitException("Access to Key Vault failed", innerException)
         {
-            Help = "check if you have the required permissions to access the Key Vault"
+            Help = "check if you have the required permissions to access the Key Vault",
+            Details = details.ToString()
         };
+    }
 
     public static Exception AuthenticationFailedForVault(Exception innerException) =>
         new ExitException("Authentication for Key Vault failed", innerException)
