@@ -38,7 +38,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
         => KeyVaultExtension.HandleKeyVaultException<IReadOnlyList<string>>(async () =>
         {
             App.Log.ListSecrets(_client.VaultUri);
-            
+
             var secrets = new List<string>();
             await foreach (var secret in _client.GetPropertiesOfSecretsAsync(cancellationToken))
             {
@@ -54,7 +54,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
             KeyVaultSecret result = await _client.GetSecretAsync(path.ToKeyVaultCompatiblePath(),
                 cancellationToken: cancellationToken);
             return JsonValue.Create(result.Value)!;
-        });
+        }, path);
 
     public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
@@ -70,9 +70,9 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
             }
 
             KeyVaultSecret result = await _client
-                .SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string) value!, ct);
+                .SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, ct);
             return result.Name.ToConfixPath();
-        });
+        }, path);
 
     public ValueTask DisposeAsync()
     {

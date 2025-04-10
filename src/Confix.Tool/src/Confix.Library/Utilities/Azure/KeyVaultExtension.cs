@@ -1,13 +1,12 @@
 using Azure;
 using Azure.Identity;
 using Confix.Tool;
-using Confix.Tool.Commands.Logging;
 
 namespace Confix.Utilities.Azure;
 
 public static class KeyVaultExtension
 {
-    public static async Task<T> HandleKeyVaultException<T>(Func<Task<T>> action)
+    public static async Task<T> HandleKeyVaultException<T>(Func<Task<T>> action, string? path = null)
     {
         try
         {
@@ -15,7 +14,7 @@ public static class KeyVaultExtension
         }
         catch (RequestFailedException ex) when (ex.ErrorCode == "SecretNotFound")
         {
-            throw ThrowHelper.SecretNotFound(ex);
+            throw ThrowHelper.SecretNotFound(ex, path);
         }
         catch (RequestFailedException ex)
         {

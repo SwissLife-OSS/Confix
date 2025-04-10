@@ -41,8 +41,11 @@ public static class ThrowHelper
     public static Exception CouldNotParseJsonFile(FileInfo file)
         => throw new ExitException($"File {file.FullName} has invalid content.");
 
-    public static Exception SecretNotFound(Exception innerException) =>
-        new ExitException("Secret does not exist in this provider.", innerException)
+    public static Exception SecretNotFound(Exception innerException, string? path = null) =>
+        new ExitException(
+            path is null
+                ? "Secret does not exist in this provider."
+                : $"Secret {path.AsHighlighted()} does not exist in this provider.", innerException)
         {
             Help = $"try running {"confix variable list".AsHighlighted()} to list all available variables"
         };
@@ -53,7 +56,7 @@ public static class ThrowHelper
         details.AppendLine($"Message: {innerException.Message}");
         details.AppendLine($"Error code: {innerException.ErrorCode}");
         details.AppendLine($"Status code: {innerException.Status}");
-        
+
         return new ExitException("Access to Key Vault failed", innerException)
         {
             Help = "check if you have the required permissions to access the Key Vault",
