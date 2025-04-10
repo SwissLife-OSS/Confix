@@ -72,12 +72,12 @@ Explore more about variable providers in the [variable documentation](/variables
 For simplicity, we'll use the `local` variable provider to store our `ConnectionString` and `Url` values. This is obviously not a secure approach, but it's a good starting point to explain how the providers work.
 
 <Callout type="info">
-  In a real scenario you probably want to use something like the
+  In a real world scenario you probably want to use something like the
   [`azure-keyvault`](/variables/azure-keyvault) or the
   [`secret`](/variables/secrets) provider to secure your sensitive data.
 </Callout>
 
-As explained before, to discover variables we need to config `variableProviders`. We have to add this to the `.confixrc`:
+As explained before, to discover variables we need to configure `variableProviders`. We have to add this to the `.confixrc`:
 
 ```json filename=".confixrc" copy
 {
@@ -117,8 +117,8 @@ As explained before, to discover variables we need to config `variableProviders`
 
 ## Defining variables
 
-The variable provider `example` of the type `local` is configured to use the file `variables.json` in the project direcotries.
-Variables always start `${name}:` (in out case `$example:`) and then are followed by a path separated by `.`.
+The variable provider `example` of the type `local` is configured to use the file `variables.json` in the project directories.
+Variables always start with `${name}:` (in out case `$example:`) and then are followed by a path separated by `.`.
 
 Lets set the variable `$example:Website.Url`
 
@@ -206,7 +206,7 @@ confix variable list
   </Tab>
 </Tabs>
 
-When we do a `confix restore` the variables become available as intellisense the configuration file.
+When we do a `confix restore` the variables become available as intellisense in the configuration file.
 
 <Tabs items={["VSCode", "Command", "Output"]}>
   <Tab>
@@ -256,8 +256,8 @@ Up until now, we've only defined variables. Now we'll use them in our configurat
 }
 ```
 
-When we now run 'confix build' the variables are replaced with the values from the variable provider.
-As we use the `appsettings` configuration file, the variables are not replaced in the `appsettings.json` but stored in user secrets.
+When we now run 'confix build' the variables are being replaced with the values from the variable provider.
+Since we are using the `appsettings` configuration file, the variables are not replaced in the `appsettings.json` but stored in user secrets.
 
 <Tabs items={["appsettings.json", "usersecrets.json", "Command", "Output"]}>
   <Tab>
