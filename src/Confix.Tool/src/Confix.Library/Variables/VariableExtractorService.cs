@@ -1,7 +1,6 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Json.More;
-using Json.Pointer;
 using Json.Schema;
 
 namespace Confix.Variables;
@@ -18,7 +17,7 @@ public sealed class VariableExtractorService
 
     public async Task<IEnumerable<VariableInfo>> ExtractAsync(
         JsonNode? node,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         if (node is null)
         {
@@ -30,7 +29,7 @@ public sealed class VariableExtractorService
         App.Log.DetectedVariables(variables.Length);
 
         var resolved = await _variableResolver
-            .ResolveVariables(variables.Select(x => x.Path).ToArray(), cancellationToken);
+            .ResolveVariables(variables.Select(x => x.Path).ToArray(), context);
 
         var infos = new List<VariableInfo>();
 

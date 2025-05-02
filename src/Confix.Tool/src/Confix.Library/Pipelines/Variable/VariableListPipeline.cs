@@ -26,16 +26,20 @@ public sealed class VariableListPipeline : Pipeline
         IEnumerable<VariablePath> variables;
 
         context.Status.Message = "Fetching Variables...";
+        
+        var variableContext = new VariableProviderContext(
+            context.Parameter,
+            context.CancellationToken);
 
         if (context.Parameter
             .TryGet(VariableProviderNameOption.Instance, out string? variableProviderName))
         {
             variables =
-                await resolver.ListVariables(variableProviderName, context.CancellationToken);
+                await resolver.ListVariables(variableProviderName, variableContext);
         }
         else
         {
-            variables = await resolver.ListVariables(context.CancellationToken);
+            variables = await resolver.ListVariables(variableContext);
         }
 
         context.Logger.PrintVariables(variables);

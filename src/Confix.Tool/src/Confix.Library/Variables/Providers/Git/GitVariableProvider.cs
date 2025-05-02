@@ -1,5 +1,7 @@
 using System.Text.Json.Nodes;
 using Confix.Tool;
+using Confix.Tool.Common.Pipelines;
+using Confix.Tool.Entities.Components.Git;
 using Confix.Utilities;
 
 namespace Confix.Variables;
@@ -40,39 +42,41 @@ public sealed class GitVariableProvider : IVariableProvider
 
     public static string Type => "git";
 
-    public async Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<string>> ListAsync(IVariableProviderContext context)
     {
-        await EnsureClonedAsync(true, cancellationToken);
-        return await _localVariableProvider.ListAsync(cancellationToken);
+        await EnsureClonedAsync(true, context);
+        return await _localVariableProvider.ListAsync(context);
     }
 
-    public async Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
+    public async Task<JsonNode> ResolveAsync(string path, IVariableProviderContext context)
     {
-        await EnsureClonedAsync(true, cancellationToken);
-        return await _localVariableProvider.ResolveAsync(path, cancellationToken);
+        await EnsureClonedAsync(true, context);
+        return await _localVariableProvider.ResolveAsync(path, context);
     }
 
     public async Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
-        await EnsureClonedAsync(true, cancellationToken);
-        return await _localVariableProvider.ResolveManyAsync(paths, cancellationToken);
+        await EnsureClonedAsync(true, context);
+        return await _localVariableProvider.ResolveManyAsync(paths, context);
     }
 
     public async Task<string> SetAsync(
         string path,
         JsonNode value,
-        CancellationToken ct)
+        IVariableProviderContext context)
     {
-        await EnsureClonedAsync(true, ct);
-        var result = await _localVariableProvider.SetAsync(path, value, ct);
+        await EnsureClonedAsync(true, context);
+        var result = await _localVariableProvider.SetAsync(path, value, context);
+
+        var ct = context.CancellationToken;
 
         await _git.AddAsync(new GitAddConfiguration(_cloneDirectory, _definition.Arguments), ct);
 
         var commitMessage = $"Update {path} in {_definition.FilePath}";
         await _git.CommitAsync(
-            new GitCommitConfiguration(_cloneDirectory, commitMessage, _definition.Arguments),
+            new GitCommitConfiguration(_cloneDirectory, commitMessage, _definition.Arguments), 
             ct);
 
         await _git.PushAsync(new GitPushConfiguration(_cloneDirectory, _definition.Arguments), ct);
@@ -108,8 +112,9 @@ public sealed class GitVariableProvider : IVariableProvider
         File.Delete(file);
     }
 
-    private async Task EnsureClonedAsync(bool forcePull, CancellationToken ct)
+    private async Task EnsureClonedAsync(bool forcePull, IVariableProviderContext context)
     {
+        var ct = context.CancellationToken;
         if (Directory.Exists(_cloneDirectory))
         {
             if (!forcePull)
@@ -121,8 +126,10 @@ public sealed class GitVariableProvider : IVariableProvider
         }
         else
         {
+            var gitUrl = GitUrl.Create(_definition.RepositoryUrl, context.Parameters);
+            
             GitCloneConfiguration configuration =
-                new(_definition.RepositoryUrl, _cloneDirectory, _definition.Arguments);
+                new(gitUrl, _cloneDirectory, _definition.Arguments);
 
             await _git.CloneAsync(configuration, ct);
         }

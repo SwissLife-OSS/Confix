@@ -14,22 +14,22 @@ public sealed class VariableReplacerService : IVariableReplacerService
         _variableResolver = variableResolver;
     }
 
-    public async Task<JsonNode?> RewriteAsync(JsonNode? node, CancellationToken cancellationToken)
+    public async Task<JsonNode?> RewriteAsync(JsonNode? node, IVariableProviderContext context)
     {
         if (node is null)
         {
             return null;
         }
 
-        return await RewriteAsync(node, ImmutableHashSet<VariablePath>.Empty, cancellationToken);
+        return await RewriteAsync(node, ImmutableHashSet<VariablePath>.Empty, context);
     }
 
     private async Task<JsonNode> RewriteAsync(
         JsonNode node,
         IReadOnlySet<VariablePath> resolvedPaths,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
-        var resolvedVariables = await ResolveVariables(node, resolvedPaths, cancellationToken);
+        var resolvedVariables = await ResolveVariables(node, resolvedPaths, context);
 
         return new JsonVariableRewriter().Rewrite(node, new(resolvedVariables));
     }
@@ -51,7 +51,7 @@ public sealed class VariableReplacerService : IVariableReplacerService
     private async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
         JsonNode node,
         IReadOnlySet<VariablePath> resolvedPaths,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         var variables = GetVariables(node).ToArray();
         if (variables.Length == 0)
@@ -64,7 +64,7 @@ public sealed class VariableReplacerService : IVariableReplacerService
             throw new CircularVariableReferenceException(variables.First(v => resolvedPaths.Contains(v)));
         }
 
-        var resolvedVariables = await _variableResolver.ResolveVariables(variables, cancellationToken);
+        var resolvedVariables = await _variableResolver.ResolveVariables(variables, context);
 
         var resolved = new Dictionary<VariablePath, JsonNode>();
         foreach (var variable in resolvedVariables)
@@ -74,7 +74,7 @@ public sealed class VariableReplacerService : IVariableReplacerService
             resolved[variable.Key] = await RewriteAsync(
                 variable.Value,
                 currentPath,
-                cancellationToken);
+                context);
         }
 
         return resolved;

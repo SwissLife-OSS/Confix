@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
+using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 using HotChocolate.Types;
@@ -37,10 +38,10 @@ public sealed class LocalVariableProvider : IVariableProvider
 
     public static string Type => "local";
 
-    public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
+    public Task<IReadOnlyList<string>> ListAsync(IVariableProviderContext context)
         => Task.FromResult<IReadOnlyList<string>>(_parsedLocalFile.Value.Keys.ToArray());
 
-    public Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
+    public Task<JsonNode> ResolveAsync(string path, IVariableProviderContext context)
     {
         EnsureConfigFile();
 
@@ -54,10 +55,10 @@ public sealed class LocalVariableProvider : IVariableProvider
 
     public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
-        CancellationToken cancellationToken)
-        => paths.ResolveMany(ResolveAsync, cancellationToken);
+        IVariableProviderContext context)
+        => paths.ResolveMany(ResolveAsync, context);
 
-    public Task<string> SetAsync(string path, JsonNode value, CancellationToken ct)
+    public Task<string> SetAsync(string path, JsonNode value, IVariableProviderContext context)
     {
         EnsureConfigFile();
 

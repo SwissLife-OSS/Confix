@@ -7,21 +7,21 @@ public interface IVariableResolver
     Task<VariablePath> SetVariable(
         VariablePath path,
         JsonNode value,
-        CancellationToken cancellationToken);
+        IVariableProviderContext context);
 
-    Task<IEnumerable<VariablePath>> ListVariables(CancellationToken cancellationToken);
+    Task<IEnumerable<VariablePath>> ListVariables(IVariableProviderContext context);
 
     Task<IEnumerable<VariablePath>> ListVariables(
         string providerName,
-        CancellationToken cancellationToken);
+        IVariableProviderContext context);
 
     IEnumerable<string> ListProviders();
 
     string GetProviderType(string name);
 
-    Task<JsonNode> ResolveVariable(VariablePath key, CancellationToken cancellationToken);
+    Task<JsonNode> ResolveVariable(VariablePath key, IVariableProviderContext context);
 
     Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
         IReadOnlyList<VariablePath> keys,
-        CancellationToken cancellationToken);
+        IVariableProviderContext context);
 }

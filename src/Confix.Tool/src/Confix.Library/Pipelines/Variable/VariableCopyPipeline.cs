@@ -23,7 +23,9 @@ public sealed class VariableCopyPipeline : Pipeline
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
-        var cancellationToken = context.CancellationToken;
+        var variableContext = new VariableProviderContext(
+            context.Parameter,
+            context.CancellationToken);
 
         var variableFeature = context.Features.Get<VariablesFeature>();
 
@@ -48,9 +50,9 @@ public sealed class VariableCopyPipeline : Pipeline
         context.Status.Message =
             $"Copy variable {fromVariablePath.ToString().AsHighlighted()} to {toVariablePath.ToString().AsHighlighted()}...";
 
-        var fromValue = await fromResolver.ResolveOrThrowAsync(fromVariablePath, cancellationToken);
+        var fromValue = await fromResolver.ResolveOrThrowAsync(fromVariablePath, variableContext);
 
-        var result = await toResolver.SetVariable(toVariablePath, fromValue, cancellationToken);
+        var result = await toResolver.SetVariable(toVariablePath, fromValue, variableContext);
 
         context.Logger.VariableSet(result);
     }

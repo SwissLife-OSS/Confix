@@ -9,6 +9,7 @@ using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Middlewares.Reporting;
 using Confix.Tool.Schema;
 using Confix.Utilities;
+using Confix.Variables;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Tool.Reporting;
@@ -215,11 +216,18 @@ public sealed class ProjectReportMiddleware : IMiddleware
         ConfigurationFile file,
         CancellationToken ct)
     {
+        var variableContext = new VariableProviderContext(
+            context.Parameter,
+            context.CancellationToken);
+        
         var variablesFeature = context.Features.Get<VariablesFeature>();
         var variables = new List<VariableReport>();
 
         var content = await file.TryLoadContentAsync(ct);
-        foreach (var variable in await variablesFeature.Extractor.ExtractAsync(content, ct))
+        var variableInfos = await variablesFeature.Extractor
+            .ExtractAsync(content, variableContext);
+        
+        foreach (var variable in variableInfos)
         {
             var hash = SHA256.HashData(Encoding.UTF8.GetBytes(variable.VariableValue));
 

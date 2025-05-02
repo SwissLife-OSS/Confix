@@ -105,7 +105,7 @@ public class VariableCopyCommandTests
         using var cli = _cli;
         const string beforeValue = "test";
         var node = (JsonNode?) beforeValue;
-        await _first.SetAsync("a.b", node!, CancellationToken.None);
+        await _first.SetAsync("a.b", node!, new VariableProviderContext(null, CancellationToken.None));
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
@@ -113,7 +113,7 @@ public class VariableCopyCommandTests
         await cli.RunAsync("variable copy --from $first:a.b --to $second:a.b");
 
         // Assert
-        var afterValue = await _second.ResolveAsync("a.b", CancellationToken.None);
+        var afterValue = await _second.ResolveAsync("a.b", new VariableProviderContext(null, CancellationToken.None));
         Assert.Equal(beforeValue, afterValue.ToString());
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
     }
@@ -125,7 +125,7 @@ public class VariableCopyCommandTests
         using var cli = _cli;
         const string beforeValue = "test";
         var node = (JsonNode?) beforeValue;
-        await _first.SetAsync("a.b", node!, CancellationToken.None);
+        await _first.SetAsync("a.b", node!, new VariableProviderContext(null, CancellationToken.None));
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
@@ -134,7 +134,7 @@ public class VariableCopyCommandTests
             "variable copy --from $first:a.b --to $second:a.b --to-environment prod --environment dev");
 
         // Assert
-        var afterValue = await _second.ResolveAsync("a.b", CancellationToken.None);
+        var afterValue = await _second.ResolveAsync("a.b", new VariableProviderContext(null, CancellationToken.None));
         Assert.Equal(beforeValue, afterValue.ToString());
         SnapshotBuilder.New().AddOutput(cli).MatchSnapshot();
     }
@@ -146,7 +146,7 @@ public class VariableCopyCommandTests
         using var cli = _cli;
         const string beforeValue = "test";
         var node = (JsonNode?) beforeValue;
-        await _first.SetAsync("a.b", node!, CancellationToken.None);
+        await _first.SetAsync("a.b", node!, new VariableProviderContext(null, CancellationToken.None));
 
         cli.Directories.Home.CreateConfixRc(_confixRc);
 
@@ -196,13 +196,13 @@ file class InMemoryVariableProvider : IVariableProvider
     }
 
     /// <inheritdoc />
-    public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
+    public Task<IReadOnlyList<string>> ListAsync(IVariableProviderContext context)
     {
         return Task.FromResult<IReadOnlyList<string>>(_variables.Keys.ToList());
     }
 
     /// <inheritdoc />
-    public Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
+    public Task<JsonNode> ResolveAsync(string path, IVariableProviderContext context)
     {
         if (_variables.TryGetValue(path, out var value))
         {
@@ -215,7 +215,7 @@ file class InMemoryVariableProvider : IVariableProvider
     /// <inheritdoc />
     public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         return Task.FromResult<IReadOnlyDictionary<string, JsonNode>>(_variables
             .Where(x => paths.Contains(x.Key))
@@ -223,7 +223,7 @@ file class InMemoryVariableProvider : IVariableProvider
     }
 
     /// <inheritdoc />
-    public Task<string> SetAsync(string path, JsonNode value, CancellationToken ct)
+    public Task<string> SetAsync(string path, JsonNode value, IVariableProviderContext context)
     {
         _variables[path] = value;
         return Task.FromResult(path);

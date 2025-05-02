@@ -7,15 +7,15 @@ internal static class VariableProviderExtensions
 {
     public static async Task<IReadOnlyDictionary<string, JsonNode>> ResolveMany(
         this IEnumerable<string> paths,
-        Func<string, CancellationToken, Task<JsonNode>> resolveAsync,
-        CancellationToken cancellationToken)
+        Func<string, IVariableProviderContext, Task<JsonNode>> resolveAsync,
+        IVariableProviderContext context)
     {
         var errors = new ConcurrentQueue<VariableNotFoundException>();
         var resolvedVariables = new ConcurrentDictionary<string, JsonNode>();
 
-        var parallelOptions = new ParallelOptions { CancellationToken = cancellationToken };
+        var parallelOptions = new ParallelOptions { CancellationToken = context.CancellationToken };
 
-        async ValueTask ForEachAsync(string path, CancellationToken ctx)
+        async ValueTask ForEachAsync(string path, IVariableProviderContext ctx)
         {
             try
             {
@@ -28,7 +28,7 @@ internal static class VariableProviderExtensions
             }
         }
 
-        await Parallel.ForEachAsync(paths, parallelOptions, ForEachAsync);
+        await Parallel.ForEachAsync(paths, parallelOptions, (path, _) => ForEachAsync(path, context));
 
         if (!errors.IsEmpty)
         {

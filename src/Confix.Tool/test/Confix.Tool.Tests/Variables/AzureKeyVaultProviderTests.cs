@@ -36,8 +36,10 @@ public class AzureKeyVaultProviderTests
             .Returns(pageableMock.Object);
 
         AzureKeyVaultProvider provider = new(secretClientMock.Object);
+        var context = new VariableProviderContext(null, CancellationToken.None);
+
         // act
-        var result = await provider.ListAsync(default);
+        var result = await provider.ListAsync(context);
 
         // assert
         result.Should().HaveCount(2);
@@ -60,9 +62,10 @@ public class AzureKeyVaultProviderTests
             .ReturnsAsync(responseMock.Object);
 
         AzureKeyVaultProvider provider = new(secretClientMock.Object);
+        var context = new VariableProviderContext(null, CancellationToken.None);
 
         // act
-        var result = await provider.ResolveAsync("foo", default);
+        var result = await provider.ResolveAsync("foo", context);
 
         // assert
         ((string?)result)?.Should().Be("bar");
@@ -82,9 +85,10 @@ public class AzureKeyVaultProviderTests
             .Setup(x => x.SetSecretAsync("foo", "bar", default))
             .ReturnsAsync(responseMock.Object);
         AzureKeyVaultProvider provider = new(secretClientMock.Object);
+        var context = new VariableProviderContext(null, CancellationToken.None);
 
         // act
-        var result = await provider.SetAsync("foo", JsonValue.Create("bar")!, default);
+        var result = await provider.SetAsync("foo", JsonValue.Create("bar")!, context);
 
         // assert
         result.Should().Be("vault.key");

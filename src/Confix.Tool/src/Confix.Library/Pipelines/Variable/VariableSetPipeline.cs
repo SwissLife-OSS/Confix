@@ -25,6 +25,10 @@ public sealed class VariableSetPipeline : Pipeline
     {
         context.Features.Get<ConfigurationFeature>().EnsureProjectScope();
 
+        var variableContext = new VariableProviderContext(
+            context.Parameter,
+            context.CancellationToken);
+
         var resolver = context.Features.Get<VariablesFeature>().Resolver;
         if (!context.Parameter.TryGet(VariableNameOption.Instance, out string variableName))
         {
@@ -44,7 +48,7 @@ public sealed class VariableSetPipeline : Pipeline
                 $"Setting variable {parsed.Value.ToString().AsHighlighted()}...";
 
             var result = await resolver
-                .SetVariable(parsed.Value, value, context.CancellationToken);
+                .SetVariable(parsed.Value, value, variableContext);
 
             context.Logger.VariableSet(result);
         }

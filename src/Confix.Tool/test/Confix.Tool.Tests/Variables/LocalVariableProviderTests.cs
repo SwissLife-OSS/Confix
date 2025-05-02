@@ -102,9 +102,10 @@ public class LocalVariableProviderTests : IDisposable
             """);
         LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
         var paths = new List<string> { "foo", "bar" };
+        var context = new VariableProviderContext(null, CancellationToken.None);
 
         // act
-        var result = await provider.ResolveManyAsync(paths, default);
+        var result = await provider.ResolveManyAsync(paths, context);
 
         // assert
         result.Should().HaveCount(2);
@@ -125,11 +126,12 @@ public class LocalVariableProviderTests : IDisposable
             """);
         LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
         var paths = new List<string> { "foo", "nonexistent" };
+        var context = new VariableProviderContext(null, CancellationToken.None);
 
         // act & assert
         var exception =
             await Assert.ThrowsAsync<AggregateException>(()
-                => provider.ResolveManyAsync(paths, default));
+                => provider.ResolveManyAsync(paths, context));
         exception.InnerExceptions.Should().HaveCount(1);
         exception.InnerExceptions[0].Should().BeOfType<VariableNotFoundException>();
     }

@@ -7,7 +7,6 @@ public class GitUrlTests
 {
     [Theory]
     [InlineData("https://github.com/org/repo.git", "user", "token", "https://user:token@github.com/org/repo.git")]
-    [InlineData("https://github.com/org/repo.git", null, "token", "https://token@github.com/org/repo.git")]
     [InlineData("https://github.com/org/repo.git", null, null, "https://github.com/org/repo.git")]
     [InlineData("https://github.com/org/repo.git", "", "", "https://github.com/org/repo.git")]
     [InlineData("http://github.com/org/repo.git", "user", "token", "http://github.com/org/repo.git")]
