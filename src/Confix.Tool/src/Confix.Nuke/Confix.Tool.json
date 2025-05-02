@@ -501,6 +501,18 @@
             "help": "Encrypt the output file"
           },
           {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
+          },
+          {
             "name": "Verbosity",
             "type": "string",
             "format": "--verbosity {value}",
