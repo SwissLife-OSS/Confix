@@ -12,6 +12,8 @@ public sealed class ProjectBuildPipeline : Pipeline
     {
         builder
             .AddOption(NoRestoreOptions.Instance)
+            .AddOption(GitUsernameOptions.Instance)
+            .AddOption(GitTokenOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseReadConfigurationFiles()
             .UseEnvironment()
