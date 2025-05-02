@@ -8,21 +8,27 @@ public static class GitUrl
     {
         parameters.TryGet(GitUsernameOptions.Instance, out string? username);
         parameters.TryGet(GitTokenOptions.Instance, out string? token);
-        
-        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(token))
+
+        if (!string.IsNullOrEmpty(token) && 
+            repositoryUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
         {
-            if (repositoryUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            var uri = new Uri(repositoryUrl);
+            var builder = new UriBuilder(uri);
+
+            if (!string.IsNullOrEmpty(username))
             {
-                var uri = new Uri(repositoryUrl);
-                var builder = new UriBuilder(uri)
-                {
-                    UserName = username,
-                    Password = token
-                };
-                return builder.Uri.ToString();
+                builder.UserName = username;
+                builder.Password = token;
             }
+            else
+            {
+                builder.UserName = token;
+                builder.Password = string.Empty;
+            }
+
+            return builder.Uri.ToString();
         }
-        
+
         return repositoryUrl;
     }
 }
