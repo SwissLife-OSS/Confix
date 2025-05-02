@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
+using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
 using Confix.Utilities;
 using Json.Schema;
@@ -52,7 +53,7 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
     {
         var components = context.ComponentReferences.Where(x => x.Provider == _name && x.IsEnabled);
 
-        var refs = await FetchRefsAsync(context.CancellationToken);
+        var refs = await FetchRefsAsync(context);
 
         var tasks = components
             .Select(x => ProcessComponentAsync(x, refs, context.Logger, context.CancellationToken))
@@ -82,18 +83,36 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
     }
 
     private async Task<IReadOnlyDictionary<string, string>> FetchRefsAsync(
-        CancellationToken cancellationToken)
+        IComponentProviderContext context)
     {
+        context.Parameter.TryGet(GitUsernameOptions.Instance, out string? username);
+        context.Parameter.TryGet(GitTokenOptions.Instance, out string? token);
+
+        string repositoryUrl = _repositoryUrl;
+        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(token))
+        {
+            if (repositoryUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                var uri = new Uri(repositoryUrl);
+                var builder = new UriBuilder(uri)
+                {
+                    UserName = username,
+                    Password = token
+                };
+                repositoryUrl = builder.Uri.ToString();
+            }
+        }
+
         var directory =
             new DirectoryInfo(Path.Combine(_cloneDirectory.FullName, "__refs"));
         var refs = new Dictionary<string, string>();
 
         var sparseConfig =
-            new GitSparseCheckoutConfiguration(_repositoryUrl, directory.FullName, _arguments);
-        await _git.SparseCheckoutAsync(sparseConfig, cancellationToken);
+            new GitSparseCheckoutConfiguration(repositoryUrl, directory.FullName, _arguments);
+        await _git.SparseCheckoutAsync(sparseConfig, context.CancellationToken);
 
         var showRefConfig = new GitShowRefsConfiguration(directory.FullName, _arguments);
-        var refsOutput = await _git.ShowRefsAsync(showRefConfig, cancellationToken);
+        var refsOutput = await _git.ShowRefsAsync(showRefConfig, context.CancellationToken);
 
         foreach (var line in refsOutput.Split('\n'))
         {
