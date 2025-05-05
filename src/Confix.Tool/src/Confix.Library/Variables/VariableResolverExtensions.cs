@@ -8,11 +8,11 @@ public static class VariableResolverExtensions
     public static async Task<JsonNode> ResolveOrThrowAsync(
         this IVariableResolver resolver,
         VariablePath path,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         try
         {
-            return await resolver.ResolveVariable(path, cancellationToken);
+            return await resolver.ResolveVariable(path, context);
         }
         catch (AggregateException ex)
         {
@@ -37,11 +37,11 @@ public static class VariableResolverExtensions
     public static async Task<JsonNode?> RewriteOrThrowAsync(
         this IVariableReplacerService service,
         JsonNode? node,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         try
         {
-            return await service.RewriteAsync(node, cancellationToken);
+            return await service.RewriteAsync(node, context);
         }
         catch (AggregateException ex)
         {

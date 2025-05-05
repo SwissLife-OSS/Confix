@@ -9,6 +9,10 @@ public sealed class BuildProjectMiddleware : IMiddleware
     /// <inheritdoc />
     public async Task InvokeAsync(IMiddlewareContext context, MiddlewareDelegate next)
     {
+        var variableContext = new VariableProviderContext(
+            context.Parameter,
+            context.CancellationToken);
+        
         context.SetStatus("Building the project files");
 
         var cancellationToken = context.CancellationToken;
@@ -32,7 +36,7 @@ public sealed class BuildProjectMiddleware : IMiddleware
             context.Logger.ReplaceVariablesOfConfigurationFile(file);
 
             file.Content = await variableReplacer
-                .RewriteOrThrowAsync(content, context.CancellationToken);
+                .RewriteOrThrowAsync(content, variableContext);
         }
 
         await next(context);

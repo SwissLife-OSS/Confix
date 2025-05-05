@@ -4,5 +4,5 @@ namespace Confix.Variables;
 
 public interface IVariableReplacerService
 {
-    Task<JsonNode?> RewriteAsync(JsonNode? node, CancellationToken cancellationToken);
+    Task<JsonNode?> RewriteAsync(JsonNode? node, IVariableProviderContext context);
 }

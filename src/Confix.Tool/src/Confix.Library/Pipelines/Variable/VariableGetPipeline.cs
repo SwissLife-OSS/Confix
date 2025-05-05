@@ -20,6 +20,10 @@ public sealed class VariableGetPipeline : Pipeline
 
     private static async Task InvokeAsync(IMiddlewareContext context)
     {
+        var variableContext = new VariableProviderContext(
+            context.Parameter,
+            context.CancellationToken);
+        
         var resolver = context.Features.Get<VariablesFeature>().Resolver;
 
         if (!context.Parameter.TryGet(VariableNameOption.Instance, out string variableName))
@@ -32,7 +36,7 @@ public sealed class VariableGetPipeline : Pipeline
         context.Status.Message = $"Resolving variable {variablePath.ToString().AsHighlighted()}...";
 
         var result = await resolver
-            .ResolveOrThrowAsync(variablePath, context.CancellationToken);
+            .ResolveOrThrowAsync(variablePath, variableContext);
 
         context.Logger.PrintVariableResolved(variablePath, result.ToJsonString());
 

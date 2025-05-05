@@ -13,6 +13,8 @@ public sealed class RestoreCommandPipeline : Pipeline
     {
         builder
             .AddOption(DotnetConfigurationOptions.Instance)
+            .AddOption(GitUsernameOptions.Instance)
+            .AddOption(GitTokenOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .UseHandler(InvokeAsync);

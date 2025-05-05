@@ -28,10 +28,10 @@ public sealed class SecretVariableProvider : IVariableProvider
     
     public static string Type => "secret";
 
-    public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
+    public Task<IReadOnlyList<string>> ListAsync(IVariableProviderContext context)
         => Task.FromResult<IReadOnlyList<string>>(Array.Empty<string>());
 
-    public Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
+    public Task<JsonNode> ResolveAsync(string path, IVariableProviderContext context)
     {
         byte[] valueToDecrypt = Convert.FromBase64String(path);
         byte[] encryptedValue = Decrypt(valueToDecrypt, _privateKey.Value);
@@ -42,10 +42,10 @@ public sealed class SecretVariableProvider : IVariableProvider
 
     public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
-        CancellationToken cancellationToken)
-        => paths.ResolveMany(ResolveAsync, cancellationToken);
+        IVariableProviderContext context)
+        => paths.ResolveMany(ResolveAsync, context);
 
-    public Task<string> SetAsync(string path, JsonNode value, CancellationToken ct)
+    public Task<string> SetAsync(string path, JsonNode value, IVariableProviderContext context)
     {
         string valueToEncrypt = value.ToJsonString();
         byte[] bytesToEncrypt = Encoding.UTF8.GetBytes(valueToEncrypt);

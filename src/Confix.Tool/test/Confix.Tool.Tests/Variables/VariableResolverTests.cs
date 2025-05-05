@@ -47,12 +47,12 @@ public class VariableResolverTests
             }
         };
         var resolver = new VariableResolver(factoryMock.Object, new VariableListCache(), configurations);
-        var cancellationToken = CancellationToken.None;
+        var context = new VariableProviderContext(null!, CancellationToken.None);
 
         var provider1Mock = new Mock<IVariableProvider>();
         provider1Mock.Setup(p => p.ResolveManyAsync(
             It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key1", "Key3" })),
-            cancellationToken))
+            context))
             .ReturnsAsync(new Dictionary<string, JsonNode>
             {
                 { "Key1", JsonValue.Create("Value1")! },
@@ -62,7 +62,7 @@ public class VariableResolverTests
         var provider2Mock = new Mock<IVariableProvider>();
         provider2Mock.Setup(p => p.ResolveManyAsync(
             It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key2", "Key4" })),
-            cancellationToken))
+            context))
             .ReturnsAsync(new Dictionary<string, JsonNode>
             {
                 { "Key2", JsonValue.Create("Value2")! },
@@ -76,7 +76,7 @@ public class VariableResolverTests
             .Returns(provider2Mock.Object);
 
         // Act
-        var result = await resolver.ResolveVariables(keys, cancellationToken);
+        var result = await resolver.ResolveVariables(keys, context);
 
         // Assert
         result.Should().HaveCount(4);
@@ -112,12 +112,12 @@ public class VariableResolverTests
             }
         };
         var resolver = new VariableResolver(factoryMock.Object, new VariableListCache(), configurations);
-        var cancellationToken = CancellationToken.None;
+        var context = new VariableProviderContext(null!, CancellationToken.None);
 
         var provider1Mock = new Mock<IVariableProvider>();
         provider1Mock.Setup(p => p.ResolveManyAsync(
             It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key1" })),
-            cancellationToken))
+            context))
             .ReturnsAsync(new Dictionary<string, JsonNode>
             {
                 { "Key1", JsonValue.Create("Value1")! },
@@ -127,7 +127,7 @@ public class VariableResolverTests
             .Returns(provider1Mock.Object);
 
         // Act
-        var result = await resolver.ResolveVariables(keys, cancellationToken);
+        var result = await resolver.ResolveVariables(keys, context);
 
         // Assert
         result.Should().HaveCount(1);
@@ -135,7 +135,7 @@ public class VariableResolverTests
 
         provider1Mock.Verify(p => p.ResolveManyAsync(
             It.Is<IReadOnlyList<string>>(paths => paths.SequenceEqual(new[] { "Key1" })),
-            cancellationToken), Times.Once);
+            context), Times.Once);
     }
 
     [Fact]
@@ -145,11 +145,11 @@ public class VariableResolverTests
         var factoryMock = new Mock<IVariableProviderFactory>();
         var configurations = new List<VariableProviderConfiguration>();
         var resolver = new VariableResolver(factoryMock.Object,new VariableListCache(), configurations);
-        var cancellationToken = CancellationToken.None;
+        var context = new VariableProviderContext(null!, CancellationToken.None);
 
         // Act & Assert
         await Assert.ThrowsAsync<ExitException>(() =>
-            resolver.ResolveVariable(new VariablePath("Provider1", "Key1"), cancellationToken));
+            resolver.ResolveVariable(new VariablePath("Provider1", "Key1"), context));
     }
 
     [Fact]
@@ -165,10 +165,10 @@ public class VariableResolverTests
 
         var configurations = new List<VariableProviderConfiguration>();
         var resolver = new VariableResolver(factoryMock.Object, new VariableListCache(), configurations);
-        var cancellationToken = CancellationToken.None;
+        var context = new VariableProviderContext(null!, CancellationToken.None);
 
         // Act & Assert
         await Assert.ThrowsAsync<ExitException>(() =>
-            resolver.ResolveVariables(keys, cancellationToken));
+            resolver.ResolveVariables(keys, context));
     }
 }

@@ -160,6 +160,18 @@
             "help": "Disables restoring of schemas"
           },
           {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
+          },
+          {
             "name": "OutputFile",
             "type": "string",
             "format": "--output-file {value}",
@@ -501,6 +513,18 @@
             "help": "Encrypt the output file"
           },
           {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
+          },
+          {
             "name": "Verbosity",
             "type": "string",
             "format": "--verbosity {value}",
@@ -519,6 +543,18 @@
             "type": "string",
             "format": "--dotnet-configuration {value}",
             "help": "The configuration passed to dotnet commands. Defaults to 'Debug'."
+          },
+          {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
           },
           {
             "name": "Environment",

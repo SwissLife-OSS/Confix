@@ -17,6 +17,8 @@ public class BuildCommandPipeline : Pipeline
             .AddOption(ActiveEnvironmentOption.Instance)
             .AddOption(OutputFileOption.Instance)
             .AddOption(EncryptionOption.Instance)
+            .AddOption(GitUsernameOptions.Instance)
+            .AddOption(GitTokenOptions.Instance)
             .UseHandler(InvokeAsync);
     }
 

@@ -1,4 +1,3 @@
-using System.Reactive.Linq;
 using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
@@ -25,29 +24,29 @@ public sealed class VariableResolver : IVariableResolver
     public async Task<VariablePath> SetVariable(
         VariablePath path,
         JsonNode value,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         var configuration = GetProviderConfiguration(path.ProviderName);
 
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
 
-        await provider.SetAsync(path.Path, value, cancellationToken);
+        await provider.SetAsync(path.Path, value, context);
 
         return path;
     }
 
-    public async Task<IEnumerable<VariablePath>> ListVariables(CancellationToken cancellationToken)
+    public async Task<IEnumerable<VariablePath>> ListVariables(IVariableProviderContext context)
     {
         var variables = await _configurations
-            .Select(c => ListVariables(c.Name, cancellationToken))
-            .ToListAsync(cancellationToken);
+            .Select(c => ListVariables(c.Name, context))
+            .ToListAsync(context.CancellationToken);
 
         return variables.SelectMany(v => v);
     }
 
     public async Task<IEnumerable<VariablePath>> ListVariables(
         string providerName,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         var configuration = GetProviderConfiguration(providerName);
 
@@ -57,7 +56,7 @@ public sealed class VariableResolver : IVariableResolver
         }
 
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
-        var variableKeys = await provider.ListAsync(cancellationToken);
+        var variableKeys = await provider.ListAsync(context);
 
         var items = variableKeys.Select(k => new VariablePath(providerName, k)).ToArray();
         _variableListCache.TryAdd(configuration, items);
@@ -78,18 +77,18 @@ public sealed class VariableResolver : IVariableResolver
 
     public async Task<JsonNode> ResolveVariable(
         VariablePath key,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         App.Log.ResolvingVariable(key);
         var configuration = GetProviderConfiguration(key.ProviderName);
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
         
-        return await provider.ResolveAsync(key.Path, cancellationToken);
+        return await provider.ResolveAsync(key.Path, context);
     }
 
     public async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
         IReadOnlyList<VariablePath> keys,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         List<KeyValuePair<VariablePath, JsonNode>> resolvedVariables = new(keys.Count);
 
@@ -97,7 +96,7 @@ public sealed class VariableResolver : IVariableResolver
         {
             var paths = group.Select(k => k.Path).Distinct().ToList();
 
-            var providerResults = await ResolveVariables(group.Key, paths, cancellationToken);
+            var providerResults = await ResolveVariables(group.Key, paths, context);
 
             resolvedVariables.AddRange(providerResults);
         }
@@ -108,7 +107,7 @@ public sealed class VariableResolver : IVariableResolver
     private async Task<IReadOnlyDictionary<VariablePath, JsonNode>> ResolveVariables(
         string providerName,
         IReadOnlyList<string> paths,
-        CancellationToken cancellationToken)
+        IVariableProviderContext context)
     {
         App.Log.ResolvingVariables(providerName, paths.Count);
         var resolvedVariables = new Dictionary<VariablePath, JsonNode>();
@@ -116,7 +115,7 @@ public sealed class VariableResolver : IVariableResolver
         var providerConfiguration = GetProviderConfiguration(providerName);
         await using var provider = _variableProviderFactory.CreateProvider(providerConfiguration);
 
-        var resolvedValues = await provider.ResolveManyAsync(paths, cancellationToken);
+        var resolvedValues = await provider.ResolveManyAsync(paths, context);
         foreach (var (key, value) in resolvedValues)
         {
             resolvedVariables.Add(new(providerName, key), value);

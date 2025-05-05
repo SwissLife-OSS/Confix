@@ -52,10 +52,10 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
     {
         var components = context.ComponentReferences.Where(x => x.Provider == _name && x.IsEnabled);
 
-        var refs = await FetchRefsAsync(context.CancellationToken);
+        var refs = await FetchRefsAsync(context);
 
         var tasks = components
-            .Select(x => ProcessComponentAsync(x, refs, context.Logger, context.CancellationToken))
+            .Select(x => ProcessComponentAsync(x, refs, context))
             .ToArray();
 
         List<string>? errors = null;
@@ -82,18 +82,20 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
     }
 
     private async Task<IReadOnlyDictionary<string, string>> FetchRefsAsync(
-        CancellationToken cancellationToken)
+        IComponentProviderContext context)
     {
         var directory =
             new DirectoryInfo(Path.Combine(_cloneDirectory.FullName, "__refs"));
         var refs = new Dictionary<string, string>();
+        
+        string gitUrl = GitUrl.Create(_repositoryUrl, context.Parameter);
 
         var sparseConfig =
-            new GitSparseCheckoutConfiguration(_repositoryUrl, directory.FullName, _arguments);
-        await _git.SparseCheckoutAsync(sparseConfig, cancellationToken);
+            new GitSparseCheckoutConfiguration(gitUrl, directory.FullName, _arguments);
+        await _git.SparseCheckoutAsync(sparseConfig, context.CancellationToken);
 
         var showRefConfig = new GitShowRefsConfiguration(directory.FullName, _arguments);
-        var refsOutput = await _git.ShowRefsAsync(showRefConfig, cancellationToken);
+        var refsOutput = await _git.ShowRefsAsync(showRefConfig, context.CancellationToken);
 
         foreach (var line in refsOutput.Split('\n'))
         {
@@ -115,8 +117,7 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
     private async Task<ComponentOrError?> ProcessComponentAsync(
         ComponentReferenceDefinition definition,
         IReadOnlyDictionary<string, string> refs,
-        IConsoleLogger logger,
-        CancellationToken cancellationToken)
+        IComponentProviderContext context)
     {
         var version = definition.Version ?? "latest";
         var componentName = definition.ComponentName;
@@ -129,13 +130,15 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
             directory.EnsureFolder();
 
             var cloneArgument = _arguments.ToList();
+            
+            string gitUrl = GitUrl.Create(_repositoryUrl, context.Parameter);
 
             var cloneConfiguration = new GitCloneConfiguration(
-                _repositoryUrl,
+                gitUrl,
                 directory.FullName,
                 cloneArgument.ToArray());
 
-            await _git.CloneAsync(cloneConfiguration, cancellationToken);
+            await _git.CloneAsync(cloneConfiguration, context.CancellationToken);
 
             if (version is not "latest")
             {
@@ -147,7 +150,7 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
 
                 await _git.CheckoutAsync(
                     new GitCheckoutConfiguration(directory.FullName, hash, cloneArgument.ToArray()),
-                    cancellationToken);
+                    context.CancellationToken);
             }
 
             var pathToComponent = Path
@@ -159,7 +162,7 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
                     $"Could not find component {componentName} ({version}) in git repository");
             }
 
-            logger.FoundComponent(componentName, version);
+            context.Logger.FoundComponent(componentName, version);
 
             var json = JsonSchema.FromFile(pathToComponent);
             var component =

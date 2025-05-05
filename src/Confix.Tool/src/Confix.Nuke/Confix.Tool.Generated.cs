@@ -71,13 +71,13 @@ public partial class ConfixTasks : ToolTasks
     /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li></ul></remarks>
     public static IEnumerable<(ConfixProjectRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectRestore(CombinatorialConfigure<ConfixProjectRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixProjectRestore, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Replaces all variables in the project files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixProjectBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixProjectBuildSettings.GitUsername"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixProjectBuild(ConfixProjectBuildSettings options = null) => new ConfixTasks().Run(options);
     /// <summary><p>Replaces all variables in the project files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixProjectBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixProjectBuildSettings.GitUsername"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixProjectBuild(Configure<ConfixProjectBuildSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixProjectBuildSettings()));
     /// <summary><p>Replaces all variables in the project files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixProjectBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixProjectBuildSettings.GitUsername"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
     public static IEnumerable<(ConfixProjectBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectBuild(CombinatorialConfigure<ConfixProjectBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixProjectBuild, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Initializes a project and creates a project file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
     /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--output-file</c> via <see cref="ConfixProjectInitSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectInitSettings.Verbosity"/></li></ul></remarks>
@@ -179,22 +179,22 @@ public partial class ConfixTasks : ToolTasks
     /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableCopySettings.Environment"/></li><li><c>--from</c> via <see cref="ConfixVariableCopySettings.From"/></li><li><c>--to</c> via <see cref="ConfixVariableCopySettings.To"/></li><li><c>--to-environment</c> via <see cref="ConfixVariableCopySettings.ToEnvironment"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableCopySettings.Verbosity"/></li></ul></remarks>
     public static IEnumerable<(ConfixVariableCopySettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariableCopy(CombinatorialConfigure<ConfixVariableCopySettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixVariableCopy, degreeOfParallelism, completeOnFailure);
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixBuildSettings.GitUsername"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixBuild(ConfixBuildSettings options = null) => new ConfixTasks().Run(options);
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixBuildSettings.GitUsername"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixBuild(Configure<ConfixBuildSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixBuildSettings()));
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixBuildSettings.GitUsername"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
     public static IEnumerable<(ConfixBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixBuild(CombinatorialConfigure<ConfixBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixBuild, degreeOfParallelism, completeOnFailure);
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixRestoreSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixRestoreSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixRestore(ConfixRestoreSettings options = null) => new ConfixTasks().Run(options);
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixRestoreSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixRestoreSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixRestore(Configure<ConfixRestoreSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixRestoreSettings()));
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixRestoreSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixRestoreSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
     public static IEnumerable<(ConfixRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixRestore(CombinatorialConfigure<ConfixRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixRestore, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Validates the schema of all the projects</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
     /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li></ul></remarks>
@@ -347,6 +347,10 @@ public partial class ConfixProjectBuildSettings : ToolOptions
 {
     /// <summary>Disables restoring of schemas</summary>
     [Argument(Format = "--no-restore {value}")] public string NoRestore => Get<string>(() => NoRestore);
+    /// <summary>The username used for git authentication.</summary>
+    [Argument(Format = "--git-username {value}")] public string GitUsername => Get<string>(() => GitUsername);
+    /// <summary>The token used for git authentication.</summary>
+    [Argument(Format = "--git-token {value}")] public string GitToken => Get<string>(() => GitToken);
     /// <summary>Specifies the output file</summary>
     [Argument(Format = "--output-file {value}")] public string OutputFile => Get<string>(() => OutputFile);
     /// <summary>The name of the environment to run the command in. Overrules the active environment set in .confixrc</summary>
@@ -557,6 +561,10 @@ public partial class ConfixBuildSettings : ToolOptions
     [Argument(Format = "--output-file {value}")] public string OutputFile => Get<string>(() => OutputFile);
     /// <summary>Encrypt the output file</summary>
     [Argument(Format = "--encrypt {value}")] public string Encrypt => Get<string>(() => Encrypt);
+    /// <summary>The username used for git authentication.</summary>
+    [Argument(Format = "--git-username {value}")] public string GitUsername => Get<string>(() => GitUsername);
+    /// <summary>The token used for git authentication.</summary>
+    [Argument(Format = "--git-token {value}")] public string GitToken => Get<string>(() => GitToken);
     /// <summary>Sets the verbosity level</summary>
     [Argument(Format = "--verbosity {value}")] public string Verbosity => Get<string>(() => Verbosity);
     /// <summary></summary>
@@ -572,6 +580,10 @@ public partial class ConfixRestoreSettings : ToolOptions
 {
     /// <summary>The configuration passed to dotnet commands. Defaults to 'Debug'.</summary>
     [Argument(Format = "--dotnet-configuration {value}")] public string DotnetConfiguration => Get<string>(() => DotnetConfiguration);
+    /// <summary>The username used for git authentication.</summary>
+    [Argument(Format = "--git-username {value}")] public string GitUsername => Get<string>(() => GitUsername);
+    /// <summary>The token used for git authentication.</summary>
+    [Argument(Format = "--git-token {value}")] public string GitToken => Get<string>(() => GitToken);
     /// <summary>The name of the environment to run the command in. Overrules the active environment set in .confixrc</summary>
     [Argument(Format = "--environment {value}")] public string Environment => Get<string>(() => Environment);
     /// <summary>Sets the verbosity level</summary>
@@ -901,6 +913,22 @@ public static partial class ConfixProjectBuildSettingsExtensions
     /// <inheritdoc cref="ConfixProjectBuildSettings.NoRestore"/>
     [Pure] [Builder(Type = typeof(ConfixProjectBuildSettings), Property = nameof(ConfixProjectBuildSettings.NoRestore))]
     public static T ResetNoRestore<T>(this T o) where T : ConfixProjectBuildSettings => o.Modify(b => b.Remove(() => o.NoRestore));
+    #endregion
+    #region GitUsername
+    /// <inheritdoc cref="ConfixProjectBuildSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectBuildSettings), Property = nameof(ConfixProjectBuildSettings.GitUsername))]
+    public static T SetGitUsername<T>(this T o, string v) where T : ConfixProjectBuildSettings => o.Modify(b => b.Set(() => o.GitUsername, v));
+    /// <inheritdoc cref="ConfixProjectBuildSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectBuildSettings), Property = nameof(ConfixProjectBuildSettings.GitUsername))]
+    public static T ResetGitUsername<T>(this T o) where T : ConfixProjectBuildSettings => o.Modify(b => b.Remove(() => o.GitUsername));
+    #endregion
+    #region GitToken
+    /// <inheritdoc cref="ConfixProjectBuildSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectBuildSettings), Property = nameof(ConfixProjectBuildSettings.GitToken))]
+    public static T SetGitToken<T>(this T o, string v) where T : ConfixProjectBuildSettings => o.Modify(b => b.Set(() => o.GitToken, v));
+    /// <inheritdoc cref="ConfixProjectBuildSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectBuildSettings), Property = nameof(ConfixProjectBuildSettings.GitToken))]
+    public static T ResetGitToken<T>(this T o) where T : ConfixProjectBuildSettings => o.Modify(b => b.Remove(() => o.GitToken));
     #endregion
     #region OutputFile
     /// <inheritdoc cref="ConfixProjectBuildSettings.OutputFile"/>
@@ -1406,6 +1434,22 @@ public static partial class ConfixBuildSettingsExtensions
     [Pure] [Builder(Type = typeof(ConfixBuildSettings), Property = nameof(ConfixBuildSettings.Encrypt))]
     public static T ResetEncrypt<T>(this T o) where T : ConfixBuildSettings => o.Modify(b => b.Remove(() => o.Encrypt));
     #endregion
+    #region GitUsername
+    /// <inheritdoc cref="ConfixBuildSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixBuildSettings), Property = nameof(ConfixBuildSettings.GitUsername))]
+    public static T SetGitUsername<T>(this T o, string v) where T : ConfixBuildSettings => o.Modify(b => b.Set(() => o.GitUsername, v));
+    /// <inheritdoc cref="ConfixBuildSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixBuildSettings), Property = nameof(ConfixBuildSettings.GitUsername))]
+    public static T ResetGitUsername<T>(this T o) where T : ConfixBuildSettings => o.Modify(b => b.Remove(() => o.GitUsername));
+    #endregion
+    #region GitToken
+    /// <inheritdoc cref="ConfixBuildSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixBuildSettings), Property = nameof(ConfixBuildSettings.GitToken))]
+    public static T SetGitToken<T>(this T o, string v) where T : ConfixBuildSettings => o.Modify(b => b.Set(() => o.GitToken, v));
+    /// <inheritdoc cref="ConfixBuildSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixBuildSettings), Property = nameof(ConfixBuildSettings.GitToken))]
+    public static T ResetGitToken<T>(this T o) where T : ConfixBuildSettings => o.Modify(b => b.Remove(() => o.GitToken));
+    #endregion
     #region Verbosity
     /// <inheritdoc cref="ConfixBuildSettings.Verbosity"/>
     [Pure] [Builder(Type = typeof(ConfixBuildSettings), Property = nameof(ConfixBuildSettings.Verbosity))]
@@ -1437,6 +1481,22 @@ public static partial class ConfixRestoreSettingsExtensions
     /// <inheritdoc cref="ConfixRestoreSettings.DotnetConfiguration"/>
     [Pure] [Builder(Type = typeof(ConfixRestoreSettings), Property = nameof(ConfixRestoreSettings.DotnetConfiguration))]
     public static T ResetDotnetConfiguration<T>(this T o) where T : ConfixRestoreSettings => o.Modify(b => b.Remove(() => o.DotnetConfiguration));
+    #endregion
+    #region GitUsername
+    /// <inheritdoc cref="ConfixRestoreSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixRestoreSettings), Property = nameof(ConfixRestoreSettings.GitUsername))]
+    public static T SetGitUsername<T>(this T o, string v) where T : ConfixRestoreSettings => o.Modify(b => b.Set(() => o.GitUsername, v));
+    /// <inheritdoc cref="ConfixRestoreSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixRestoreSettings), Property = nameof(ConfixRestoreSettings.GitUsername))]
+    public static T ResetGitUsername<T>(this T o) where T : ConfixRestoreSettings => o.Modify(b => b.Remove(() => o.GitUsername));
+    #endregion
+    #region GitToken
+    /// <inheritdoc cref="ConfixRestoreSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixRestoreSettings), Property = nameof(ConfixRestoreSettings.GitToken))]
+    public static T SetGitToken<T>(this T o, string v) where T : ConfixRestoreSettings => o.Modify(b => b.Set(() => o.GitToken, v));
+    /// <inheritdoc cref="ConfixRestoreSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixRestoreSettings), Property = nameof(ConfixRestoreSettings.GitToken))]
+    public static T ResetGitToken<T>(this T o) where T : ConfixRestoreSettings => o.Modify(b => b.Remove(() => o.GitToken));
     #endregion
     #region Environment
     /// <inheritdoc cref="ConfixRestoreSettings.Environment"/>

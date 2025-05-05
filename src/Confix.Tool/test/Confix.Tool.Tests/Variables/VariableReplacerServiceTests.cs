@@ -25,8 +25,8 @@ public class VariableReplacerServiceTests
         Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
         variableResolverMock.Setup(x => x.ResolveVariables(
                 It.IsAny<IReadOnlyList<VariablePath>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+                It.IsAny<IVariableProviderContext>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, IVariableProviderContext _) =>
             {
                 var result = new Dictionary<VariablePath, JsonNode>();
                 foreach (var key in keys)
@@ -53,8 +53,8 @@ public class VariableReplacerServiceTests
         Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
         variableResolverMock.Setup(x => x.ResolveVariables(
                 It.IsAny<IReadOnlyList<VariablePath>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+                It.IsAny<IVariableProviderContext>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, IVariableProviderContext _) =>
             {
                 var result = new Dictionary<VariablePath, JsonNode>();
                 foreach (var key in keys)
@@ -85,8 +85,8 @@ public class VariableReplacerServiceTests
         Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
         variableResolverMock.Setup(x => x.ResolveVariables(
                 It.IsAny<IReadOnlyList<VariablePath>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+                It.IsAny<IVariableProviderContext>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, IVariableProviderContext _) =>
             {
                 var result = new Dictionary<VariablePath, JsonNode>();
                 foreach (var key in keys)
@@ -133,8 +133,8 @@ public class VariableReplacerServiceTests
         Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
         variableResolverMock.Setup(x => x.ResolveVariables(
                 It.IsAny<IReadOnlyList<VariablePath>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+                It.IsAny<IVariableProviderContext>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, IVariableProviderContext _) =>
             {
                 var result = new Dictionary<VariablePath, JsonNode>();
                 foreach (var key in keys)
@@ -182,8 +182,8 @@ public class VariableReplacerServiceTests
         Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
         variableResolverMock.Setup(x => x.ResolveVariables(
                 It.IsAny<IReadOnlyList<VariablePath>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+                It.IsAny<IVariableProviderContext>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, IVariableProviderContext _) =>
             {
                 var result = new Dictionary<VariablePath, JsonNode>();
                 foreach (var key in keys)
@@ -222,8 +222,8 @@ public class VariableReplacerServiceTests
         Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
         variableResolverMock.Setup(x => x.ResolveVariables(
                 It.IsAny<IReadOnlyList<VariablePath>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+                It.IsAny<IVariableProviderContext>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, IVariableProviderContext _) =>
             {
                 var result = new Dictionary<VariablePath, JsonNode>();
                 foreach (var key in keys)
@@ -259,8 +259,8 @@ public class VariableReplacerServiceTests
         Mock<IVariableResolver> variableResolverMock = new(MockBehavior.Strict);
         variableResolverMock.Setup(x => x.ResolveVariables(
                 It.IsAny<IReadOnlyList<VariablePath>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<VariablePath> keys, CancellationToken _) =>
+                It.IsAny<IVariableProviderContext>()))
+            .ReturnsAsync((IReadOnlyList<VariablePath> keys, IVariableProviderContext _) =>
             {
                 var result = new Dictionary<VariablePath, JsonNode>();
                 foreach (var key in keys)

@@ -5,6 +5,7 @@ using Confix.Tool.Entities.Components;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Schema;
+using Confix.Variables;
 
 namespace Confix.Tool.Middlewares.Project;
 
@@ -30,6 +31,10 @@ public class RestoreProjectMiddleware : IMiddleware
         var jsonSchemas = context.Features.Get<JsonSchemaFeature>();
         var configuration = context.Features.Get<ConfigurationFeature>();
         var files = context.Features.Get<ConfigurationFileFeature>().Files;
+        
+        var variableContext = new VariableProviderContext(
+            context.Parameter,
+            context.CancellationToken);
 
         configuration.EnsureProjectScope();
 
@@ -42,7 +47,7 @@ public class RestoreProjectMiddleware : IMiddleware
 
         context.SetStatus("Loading variables...");
         var variableResolver = context.Features.Get<VariablesFeature>().Resolver;
-        var variables = await variableResolver.ListVariables(cancellationToken);
+        var variables = await variableResolver.ListVariables(variableContext);
 
         context.SetStatus("Composing the schema...");
         var jsonSchema = _projectComposer.Compose(components, variables);

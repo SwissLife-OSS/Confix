@@ -34,13 +34,13 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     /// <inheritdoc />
     public static string Type => "azure-keyvault";
 
-    public Task<IReadOnlyList<string>> ListAsync(CancellationToken cancellationToken)
+    public Task<IReadOnlyList<string>> ListAsync(IVariableProviderContext context)
         => KeyVaultExtension.HandleKeyVaultException<IReadOnlyList<string>>(async () =>
         {
             App.Log.ListSecrets(_client.VaultUri);
 
             var secrets = new List<string>();
-            await foreach (var secret in _client.GetPropertiesOfSecretsAsync(cancellationToken))
+            await foreach (var secret in _client.GetPropertiesOfSecretsAsync(context.CancellationToken))
             {
                 secrets.Add(secret.Name.ToConfixPath());
             }
@@ -48,20 +48,20 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
             return secrets;
         });
 
-    public Task<JsonNode> ResolveAsync(string path, CancellationToken cancellationToken)
+    public Task<JsonNode> ResolveAsync(string path, IVariableProviderContext context)
         => KeyVaultExtension.HandleKeyVaultException<JsonNode>(async () =>
         {
             KeyVaultSecret result = await _client.GetSecretAsync(path.ToKeyVaultCompatiblePath(),
-                cancellationToken: cancellationToken);
+                cancellationToken: context.CancellationToken);
             return JsonValue.Create(result.Value)!;
         }, path);
 
     public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
-        CancellationToken cancellationToken)
-        => paths.ResolveMany(ResolveAsync, cancellationToken);
+        IVariableProviderContext context)
+        => paths.ResolveMany(ResolveAsync, context);
 
-    public Task<string> SetAsync(string path, JsonNode value, CancellationToken ct)
+    public Task<string> SetAsync(string path, JsonNode value, IVariableProviderContext context)
         => KeyVaultExtension.HandleKeyVaultException(async () =>
         {
             if (value.GetSchemaValueType() != SchemaValueType.String)
@@ -70,7 +70,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
             }
 
             KeyVaultSecret result = await _client
-                .SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, ct);
+                .SetSecretAsync(path.ToKeyVaultCompatiblePath(), (string)value!, context.CancellationToken);
             return result.Name.ToConfixPath();
         }, path);
 

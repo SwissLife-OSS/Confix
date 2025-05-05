@@ -582,6 +582,7 @@ file static class LogExtensions
 
     public static void GitSparseCheckoutFailed(this IConsoleLogger log, Exception ex)
     {
+        log.LogException(ex);
         log.Exception("Git sparse checkout failed", ex);
     }
 
@@ -599,6 +600,7 @@ file static class LogExtensions
 
     public static void GitShowRefsFailed(this IConsoleLogger log, Exception ex)
     {
+        log.LogException(ex);
         log.Exception("Git show refs failed", ex);
     }
 
@@ -614,6 +616,7 @@ file static class LogExtensions
 
     public static void GitCheckoutFailed(this IConsoleLogger log, Exception ex)
     {
+        log.LogException(ex);
         log.Exception("Git checkout failed", ex);
     }
 
@@ -629,6 +632,7 @@ file static class LogExtensions
 
     public static void GitGetInfoFailed(this IConsoleLogger log, Exception ex)
     {
+        log.LogException(ex);
         log.Exception("Git get info failed", ex);
     }
 
@@ -644,6 +648,7 @@ file static class LogExtensions
 
     public static void GitGetBranchFailed(this IConsoleLogger log, Exception ex)
     {
+        log.LogException(ex);
         log.Exception("Git get branch failed", ex);
     }
 
@@ -659,6 +664,7 @@ file static class LogExtensions
 
     public static void GitGetTagFailed(this IConsoleLogger log, Exception ex)
     {
+        log.LogException(ex);
         log.Exception("Git get tag failed", ex);
     }
 
@@ -674,6 +680,7 @@ file static class LogExtensions
 
     public static void GitGetRootFailed(this IConsoleLogger log, Exception ex)
     {
+        log.LogException(ex);
         log.Exception("Git get repository root failed", ex);
     }
 
@@ -689,6 +696,18 @@ file static class LogExtensions
 
     public static void GitGetOriginUrlFailed(this IConsoleLogger log, Exception ex)
     {
+        log.LogException(ex);
         log.Exception("Git get origin url failed", ex);
+    }
+    
+    private static void LogException(
+        this IConsoleLogger log,
+        Exception ex)
+    {
+        log.Error(ex.Message);
+        if (ex.InnerException != null)
+        {
+            log.Error(ex.InnerException.Message);
+        }
     }
 }

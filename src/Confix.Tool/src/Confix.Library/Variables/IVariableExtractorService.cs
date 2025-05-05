@@ -6,5 +6,5 @@ public interface IVariableExtractorService
 {
     Task<IEnumerable<VariableInfo>> ExtractAsync(
         JsonNode? node,
-        CancellationToken cancellationToken);
+        IVariableProviderContext context);
 }
