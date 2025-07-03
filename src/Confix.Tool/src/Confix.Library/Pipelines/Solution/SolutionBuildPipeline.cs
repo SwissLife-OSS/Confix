@@ -15,6 +15,9 @@ public sealed class SolutionBuildPipeline : Pipeline
     {
         builder
             .Use<LoadConfigurationMiddleware>()
+            .AddOption(EncryptionOption.Instance)
+            .AddOption(GitUsernameOptions.Instance)
+            .AddOption(GitTokenOptions.Instance)
             .UseHandler(InvokeAsync);
     }
 
