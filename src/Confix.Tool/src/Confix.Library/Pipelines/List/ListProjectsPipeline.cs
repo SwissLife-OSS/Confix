@@ -5,7 +5,7 @@ using Confix.Tool.Schema;
 
 namespace Confix.Tool.Commands.Project;
 
-public sealed class ProjectListPipeline : Pipeline
+public sealed class ListProjectsPipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)

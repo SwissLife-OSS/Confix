@@ -28,5 +28,6 @@ internal sealed class ConfixRootCommand : Command
         AddCommand(new FileDecryptCommand());
 
         AddCommand(new ConfigCommand());
+        AddCommand(new ListCommand());
     }
 }

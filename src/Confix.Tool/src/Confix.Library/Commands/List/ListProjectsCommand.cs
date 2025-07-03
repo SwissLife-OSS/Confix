@@ -1,8 +1,8 @@
 namespace Confix.Tool.Commands.Project;
 
-public sealed class ProjectListCommand : PipelineCommand<ProjectListPipeline>
+public sealed class ListProjectsCommand : PipelineCommand<ListProjectsPipeline>
 {
-    public ProjectListCommand() : base("list")
+    public ListProjectsCommand() : base("projects")
     {
         Description = "Lists all .confix.project files in the current directory and subdirectories";
     }
