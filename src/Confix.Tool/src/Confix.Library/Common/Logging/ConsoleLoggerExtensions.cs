@@ -153,6 +153,21 @@ public static class ConsoleLoggerExtensions
         logger.Log(ref loggerMessage);
     }
 
+    public static void Always(
+        this IConsoleLogger logger,
+        [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string message,
+        params object[] arguments)
+    {
+        ILoggerMessage loggerMessage = new DefaultLoggerMessage
+        {
+            Template = message,
+            Arguments = arguments,
+            Verbosity = Verbosity.Quiet
+        };
+
+        logger.Log(ref loggerMessage);
+    }
+
     public static void WriteJson(
         this IConsoleLogger logger,
         string json)

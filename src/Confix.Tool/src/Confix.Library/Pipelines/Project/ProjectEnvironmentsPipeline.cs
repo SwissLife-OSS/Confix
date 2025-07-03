@@ -2,17 +2,15 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
-using Confix.Tool.Schema;
 
 namespace Confix.Tool.Commands.Project;
 
-public sealed class ListProjectsPipeline : Pipeline
+public sealed class ProjectEnvironmentsPipeline : Pipeline
 {
     /// <inheritdoc />
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddOption(DirectoriesOnlyOption.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseHandler(InvokeAsync);
     }
@@ -20,13 +18,12 @@ public sealed class ListProjectsPipeline : Pipeline
     private static Task InvokeAsync(IMiddlewareContext context)
     {
         var configuration = context.Features.Get<ConfigurationFeature>();
-        var searchDirectory = configuration.Solution?.Directory ?? context.Execution.CurrentDirectory;
-        var projectFiles = searchDirectory.FindAllInPath(FileNames.ConfixProject);
-        var directoriesOnly = context.Parameter.TryGet(DirectoriesOnlyOption.Instance, out bool dirs) && dirs;
-
-        foreach (var projectFile in projectFiles)
+        var project = configuration.EnsureProject();
+        var environments = project.Environments;
+        
+        foreach (var environment in environments)
         {
-            context.Logger.Always(directoriesOnly ? projectFile.Directory!.FullName : projectFile.FullName);
+            context.Logger.Always(environment.Name);
         }
 
         return Task.CompletedTask;
