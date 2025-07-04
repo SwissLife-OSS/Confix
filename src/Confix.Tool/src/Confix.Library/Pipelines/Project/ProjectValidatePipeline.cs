@@ -10,6 +10,8 @@ public sealed class ProjectValidatePipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
+            .AddOption(GitUsernameOptions.Instance)
+            .AddOption(GitTokenOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseReadConfigurationFiles()
             .UseEnvironment()
