@@ -21,238 +21,188 @@ namespace Confix.Nuke;
 [ExcludeFromCodeCoverage]
 public partial class ConfixTasks : ToolTasks
 {
-    public static string ConfixPath => new ConfixTasks().GetToolPath();
+    public static string ConfixPath { get => new ConfixTasks().GetToolPathInternal(); set => new ConfixTasks().SetToolPath(value); }
     public const string PackageExecutable = "Confix.dll";
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
     public static IReadOnlyCollection<Output> Confix(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Func<IProcess, object> exitHandler = null) => new ConfixTasks().Run(arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger, exitHandler);
     /// <summary><p>builds a component. Runs all configured component inputs</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixComponentBuildSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixComponentBuild(ConfixComponentBuildSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>builds a component. Runs all configured component inputs</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixComponentBuildSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixComponentBuild(Configure<ConfixComponentBuildSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixComponentBuildSettings()));
-    /// <summary><p>builds a component. Runs all configured component inputs</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixComponentBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixComponentBuildSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixComponentBuild(ConfixComponentBuildSettings options = null) => new ConfixTasks().Run<ConfixComponentBuildSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixComponentBuild(Confix.Nuke.ConfixComponentBuildSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixComponentBuild(Configure<ConfixComponentBuildSettings> configurator) => new ConfixTasks().Run<ConfixComponentBuildSettings>(configurator.Invoke(new ConfixComponentBuildSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixComponentBuild(Confix.Nuke.ConfixComponentBuildSettings)"/>
     public static IEnumerable<(ConfixComponentBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixComponentBuild(CombinatorialConfigure<ConfixComponentBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixComponentBuild, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Initializes a component and creates a component file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;name&gt;</c> via <see cref="ConfixComponentInitSettings.Name"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentInitSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixComponentInit(ConfixComponentInitSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Initializes a component and creates a component file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;name&gt;</c> via <see cref="ConfixComponentInitSettings.Name"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentInitSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixComponentInit(Configure<ConfixComponentInitSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixComponentInitSettings()));
-    /// <summary><p>Initializes a component and creates a component file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;name&gt;</c> via <see cref="ConfixComponentInitSettings.Name"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentInitSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;name&gt;</c> via <see cref="ConfixComponentInitSettings.Name"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentInitSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixComponentInit(ConfixComponentInitSettings options = null) => new ConfixTasks().Run<ConfixComponentInitSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixComponentInit(Confix.Nuke.ConfixComponentInitSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixComponentInit(Configure<ConfixComponentInitSettings> configurator) => new ConfixTasks().Run<ConfixComponentInitSettings>(configurator.Invoke(new ConfixComponentInitSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixComponentInit(Confix.Nuke.ConfixComponentInitSettings)"/>
     public static IEnumerable<(ConfixComponentInitSettings Settings, IReadOnlyCollection<Output> Output)> ConfixComponentInit(CombinatorialConfigure<ConfixComponentInitSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixComponentInit, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Lists the component of the project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixComponentListSettings.Environment"/></li><li><c>--format</c> via <see cref="ConfixComponentListSettings.Format"/></li><li><c>--only-components</c> via <see cref="ConfixComponentListSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixComponentListSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentListSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixComponentList(ConfixComponentListSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Lists the component of the project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixComponentListSettings.Environment"/></li><li><c>--format</c> via <see cref="ConfixComponentListSettings.Format"/></li><li><c>--only-components</c> via <see cref="ConfixComponentListSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixComponentListSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentListSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixComponentList(Configure<ConfixComponentListSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixComponentListSettings()));
-    /// <summary><p>Lists the component of the project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixComponentListSettings.Environment"/></li><li><c>--format</c> via <see cref="ConfixComponentListSettings.Format"/></li><li><c>--only-components</c> via <see cref="ConfixComponentListSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixComponentListSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentListSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixComponentListSettings.Environment"/></li><li><c>--format</c> via <see cref="ConfixComponentListSettings.Format"/></li><li><c>--only-components</c> via <see cref="ConfixComponentListSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixComponentListSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentListSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixComponentList(ConfixComponentListSettings options = null) => new ConfixTasks().Run<ConfixComponentListSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixComponentList(Confix.Nuke.ConfixComponentListSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixComponentList(Configure<ConfixComponentListSettings> configurator) => new ConfixTasks().Run<ConfixComponentListSettings>(configurator.Invoke(new ConfixComponentListSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixComponentList(Confix.Nuke.ConfixComponentListSettings)"/>
     public static IEnumerable<(ConfixComponentListSettings Settings, IReadOnlyCollection<Output> Output)> ConfixComponentList(CombinatorialConfigure<ConfixComponentListSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixComponentList, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Adds a component to the project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;name&gt;</c> via <see cref="ConfixComponentAddSettings.Name"/></li><li><c>--output-file</c> via <see cref="ConfixComponentAddSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentAddSettings.Verbosity"/></li><li><c>--version</c> via <see cref="ConfixComponentAddSettings.Version"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixComponentAdd(ConfixComponentAddSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Adds a component to the project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;name&gt;</c> via <see cref="ConfixComponentAddSettings.Name"/></li><li><c>--output-file</c> via <see cref="ConfixComponentAddSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentAddSettings.Verbosity"/></li><li><c>--version</c> via <see cref="ConfixComponentAddSettings.Version"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixComponentAdd(Configure<ConfixComponentAddSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixComponentAddSettings()));
-    /// <summary><p>Adds a component to the project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;name&gt;</c> via <see cref="ConfixComponentAddSettings.Name"/></li><li><c>--output-file</c> via <see cref="ConfixComponentAddSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentAddSettings.Verbosity"/></li><li><c>--version</c> via <see cref="ConfixComponentAddSettings.Version"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;name&gt;</c> via <see cref="ConfixComponentAddSettings.Name"/></li><li><c>--output-file</c> via <see cref="ConfixComponentAddSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixComponentAddSettings.Verbosity"/></li><li><c>--version</c> via <see cref="ConfixComponentAddSettings.Version"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixComponentAdd(ConfixComponentAddSettings options = null) => new ConfixTasks().Run<ConfixComponentAddSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixComponentAdd(Confix.Nuke.ConfixComponentAddSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixComponentAdd(Configure<ConfixComponentAddSettings> configurator) => new ConfixTasks().Run<ConfixComponentAddSettings>(configurator.Invoke(new ConfixComponentAddSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixComponentAdd(Confix.Nuke.ConfixComponentAddSettings)"/>
     public static IEnumerable<(ConfixComponentAddSettings Settings, IReadOnlyCollection<Output> Output)> ConfixComponentAdd(CombinatorialConfigure<ConfixComponentAddSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixComponentAdd, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Reloads the schema of a project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectRestore(ConfixProjectRestoreSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Reloads the schema of a project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectRestore(Configure<ConfixProjectRestoreSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixProjectRestoreSettings()));
-    /// <summary><p>Reloads the schema of a project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixProjectRestore(ConfixProjectRestoreSettings options = null) => new ConfixTasks().Run<ConfixProjectRestoreSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectRestore(Confix.Nuke.ConfixProjectRestoreSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixProjectRestore(Configure<ConfixProjectRestoreSettings> configurator) => new ConfixTasks().Run<ConfixProjectRestoreSettings>(configurator.Invoke(new ConfixProjectRestoreSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectRestore(Confix.Nuke.ConfixProjectRestoreSettings)"/>
     public static IEnumerable<(ConfixProjectRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectRestore(CombinatorialConfigure<ConfixProjectRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixProjectRestore, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Replaces all variables in the project files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixProjectBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixProjectBuildSettings.GitUsername"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectBuild(ConfixProjectBuildSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Replaces all variables in the project files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixProjectBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixProjectBuildSettings.GitUsername"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectBuild(Configure<ConfixProjectBuildSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixProjectBuildSettings()));
-    /// <summary><p>Replaces all variables in the project files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixProjectBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixProjectBuildSettings.GitUsername"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixProjectBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixProjectBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixProjectBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixProjectBuildSettings.GitUsername"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectBuildSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectBuildSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectBuildSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixProjectBuild(ConfixProjectBuildSettings options = null) => new ConfixTasks().Run<ConfixProjectBuildSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectBuild(Confix.Nuke.ConfixProjectBuildSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixProjectBuild(Configure<ConfixProjectBuildSettings> configurator) => new ConfixTasks().Run<ConfixProjectBuildSettings>(configurator.Invoke(new ConfixProjectBuildSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectBuild(Confix.Nuke.ConfixProjectBuildSettings)"/>
     public static IEnumerable<(ConfixProjectBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectBuild(CombinatorialConfigure<ConfixProjectBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixProjectBuild, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Initializes a project and creates a project file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--output-file</c> via <see cref="ConfixProjectInitSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectInitSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectInit(ConfixProjectInitSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Initializes a project and creates a project file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--output-file</c> via <see cref="ConfixProjectInitSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectInitSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectInit(Configure<ConfixProjectInitSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixProjectInitSettings()));
-    /// <summary><p>Initializes a project and creates a project file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--output-file</c> via <see cref="ConfixProjectInitSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectInitSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--output-file</c> via <see cref="ConfixProjectInitSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectInitSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixProjectInit(ConfixProjectInitSettings options = null) => new ConfixTasks().Run<ConfixProjectInitSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectInit(Confix.Nuke.ConfixProjectInitSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixProjectInit(Configure<ConfixProjectInitSettings> configurator) => new ConfixTasks().Run<ConfixProjectInitSettings>(configurator.Invoke(new ConfixProjectInitSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectInit(Confix.Nuke.ConfixProjectInitSettings)"/>
     public static IEnumerable<(ConfixProjectInitSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectInit(CombinatorialConfigure<ConfixProjectInitSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixProjectInit, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Validates the configuration files of a project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectValidateSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectValidateSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectValidateSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectValidateSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectValidate(ConfixProjectValidateSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Validates the configuration files of a project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectValidateSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectValidateSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectValidateSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectValidateSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectValidate(Configure<ConfixProjectValidateSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixProjectValidateSettings()));
-    /// <summary><p>Validates the configuration files of a project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectValidateSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectValidateSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectValidateSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectValidateSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectValidateSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectValidateSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectValidateSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectValidateSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixProjectValidate(ConfixProjectValidateSettings options = null) => new ConfixTasks().Run<ConfixProjectValidateSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectValidate(Confix.Nuke.ConfixProjectValidateSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixProjectValidate(Configure<ConfixProjectValidateSettings> configurator) => new ConfixTasks().Run<ConfixProjectValidateSettings>(configurator.Invoke(new ConfixProjectValidateSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectValidate(Confix.Nuke.ConfixProjectValidateSettings)"/>
     public static IEnumerable<(ConfixProjectValidateSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectValidate(CombinatorialConfigure<ConfixProjectValidateSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixProjectValidate, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Generates a report for the project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectReportSettings.Environment"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectReportSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectReportSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectReportSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectReportSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectReport(ConfixProjectReportSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Generates a report for the project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectReportSettings.Environment"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectReportSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectReportSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectReportSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectReportSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixProjectReport(Configure<ConfixProjectReportSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixProjectReportSettings()));
-    /// <summary><p>Generates a report for the project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectReportSettings.Environment"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectReportSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectReportSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectReportSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectReportSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectReportSettings.Environment"/></li><li><c>--no-restore</c> via <see cref="ConfixProjectReportSettings.NoRestore"/></li><li><c>--only-components</c> via <see cref="ConfixProjectReportSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectReportSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectReportSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixProjectReport(ConfixProjectReportSettings options = null) => new ConfixTasks().Run<ConfixProjectReportSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectReport(Confix.Nuke.ConfixProjectReportSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixProjectReport(Configure<ConfixProjectReportSettings> configurator) => new ConfixTasks().Run<ConfixProjectReportSettings>(configurator.Invoke(new ConfixProjectReportSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixProjectReport(Confix.Nuke.ConfixProjectReportSettings)"/>
     public static IEnumerable<(ConfixProjectReportSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectReport(CombinatorialConfigure<ConfixProjectReportSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixProjectReport, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Reloads the schema of all the projects in the solution</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionRestoreSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixSolutionRestore(ConfixSolutionRestoreSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Reloads the schema of all the projects in the solution</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionRestoreSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixSolutionRestore(Configure<ConfixSolutionRestoreSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixSolutionRestoreSettings()));
-    /// <summary><p>Reloads the schema of all the projects in the solution</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionRestoreSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixSolutionRestore(ConfixSolutionRestoreSettings options = null) => new ConfixTasks().Run<ConfixSolutionRestoreSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixSolutionRestore(Confix.Nuke.ConfixSolutionRestoreSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixSolutionRestore(Configure<ConfixSolutionRestoreSettings> configurator) => new ConfixTasks().Run<ConfixSolutionRestoreSettings>(configurator.Invoke(new ConfixSolutionRestoreSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixSolutionRestore(Confix.Nuke.ConfixSolutionRestoreSettings)"/>
     public static IEnumerable<(ConfixSolutionRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionRestore(CombinatorialConfigure<ConfixSolutionRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixSolutionRestore, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Replaces all variables in the solution files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionBuildSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixSolutionBuild(ConfixSolutionBuildSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Replaces all variables in the solution files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionBuildSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixSolutionBuild(Configure<ConfixSolutionBuildSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixSolutionBuildSettings()));
-    /// <summary><p>Replaces all variables in the solution files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionBuildSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixSolutionBuild(ConfixSolutionBuildSettings options = null) => new ConfixTasks().Run<ConfixSolutionBuildSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixSolutionBuild(Confix.Nuke.ConfixSolutionBuildSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixSolutionBuild(Configure<ConfixSolutionBuildSettings> configurator) => new ConfixTasks().Run<ConfixSolutionBuildSettings>(configurator.Invoke(new ConfixSolutionBuildSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixSolutionBuild(Confix.Nuke.ConfixSolutionBuildSettings)"/>
     public static IEnumerable<(ConfixSolutionBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionBuild(CombinatorialConfigure<ConfixSolutionBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixSolutionBuild, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Initializes a solution and creates a solution file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionInitSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixSolutionInit(ConfixSolutionInitSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Initializes a solution and creates a solution file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionInitSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixSolutionInit(Configure<ConfixSolutionInitSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixSolutionInitSettings()));
-    /// <summary><p>Initializes a solution and creates a solution file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionInitSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionInitSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixSolutionInit(ConfixSolutionInitSettings options = null) => new ConfixTasks().Run<ConfixSolutionInitSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixSolutionInit(Confix.Nuke.ConfixSolutionInitSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixSolutionInit(Configure<ConfixSolutionInitSettings> configurator) => new ConfixTasks().Run<ConfixSolutionInitSettings>(configurator.Invoke(new ConfixSolutionInitSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixSolutionInit(Confix.Nuke.ConfixSolutionInitSettings)"/>
     public static IEnumerable<(ConfixSolutionInitSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionInit(CombinatorialConfigure<ConfixSolutionInitSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixSolutionInit, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Validates the schema of all the projects in the solution</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionValidateSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixSolutionValidate(ConfixSolutionValidateSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Validates the schema of all the projects in the solution</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionValidateSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixSolutionValidate(Configure<ConfixSolutionValidateSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixSolutionValidateSettings()));
-    /// <summary><p>Validates the schema of all the projects in the solution</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionValidateSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionValidateSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixSolutionValidate(ConfixSolutionValidateSettings options = null) => new ConfixTasks().Run<ConfixSolutionValidateSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixSolutionValidate(Confix.Nuke.ConfixSolutionValidateSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixSolutionValidate(Configure<ConfixSolutionValidateSettings> configurator) => new ConfixTasks().Run<ConfixSolutionValidateSettings>(configurator.Invoke(new ConfixSolutionValidateSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixSolutionValidate(Confix.Nuke.ConfixSolutionValidateSettings)"/>
     public static IEnumerable<(ConfixSolutionValidateSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionValidate(CombinatorialConfigure<ConfixSolutionValidateSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixSolutionValidate, degreeOfParallelism, completeOnFailure);
     /// <summary><p>resolves a variable by name</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li><li><c>--format</c> via <see cref="ConfixVariableGetSettings.Format"/></li><li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixVariableGet(ConfixVariableGetSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>resolves a variable by name</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li><li><c>--format</c> via <see cref="ConfixVariableGetSettings.Format"/></li><li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixVariableGet(Configure<ConfixVariableGetSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixVariableGetSettings()));
-    /// <summary><p>resolves a variable by name</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li><li><c>--format</c> via <see cref="ConfixVariableGetSettings.Format"/></li><li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableGetSettings.Environment"/></li><li><c>--format</c> via <see cref="ConfixVariableGetSettings.Format"/></li><li><c>--name</c> via <see cref="ConfixVariableGetSettings.Name"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableGetSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixVariableGet(ConfixVariableGetSettings options = null) => new ConfixTasks().Run<ConfixVariableGetSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixVariableGet(Confix.Nuke.ConfixVariableGetSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixVariableGet(Configure<ConfixVariableGetSettings> configurator) => new ConfixTasks().Run<ConfixVariableGetSettings>(configurator.Invoke(new ConfixVariableGetSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixVariableGet(Confix.Nuke.ConfixVariableGetSettings)"/>
     public static IEnumerable<(ConfixVariableGetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariableGet(CombinatorialConfigure<ConfixVariableGetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixVariableGet, degreeOfParallelism, completeOnFailure);
     /// <summary><p>sets a variable. Overrides existing value if any.</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableSetSettings.Environment"/></li><li><c>--name</c> via <see cref="ConfixVariableSetSettings.Name"/></li><li><c>--value</c> via <see cref="ConfixVariableSetSettings.Value"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableSetSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixVariableSet(ConfixVariableSetSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>sets a variable. Overrides existing value if any.</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableSetSettings.Environment"/></li><li><c>--name</c> via <see cref="ConfixVariableSetSettings.Name"/></li><li><c>--value</c> via <see cref="ConfixVariableSetSettings.Value"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableSetSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixVariableSet(Configure<ConfixVariableSetSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixVariableSetSettings()));
-    /// <summary><p>sets a variable. Overrides existing value if any.</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableSetSettings.Environment"/></li><li><c>--name</c> via <see cref="ConfixVariableSetSettings.Name"/></li><li><c>--value</c> via <see cref="ConfixVariableSetSettings.Value"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableSetSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableSetSettings.Environment"/></li><li><c>--name</c> via <see cref="ConfixVariableSetSettings.Name"/></li><li><c>--value</c> via <see cref="ConfixVariableSetSettings.Value"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableSetSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixVariableSet(ConfixVariableSetSettings options = null) => new ConfixTasks().Run<ConfixVariableSetSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixVariableSet(Confix.Nuke.ConfixVariableSetSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixVariableSet(Configure<ConfixVariableSetSettings> configurator) => new ConfixTasks().Run<ConfixVariableSetSettings>(configurator.Invoke(new ConfixVariableSetSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixVariableSet(Confix.Nuke.ConfixVariableSetSettings)"/>
     public static IEnumerable<(ConfixVariableSetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariableSet(CombinatorialConfigure<ConfixVariableSetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixVariableSet, degreeOfParallelism, completeOnFailure);
     /// <summary><p>list available variables</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableListSettings.Environment"/></li><li><c>--provider</c> via <see cref="ConfixVariableListSettings.Provider"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableListSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixVariableList(ConfixVariableListSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>list available variables</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableListSettings.Environment"/></li><li><c>--provider</c> via <see cref="ConfixVariableListSettings.Provider"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableListSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixVariableList(Configure<ConfixVariableListSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixVariableListSettings()));
-    /// <summary><p>list available variables</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableListSettings.Environment"/></li><li><c>--provider</c> via <see cref="ConfixVariableListSettings.Provider"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableListSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableListSettings.Environment"/></li><li><c>--provider</c> via <see cref="ConfixVariableListSettings.Provider"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableListSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixVariableList(ConfixVariableListSettings options = null) => new ConfixTasks().Run<ConfixVariableListSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixVariableList(Confix.Nuke.ConfixVariableListSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixVariableList(Configure<ConfixVariableListSettings> configurator) => new ConfixTasks().Run<ConfixVariableListSettings>(configurator.Invoke(new ConfixVariableListSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixVariableList(Confix.Nuke.ConfixVariableListSettings)"/>
     public static IEnumerable<(ConfixVariableListSettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariableList(CombinatorialConfigure<ConfixVariableListSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixVariableList, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Copies a variable from one provider to another provider</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableCopySettings.Environment"/></li><li><c>--from</c> via <see cref="ConfixVariableCopySettings.From"/></li><li><c>--to</c> via <see cref="ConfixVariableCopySettings.To"/></li><li><c>--to-environment</c> via <see cref="ConfixVariableCopySettings.ToEnvironment"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableCopySettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixVariableCopy(ConfixVariableCopySettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Copies a variable from one provider to another provider</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableCopySettings.Environment"/></li><li><c>--from</c> via <see cref="ConfixVariableCopySettings.From"/></li><li><c>--to</c> via <see cref="ConfixVariableCopySettings.To"/></li><li><c>--to-environment</c> via <see cref="ConfixVariableCopySettings.ToEnvironment"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableCopySettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixVariableCopy(Configure<ConfixVariableCopySettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixVariableCopySettings()));
-    /// <summary><p>Copies a variable from one provider to another provider</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableCopySettings.Environment"/></li><li><c>--from</c> via <see cref="ConfixVariableCopySettings.From"/></li><li><c>--to</c> via <see cref="ConfixVariableCopySettings.To"/></li><li><c>--to-environment</c> via <see cref="ConfixVariableCopySettings.ToEnvironment"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableCopySettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixVariableCopySettings.Environment"/></li><li><c>--from</c> via <see cref="ConfixVariableCopySettings.From"/></li><li><c>--to</c> via <see cref="ConfixVariableCopySettings.To"/></li><li><c>--to-environment</c> via <see cref="ConfixVariableCopySettings.ToEnvironment"/></li><li><c>--verbosity</c> via <see cref="ConfixVariableCopySettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixVariableCopy(ConfixVariableCopySettings options = null) => new ConfixTasks().Run<ConfixVariableCopySettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixVariableCopy(Confix.Nuke.ConfixVariableCopySettings)"/>
+    public static IReadOnlyCollection<Output> ConfixVariableCopy(Configure<ConfixVariableCopySettings> configurator) => new ConfixTasks().Run<ConfixVariableCopySettings>(configurator.Invoke(new ConfixVariableCopySettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixVariableCopy(Confix.Nuke.ConfixVariableCopySettings)"/>
     public static IEnumerable<(ConfixVariableCopySettings Settings, IReadOnlyCollection<Output> Output)> ConfixVariableCopy(CombinatorialConfigure<ConfixVariableCopySettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixVariableCopy, degreeOfParallelism, completeOnFailure);
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixBuildSettings.GitUsername"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixBuild(ConfixBuildSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixBuildSettings.GitUsername"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixBuild(Configure<ConfixBuildSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixBuildSettings()));
-    /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixBuildSettings.GitUsername"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixBuildSettings.Encrypt"/></li><li><c>--environment</c> via <see cref="ConfixBuildSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixBuildSettings.GitUsername"/></li><li><c>--output-file</c> via <see cref="ConfixBuildSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixBuildSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixBuild(ConfixBuildSettings options = null) => new ConfixTasks().Run<ConfixBuildSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixBuild(Confix.Nuke.ConfixBuildSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixBuild(Configure<ConfixBuildSettings> configurator) => new ConfixTasks().Run<ConfixBuildSettings>(configurator.Invoke(new ConfixBuildSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixBuild(Confix.Nuke.ConfixBuildSettings)"/>
     public static IEnumerable<(ConfixBuildSettings Settings, IReadOnlyCollection<Output> Output)> ConfixBuild(CombinatorialConfigure<ConfixBuildSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixBuild, degreeOfParallelism, completeOnFailure);
     /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixRestoreSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixRestoreSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixRestore(ConfixRestoreSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixRestoreSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixRestoreSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixRestore(Configure<ConfixRestoreSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixRestoreSettings()));
-    /// <summary><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixRestoreSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixRestoreSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--dotnet-configuration</c> via <see cref="ConfixRestoreSettings.DotnetConfiguration"/></li><li><c>--environment</c> via <see cref="ConfixRestoreSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixRestoreSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixRestoreSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixRestoreSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixRestore(ConfixRestoreSettings options = null) => new ConfixTasks().Run<ConfixRestoreSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixRestore(Confix.Nuke.ConfixRestoreSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixRestore(Configure<ConfixRestoreSettings> configurator) => new ConfixTasks().Run<ConfixRestoreSettings>(configurator.Invoke(new ConfixRestoreSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixRestore(Confix.Nuke.ConfixRestoreSettings)"/>
     public static IEnumerable<(ConfixRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixRestore(CombinatorialConfigure<ConfixRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixRestore, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Validates the schema of all the projects</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixValidate(ConfixValidateSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Validates the schema of all the projects</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixValidate(Configure<ConfixValidateSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixValidateSettings()));
-    /// <summary><p>Validates the schema of all the projects</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixValidate(ConfixValidateSettings options = null) => new ConfixTasks().Run<ConfixValidateSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixValidate(Confix.Nuke.ConfixValidateSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixValidate(Configure<ConfixValidateSettings> configurator) => new ConfixTasks().Run<ConfixValidateSettings>(configurator.Invoke(new ConfixValidateSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixValidate(Confix.Nuke.ConfixValidateSettings)"/>
     public static IEnumerable<(ConfixValidateSettings Settings, IReadOnlyCollection<Output> Output)> ConfixValidate(CombinatorialConfigure<ConfixValidateSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixValidate, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Encrypts a file using the configured provider</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;inputFile&gt;</c> via <see cref="ConfixEncryptSettings.InputFile"/></li><li><c>&lt;outFile&gt;</c> via <see cref="ConfixEncryptSettings.OutFile"/></li><li><c>--environment</c> via <see cref="ConfixEncryptSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixEncryptSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixEncrypt(ConfixEncryptSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Encrypts a file using the configured provider</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;inputFile&gt;</c> via <see cref="ConfixEncryptSettings.InputFile"/></li><li><c>&lt;outFile&gt;</c> via <see cref="ConfixEncryptSettings.OutFile"/></li><li><c>--environment</c> via <see cref="ConfixEncryptSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixEncryptSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixEncrypt(Configure<ConfixEncryptSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixEncryptSettings()));
-    /// <summary><p>Encrypts a file using the configured provider</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;inputFile&gt;</c> via <see cref="ConfixEncryptSettings.InputFile"/></li><li><c>&lt;outFile&gt;</c> via <see cref="ConfixEncryptSettings.OutFile"/></li><li><c>--environment</c> via <see cref="ConfixEncryptSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixEncryptSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;inputFile&gt;</c> via <see cref="ConfixEncryptSettings.InputFile"/></li><li><c>&lt;outFile&gt;</c> via <see cref="ConfixEncryptSettings.OutFile"/></li><li><c>--environment</c> via <see cref="ConfixEncryptSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixEncryptSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixEncrypt(ConfixEncryptSettings options = null) => new ConfixTasks().Run<ConfixEncryptSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixEncrypt(Confix.Nuke.ConfixEncryptSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixEncrypt(Configure<ConfixEncryptSettings> configurator) => new ConfixTasks().Run<ConfixEncryptSettings>(configurator.Invoke(new ConfixEncryptSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixEncrypt(Confix.Nuke.ConfixEncryptSettings)"/>
     public static IEnumerable<(ConfixEncryptSettings Settings, IReadOnlyCollection<Output> Output)> ConfixEncrypt(CombinatorialConfigure<ConfixEncryptSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixEncrypt, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Decrypts a file using the configured provider</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;inputFile&gt;</c> via <see cref="ConfixDecryptSettings.InputFile"/></li><li><c>&lt;outFile&gt;</c> via <see cref="ConfixDecryptSettings.OutFile"/></li><li><c>--environment</c> via <see cref="ConfixDecryptSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixDecryptSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixDecrypt(ConfixDecryptSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Decrypts a file using the configured provider</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;inputFile&gt;</c> via <see cref="ConfixDecryptSettings.InputFile"/></li><li><c>&lt;outFile&gt;</c> via <see cref="ConfixDecryptSettings.OutFile"/></li><li><c>--environment</c> via <see cref="ConfixDecryptSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixDecryptSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixDecrypt(Configure<ConfixDecryptSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixDecryptSettings()));
-    /// <summary><p>Decrypts a file using the configured provider</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;inputFile&gt;</c> via <see cref="ConfixDecryptSettings.InputFile"/></li><li><c>&lt;outFile&gt;</c> via <see cref="ConfixDecryptSettings.OutFile"/></li><li><c>--environment</c> via <see cref="ConfixDecryptSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixDecryptSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;inputFile&gt;</c> via <see cref="ConfixDecryptSettings.InputFile"/></li><li><c>&lt;outFile&gt;</c> via <see cref="ConfixDecryptSettings.OutFile"/></li><li><c>--environment</c> via <see cref="ConfixDecryptSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixDecryptSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixDecrypt(ConfixDecryptSettings options = null) => new ConfixTasks().Run<ConfixDecryptSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixDecrypt(Confix.Nuke.ConfixDecryptSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixDecrypt(Configure<ConfixDecryptSettings> configurator) => new ConfixTasks().Run<ConfixDecryptSettings>(configurator.Invoke(new ConfixDecryptSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixDecrypt(Confix.Nuke.ConfixDecryptSettings)"/>
     public static IEnumerable<(ConfixDecryptSettings Settings, IReadOnlyCollection<Output> Output)> ConfixDecrypt(CombinatorialConfigure<ConfixDecryptSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixDecrypt, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Shows the configuration to a file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--format</c> via <see cref="ConfixConfigShowSettings.Format"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigShowSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixConfigShow(ConfixConfigShowSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Shows the configuration to a file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--format</c> via <see cref="ConfixConfigShowSettings.Format"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigShowSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixConfigShow(Configure<ConfixConfigShowSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixConfigShowSettings()));
-    /// <summary><p>Shows the configuration to a file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--format</c> via <see cref="ConfixConfigShowSettings.Format"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigShowSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--format</c> via <see cref="ConfixConfigShowSettings.Format"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigShowSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixConfigShow(ConfixConfigShowSettings options = null) => new ConfixTasks().Run<ConfixConfigShowSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixConfigShow(Confix.Nuke.ConfixConfigShowSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixConfigShow(Configure<ConfixConfigShowSettings> configurator) => new ConfixTasks().Run<ConfixConfigShowSettings>(configurator.Invoke(new ConfixConfigShowSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixConfigShow(Confix.Nuke.ConfixConfigShowSettings)"/>
     public static IEnumerable<(ConfixConfigShowSettings Settings, IReadOnlyCollection<Output> Output)> ConfixConfigShow(CombinatorialConfigure<ConfixConfigShowSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixConfigShow, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Sets a configuration value in the nearest .confixrc</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;path&gt;</c> via <see cref="ConfixConfigSetSettings.Path"/></li><li><c>&lt;value&gt;</c> via <see cref="ConfixConfigSetSettings.Value"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigSetSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixConfigSet(ConfixConfigSetSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Sets a configuration value in the nearest .confixrc</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;path&gt;</c> via <see cref="ConfixConfigSetSettings.Path"/></li><li><c>&lt;value&gt;</c> via <see cref="ConfixConfigSetSettings.Value"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigSetSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixConfigSet(Configure<ConfixConfigSetSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixConfigSetSettings()));
-    /// <summary><p>Sets a configuration value in the nearest .confixrc</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;path&gt;</c> via <see cref="ConfixConfigSetSettings.Path"/></li><li><c>&lt;value&gt;</c> via <see cref="ConfixConfigSetSettings.Value"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigSetSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>&lt;path&gt;</c> via <see cref="ConfixConfigSetSettings.Path"/></li><li><c>&lt;value&gt;</c> via <see cref="ConfixConfigSetSettings.Value"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigSetSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixConfigSet(ConfixConfigSetSettings options = null) => new ConfixTasks().Run<ConfixConfigSetSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixConfigSet(Confix.Nuke.ConfixConfigSetSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixConfigSet(Configure<ConfixConfigSetSettings> configurator) => new ConfixTasks().Run<ConfixConfigSetSettings>(configurator.Invoke(new ConfixConfigSetSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixConfigSet(Confix.Nuke.ConfixConfigSetSettings)"/>
     public static IEnumerable<(ConfixConfigSetSettings Settings, IReadOnlyCollection<Output> Output)> ConfixConfigSet(CombinatorialConfigure<ConfixConfigSetSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixConfigSet, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Lists the configuration to a file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--format</c> via <see cref="ConfixConfigListSettings.Format"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigListSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixConfigList(ConfixConfigListSettings options = null) => new ConfixTasks().Run(options);
-    /// <summary><p>Lists the configuration to a file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--format</c> via <see cref="ConfixConfigListSettings.Format"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigListSettings.Verbosity"/></li></ul></remarks>
-    public static IReadOnlyCollection<Output> ConfixConfigList(Configure<ConfixConfigListSettings> configurator) => new ConfixTasks().Run(configurator.Invoke(new ConfixConfigListSettings()));
-    /// <summary><p>Lists the configuration to a file</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--format</c> via <see cref="ConfixConfigListSettings.Format"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigListSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--format</c> via <see cref="ConfixConfigListSettings.Format"/></li><li><c>--verbosity</c> via <see cref="ConfixConfigListSettings.Verbosity"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ConfixConfigList(ConfixConfigListSettings options = null) => new ConfixTasks().Run<ConfixConfigListSettings>(options);
+    /// <inheritdoc cref="ConfixTasks.ConfixConfigList(Confix.Nuke.ConfixConfigListSettings)"/>
+    public static IReadOnlyCollection<Output> ConfixConfigList(Configure<ConfixConfigListSettings> configurator) => new ConfixTasks().Run<ConfixConfigListSettings>(configurator.Invoke(new ConfixConfigListSettings()));
+    /// <inheritdoc cref="ConfixTasks.ConfixConfigList(Confix.Nuke.ConfixConfigListSettings)"/>
     public static IEnumerable<(ConfixConfigListSettings Settings, IReadOnlyCollection<Output> Output)> ConfixConfigList(CombinatorialConfigure<ConfixConfigListSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixConfigList, degreeOfParallelism, completeOnFailure);
 }
 #region ConfixComponentBuildSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixComponentBuild(Confix.Nuke.ConfixComponentBuildSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixComponentBuild), Arguments = "component build")]
@@ -265,7 +215,7 @@ public partial class ConfixComponentBuildSettings : ToolOptions
 }
 #endregion
 #region ConfixComponentInitSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixComponentInit(Confix.Nuke.ConfixComponentInitSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixComponentInit), Arguments = "component init")]
@@ -280,7 +230,7 @@ public partial class ConfixComponentInitSettings : ToolOptions
 }
 #endregion
 #region ConfixComponentListSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixComponentList(Confix.Nuke.ConfixComponentListSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixComponentList), Arguments = "component list")]
@@ -301,7 +251,7 @@ public partial class ConfixComponentListSettings : ToolOptions
 }
 #endregion
 #region ConfixComponentAddSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixComponentAdd(Confix.Nuke.ConfixComponentAddSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixComponentAdd), Arguments = "component add")]
@@ -320,7 +270,7 @@ public partial class ConfixComponentAddSettings : ToolOptions
 }
 #endregion
 #region ConfixProjectRestoreSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectRestore(Confix.Nuke.ConfixProjectRestoreSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixProjectRestore), Arguments = "project restore")]
@@ -339,7 +289,7 @@ public partial class ConfixProjectRestoreSettings : ToolOptions
 }
 #endregion
 #region ConfixProjectBuildSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectBuild(Confix.Nuke.ConfixProjectBuildSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixProjectBuild), Arguments = "project build")]
@@ -366,7 +316,7 @@ public partial class ConfixProjectBuildSettings : ToolOptions
 }
 #endregion
 #region ConfixProjectInitSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectInit(Confix.Nuke.ConfixProjectInitSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixProjectInit), Arguments = "project init")]
@@ -381,7 +331,7 @@ public partial class ConfixProjectInitSettings : ToolOptions
 }
 #endregion
 #region ConfixProjectValidateSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectValidate(Confix.Nuke.ConfixProjectValidateSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixProjectValidate), Arguments = "project validate")]
@@ -400,7 +350,7 @@ public partial class ConfixProjectValidateSettings : ToolOptions
 }
 #endregion
 #region ConfixProjectReportSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectReport(Confix.Nuke.ConfixProjectReportSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixProjectReport), Arguments = "project report")]
@@ -421,7 +371,7 @@ public partial class ConfixProjectReportSettings : ToolOptions
 }
 #endregion
 #region ConfixSolutionRestoreSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixSolutionRestore(Confix.Nuke.ConfixSolutionRestoreSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixSolutionRestore), Arguments = "solution restore")]
@@ -434,7 +384,7 @@ public partial class ConfixSolutionRestoreSettings : ToolOptions
 }
 #endregion
 #region ConfixSolutionBuildSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixSolutionBuild(Confix.Nuke.ConfixSolutionBuildSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixSolutionBuild), Arguments = "solution build")]
@@ -447,7 +397,7 @@ public partial class ConfixSolutionBuildSettings : ToolOptions
 }
 #endregion
 #region ConfixSolutionInitSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixSolutionInit(Confix.Nuke.ConfixSolutionInitSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixSolutionInit), Arguments = "solution init")]
@@ -460,7 +410,7 @@ public partial class ConfixSolutionInitSettings : ToolOptions
 }
 #endregion
 #region ConfixSolutionValidateSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixSolutionValidate(Confix.Nuke.ConfixSolutionValidateSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixSolutionValidate), Arguments = "solution validate")]
@@ -473,7 +423,7 @@ public partial class ConfixSolutionValidateSettings : ToolOptions
 }
 #endregion
 #region ConfixVariableGetSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixVariableGet(Confix.Nuke.ConfixVariableGetSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixVariableGet), Arguments = "variable get")]
@@ -492,7 +442,7 @@ public partial class ConfixVariableGetSettings : ToolOptions
 }
 #endregion
 #region ConfixVariableSetSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixVariableSet(Confix.Nuke.ConfixVariableSetSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixVariableSet), Arguments = "variable set")]
@@ -511,7 +461,7 @@ public partial class ConfixVariableSetSettings : ToolOptions
 }
 #endregion
 #region ConfixVariableListSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixVariableList(Confix.Nuke.ConfixVariableListSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixVariableList), Arguments = "variable list")]
@@ -528,7 +478,7 @@ public partial class ConfixVariableListSettings : ToolOptions
 }
 #endregion
 #region ConfixVariableCopySettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixVariableCopy(Confix.Nuke.ConfixVariableCopySettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixVariableCopy), Arguments = "variable copy")]
@@ -549,7 +499,7 @@ public partial class ConfixVariableCopySettings : ToolOptions
 }
 #endregion
 #region ConfixBuildSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixBuild(Confix.Nuke.ConfixBuildSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixBuild), Arguments = "build")]
@@ -572,7 +522,7 @@ public partial class ConfixBuildSettings : ToolOptions
 }
 #endregion
 #region ConfixRestoreSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixRestore(Confix.Nuke.ConfixRestoreSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixRestore), Arguments = "restore")]
@@ -593,7 +543,7 @@ public partial class ConfixRestoreSettings : ToolOptions
 }
 #endregion
 #region ConfixValidateSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixValidate(Confix.Nuke.ConfixValidateSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixValidate), Arguments = "validate")]
@@ -608,7 +558,7 @@ public partial class ConfixValidateSettings : ToolOptions
 }
 #endregion
 #region ConfixEncryptSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixEncrypt(Confix.Nuke.ConfixEncryptSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixEncrypt), Arguments = "encrypt")]
@@ -627,7 +577,7 @@ public partial class ConfixEncryptSettings : ToolOptions
 }
 #endregion
 #region ConfixDecryptSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixDecrypt(Confix.Nuke.ConfixDecryptSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixDecrypt), Arguments = "decrypt")]
@@ -646,7 +596,7 @@ public partial class ConfixDecryptSettings : ToolOptions
 }
 #endregion
 #region ConfixConfigShowSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixConfigShow(Confix.Nuke.ConfixConfigShowSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixConfigShow), Arguments = "config show")]
@@ -661,7 +611,7 @@ public partial class ConfixConfigShowSettings : ToolOptions
 }
 #endregion
 #region ConfixConfigSetSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixConfigSet(Confix.Nuke.ConfixConfigSetSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixConfigSet), Arguments = "config set")]
@@ -678,7 +628,7 @@ public partial class ConfixConfigSetSettings : ToolOptions
 }
 #endregion
 #region ConfixConfigListSettings
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixConfigList(Confix.Nuke.ConfixConfigListSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixConfigList), Arguments = "config list")]
@@ -693,7 +643,7 @@ public partial class ConfixConfigListSettings : ToolOptions
 }
 #endregion
 #region ConfixComponentBuildSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixComponentBuild(Confix.Nuke.ConfixComponentBuildSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixComponentBuildSettingsExtensions
@@ -717,7 +667,7 @@ public static partial class ConfixComponentBuildSettingsExtensions
 }
 #endregion
 #region ConfixComponentInitSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixComponentInit(Confix.Nuke.ConfixComponentInitSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixComponentInitSettingsExtensions
@@ -749,7 +699,7 @@ public static partial class ConfixComponentInitSettingsExtensions
 }
 #endregion
 #region ConfixComponentListSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixComponentList(Confix.Nuke.ConfixComponentListSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixComponentListSettingsExtensions
@@ -805,7 +755,7 @@ public static partial class ConfixComponentListSettingsExtensions
 }
 #endregion
 #region ConfixComponentAddSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixComponentAdd(Confix.Nuke.ConfixComponentAddSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixComponentAddSettingsExtensions
@@ -853,7 +803,7 @@ public static partial class ConfixComponentAddSettingsExtensions
 }
 #endregion
 #region ConfixProjectRestoreSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectRestore(Confix.Nuke.ConfixProjectRestoreSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixProjectRestoreSettingsExtensions
@@ -901,7 +851,7 @@ public static partial class ConfixProjectRestoreSettingsExtensions
 }
 #endregion
 #region ConfixProjectBuildSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectBuild(Confix.Nuke.ConfixProjectBuildSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixProjectBuildSettingsExtensions
@@ -981,7 +931,7 @@ public static partial class ConfixProjectBuildSettingsExtensions
 }
 #endregion
 #region ConfixProjectInitSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectInit(Confix.Nuke.ConfixProjectInitSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixProjectInitSettingsExtensions
@@ -1013,7 +963,7 @@ public static partial class ConfixProjectInitSettingsExtensions
 }
 #endregion
 #region ConfixProjectValidateSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectValidate(Confix.Nuke.ConfixProjectValidateSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixProjectValidateSettingsExtensions
@@ -1061,7 +1011,7 @@ public static partial class ConfixProjectValidateSettingsExtensions
 }
 #endregion
 #region ConfixProjectReportSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixProjectReport(Confix.Nuke.ConfixProjectReportSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixProjectReportSettingsExtensions
@@ -1117,7 +1067,7 @@ public static partial class ConfixProjectReportSettingsExtensions
 }
 #endregion
 #region ConfixSolutionRestoreSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixSolutionRestore(Confix.Nuke.ConfixSolutionRestoreSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixSolutionRestoreSettingsExtensions
@@ -1141,7 +1091,7 @@ public static partial class ConfixSolutionRestoreSettingsExtensions
 }
 #endregion
 #region ConfixSolutionBuildSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixSolutionBuild(Confix.Nuke.ConfixSolutionBuildSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixSolutionBuildSettingsExtensions
@@ -1165,7 +1115,7 @@ public static partial class ConfixSolutionBuildSettingsExtensions
 }
 #endregion
 #region ConfixSolutionInitSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixSolutionInit(Confix.Nuke.ConfixSolutionInitSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixSolutionInitSettingsExtensions
@@ -1189,7 +1139,7 @@ public static partial class ConfixSolutionInitSettingsExtensions
 }
 #endregion
 #region ConfixSolutionValidateSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixSolutionValidate(Confix.Nuke.ConfixSolutionValidateSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixSolutionValidateSettingsExtensions
@@ -1213,7 +1163,7 @@ public static partial class ConfixSolutionValidateSettingsExtensions
 }
 #endregion
 #region ConfixVariableGetSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixVariableGet(Confix.Nuke.ConfixVariableGetSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixVariableGetSettingsExtensions
@@ -1261,7 +1211,7 @@ public static partial class ConfixVariableGetSettingsExtensions
 }
 #endregion
 #region ConfixVariableSetSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixVariableSet(Confix.Nuke.ConfixVariableSetSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixVariableSetSettingsExtensions
@@ -1309,7 +1259,7 @@ public static partial class ConfixVariableSetSettingsExtensions
 }
 #endregion
 #region ConfixVariableListSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixVariableList(Confix.Nuke.ConfixVariableListSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixVariableListSettingsExtensions
@@ -1349,7 +1299,7 @@ public static partial class ConfixVariableListSettingsExtensions
 }
 #endregion
 #region ConfixVariableCopySettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixVariableCopy(Confix.Nuke.ConfixVariableCopySettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixVariableCopySettingsExtensions
@@ -1405,7 +1355,7 @@ public static partial class ConfixVariableCopySettingsExtensions
 }
 #endregion
 #region ConfixBuildSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixBuild(Confix.Nuke.ConfixBuildSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixBuildSettingsExtensions
@@ -1469,7 +1419,7 @@ public static partial class ConfixBuildSettingsExtensions
 }
 #endregion
 #region ConfixRestoreSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixRestore(Confix.Nuke.ConfixRestoreSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixRestoreSettingsExtensions
@@ -1525,7 +1475,7 @@ public static partial class ConfixRestoreSettingsExtensions
 }
 #endregion
 #region ConfixValidateSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixValidate(Confix.Nuke.ConfixValidateSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixValidateSettingsExtensions
@@ -1557,7 +1507,7 @@ public static partial class ConfixValidateSettingsExtensions
 }
 #endregion
 #region ConfixEncryptSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixEncrypt(Confix.Nuke.ConfixEncryptSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixEncryptSettingsExtensions
@@ -1605,7 +1555,7 @@ public static partial class ConfixEncryptSettingsExtensions
 }
 #endregion
 #region ConfixDecryptSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixDecrypt(Confix.Nuke.ConfixDecryptSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixDecryptSettingsExtensions
@@ -1653,7 +1603,7 @@ public static partial class ConfixDecryptSettingsExtensions
 }
 #endregion
 #region ConfixConfigShowSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixConfigShow(Confix.Nuke.ConfixConfigShowSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixConfigShowSettingsExtensions
@@ -1685,7 +1635,7 @@ public static partial class ConfixConfigShowSettingsExtensions
 }
 #endregion
 #region ConfixConfigSetSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixConfigSet(Confix.Nuke.ConfixConfigSetSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixConfigSetSettingsExtensions
@@ -1725,7 +1675,7 @@ public static partial class ConfixConfigSetSettingsExtensions
 }
 #endregion
 #region ConfixConfigListSettingsExtensions
-/// <summary>Used within <see cref="ConfixTasks"/>.</summary>
+/// <inheritdoc cref="ConfixTasks.ConfixConfigList(Confix.Nuke.ConfixConfigListSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ConfixConfigListSettingsExtensions
