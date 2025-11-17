@@ -14,6 +14,9 @@ public sealed class SolutionBuildPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
+            .AddOption(EncryptionOption.Instance)
+            .AddOption(GitUsernameOptions.Instance)
+            .AddOption(GitTokenOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseHandler(InvokeAsync);
     }

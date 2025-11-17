@@ -121,6 +121,18 @@
       "settingsClass": {
         "properties": [
           {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
+          },
+          {
             "name": "OutputFile",
             "type": "string",
             "format": "--output-file {value}",
@@ -232,6 +244,18 @@
       "settingsClass": {
         "properties": [
           {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
+          },
+          {
             "name": "OutputFile",
             "type": "string",
             "format": "--output-file {value}",
@@ -304,6 +328,18 @@
       "settingsClass": {
         "properties": [
           {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
+          },
+          {
             "name": "Verbosity",
             "type": "string",
             "format": "--verbosity {value}",
@@ -318,6 +354,24 @@
       "definiteArgument": "solution build",
       "settingsClass": {
         "properties": [
+          {
+            "name": "Encrypt",
+            "type": "string",
+            "format": "--encrypt {value}",
+            "help": "Encrypt the output file"
+          },
+          {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
+          },
           {
             "name": "Verbosity",
             "type": "string",
@@ -348,6 +402,18 @@
       "definiteArgument": "solution validate",
       "settingsClass": {
         "properties": [
+          {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
+          },
           {
             "name": "Verbosity",
             "type": "string",
@@ -577,6 +643,18 @@
       "definiteArgument": "validate",
       "settingsClass": {
         "properties": [
+          {
+            "name": "GitUsername",
+            "type": "string",
+            "format": "--git-username {value}",
+            "help": "The username used for git authentication."
+          },
+          {
+            "name": "GitToken",
+            "type": "string",
+            "format": "--git-token {value}",
+            "help": "The token used for git authentication."
+          },
           {
             "name": "Environment",
             "type": "string",

@@ -13,6 +13,8 @@ public sealed class SolutionValidatePipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
+            .AddOption(GitUsernameOptions.Instance)
+            .AddOption(GitTokenOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseHandler(InvokeAsync);
     }

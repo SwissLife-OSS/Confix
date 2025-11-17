@@ -54,7 +54,7 @@ public partial class ConfixTasks : ToolTasks
     /// <inheritdoc cref="ConfixTasks.ConfixComponentAdd(Confix.Nuke.ConfixComponentAddSettings)"/>
     public static IEnumerable<(ConfixComponentAddSettings Settings, IReadOnlyCollection<Output> Output)> ConfixComponentAdd(CombinatorialConfigure<ConfixComponentAddSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixComponentAdd, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Reloads the schema of a project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectRestoreSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixProjectRestoreSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixProjectRestoreSettings.GitUsername"/></li><li><c>--only-components</c> via <see cref="ConfixProjectRestoreSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectRestoreSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectRestoreSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixProjectRestore(ConfixProjectRestoreSettings options = null) => new ConfixTasks().Run<ConfixProjectRestoreSettings>(options);
     /// <inheritdoc cref="ConfixTasks.ConfixProjectRestore(Confix.Nuke.ConfixProjectRestoreSettings)"/>
     public static IReadOnlyCollection<Output> ConfixProjectRestore(Configure<ConfixProjectRestoreSettings> configurator) => new ConfixTasks().Run<ConfixProjectRestoreSettings>(configurator.Invoke(new ConfixProjectRestoreSettings()));
@@ -75,7 +75,7 @@ public partial class ConfixTasks : ToolTasks
     /// <inheritdoc cref="ConfixTasks.ConfixProjectInit(Confix.Nuke.ConfixProjectInitSettings)"/>
     public static IEnumerable<(ConfixProjectInitSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectInit(CombinatorialConfigure<ConfixProjectInitSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixProjectInit, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Validates the configuration files of a project</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectValidateSettings.Environment"/></li><li><c>--only-components</c> via <see cref="ConfixProjectValidateSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectValidateSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectValidateSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixProjectValidateSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixProjectValidateSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixProjectValidateSettings.GitUsername"/></li><li><c>--only-components</c> via <see cref="ConfixProjectValidateSettings.OnlyComponents"/></li><li><c>--output-file</c> via <see cref="ConfixProjectValidateSettings.OutputFile"/></li><li><c>--verbosity</c> via <see cref="ConfixProjectValidateSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixProjectValidate(ConfixProjectValidateSettings options = null) => new ConfixTasks().Run<ConfixProjectValidateSettings>(options);
     /// <inheritdoc cref="ConfixTasks.ConfixProjectValidate(Confix.Nuke.ConfixProjectValidateSettings)"/>
     public static IReadOnlyCollection<Output> ConfixProjectValidate(Configure<ConfixProjectValidateSettings> configurator) => new ConfixTasks().Run<ConfixProjectValidateSettings>(configurator.Invoke(new ConfixProjectValidateSettings()));
@@ -89,14 +89,14 @@ public partial class ConfixTasks : ToolTasks
     /// <inheritdoc cref="ConfixTasks.ConfixProjectReport(Confix.Nuke.ConfixProjectReportSettings)"/>
     public static IEnumerable<(ConfixProjectReportSettings Settings, IReadOnlyCollection<Output> Output)> ConfixProjectReport(CombinatorialConfigure<ConfixProjectReportSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixProjectReport, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Reloads the schema of all the projects in the solution</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionRestoreSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--git-token</c> via <see cref="ConfixSolutionRestoreSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixSolutionRestoreSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixSolutionRestoreSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixSolutionRestore(ConfixSolutionRestoreSettings options = null) => new ConfixTasks().Run<ConfixSolutionRestoreSettings>(options);
     /// <inheritdoc cref="ConfixTasks.ConfixSolutionRestore(Confix.Nuke.ConfixSolutionRestoreSettings)"/>
     public static IReadOnlyCollection<Output> ConfixSolutionRestore(Configure<ConfixSolutionRestoreSettings> configurator) => new ConfixTasks().Run<ConfixSolutionRestoreSettings>(configurator.Invoke(new ConfixSolutionRestoreSettings()));
     /// <inheritdoc cref="ConfixTasks.ConfixSolutionRestore(Confix.Nuke.ConfixSolutionRestoreSettings)"/>
     public static IEnumerable<(ConfixSolutionRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionRestore(CombinatorialConfigure<ConfixSolutionRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixSolutionRestore, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Replaces all variables in the solution files with their values</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionBuildSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--encrypt</c> via <see cref="ConfixSolutionBuildSettings.Encrypt"/></li><li><c>--git-token</c> via <see cref="ConfixSolutionBuildSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixSolutionBuildSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixSolutionBuildSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixSolutionBuild(ConfixSolutionBuildSettings options = null) => new ConfixTasks().Run<ConfixSolutionBuildSettings>(options);
     /// <inheritdoc cref="ConfixTasks.ConfixSolutionBuild(Confix.Nuke.ConfixSolutionBuildSettings)"/>
     public static IReadOnlyCollection<Output> ConfixSolutionBuild(Configure<ConfixSolutionBuildSettings> configurator) => new ConfixTasks().Run<ConfixSolutionBuildSettings>(configurator.Invoke(new ConfixSolutionBuildSettings()));
@@ -110,7 +110,7 @@ public partial class ConfixTasks : ToolTasks
     /// <inheritdoc cref="ConfixTasks.ConfixSolutionInit(Confix.Nuke.ConfixSolutionInitSettings)"/>
     public static IEnumerable<(ConfixSolutionInitSettings Settings, IReadOnlyCollection<Output> Output)> ConfixSolutionInit(CombinatorialConfigure<ConfixSolutionInitSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixSolutionInit, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Validates the schema of all the projects in the solution</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--verbosity</c> via <see cref="ConfixSolutionValidateSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--git-token</c> via <see cref="ConfixSolutionValidateSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixSolutionValidateSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixSolutionValidateSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixSolutionValidate(ConfixSolutionValidateSettings options = null) => new ConfixTasks().Run<ConfixSolutionValidateSettings>(options);
     /// <inheritdoc cref="ConfixTasks.ConfixSolutionValidate(Confix.Nuke.ConfixSolutionValidateSettings)"/>
     public static IReadOnlyCollection<Output> ConfixSolutionValidate(Configure<ConfixSolutionValidateSettings> configurator) => new ConfixTasks().Run<ConfixSolutionValidateSettings>(configurator.Invoke(new ConfixSolutionValidateSettings()));
@@ -159,7 +159,7 @@ public partial class ConfixTasks : ToolTasks
     /// <inheritdoc cref="ConfixTasks.ConfixRestore(Confix.Nuke.ConfixRestoreSettings)"/>
     public static IEnumerable<(ConfixRestoreSettings Settings, IReadOnlyCollection<Output> Output)> ConfixRestore(CombinatorialConfigure<ConfixRestoreSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ConfixRestore, degreeOfParallelism, completeOnFailure);
     /// <summary><p>Validates the schema of all the projects</p><p>For more details, visit the <a href="https://swisslife-oss.github.io/Confix/">official website</a>.</p></summary>
-    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li><li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li></ul></remarks>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--environment</c> via <see cref="ConfixValidateSettings.Environment"/></li><li><c>--git-token</c> via <see cref="ConfixValidateSettings.GitToken"/></li><li><c>--git-username</c> via <see cref="ConfixValidateSettings.GitUsername"/></li><li><c>--verbosity</c> via <see cref="ConfixValidateSettings.Verbosity"/></li></ul></remarks>
     public static IReadOnlyCollection<Output> ConfixValidate(ConfixValidateSettings options = null) => new ConfixTasks().Run<ConfixValidateSettings>(options);
     /// <inheritdoc cref="ConfixTasks.ConfixValidate(Confix.Nuke.ConfixValidateSettings)"/>
     public static IReadOnlyCollection<Output> ConfixValidate(Configure<ConfixValidateSettings> configurator) => new ConfixTasks().Run<ConfixValidateSettings>(configurator.Invoke(new ConfixValidateSettings()));
@@ -276,6 +276,10 @@ public partial class ConfixComponentAddSettings : ToolOptions
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixProjectRestore), Arguments = "project restore")]
 public partial class ConfixProjectRestoreSettings : ToolOptions
 {
+    /// <summary>The username used for git authentication.</summary>
+    [Argument(Format = "--git-username {value}")] public string GitUsername => Get<string>(() => GitUsername);
+    /// <summary>The token used for git authentication.</summary>
+    [Argument(Format = "--git-token {value}")] public string GitToken => Get<string>(() => GitToken);
     /// <summary>Specifies the output file</summary>
     [Argument(Format = "--output-file {value}")] public string OutputFile => Get<string>(() => OutputFile);
     /// <summary>The name of the environment to run the command in. Overrules the active environment set in .confixrc</summary>
@@ -337,6 +341,10 @@ public partial class ConfixProjectInitSettings : ToolOptions
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixProjectValidate), Arguments = "project validate")]
 public partial class ConfixProjectValidateSettings : ToolOptions
 {
+    /// <summary>The username used for git authentication.</summary>
+    [Argument(Format = "--git-username {value}")] public string GitUsername => Get<string>(() => GitUsername);
+    /// <summary>The token used for git authentication.</summary>
+    [Argument(Format = "--git-token {value}")] public string GitToken => Get<string>(() => GitToken);
     /// <summary>Specifies the output file</summary>
     [Argument(Format = "--output-file {value}")] public string OutputFile => Get<string>(() => OutputFile);
     /// <summary>The name of the environment to run the command in. Overrules the active environment set in .confixrc</summary>
@@ -377,6 +385,10 @@ public partial class ConfixProjectReportSettings : ToolOptions
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixSolutionRestore), Arguments = "solution restore")]
 public partial class ConfixSolutionRestoreSettings : ToolOptions
 {
+    /// <summary>The username used for git authentication.</summary>
+    [Argument(Format = "--git-username {value}")] public string GitUsername => Get<string>(() => GitUsername);
+    /// <summary>The token used for git authentication.</summary>
+    [Argument(Format = "--git-token {value}")] public string GitToken => Get<string>(() => GitToken);
     /// <summary>Sets the verbosity level</summary>
     [Argument(Format = "--verbosity {value}")] public string Verbosity => Get<string>(() => Verbosity);
     /// <summary></summary>
@@ -390,6 +402,12 @@ public partial class ConfixSolutionRestoreSettings : ToolOptions
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixSolutionBuild), Arguments = "solution build")]
 public partial class ConfixSolutionBuildSettings : ToolOptions
 {
+    /// <summary>Encrypt the output file</summary>
+    [Argument(Format = "--encrypt {value}")] public string Encrypt => Get<string>(() => Encrypt);
+    /// <summary>The username used for git authentication.</summary>
+    [Argument(Format = "--git-username {value}")] public string GitUsername => Get<string>(() => GitUsername);
+    /// <summary>The token used for git authentication.</summary>
+    [Argument(Format = "--git-token {value}")] public string GitToken => Get<string>(() => GitToken);
     /// <summary>Sets the verbosity level</summary>
     [Argument(Format = "--verbosity {value}")] public string Verbosity => Get<string>(() => Verbosity);
     /// <summary></summary>
@@ -416,6 +434,10 @@ public partial class ConfixSolutionInitSettings : ToolOptions
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixSolutionValidate), Arguments = "solution validate")]
 public partial class ConfixSolutionValidateSettings : ToolOptions
 {
+    /// <summary>The username used for git authentication.</summary>
+    [Argument(Format = "--git-username {value}")] public string GitUsername => Get<string>(() => GitUsername);
+    /// <summary>The token used for git authentication.</summary>
+    [Argument(Format = "--git-token {value}")] public string GitToken => Get<string>(() => GitToken);
     /// <summary>Sets the verbosity level</summary>
     [Argument(Format = "--verbosity {value}")] public string Verbosity => Get<string>(() => Verbosity);
     /// <summary></summary>
@@ -549,6 +571,10 @@ public partial class ConfixRestoreSettings : ToolOptions
 [Command(Type = typeof(ConfixTasks), Command = nameof(ConfixTasks.ConfixValidate), Arguments = "validate")]
 public partial class ConfixValidateSettings : ToolOptions
 {
+    /// <summary>The username used for git authentication.</summary>
+    [Argument(Format = "--git-username {value}")] public string GitUsername => Get<string>(() => GitUsername);
+    /// <summary>The token used for git authentication.</summary>
+    [Argument(Format = "--git-token {value}")] public string GitToken => Get<string>(() => GitToken);
     /// <summary>The name of the environment to run the command in. Overrules the active environment set in .confixrc</summary>
     [Argument(Format = "--environment {value}")] public string Environment => Get<string>(() => Environment);
     /// <summary>Sets the verbosity level</summary>
@@ -808,6 +834,22 @@ public static partial class ConfixComponentAddSettingsExtensions
 [ExcludeFromCodeCoverage]
 public static partial class ConfixProjectRestoreSettingsExtensions
 {
+    #region GitUsername
+    /// <inheritdoc cref="ConfixProjectRestoreSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectRestoreSettings), Property = nameof(ConfixProjectRestoreSettings.GitUsername))]
+    public static T SetGitUsername<T>(this T o, string v) where T : ConfixProjectRestoreSettings => o.Modify(b => b.Set(() => o.GitUsername, v));
+    /// <inheritdoc cref="ConfixProjectRestoreSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectRestoreSettings), Property = nameof(ConfixProjectRestoreSettings.GitUsername))]
+    public static T ResetGitUsername<T>(this T o) where T : ConfixProjectRestoreSettings => o.Modify(b => b.Remove(() => o.GitUsername));
+    #endregion
+    #region GitToken
+    /// <inheritdoc cref="ConfixProjectRestoreSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectRestoreSettings), Property = nameof(ConfixProjectRestoreSettings.GitToken))]
+    public static T SetGitToken<T>(this T o, string v) where T : ConfixProjectRestoreSettings => o.Modify(b => b.Set(() => o.GitToken, v));
+    /// <inheritdoc cref="ConfixProjectRestoreSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectRestoreSettings), Property = nameof(ConfixProjectRestoreSettings.GitToken))]
+    public static T ResetGitToken<T>(this T o) where T : ConfixProjectRestoreSettings => o.Modify(b => b.Remove(() => o.GitToken));
+    #endregion
     #region OutputFile
     /// <inheritdoc cref="ConfixProjectRestoreSettings.OutputFile"/>
     [Pure] [Builder(Type = typeof(ConfixProjectRestoreSettings), Property = nameof(ConfixProjectRestoreSettings.OutputFile))]
@@ -968,6 +1010,22 @@ public static partial class ConfixProjectInitSettingsExtensions
 [ExcludeFromCodeCoverage]
 public static partial class ConfixProjectValidateSettingsExtensions
 {
+    #region GitUsername
+    /// <inheritdoc cref="ConfixProjectValidateSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectValidateSettings), Property = nameof(ConfixProjectValidateSettings.GitUsername))]
+    public static T SetGitUsername<T>(this T o, string v) where T : ConfixProjectValidateSettings => o.Modify(b => b.Set(() => o.GitUsername, v));
+    /// <inheritdoc cref="ConfixProjectValidateSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectValidateSettings), Property = nameof(ConfixProjectValidateSettings.GitUsername))]
+    public static T ResetGitUsername<T>(this T o) where T : ConfixProjectValidateSettings => o.Modify(b => b.Remove(() => o.GitUsername));
+    #endregion
+    #region GitToken
+    /// <inheritdoc cref="ConfixProjectValidateSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectValidateSettings), Property = nameof(ConfixProjectValidateSettings.GitToken))]
+    public static T SetGitToken<T>(this T o, string v) where T : ConfixProjectValidateSettings => o.Modify(b => b.Set(() => o.GitToken, v));
+    /// <inheritdoc cref="ConfixProjectValidateSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixProjectValidateSettings), Property = nameof(ConfixProjectValidateSettings.GitToken))]
+    public static T ResetGitToken<T>(this T o) where T : ConfixProjectValidateSettings => o.Modify(b => b.Remove(() => o.GitToken));
+    #endregion
     #region OutputFile
     /// <inheritdoc cref="ConfixProjectValidateSettings.OutputFile"/>
     [Pure] [Builder(Type = typeof(ConfixProjectValidateSettings), Property = nameof(ConfixProjectValidateSettings.OutputFile))]
@@ -1072,6 +1130,22 @@ public static partial class ConfixProjectReportSettingsExtensions
 [ExcludeFromCodeCoverage]
 public static partial class ConfixSolutionRestoreSettingsExtensions
 {
+    #region GitUsername
+    /// <inheritdoc cref="ConfixSolutionRestoreSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionRestoreSettings), Property = nameof(ConfixSolutionRestoreSettings.GitUsername))]
+    public static T SetGitUsername<T>(this T o, string v) where T : ConfixSolutionRestoreSettings => o.Modify(b => b.Set(() => o.GitUsername, v));
+    /// <inheritdoc cref="ConfixSolutionRestoreSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionRestoreSettings), Property = nameof(ConfixSolutionRestoreSettings.GitUsername))]
+    public static T ResetGitUsername<T>(this T o) where T : ConfixSolutionRestoreSettings => o.Modify(b => b.Remove(() => o.GitUsername));
+    #endregion
+    #region GitToken
+    /// <inheritdoc cref="ConfixSolutionRestoreSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionRestoreSettings), Property = nameof(ConfixSolutionRestoreSettings.GitToken))]
+    public static T SetGitToken<T>(this T o, string v) where T : ConfixSolutionRestoreSettings => o.Modify(b => b.Set(() => o.GitToken, v));
+    /// <inheritdoc cref="ConfixSolutionRestoreSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionRestoreSettings), Property = nameof(ConfixSolutionRestoreSettings.GitToken))]
+    public static T ResetGitToken<T>(this T o) where T : ConfixSolutionRestoreSettings => o.Modify(b => b.Remove(() => o.GitToken));
+    #endregion
     #region Verbosity
     /// <inheritdoc cref="ConfixSolutionRestoreSettings.Verbosity"/>
     [Pure] [Builder(Type = typeof(ConfixSolutionRestoreSettings), Property = nameof(ConfixSolutionRestoreSettings.Verbosity))]
@@ -1096,6 +1170,30 @@ public static partial class ConfixSolutionRestoreSettingsExtensions
 [ExcludeFromCodeCoverage]
 public static partial class ConfixSolutionBuildSettingsExtensions
 {
+    #region Encrypt
+    /// <inheritdoc cref="ConfixSolutionBuildSettings.Encrypt"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionBuildSettings), Property = nameof(ConfixSolutionBuildSettings.Encrypt))]
+    public static T SetEncrypt<T>(this T o, string v) where T : ConfixSolutionBuildSettings => o.Modify(b => b.Set(() => o.Encrypt, v));
+    /// <inheritdoc cref="ConfixSolutionBuildSettings.Encrypt"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionBuildSettings), Property = nameof(ConfixSolutionBuildSettings.Encrypt))]
+    public static T ResetEncrypt<T>(this T o) where T : ConfixSolutionBuildSettings => o.Modify(b => b.Remove(() => o.Encrypt));
+    #endregion
+    #region GitUsername
+    /// <inheritdoc cref="ConfixSolutionBuildSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionBuildSettings), Property = nameof(ConfixSolutionBuildSettings.GitUsername))]
+    public static T SetGitUsername<T>(this T o, string v) where T : ConfixSolutionBuildSettings => o.Modify(b => b.Set(() => o.GitUsername, v));
+    /// <inheritdoc cref="ConfixSolutionBuildSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionBuildSettings), Property = nameof(ConfixSolutionBuildSettings.GitUsername))]
+    public static T ResetGitUsername<T>(this T o) where T : ConfixSolutionBuildSettings => o.Modify(b => b.Remove(() => o.GitUsername));
+    #endregion
+    #region GitToken
+    /// <inheritdoc cref="ConfixSolutionBuildSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionBuildSettings), Property = nameof(ConfixSolutionBuildSettings.GitToken))]
+    public static T SetGitToken<T>(this T o, string v) where T : ConfixSolutionBuildSettings => o.Modify(b => b.Set(() => o.GitToken, v));
+    /// <inheritdoc cref="ConfixSolutionBuildSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionBuildSettings), Property = nameof(ConfixSolutionBuildSettings.GitToken))]
+    public static T ResetGitToken<T>(this T o) where T : ConfixSolutionBuildSettings => o.Modify(b => b.Remove(() => o.GitToken));
+    #endregion
     #region Verbosity
     /// <inheritdoc cref="ConfixSolutionBuildSettings.Verbosity"/>
     [Pure] [Builder(Type = typeof(ConfixSolutionBuildSettings), Property = nameof(ConfixSolutionBuildSettings.Verbosity))]
@@ -1144,6 +1242,22 @@ public static partial class ConfixSolutionInitSettingsExtensions
 [ExcludeFromCodeCoverage]
 public static partial class ConfixSolutionValidateSettingsExtensions
 {
+    #region GitUsername
+    /// <inheritdoc cref="ConfixSolutionValidateSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionValidateSettings), Property = nameof(ConfixSolutionValidateSettings.GitUsername))]
+    public static T SetGitUsername<T>(this T o, string v) where T : ConfixSolutionValidateSettings => o.Modify(b => b.Set(() => o.GitUsername, v));
+    /// <inheritdoc cref="ConfixSolutionValidateSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionValidateSettings), Property = nameof(ConfixSolutionValidateSettings.GitUsername))]
+    public static T ResetGitUsername<T>(this T o) where T : ConfixSolutionValidateSettings => o.Modify(b => b.Remove(() => o.GitUsername));
+    #endregion
+    #region GitToken
+    /// <inheritdoc cref="ConfixSolutionValidateSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionValidateSettings), Property = nameof(ConfixSolutionValidateSettings.GitToken))]
+    public static T SetGitToken<T>(this T o, string v) where T : ConfixSolutionValidateSettings => o.Modify(b => b.Set(() => o.GitToken, v));
+    /// <inheritdoc cref="ConfixSolutionValidateSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixSolutionValidateSettings), Property = nameof(ConfixSolutionValidateSettings.GitToken))]
+    public static T ResetGitToken<T>(this T o) where T : ConfixSolutionValidateSettings => o.Modify(b => b.Remove(() => o.GitToken));
+    #endregion
     #region Verbosity
     /// <inheritdoc cref="ConfixSolutionValidateSettings.Verbosity"/>
     [Pure] [Builder(Type = typeof(ConfixSolutionValidateSettings), Property = nameof(ConfixSolutionValidateSettings.Verbosity))]
@@ -1480,6 +1594,22 @@ public static partial class ConfixRestoreSettingsExtensions
 [ExcludeFromCodeCoverage]
 public static partial class ConfixValidateSettingsExtensions
 {
+    #region GitUsername
+    /// <inheritdoc cref="ConfixValidateSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixValidateSettings), Property = nameof(ConfixValidateSettings.GitUsername))]
+    public static T SetGitUsername<T>(this T o, string v) where T : ConfixValidateSettings => o.Modify(b => b.Set(() => o.GitUsername, v));
+    /// <inheritdoc cref="ConfixValidateSettings.GitUsername"/>
+    [Pure] [Builder(Type = typeof(ConfixValidateSettings), Property = nameof(ConfixValidateSettings.GitUsername))]
+    public static T ResetGitUsername<T>(this T o) where T : ConfixValidateSettings => o.Modify(b => b.Remove(() => o.GitUsername));
+    #endregion
+    #region GitToken
+    /// <inheritdoc cref="ConfixValidateSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixValidateSettings), Property = nameof(ConfixValidateSettings.GitToken))]
+    public static T SetGitToken<T>(this T o, string v) where T : ConfixValidateSettings => o.Modify(b => b.Set(() => o.GitToken, v));
+    /// <inheritdoc cref="ConfixValidateSettings.GitToken"/>
+    [Pure] [Builder(Type = typeof(ConfixValidateSettings), Property = nameof(ConfixValidateSettings.GitToken))]
+    public static T ResetGitToken<T>(this T o) where T : ConfixValidateSettings => o.Modify(b => b.Remove(() => o.GitToken));
+    #endregion
     #region Environment
     /// <inheritdoc cref="ConfixValidateSettings.Environment"/>
     [Pure] [Builder(Type = typeof(ConfixValidateSettings), Property = nameof(ConfixValidateSettings.Environment))]
