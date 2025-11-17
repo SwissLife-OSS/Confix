@@ -1,8 +1,8 @@
 using System.Text.Json.Nodes;
 using Confix.Inputs;
+using Confix.Utilities.Json;
 using Confix.Variables;
 using FluentAssertions;
-using Json.More;
 
 namespace Confix.Tool.Tests;
 

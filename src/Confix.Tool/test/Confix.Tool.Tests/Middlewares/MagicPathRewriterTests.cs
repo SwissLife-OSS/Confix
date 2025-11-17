@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Middlewares;
-using Json.More;
+using Confix.Utilities.Json;
 using Snapshooter.Xunit;
 
 namespace Confix.Entities.Component.Configuration.Middlewares;
