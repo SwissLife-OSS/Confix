@@ -43,8 +43,8 @@ public static partial class JsonNodeExtensions
             (_, JsonValue nodeValue) => nodeValue,
             _ => throw new InvalidOperationException($"""
                     Cannot merge nodes of different types:
-                    Source: {source.GetSchemaValueType()}
-                    Node: {node.GetSchemaValueType()}
+                    Source: {source.GetValueKind()}
+                    Node: {node.GetValueKind()}
                 """)
         };
 
