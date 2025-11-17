@@ -12,7 +12,7 @@ public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewr
     protected override JsonNode Rewrite(JsonValue value, JsonVariableRewriterContext context)
         => value.GetValueKind() switch
         {
-            JsonValueKind.String => RewriteVariable((string) value!, context),
+            JsonValueKind.String => RewriteVariable((string)value!, context),
             _ => value.Deserialize<JsonNode>()!
         };
 

@@ -8,208 +8,208 @@ namespace Confix.Tool.Tests;
 
 public class LocalVariableProviderTests : IDisposable
 {
-    private readonly string tmpFilePath = $"./LocalVariableProviderTests_{Guid.NewGuid():N}.json";
+  private readonly string tmpFilePath = $"./LocalVariableProviderTests_{Guid.NewGuid():N}.json";
 
-    [Fact]
-    public async Task ListAsync_ValidFile_CorrectResult()
-    {
-        // arrange
-        await PrepareFile(
-            """
+  [Fact]
+  public async Task ListAsync_ValidFile_CorrectResult()
+  {
+    // arrange
+    await PrepareFile(
+        """
             {
                 "foo": 42,
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        var result = await provider.ListAsync(default);
+    // act
+    var result = await provider.ListAsync(default);
 
-        // assert
-        result.Should().HaveCount(2);
-        result.Should().Contain("foo");
-        result.Should().Contain("bar");
-    }
+    // assert
+    result.Should().HaveCount(2);
+    result.Should().Contain("foo");
+    result.Should().Contain("bar");
+  }
 
-    [Fact]
-    public async Task ResolveAsync_ExistingPath_CorrectResult()
-    {
-        // arrange
-        await PrepareFile(
-            """
+  [Fact]
+  public async Task ResolveAsync_ExistingPath_CorrectResult()
+  {
+    // arrange
+    await PrepareFile(
+        """
             {
                 "foo": 42,
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        var result = await provider.ResolveAsync("foo", default);
+    // act
+    var result = await provider.ResolveAsync("foo", default);
 
-        // assert
-        Assert.True(result.IsEquivalentTo(JsonValue.Create(42)));
-    }
+    // assert
+    Assert.True(result.IsEquivalentTo(JsonValue.Create(42)));
+  }
 
-    [Fact]
-    public async Task ResolveAsync_WithArray_CorrectResult()
-    {
-        // arrange
-        await PrepareFile(
-            """
+  [Fact]
+  public async Task ResolveAsync_WithArray_CorrectResult()
+  {
+    // arrange
+    await PrepareFile(
+        """
             {
                 "someArray": ["a", "b", "c"]
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        var result = await provider.ResolveAsync("someArray", default);
+    // act
+    var result = await provider.ResolveAsync("someArray", default);
 
-        // assert
-        Assert.True(result.IsEquivalentTo(JsonNode.Parse("""["a","b","c"]""")));
-    }
+    // assert
+    Assert.True(result.IsEquivalentTo(JsonNode.Parse("""["a","b","c"]""")));
+  }
 
-    [Fact]
-    public async Task ResolveAsync_NonExistingPath_VariableNotFoundException()
-    {
-        // arrange
-        await PrepareFile(
-            """
+  [Fact]
+  public async Task ResolveAsync_NonExistingPath_VariableNotFoundException()
+  {
+    // arrange
+    await PrepareFile(
+        """
             {
                 "foo": 42,
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act & assert
-        await Assert.ThrowsAsync<VariableNotFoundException>(()
-            => provider.ResolveAsync("nonexistent", default));
-    }
+    // act & assert
+    await Assert.ThrowsAsync<VariableNotFoundException>(()
+        => provider.ResolveAsync("nonexistent", default));
+  }
 
-    [Fact]
-    public async Task ResolveManyAsync_ExistingPaths_CorrectResult()
-    {
-        // arrange
-        await PrepareFile(
-            """
+  [Fact]
+  public async Task ResolveManyAsync_ExistingPaths_CorrectResult()
+  {
+    // arrange
+    await PrepareFile(
+        """
             {
                 "foo": 42,
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
-        var paths = new List<string> { "foo", "bar" };
-        var context = new VariableProviderContext(null, CancellationToken.None);
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+    var paths = new List<string> { "foo", "bar" };
+    var context = new VariableProviderContext(null, CancellationToken.None);
 
-        // act
-        var result = await provider.ResolveManyAsync(paths, context);
+    // act
+    var result = await provider.ResolveManyAsync(paths, context);
 
-        // assert
-        result.Should().HaveCount(2);
-        Assert.True(result["foo"].IsEquivalentTo(JsonValue.Create(42)));
-        Assert.True(result["bar"].IsEquivalentTo(JsonValue.Create("baz")));
-    }
+    // assert
+    result.Should().HaveCount(2);
+    Assert.True(result["foo"].IsEquivalentTo(JsonValue.Create(42)));
+    Assert.True(result["bar"].IsEquivalentTo(JsonValue.Create("baz")));
+  }
 
-    [Fact]
-    public async Task ResolveManyAsync_MixedPaths_AggregateException()
-    {
-        // arrange
-        await PrepareFile(
-            """
+  [Fact]
+  public async Task ResolveManyAsync_MixedPaths_AggregateException()
+  {
+    // arrange
+    await PrepareFile(
+        """
             {
                 "foo": 42,
                 "bar": "baz"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
-        var paths = new List<string> { "foo", "nonexistent" };
-        var context = new VariableProviderContext(null, CancellationToken.None);
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+    var paths = new List<string> { "foo", "nonexistent" };
+    var context = new VariableProviderContext(null, CancellationToken.None);
 
-        // act & assert
-        var exception =
-            await Assert.ThrowsAsync<AggregateException>(()
-                => provider.ResolveManyAsync(paths, context));
-        exception.InnerExceptions.Should().HaveCount(1);
-        exception.InnerExceptions[0].Should().BeOfType<VariableNotFoundException>();
-    }
+    // act & assert
+    var exception =
+        await Assert.ThrowsAsync<AggregateException>(()
+            => provider.ResolveManyAsync(paths, context));
+    exception.InnerExceptions.Should().HaveCount(1);
+    exception.InnerExceptions[0].Should().BeOfType<VariableNotFoundException>();
+  }
 
-    [Fact]
-    public async Task ListAsync_Should_NotFail_When_NoFile()
-    {
-        // arrange
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+  [Fact]
+  public async Task ListAsync_Should_NotFail_When_NoFile()
+  {
+    // arrange
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        var result = await provider.ListAsync(default);
+    // act
+    var result = await provider.ListAsync(default);
 
-        // assert
-        result.Should().HaveCount(0);
-    }
+    // assert
+    result.Should().HaveCount(0);
+  }
 
-    [Fact]
-    public async Task ListAsync_Should_NotCreateFile_When_FileDoesNotExists()
-    {
-        // arrange
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+  [Fact]
+  public async Task ListAsync_Should_NotCreateFile_When_FileDoesNotExists()
+  {
+    // arrange
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        await provider.ListAsync(default);
+    // act
+    await provider.ListAsync(default);
 
-        // assert
-        Assert.False(File.Exists(tmpFilePath));
-    }
+    // assert
+    Assert.False(File.Exists(tmpFilePath));
+  }
 
-    [Fact]
-    public async Task GetAsync_Should_CreateFile_When_FileDoesNotExist()
-    {
-        // arrange
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+  [Fact]
+  public async Task GetAsync_Should_CreateFile_When_FileDoesNotExist()
+  {
+    // arrange
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        var exception =
-            await Record.ExceptionAsync(async () => await provider.ResolveAsync("foo", default));
+    // act
+    var exception =
+        await Record.ExceptionAsync(async () => await provider.ResolveAsync("foo", default));
 
-        // assert
-        Assert.IsType<VariableNotFoundException>(exception);
-        Assert.True(File.Exists(tmpFilePath));
-    }
+    // assert
+    Assert.IsType<VariableNotFoundException>(exception);
+    Assert.True(File.Exists(tmpFilePath));
+  }
 
-    [Fact]
-    public async Task SetAsync_Should_SetAndReturn()
-    {
-        // arrange
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+  [Fact]
+  public async Task SetAsync_Should_SetAndReturn()
+  {
+    // arrange
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        var result = await provider.SetAsync("foo", JsonValue.Create("bar")!, default);
+    // act
+    var result = await provider.SetAsync("foo", JsonValue.Create("bar")!, default);
 
-        // assert
-        result.Should().Be("foo");
-        Assert.Equal(
-            """
+    // assert
+    result.Should().Be("foo");
+    Assert.Equal(
+        """
             {
               "foo": "bar"
             }
             """,
-            await File.ReadAllTextAsync(tmpFilePath));
-    }
+        await File.ReadAllTextAsync(tmpFilePath));
+  }
 
-    [Fact]
-    public async Task SetAsync_Should_SetAndReturn_Deep()
-    {
-        // arrange
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+  [Fact]
+  public async Task SetAsync_Should_SetAndReturn_Deep()
+  {
+    // arrange
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        var result = await provider.SetAsync("foo.bar.baz", JsonValue.Create("bar")!, default);
+    // act
+    var result = await provider.SetAsync("foo.bar.baz", JsonValue.Create("bar")!, default);
 
-        // assert
-        result.Should().Be("foo.bar.baz");
-        Assert.Equal(
-            """
+    // assert
+    result.Should().Be("foo.bar.baz");
+    Assert.Equal(
+        """
             {
               "foo": {
                 "bar": {
@@ -218,41 +218,41 @@ public class LocalVariableProviderTests : IDisposable
               }
             }
             """,
-            await File.ReadAllTextAsync(tmpFilePath));
-    }
+        await File.ReadAllTextAsync(tmpFilePath));
+  }
 
-    [Fact]
-    public async Task SetAsync_Should_SetAndReturn_When_FileHasContent()
-    {
-        // arrange
-        await PrepareFile(
-            """
+  [Fact]
+  public async Task SetAsync_Should_SetAndReturn_When_FileHasContent()
+  {
+    // arrange
+    await PrepareFile(
+        """
             {
               "foo": "bar"
             }
             """);
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        var result = await provider.SetAsync("foo", JsonValue.Create("baz")!, default);
+    // act
+    var result = await provider.SetAsync("foo", JsonValue.Create("baz")!, default);
 
-        // assert
-        result.Should().Be("foo");
-        Assert.Equal(
-            """
+    // assert
+    result.Should().Be("foo");
+    Assert.Equal(
+        """
             {
               "foo": "baz"
             }
             """,
-            await File.ReadAllTextAsync(tmpFilePath));
-    }
+        await File.ReadAllTextAsync(tmpFilePath));
+  }
 
-    [Fact]
-    public async Task SetAsync_Should_SetAndReturn_When_FileHasContentDeep()
-    {
-        // arrange
-        await PrepareFile(
-            """
+  [Fact]
+  public async Task SetAsync_Should_SetAndReturn_When_FileHasContentDeep()
+  {
+    // arrange
+    await PrepareFile(
+        """
             {
               "foo": {
                 "bar": {
@@ -262,15 +262,15 @@ public class LocalVariableProviderTests : IDisposable
             }
             """);
 
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act
-        var result = await provider.SetAsync("foo.bar.baz", JsonValue.Create("baz")!, default);
+    // act
+    var result = await provider.SetAsync("foo.bar.baz", JsonValue.Create("baz")!, default);
 
-        // assert
-        result.Should().Be("foo.bar.baz");
-        Assert.Equal(
-            """
+    // assert
+    result.Should().Be("foo.bar.baz");
+    Assert.Equal(
+        """
             {
               "foo": {
                 "bar": {
@@ -279,15 +279,15 @@ public class LocalVariableProviderTests : IDisposable
               }
             }
             """,
-            await File.ReadAllTextAsync(tmpFilePath));
-    }
+        await File.ReadAllTextAsync(tmpFilePath));
+  }
 
-    [Fact]
-    public async Task SetAsync_Should_ThrowExitException_When_FileHasArray()
-    {
-        // arrange
-        await PrepareFile(
-            """
+  [Fact]
+  public async Task SetAsync_Should_ThrowExitException_When_FileHasArray()
+  {
+    // arrange
+    await PrepareFile(
+        """
             {
               "foo": [
                 { "bar": "baz"}
@@ -295,13 +295,13 @@ public class LocalVariableProviderTests : IDisposable
             }
             """);
 
-        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+    LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
 
-        // act & assert
-        await provider.SetAsync("foo[0].bar", JsonValue.Create("qux"), default);
+    // act & assert
+    await provider.SetAsync("foo[0].bar", JsonValue.Create("qux"), default);
 
-        Assert.Equal(
-            """
+    Assert.Equal(
+        """
             {
               "foo": [
                 {
@@ -310,13 +310,13 @@ public class LocalVariableProviderTests : IDisposable
               ]
             }
             """,
-            await File.ReadAllTextAsync(tmpFilePath));
-    }
+        await File.ReadAllTextAsync(tmpFilePath));
+  }
 
-    private Task PrepareFile(string content) => File.WriteAllTextAsync(tmpFilePath, content);
+  private Task PrepareFile(string content) => File.WriteAllTextAsync(tmpFilePath, content);
 
-    public void Dispose()
-    {
-        File.Delete(tmpFilePath);
-    }
+  public void Dispose()
+  {
+    File.Delete(tmpFilePath);
+  }
 }

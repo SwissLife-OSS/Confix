@@ -54,7 +54,8 @@ public class MagicPathRewriterTests
     }
 
     [Fact]
-    public void Rewrite_ProjectInNonProjectScope_Ignores(){
+    public void Rewrite_ProjectInNonProjectScope_Ignores()
+    {
         // arrange
         var sampleObject = new JsonObject()
         {
@@ -70,7 +71,8 @@ public class MagicPathRewriterTests
     }
 
     [Fact]
-    public void Rewrite_SolutionInNonSolutionScope_Ignores(){
+    public void Rewrite_SolutionInNonSolutionScope_Ignores()
+    {
         // arrange
         var sampleObject = new JsonObject()
         {
