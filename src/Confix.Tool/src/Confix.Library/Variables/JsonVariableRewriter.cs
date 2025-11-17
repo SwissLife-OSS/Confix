@@ -10,9 +10,9 @@ namespace Confix.Variables;
 public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewriterContext>
 {
     protected override JsonNode Rewrite(JsonValue value, JsonVariableRewriterContext context)
-        => value.GetSchemaValueType() switch
+        => value.GetValueKind() switch
         {
-            SchemaValueType.String => RewriteVariable((string) value!, context),
+            JsonValueKind.String => RewriteVariable((string) value!, context),
             _ => value.Deserialize<JsonNode>()!
         };
 

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Json.More;
@@ -43,10 +44,10 @@ public sealed class VariableExtractorService
                 providerName,
                 providerType,
                 variable.Path.Path,
-                resolvedValue.GetSchemaValueType() switch
+                resolvedValue.GetValueKind() switch
                 {
-                    SchemaValueType.String => resolvedValue.GetValue<string>(),
-                    SchemaValueType.Null => "null",
+                    JsonValueKind.String => resolvedValue.GetValue<string>(),
+                    JsonValueKind.Null => "null",
                     _ => resolvedValue.ToJsonString()
                 },
                 variable.Node.GetPointerFromRoot());
@@ -60,7 +61,7 @@ public sealed class VariableExtractorService
     private static IEnumerable<ExtractedVariable> Extract(JsonNode node)
         => JsonParser.ParseNode(node)
             .Values
-            .Where(v => v.GetSchemaValueType() == SchemaValueType.String)
+            .Where(v => v.GetValueKind() == JsonValueKind.String)
             .SelectMany(v =>
             {
                 var extractedVariables = new List<ExtractedVariable>();

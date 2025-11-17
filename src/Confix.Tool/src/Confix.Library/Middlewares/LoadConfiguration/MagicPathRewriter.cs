@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Schema;
@@ -18,9 +19,9 @@ public sealed class MagicPathRewriter : JsonDocumentRewriter<MagicPathContext>
 {
     protected override JsonNode Rewrite(JsonValue value, MagicPathContext context)
     {
-        switch (value.GetSchemaValueType())
+        switch (value.GetValueKind())
         {
-            case SchemaValueType.String when MagicPath.From(value) is { } magicPath:
+            case JsonValueKind.String when MagicPath.From(value) is { } magicPath:
                 var replacedValue = magicPath.Replace(context);
 
                 App.Log.ReplacedMagicPath((string?) value, replacedValue);
