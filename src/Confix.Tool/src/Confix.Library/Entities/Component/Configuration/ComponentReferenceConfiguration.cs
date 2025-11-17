@@ -59,7 +59,7 @@ public sealed class ComponentReferenceConfiguration
                 null);
         }
 
-        if (node.GetValueKind() is JsonValueKind.True)
+        if (node.GetValueKind() is JsonValueKind.True || node.GetValueKind() is JsonValueKind.False)
         {
             return new ComponentReferenceConfiguration(
                 provider,

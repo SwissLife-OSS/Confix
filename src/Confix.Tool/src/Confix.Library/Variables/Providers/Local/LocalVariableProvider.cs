@@ -6,7 +6,6 @@ using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
 using HotChocolate.Types;
-using Json.More;
 
 namespace Confix.Variables;
 
