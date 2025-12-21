@@ -50,11 +50,17 @@ public sealed partial class SnapshotBuilder
             .Aggregate(content, (current, processor) => processor(current));
 
         // Normalize Windows path separators to forward slashes for consistent cross-platform snapshots.
-        // Use regex to replace backslashes that are NOT JSON escape sequences.
-        // JSON escapes are: \", \/, \b, \f, \n, \r, \t, \uXXXX
-        // We replace any \ that is NOT followed by one of: " / b f n r t u
-        // Note: We intentionally don't exclude \\ because double backslashes in paths should become /
-        content = BackslashNotJsonEscapeRegex().Replace(content, "/");
+        // Use regex to protect JSON escape sequences (which are NOT followed by word characters),
+        // then replace all backslashes, then restore the protected sequences.
+        
+        // Protect JSON escapes that are NOT followed by word characters (to distinguish \t from \test)
+        content = JsonEscapeNotInPathRegex().Replace(content, "\x00$1");
+        
+        // Replace all remaining backslashes with forward slashes
+        content = content.Replace("\\", "/");
+        
+        // Restore protected JSON escapes
+        content = content.Replace("\x00", "\\");
 
         // Collapse multiple forward slashes to single (but preserve :// for URLs)
         content = MultipleSlashesRegex().Replace(content, "/");
@@ -63,12 +69,11 @@ public sealed partial class SnapshotBuilder
     }
 
     /// <summary>
-    /// Matches a backslash that is NOT followed by a JSON escape character (excluding \\).
-    /// This allows us to replace path separators while preserving JSON escapes.
-    /// Double backslashes (\\) are treated as path separators and will be converted.
+    /// Matches JSON escape sequences that are NOT followed by word characters.
+    /// This distinguishes real JSON escapes (\t, \n, etc.) from paths (\test, \new, etc.)
     /// </summary>
-    [GeneratedRegex(@"\\(?![""\/bfnrtu])")]
-    private static partial Regex BackslashNotJsonEscapeRegex();
+    [GeneratedRegex(@"\\([""\/bfnrt](?![a-zA-Z0-9_])|u[0-9a-fA-F]{4})")]
+    private static partial Regex JsonEscapeNotInPathRegex();
 
     /// <summary>
     /// Matches two or more consecutive forward slashes that are NOT preceded by a colon (to preserve URLs like https://).
