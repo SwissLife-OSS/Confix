@@ -59,9 +59,11 @@ public sealed partial class SnapshotBuilder
             .Replace("\\b", "\x00b")   // Protect \b (backspace)
             .Replace("\\f", "\x00f")   // Protect \f (form feed)
             .Replace("\\\"", "\x00\"") // Protect \" (escaped quote)
+            .Replace("://", "\x01")    // Protect :// (URL scheme separator)
             .Replace("\\", "/")        // Replace ALL backslashes with forward slashes
             .Replace("//", "/")        // Normalize double forward slashes to single
-            .Replace("\x00", "\\");    // Restore all protected sequences
+            .Replace("\x01", "://")    // Restore URL scheme separator
+            .Replace("\x00", "\\");    // Restore all protected JSON escape sequences
 
         content.MatchSnapshot();
     }
