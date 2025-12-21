@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using Snapshooter;
 using Snapshooter.Xunit;
 
 namespace Confix.Inputs;
@@ -38,7 +39,16 @@ public sealed partial class SnapshotBuilder
         content = _processors
             .Aggregate(content, (current, processor) => processor(current));
 
-        content.MatchSnapshot(SnapshotNameExtension.Create(RuntimeInformation.OSDescription));
+        content.MatchSnapshot(SnapshotNameExtension.Create(GetOS()));
+    }
+
+    private static string GetOS()
+    {
+        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? "windows"
+            : RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? "osx"
+                : "linux";
     }
 
     public SnapshotBuilder RemoveLineThatStartsWith(string value)
