@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Snapshooter.Xunit;
@@ -37,10 +38,7 @@ public sealed partial class SnapshotBuilder
         content = _processors
             .Aggregate(content, (current, processor) => processor(current));
 
-        // Normalize path separators for consistent cross-platform snapshots
-        content = content.Replace('\\', '/');
-
-        content.MatchSnapshot();
+        content.MatchSnapshot(SnapshotNameExtension.Create(RuntimeInformation.OSDescription));
     }
 
     public SnapshotBuilder RemoveLineThatStartsWith(string value)

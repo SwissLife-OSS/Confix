@@ -14,18 +14,8 @@ public static class TestExtensions
             });
 
     public static string ReplacePath(this string str, TestConfixCommandline info, string name)
-        => str
-            .Replace(info.Directories.Content.Parent!.FullName, $"<<{name}>>")
-            .NormalizePathSeparators();
+        => str.Replace(info.Directories.Content.Parent!.FullName, $"<<{name}>>");
 
     public static string ReplacePath(this string str, TestMiddlewareContext info, string name)
-        => str
-            .Replace(info.Directories.Content.Parent!.FullName, $"<<{name}>>")
-            .NormalizePathSeparators();
-
-    /// <summary>
-    /// Normalizes path separators to forward slashes for consistent cross-platform snapshots.
-    /// </summary>
-    public static string NormalizePathSeparators(this string str)
-        => str.Replace('\\', '/');
+        => str.Replace(info.Directories.Content.Parent!.FullName, $"<<{name}>>");
 }
