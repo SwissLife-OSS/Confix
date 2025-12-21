@@ -1,7 +1,5 @@
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using Snapshooter;
 using Snapshooter.Xunit;
 
 namespace Confix.Inputs;
@@ -25,6 +23,13 @@ public sealed partial class SnapshotBuilder
     public SnapshotBuilder AddReplacement(string original, string replacement)
     {
         _processors.Add(x => x.Replace(original, replacement));
+
+        // On Windows, also replace the path with forward slashes (in case output uses normalized paths)
+        if (Path.DirectorySeparatorChar == '\\' && original.Contains('\\'))
+        {
+            _processors.Add(x => x.Replace(original.Replace('\\', '/'), replacement));
+        }
+
         return this;
     }
 
@@ -39,17 +44,21 @@ public sealed partial class SnapshotBuilder
         content = _processors
             .Aggregate(content, (current, processor) => processor(current));
 
-        content.MatchSnapshot(SnapshotNameExtension.Create(GetOS()));
+        // Normalize Windows path separators to forward slashes for consistent cross-platform snapshots.
+        // Only replace backslashes that look like path separators (followed by word chars, dots, or angle brackets)
+        // but NOT JSON escape sequences like \u, \n, \r, \t, \b, \f, \\, \"
+        content = PathSeparatorRegex().Replace(content, "/$1");
+
+        content.MatchSnapshot();
     }
 
-    private static string GetOS()
-    {
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? "windows"
-            : RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? "osx"
-                : "linux";
-    }
+    /// <summary>
+    /// Matches backslashes followed by characters that indicate a path segment,
+    /// excluding JSON/string escape sequences (\u, \n, \r, \t, \b, \f, \\, \", \/).
+    /// The negative lookahead (?![ubfnrt\\""/]) ensures we don't match escape sequences.
+    /// </summary>
+    [GeneratedRegex(@"\\(?![ubfnrt\\""/])([A-Za-z0-9_.<>])")]
+    private static partial Regex PathSeparatorRegex();
 
     public SnapshotBuilder RemoveLineThatStartsWith(string value)
     {
