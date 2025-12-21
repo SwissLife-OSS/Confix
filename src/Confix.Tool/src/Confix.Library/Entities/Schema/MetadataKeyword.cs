@@ -78,7 +78,7 @@ internal class MetadataKeywordJsonConverter : JsonConverter<MetadataKeyword>
     {
         var node = JsonSerializer.Deserialize<JsonArray>(ref reader, options);
 
-        return new MetadataKeyword(node);
+        return new MetadataKeyword(node ?? []);
     }
 
     public override void Write(
