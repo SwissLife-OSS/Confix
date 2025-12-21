@@ -50,23 +50,31 @@ public sealed partial class SnapshotBuilder
             .Aggregate(content, (current, processor) => processor(current));
 
         // Normalize Windows path separators to forward slashes for consistent cross-platform snapshots.
-        // First protect JSON escape sequences, then replace backslashes, then restore escapes.
-        content = content
-            .Replace("\\u", "\x00u")   // Protect \u (unicode)
-            .Replace("\\n", "\x00n")   // Protect \n (newline)
-            .Replace("\\r", "\x00r")   // Protect \r (carriage return)
-            .Replace("\\t", "\x00t")   // Protect \t (tab)
-            .Replace("\\b", "\x00b")   // Protect \b (backspace)
-            .Replace("\\f", "\x00f")   // Protect \f (form feed)
-            .Replace("\\\"", "\x00\"") // Protect \" (escaped quote)
-            .Replace("://", "\x01")    // Protect :// (URL scheme separator)
-            .Replace("\\", "/")        // Replace ALL backslashes with forward slashes
-            .Replace("//", "/")        // Normalize double forward slashes to single
-            .Replace("\x01", "://")    // Restore URL scheme separator
-            .Replace("\x00", "\\");    // Restore all protected JSON escape sequences
+        // Use regex to replace backslashes that are NOT JSON escape sequences.
+        // JSON escapes are: \", \/, \b, \f, \n, \r, \t, \uXXXX
+        // We replace any \ that is NOT followed by one of: " / b f n r t u
+        // Note: We intentionally don't exclude \\ because double backslashes in paths should become /
+        content = BackslashNotJsonEscapeRegex().Replace(content, "/");
+
+        // Collapse multiple forward slashes to single (but preserve :// for URLs)
+        content = MultipleSlashesRegex().Replace(content, "/");
 
         content.MatchSnapshot();
     }
+
+    /// <summary>
+    /// Matches a backslash that is NOT followed by a JSON escape character (excluding \\).
+    /// This allows us to replace path separators while preserving JSON escapes.
+    /// Double backslashes (\\) are treated as path separators and will be converted.
+    /// </summary>
+    [GeneratedRegex(@"\\(?![""\/bfnrtu])")]
+    private static partial Regex BackslashNotJsonEscapeRegex();
+
+    /// <summary>
+    /// Matches two or more consecutive forward slashes that are NOT preceded by a colon (to preserve URLs like https://).
+    /// </summary>
+    [GeneratedRegex(@"(?<!:)/{2,}")]
+    private static partial Regex MultipleSlashesRegex();
 
     public SnapshotBuilder RemoveLineThatStartsWith(string value)
     {
