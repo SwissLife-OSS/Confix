@@ -22,18 +22,14 @@ public sealed partial class SnapshotBuilder
 
     public SnapshotBuilder AddReplacement(string original, string replacement)
     {
-        _processors.Add(x => x.Replace(original, replacement));
+        // On Windows, convert the path to forward slashes since normalization happens first
+        var normalizedOriginal = original.Replace('\\', '/');
+        
+        _processors.Add(x => x.Replace(normalizedOriginal, replacement));
 
-        // On Windows, also replace the path with forward slashes (in case output uses normalized paths)
-        if (Path.DirectorySeparatorChar == '\\' && original.Contains('\\'))
-        {
-            var withForwardSlashes = original.Replace('\\', '/');
-            _processors.Add(x => x.Replace(withForwardSlashes, replacement));
-
-            // Also handle JSON-escaped paths (forward slashes escaped as \/)
-            var jsonEscaped = withForwardSlashes.Replace("/", "\\/");
-            _processors.Add(x => x.Replace(jsonEscaped, replacement));
-        }
+        // Also handle JSON-escaped paths (forward slashes escaped as \/)
+        var jsonEscaped = normalizedOriginal.Replace("/", "\\/");
+        _processors.Add(x => x.Replace(jsonEscaped, replacement));
 
         return this;
     }
@@ -46,12 +42,9 @@ public sealed partial class SnapshotBuilder
     public void MatchSnapshot()
     {
         var content = _builder.ToString();
-        content = _processors
-            .Aggregate(content, (current, processor) => processor(current));
 
-        // Normalize Windows path separators to forward slashes for consistent cross-platform snapshots.
-        // Use regex to protect JSON escape sequences (which are NOT followed by word characters),
-        // then replace all backslashes, then restore the protected sequences.
+        // FIRST: Normalize Windows path separators to forward slashes for consistent cross-platform snapshots.
+        // This must happen BEFORE replacement processors run so they can match forward-slash paths.
         
         // Protect JSON escapes that are NOT followed by word characters (to distinguish \t from \test)
         content = JsonEscapeNotInPathRegex().Replace(content, "\x00$1");
@@ -64,6 +57,10 @@ public sealed partial class SnapshotBuilder
 
         // Collapse multiple forward slashes to single (but preserve :// for URLs)
         content = MultipleSlashesRegex().Replace(content, "/");
+
+        // THEN: Apply replacement processors (which now work on normalized forward-slash paths)
+        content = _processors
+            .Aggregate(content, (current, processor) => processor(current));
 
         content.MatchSnapshot();
     }
