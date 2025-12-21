@@ -1,4 +1,4 @@
-name: Confix.Tool.Release
+name: Release ${{ github.event.release.tag_name }}
 
 on:
   release:
@@ -14,9 +14,9 @@ jobs:
       VERSION: ${{ github.event.release.tag_name }}
       NUGET_TOKEN: ${{ secrets.NUGET_API_KEY }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
             8.0.x
