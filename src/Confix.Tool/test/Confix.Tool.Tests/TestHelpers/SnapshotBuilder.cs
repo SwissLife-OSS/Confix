@@ -100,6 +100,36 @@ public sealed partial class SnapshotBuilder
     public static SnapshotBuilder New() => new();
 
     /// <summary>
+    /// Normalizes Windows paths in a string to Unix-style forward slashes.
+    /// Use this when calling Snapshot.Match directly with content that may contain paths.
+    /// </summary>
+    public static string NormalizePaths(string content)
+    {
+        // Protect JSON escapes that are NOT followed by word characters (to distinguish \t from \test)
+        content = JsonEscapeNotInPathRegex().Replace(content, "\x00$1");
+        
+        // Replace all remaining backslashes with forward slashes
+        content = content.Replace("\\", "/");
+        
+        // Restore protected JSON escapes
+        content = content.Replace("\x00", "\\");
+
+        // Collapse multiple forward slashes to single (but preserve :// for URLs)
+        content = MultipleSlashesRegex().Replace(content, "/");
+        
+        // Remove Windows drive letters (e.g., "D:/" -> "/")
+        content = WindowsDriveLetterRegex().Replace(content, "/");
+
+        return content;
+    }
+
+    /// <summary>
+    /// Matches Windows drive letters like C:/ or D:/
+    /// </summary>
+    [GeneratedRegex(@"[A-Za-z]:/")]
+    private static partial Regex WindowsDriveLetterRegex();
+
+    /// <summary>
     /// we cannot match the date times fully. We can only match the date part,
     /// but still want to replace the whole string. 
     /// given

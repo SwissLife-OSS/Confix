@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Confix.Inputs;
 using Confix.Tool.Middlewares;
 using Confix.Utilities.Json;
 using Snapshooter.Xunit;
@@ -50,7 +51,8 @@ public class MagicPathRewriterTests
         var result = rewriter.Rewrite(sampleObject, _context);
 
         // assert
-        Snapshot.Match(result.ToJsonString(new() { WriteIndented = true }));
+        var json = result.ToJsonString(new() { WriteIndented = true });
+        Snapshot.Match(SnapshotBuilder.NormalizePaths(json));
     }
 
     [Fact]
