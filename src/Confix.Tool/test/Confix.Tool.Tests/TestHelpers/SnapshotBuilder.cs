@@ -37,6 +37,9 @@ public sealed partial class SnapshotBuilder
         content = _processors
             .Aggregate(content, (current, processor) => processor(current));
 
+        // Normalize path separators for consistent cross-platform snapshots
+        content = content.Replace('\\', '/');
+
         content.MatchSnapshot();
     }
 
