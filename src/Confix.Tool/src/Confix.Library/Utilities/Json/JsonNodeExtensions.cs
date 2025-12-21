@@ -11,6 +11,14 @@ namespace Confix.Utilities.Json;
 
 public static partial class JsonNodeExtensions
 {
+    /// <summary>
+    /// Checks if the JSON node is a non-null string value.
+    /// </summary>
+    /// <param name="node">The JSON node to check.</param>
+    /// <returns>True if the node is not null and is a string; otherwise, false.</returns>
+    public static bool IsNonNullString(this JsonNode? node)
+        => node is not null && node.GetValueKind() == JsonValueKind.String;
+
     public static bool TryGetNonNullPropertyValue(
         this JsonObject obj,
         string propertyName,

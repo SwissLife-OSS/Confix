@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
+using Confix.Utilities.Json;
 using Json.More;
 using Json.Schema;
 
@@ -61,7 +62,7 @@ public sealed class VariableExtractorService
     private static IEnumerable<ExtractedVariable> Extract(JsonNode node)
         => JsonParser.ParseNode(node)
             .Values
-            .Where(v => v.GetValueKind() == JsonValueKind.String)
+            .Where(v => v.IsNonNullString())
             .SelectMany(v =>
             {
                 var extractedVariables = new List<ExtractedVariable>();
