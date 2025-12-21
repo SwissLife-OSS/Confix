@@ -82,9 +82,13 @@ public sealed partial class SnapshotBuilder
     public SnapshotBuilder RemoveLineThatStartsWith(string value)
     {
         _processors.Add(
-            x => x.Split(Environment.NewLine)
-                .Where(y => !y.StartsWith(value))
-                .Aggregate((a, b) => a + Environment.NewLine + b));
+            x =>
+            {
+                // Split on both \r\n and \n to handle different line endings
+                var lines = x.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                var filtered = lines.Where(y => !y.StartsWith(value));
+                return string.Join("\n", filtered);
+            });
         return this;
     }
 
