@@ -22,9 +22,10 @@ public sealed class MagicPathRewriter : JsonDocumentRewriter<MagicPathContext>
         switch (value.GetValueKind())
         {
             case JsonValueKind.String when MagicPath.From(value) is { } magicPath:
+                var originalValue = (string?)value ?? string.Empty;
                 var replacedValue = magicPath.Replace(context);
 
-                App.Log.ReplacedMagicPath((string?) value, replacedValue);
+                App.Log.ReplacedMagicPath(originalValue, replacedValue);
 
                 return JsonValue.Create(replacedValue)!;
 
