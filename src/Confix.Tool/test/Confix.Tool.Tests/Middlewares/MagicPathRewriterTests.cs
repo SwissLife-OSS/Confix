@@ -178,9 +178,9 @@ public class MagicPathRewriterTests
         Assert.Null(resultObj["nullValue"]);
         Assert.Null(resultObj["anotherNull"]);
         
-        // Magic paths should be replaced
-        Assert.Contains("/home-location/", resultObj["homePath"]?.ToString());
-        Assert.Contains("/file-location/", resultObj["filePath"]?.ToString());
+        // Magic paths should be replaced (use platform-agnostic check)
+        Assert.Contains("home-location", resultObj["homePath"]?.ToString());
+        Assert.Contains("file-location", resultObj["filePath"]?.ToString());
     }
 
     [Fact]
