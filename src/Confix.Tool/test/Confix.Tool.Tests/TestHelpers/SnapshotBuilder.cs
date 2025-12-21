@@ -59,8 +59,8 @@ public sealed partial class SnapshotBuilder
             .Replace("\\b", "\x00b")   // Protect \b (backspace)
             .Replace("\\f", "\x00f")   // Protect \f (form feed)
             .Replace("\\\"", "\x00\"") // Protect \" (escaped quote)
-            .Replace("\\\\", "\x00\\") // Protect \\ (escaped backslash)
-            .Replace("\\", "/")        // Replace remaining backslashes with forward slashes
+            .Replace("\\", "/")        // Replace ALL backslashes with forward slashes
+            .Replace("//", "/")        // Normalize double forward slashes to single
             .Replace("\x00", "\\");    // Restore all protected sequences
 
         content.MatchSnapshot();
