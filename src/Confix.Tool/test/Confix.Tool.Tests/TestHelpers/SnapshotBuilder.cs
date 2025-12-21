@@ -27,7 +27,12 @@ public sealed partial class SnapshotBuilder
         // On Windows, also replace the path with forward slashes (in case output uses normalized paths)
         if (Path.DirectorySeparatorChar == '\\' && original.Contains('\\'))
         {
-            _processors.Add(x => x.Replace(original.Replace('\\', '/'), replacement));
+            var withForwardSlashes = original.Replace('\\', '/');
+            _processors.Add(x => x.Replace(withForwardSlashes, replacement));
+
+            // Also handle JSON-escaped paths (forward slashes escaped as \/)
+            var jsonEscaped = withForwardSlashes.Replace("/", "\\/");
+            _processors.Add(x => x.Replace(jsonEscaped, replacement));
         }
 
         return this;
