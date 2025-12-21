@@ -35,3 +35,11 @@ jobs:
 
     - name: Test
       run: dotnet test
+
+    - name: Upload snapshot mismatches
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: snapshot-mismatches-${{ matrix.os }}
+        path: ./**/test/**/__mismatch__/**
+        if-no-files-found: ignore
