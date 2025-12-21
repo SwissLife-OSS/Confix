@@ -73,9 +73,10 @@ public sealed partial class SnapshotBuilder
     private static partial Regex JsonEscapeNotInPathRegex();
 
     /// <summary>
-    /// Matches two or more consecutive forward slashes that are NOT preceded by a colon (to preserve URLs like https://).
+    /// Matches two or more consecutive forward slashes that should be collapsed to one.
+    /// Preserves :// in URLs (https://, http://, file://) but collapses X:// for Windows drive letters.
     /// </summary>
-    [GeneratedRegex(@"(?<!:)/{2,}")]
+    [GeneratedRegex(@"(?<![a-zA-Z]{2,}:)/{2,}")]
     private static partial Regex MultipleSlashesRegex();
 
     public SnapshotBuilder RemoveLineThatStartsWith(string value)
