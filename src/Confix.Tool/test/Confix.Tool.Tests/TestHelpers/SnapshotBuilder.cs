@@ -50,20 +50,21 @@ public sealed partial class SnapshotBuilder
             .Aggregate(content, (current, processor) => processor(current));
 
         // Normalize Windows path separators to forward slashes for consistent cross-platform snapshots.
-        // Only replace backslashes that look like path separators (followed by word chars, dots, or angle brackets)
-        // but NOT JSON escape sequences like \u, \n, \r, \t, \b, \f, \\, \"
-        content = PathSeparatorRegex().Replace(content, "/$1");
+        // First protect JSON escape sequences, then replace backslashes, then restore escapes.
+        content = content
+            .Replace("\\u", "\x00u")   // Protect \u (unicode)
+            .Replace("\\n", "\x00n")   // Protect \n (newline)
+            .Replace("\\r", "\x00r")   // Protect \r (carriage return)
+            .Replace("\\t", "\x00t")   // Protect \t (tab)
+            .Replace("\\b", "\x00b")   // Protect \b (backspace)
+            .Replace("\\f", "\x00f")   // Protect \f (form feed)
+            .Replace("\\\"", "\x00\"") // Protect \" (escaped quote)
+            .Replace("\\\\", "\x00\\") // Protect \\ (escaped backslash)
+            .Replace("\\", "/")        // Replace remaining backslashes with forward slashes
+            .Replace("\x00", "\\");    // Restore all protected sequences
 
         content.MatchSnapshot();
     }
-
-    /// <summary>
-    /// Matches backslashes followed by characters that indicate a path segment,
-    /// excluding JSON/string escape sequences (\u, \n, \r, \t, \b, \f, \\, \", \/).
-    /// The negative lookahead (?![ubfnrt\\""/]) ensures we don't match escape sequences.
-    /// </summary>
-    [GeneratedRegex(@"\\(?![ubfnrt\\""/])([A-Za-z0-9_.<>])")]
-    private static partial Regex PathSeparatorRegex();
 
     public SnapshotBuilder RemoveLineThatStartsWith(string value)
     {
