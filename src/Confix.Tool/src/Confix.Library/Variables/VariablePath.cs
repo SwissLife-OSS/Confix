@@ -36,8 +36,14 @@ public partial record struct VariablePath(string ProviderName, string Path)
     private const string VariableProviderCaptureGroup = "VariableProvider";
     private const string VariableNameCaptureGroup = "VariableName";
 
+    // The variable name (path) part is allowed to contain the standard and url-safe Base64
+    // alphabet characters (`+`, `/`, `=`, `-`) in addition to word characters and dots.
+    // This is required by providers such as the secret provider, where the variable's path
+    // is the Base64-encoded ciphertext (e.g. `$secret:K2b8F2zG9HpJxMI+...==`).
+    private const string VariableNameCharacterClass = @"[\w\.+/=\-]";
+
     [GeneratedRegex(
-        $$"""^\$(?<{{VariableProviderCaptureGroup}}>[\w\.]+):(?<{{VariableNameCaptureGroup}}>[\w\.]+)$""")]
+        $$"""^\$(?<{{VariableProviderCaptureGroup}}>[\w\.]+):(?<{{VariableNameCaptureGroup}}>{{VariableNameCharacterClass}}+)$""")]
     private static partial Regex VariableNameRegex();
 }
 
@@ -59,6 +65,6 @@ public static partial class VariablePathExtensions
 
     private const string VariableCaptureGroup = "variable";
 
-    [GeneratedRegex($$"""(\{\{)?(?<{{VariableCaptureGroup}}>\$(?:[\w\.]+):(?:[\w\.]+))(\}\})?""")]
+    [GeneratedRegex($$"""(\{\{)?(?<{{VariableCaptureGroup}}>\$(?:[\w\.]+):(?:[\w\.+/=\-]+))(\}\})?""")]
     private static partial Regex MultipleInterpolatedVariablesRegex();
 }
