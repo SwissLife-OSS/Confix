@@ -7,12 +7,18 @@ namespace Confix.Variables;
 
 public sealed class OnePasswordCli : IOnePasswordCli
 {
-    private readonly string _serviceAccountToken;
-    private string? _resolvedToken;
+    private const string DefaultServiceAccountTokenEnvVar = "OP_SERVICE_ACCOUNT_TOKEN";
+    private const string AccountEnvVar = "OP_ACCOUNT";
 
-    public OnePasswordCli(string serviceAccountToken)
+    private readonly string? _serviceAccountToken;
+    private readonly string? _account;
+    private string? _resolvedToken;
+    private bool _tokenResolved;
+
+    public OnePasswordCli(string? serviceAccountToken, string? account = null)
     {
         _serviceAccountToken = serviceAccountToken;
+        _account = account;
     }
 
     public async Task<string> ReadAsync(
@@ -22,7 +28,7 @@ public sealed class OnePasswordCli : IOnePasswordCli
         CancellationToken cancellationToken)
     {
         var result = await ExecuteAsync(
-            ["read", $"op://{vault}/{item}/{field}"],
+            new[] { "read", $"op://{vault}/{item}/{field}" },
             cancellationToken);
 
         return result.Trim();
@@ -33,7 +39,7 @@ public sealed class OnePasswordCli : IOnePasswordCli
         CancellationToken cancellationToken)
     {
         var json = await ExecuteAsync(
-            ["item", "list", "--vault", vault, "--format", "json", "--no-color"],
+            new[] { "item", "list", "--vault", vault, "--format", "json", "--no-color" },
             cancellationToken);
 
         var items = JsonSerializer.Deserialize<JsonArray>(json) ?? new JsonArray();
@@ -59,7 +65,7 @@ public sealed class OnePasswordCli : IOnePasswordCli
         CancellationToken cancellationToken)
     {
         var json = await ExecuteAsync(
-            ["item", "get", item, "--vault", vault, "--format", "json", "--no-color"],
+            new[] { "item", "get", item, "--vault", vault, "--format", "json", "--no-color" },
             cancellationToken);
 
         var node = JsonNode.Parse(json)!;
@@ -94,7 +100,7 @@ public sealed class OnePasswordCli : IOnePasswordCli
         CancellationToken cancellationToken)
     {
         await ExecuteAsync(
-            ["item", "edit", item, "--vault", vault, $"{field}={value}"],
+            new[] { "item", "edit", item, "--vault", vault, $"{field}={value}" },
             cancellationToken);
     }
 
@@ -106,17 +112,11 @@ public sealed class OnePasswordCli : IOnePasswordCli
         CancellationToken cancellationToken)
     {
         await ExecuteAsync(
-            [
-                "item", 
-                "create", 
-                "--vault", 
-                vault, 
-                "--title", 
-                item,
-                "--category", 
-                "login", 
-                $"{field}={value}"
-            ],
+            new[]
+            {
+                "item", "create", "--vault", vault, "--title", item,
+                "--category", "login", $"{field}={value}"
+            },
             cancellationToken);
     }
 
@@ -138,7 +138,15 @@ public sealed class OnePasswordCli : IOnePasswordCli
             startInfo.ArgumentList.Add(arg);
         }
 
-        startInfo.Environment["OP_SERVICE_ACCOUNT_TOKEN"] = token;
+        if (token is not null)
+        {
+            startInfo.Environment[DefaultServiceAccountTokenEnvVar] = token;
+        }
+
+        if (!string.IsNullOrWhiteSpace(_account))
+        {
+            startInfo.Environment[AccountEnvVar] = _account;
+        }
 
         var process = Process.Start(startInfo)
             ?? throw new InvalidOperationException("Failed to start op process.");
@@ -159,28 +167,36 @@ public sealed class OnePasswordCli : IOnePasswordCli
         return stdout;
     }
 
-    private string ResolveToken()
+    private string? ResolveToken()
     {
-        if (_resolvedToken is not null)
+        if (_tokenResolved)
         {
             return _resolvedToken;
+        }
+
+        _resolvedToken = ResolveTokenCore();
+        _tokenResolved = true;
+        return _resolvedToken;
+    }
+
+    private string? ResolveTokenCore()
+    {
+        if (_serviceAccountToken is null)
+        {
+            return Environment.GetEnvironmentVariable(DefaultServiceAccountTokenEnvVar);
         }
 
         if (_serviceAccountToken.StartsWith('$'))
         {
             var envVarName = _serviceAccountToken[1..];
-            _resolvedToken = Environment.GetEnvironmentVariable(envVarName)
+            return Environment.GetEnvironmentVariable(envVarName)
                 ?? throw new ExitException(
                     $"Environment variable '{envVarName}' is not set.")
                 {
-                    Help = $"Set the environment variable or provide the token directly in the provider configuration."
+                    Help = "Set the environment variable, provide the token directly in the provider configuration, or remove the serviceAccountToken setting to use your existing 'op' CLI session."
                 };
         }
-        else
-        {
-            _resolvedToken = _serviceAccountToken;
-        }
 
-        return _resolvedToken;
+        return _serviceAccountToken;
     }
 }

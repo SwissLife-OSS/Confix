@@ -6,7 +6,8 @@ namespace Confix.Variables;
 
 public sealed record OnePasswordProviderConfiguration(
     string? Vault,
-    string? ServiceAccountToken
+    string? ServiceAccountToken,
+    string? Account
 )
 {
     public static OnePasswordProviderConfiguration Parse(JsonNode node)

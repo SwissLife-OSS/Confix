@@ -4,7 +4,8 @@ namespace Confix.Variables;
 
 public sealed record OnePasswordProviderDefinition(
     string Vault,
-    string ServiceAccountToken
+    string? ServiceAccountToken,
+    string? Account
 )
 {
     public static OnePasswordProviderDefinition From(
@@ -25,7 +26,8 @@ public sealed record OnePasswordProviderDefinition(
 
         return new(
             configuration.Vault!,
-            configuration.ServiceAccountToken ?? "$OP_SERVICE_ACCOUNT_TOKEN"
+            configuration.ServiceAccountToken,
+            configuration.Account
         );
     }
 }

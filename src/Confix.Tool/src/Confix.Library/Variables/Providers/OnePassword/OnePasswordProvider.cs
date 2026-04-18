@@ -23,7 +23,7 @@ public sealed class OnePasswordProvider : IVariableProvider
     }
 
     public OnePasswordProvider(OnePasswordProviderDefinition definition)
-        : this(definition, new OnePasswordCli(definition.ServiceAccountToken))
+        : this(definition, new OnePasswordCli(definition.ServiceAccountToken, definition.Account))
     {
     }
 
@@ -44,22 +44,21 @@ public sealed class OnePasswordProvider : IVariableProvider
             var items = await _cli.ListItemsAsync(_definition.Vault,
                 context.CancellationToken);
 
-            var paths = new List<string>();
+            var paths = new HashSet<string>(StringComparer.Ordinal);
             foreach (var item in items)
             {
-                var detail = await _cli.GetItemAsync(_definition.Vault, item.Title,
-                    context.CancellationToken);
-
-                foreach (var field in detail.Fields)
+                if (!string.IsNullOrEmpty(item.Title))
                 {
-                    if (!string.IsNullOrEmpty(field.Label))
-                    {
-                        paths.Add($"{item.Title}.{field.Label}");
-                    }
+                    paths.Add(item.Title);
+                }
+
+                if (!string.IsNullOrEmpty(item.Id))
+                {
+                    paths.Add(item.Id);
                 }
             }
 
-            return paths;
+            return (IReadOnlyList<string>)paths.ToList();
         });
 
     public Task<JsonNode> ResolveAsync(string path, IVariableProviderContext context)
@@ -109,10 +108,22 @@ public sealed class OnePasswordProvider : IVariableProvider
         return ValueTask.CompletedTask;
     }
 
+    private const string DefaultField = "password";
+
     private static (string Item, string Field) ParsePath(string path)
     {
+        if (string.IsNullOrEmpty(path))
+        {
+            throw new VariableNotFoundException(path);
+        }
+
         var dotIndex = path.IndexOf('.');
-        if (dotIndex <= 0 || dotIndex == path.Length - 1)
+        if (dotIndex < 0)
+        {
+            return (path, DefaultField);
+        }
+
+        if (dotIndex == 0 || dotIndex == path.Length - 1)
         {
             throw new VariableNotFoundException(path);
         }

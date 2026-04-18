@@ -16,7 +16,7 @@ public class OnePasswordProviderTests
             .Setup(x => x.ReadAsync("TestVault", "db", "password", It.IsAny<CancellationToken>()))
             .ReturnsAsync("s3cret");
 
-        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN");
+        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN", null);
         var provider = new OnePasswordProvider(definition, cliMock.Object);
         var context = new VariableProviderContext(null, CancellationToken.None);
 
@@ -36,7 +36,7 @@ public class OnePasswordProviderTests
             .Setup(x => x.ReadAsync("TestVault", "db", "password", It.IsAny<CancellationToken>()))
             .ThrowsAsync(new OnePasswordCliException(1, "item not found"));
 
-        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN");
+        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN", null);
         var provider = new OnePasswordProvider(definition, cliMock.Object);
         var context = new VariableProviderContext(null, CancellationToken.None);
 
@@ -46,23 +46,19 @@ public class OnePasswordProviderTests
     }
 
     [Fact]
-    public async Task ListAsync_Should_ReturnItemFieldPaths()
+    public async Task ListAsync_Should_ReturnTitlesAndIds_Without_CallingGetItem()
     {
         // arrange
         Mock<IOnePasswordCli> cliMock = new();
         cliMock
             .Setup(x => x.ListItemsAsync("TestVault", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<OnePasswordItemSummary> { new("id1", "db") });
-
-        cliMock
-            .Setup(x => x.GetItemAsync("TestVault", "db", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new OnePasswordItemDetail("id1", "db", new List<OnePasswordFieldInfo>
+            .ReturnsAsync(new List<OnePasswordItemSummary>
             {
-                new("f1", "password", "secret"),
-                new("f2", "username", "admin")
-            }));
+                new("id1", "db"),
+                new("id2", "api")
+            });
 
-        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN");
+        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN", null);
         var provider = new OnePasswordProvider(definition, cliMock.Object);
         var context = new VariableProviderContext(null, CancellationToken.None);
 
@@ -70,38 +66,35 @@ public class OnePasswordProviderTests
         var result = await provider.ListAsync(context);
 
         // assert
-        result.Should().HaveCount(2);
-        result.Should().Contain("db.password");
-        result.Should().Contain("db.username");
+        result.Should().HaveCount(4);
+        result.Should().Contain("db");
+        result.Should().Contain("api");
+        result.Should().Contain("id1");
+        result.Should().Contain("id2");
+        cliMock.Verify(
+            x => x.GetItemAsync(
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            Times.Never);
     }
 
     [Fact]
-    public async Task ListAsync_Should_SkipFieldsWithEmptyLabels()
+    public async Task ResolveAsync_Should_DefaultFieldToPassword_When_PathHasNoDot()
     {
         // arrange
         Mock<IOnePasswordCli> cliMock = new();
         cliMock
-            .Setup(x => x.ListItemsAsync("TestVault", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<OnePasswordItemSummary> { new("id1", "db") });
+            .Setup(x => x.ReadAsync("TestVault", "db", "password", It.IsAny<CancellationToken>()))
+            .ReturnsAsync("s3cret");
 
-        cliMock
-            .Setup(x => x.GetItemAsync("TestVault", "db", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new OnePasswordItemDetail("id1", "db", new List<OnePasswordFieldInfo>
-            {
-                new("f1", "password", "secret"),
-                new("f2", "", "hidden")
-            }));
-
-        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN");
+        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN", null);
         var provider = new OnePasswordProvider(definition, cliMock.Object);
         var context = new VariableProviderContext(null, CancellationToken.None);
 
         // act
-        var result = await provider.ListAsync(context);
+        var result = await provider.ResolveAsync("db", context);
 
         // assert
-        result.Should().HaveCount(1);
-        result.Should().Contain("db.password");
+        ((string?)result).Should().Be("s3cret");
     }
 
     [Fact]
@@ -114,7 +107,7 @@ public class OnePasswordProviderTests
                 "TestVault", "db", "password", "new-secret", It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN");
+        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN", null);
         var provider = new OnePasswordProvider(definition, cliMock.Object);
         var context = new VariableProviderContext(null, CancellationToken.None);
 
@@ -144,7 +137,7 @@ public class OnePasswordProviderTests
                 "TestVault", "db", "password", "new-secret", It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN");
+        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN", null);
         var provider = new OnePasswordProvider(definition, cliMock.Object);
         var context = new VariableProviderContext(null, CancellationToken.None);
 
@@ -164,7 +157,7 @@ public class OnePasswordProviderTests
     {
         // arrange
         Mock<IOnePasswordCli> cliMock = new();
-        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN");
+        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN", null);
         var provider = new OnePasswordProvider(definition, cliMock.Object);
         var context = new VariableProviderContext(null, CancellationToken.None);
 
@@ -174,16 +167,16 @@ public class OnePasswordProviderTests
     }
 
     [Fact]
-    public async Task ResolveAsync_Should_Throw_When_PathHasNoDot()
+    public async Task ResolveAsync_Should_Throw_When_PathEndsWithDot()
     {
         // arrange
         Mock<IOnePasswordCli> cliMock = new();
-        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN");
+        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN", null);
         var provider = new OnePasswordProvider(definition, cliMock.Object);
         var context = new VariableProviderContext(null, CancellationToken.None);
 
         // act & assert
         await Assert.ThrowsAsync<VariableNotFoundException>(()
-            => provider.ResolveAsync("nodot", context));
+            => provider.ResolveAsync("db.", context));
     }
 }
