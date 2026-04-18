@@ -25,22 +25,26 @@ public sealed class OnePasswordCli : IOnePasswordCli
         string vault,
         string item,
         string field,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var result = await ExecuteAsync(
             new[] { "read", $"op://{vault}/{item}/{field}" },
-            cancellationToken);
+            cancellationToken
+        );
 
         return result.Trim();
     }
 
     public async Task<IReadOnlyList<OnePasswordItemSummary>> ListItemsAsync(
         string vault,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var json = await ExecuteAsync(
             new[] { "item", "list", "--vault", vault, "--format", "json", "--no-color" },
-            cancellationToken);
+            cancellationToken
+        );
 
         var items = JsonSerializer.Deserialize<JsonArray>(json) ?? new JsonArray();
         var result = new List<OnePasswordItemSummary>();
@@ -59,49 +63,18 @@ public sealed class OnePasswordCli : IOnePasswordCli
         return result;
     }
 
-    public async Task<OnePasswordItemDetail> GetItemAsync(
-        string vault,
-        string item,
-        CancellationToken cancellationToken)
-    {
-        var json = await ExecuteAsync(
-            new[] { "item", "get", item, "--vault", vault, "--format", "json", "--no-color" },
-            cancellationToken);
-
-        var node = JsonNode.Parse(json)!;
-        var id = node["id"]?.GetValue<string>() ?? string.Empty;
-        var title = node["title"]?.GetValue<string>() ?? string.Empty;
-
-        var fields = new List<OnePasswordFieldInfo>();
-        if (node["fields"] is JsonArray fieldsArray)
-        {
-            foreach (var field in fieldsArray)
-            {
-                if (field is null)
-                {
-                    continue;
-                }
-
-                var fieldId = field["id"]?.GetValue<string>() ?? string.Empty;
-                var label = field["label"]?.GetValue<string>() ?? string.Empty;
-                var value = field["value"]?.GetValue<string>();
-                fields.Add(new OnePasswordFieldInfo(fieldId, label, value));
-            }
-        }
-
-        return new OnePasswordItemDetail(id, title, fields);
-    }
-
     public async Task EditItemFieldAsync(
         string vault,
         string item,
         string field,
         string value,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         await ExecuteAsync(
             new[] { "item", "edit", item, "--vault", vault, $"{field}={value}" },
-            cancellationToken);
+            cancellationToken
+        );
     }
 
     public async Task CreateItemAsync(
@@ -109,15 +82,24 @@ public sealed class OnePasswordCli : IOnePasswordCli
         string item,
         string field,
         string value,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         await ExecuteAsync(
             new[]
             {
-                "item", "create", "--vault", vault, "--title", item,
-                "--category", "login", $"{field}={value}"
+                "item",
+                "create",
+                "--vault",
+                vault,
+                "--title",
+                item,
+                "--category",
+                "login",
+                $"{field}={value}",
             },
-            cancellationToken);
+            cancellationToken
+        );
     }
 
     private async Task<string> ExecuteAsync(string[] args, CancellationToken cancellationToken)
@@ -130,7 +112,7 @@ public sealed class OnePasswordCli : IOnePasswordCli
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
-            CreateNoWindow = true
+            CreateNoWindow = true,
         };
 
         foreach (var arg in args)
@@ -148,23 +130,35 @@ public sealed class OnePasswordCli : IOnePasswordCli
             startInfo.Environment[AccountEnvVar] = _account;
         }
 
-        var process = Process.Start(startInfo)
+        using var process =
+            Process.Start(startInfo)
             ?? throw new InvalidOperationException("Failed to start op process.");
 
-        var stdoutTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
-        var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
-
-        await process.WaitForExitAsync(cancellationToken);
-
-        var stdout = await stdoutTask;
-        var stderr = await stderrTask;
-
-        if (process.ExitCode != 0)
+        try
         {
-            throw new OnePasswordCliException(process.ExitCode, stderr.Trim());
-        }
+            var stdoutTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+            var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
 
-        return stdout;
+            await process.WaitForExitAsync(cancellationToken);
+
+            var stdout = await stdoutTask;
+            var stderr = await stderrTask;
+
+            if (process.ExitCode != 0)
+            {
+                throw new OnePasswordCliException(process.ExitCode, stderr.Trim());
+            }
+
+            return stdout;
+        }
+        catch (OperationCanceledException)
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            throw;
+        }
     }
 
     private string? ResolveToken()
@@ -190,10 +184,10 @@ public sealed class OnePasswordCli : IOnePasswordCli
         {
             var envVarName = _serviceAccountToken[1..];
             return Environment.GetEnvironmentVariable(envVarName)
-                ?? throw new ExitException(
-                    $"Environment variable '{envVarName}' is not set.")
+                ?? throw new ExitException($"Environment variable '{envVarName}' is not set.")
                 {
-                    Help = "Set the environment variable, provide the token directly in the provider configuration, or remove the serviceAccountToken setting to use your existing 'op' CLI session."
+                    Help =
+                        "Set the environment variable, provide the token directly in the provider configuration, or remove the serviceAccountToken setting to use your existing 'op' CLI session.",
                 };
         }
 

@@ -46,7 +46,7 @@ public class OnePasswordProviderTests
     }
 
     [Fact]
-    public async Task ListAsync_Should_ReturnTitlesAndIds_Without_CallingGetItem()
+    public async Task ListAsync_Should_ReturnTitlesAndIds()
     {
         // arrange
         Mock<IOnePasswordCli> cliMock = new();
@@ -71,10 +71,6 @@ public class OnePasswordProviderTests
         result.Should().Contain("api");
         result.Should().Contain("id1");
         result.Should().Contain("id2");
-        cliMock.Verify(
-            x => x.GetItemAsync(
-                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
-            Times.Never);
     }
 
     [Fact]
@@ -150,6 +146,31 @@ public class OnePasswordProviderTests
             x => x.CreateItemAsync(
                 "TestVault", "db", "password", "new-secret", It.IsAny<CancellationToken>()),
             Times.Once);
+    }
+
+    [Fact]
+    public async Task SetAsync_Should_NotCreateItem_When_EditFailsWithNonNotFoundError()
+    {
+        // arrange
+        Mock<IOnePasswordCli> cliMock = new();
+        cliMock
+            .Setup(x => x.EditItemFieldAsync(
+                "TestVault", "db", "password", "new-secret", It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new OnePasswordCliException(1, "authentication failed"));
+
+        var definition = new OnePasswordProviderDefinition("TestVault", "$OP_SERVICE_ACCOUNT_TOKEN", null);
+        var provider = new OnePasswordProvider(definition, cliMock.Object);
+        var context = new VariableProviderContext(null, CancellationToken.None);
+
+        // act & assert
+        await Assert.ThrowsAsync<ExitException>(()
+            => provider.SetAsync("db.password", JsonValue.Create("new-secret")!, context));
+
+        cliMock.Verify(
+            x => x.CreateItemAsync(
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            Times.Never);
     }
 
     [Fact]

@@ -13,19 +13,14 @@ public sealed class OnePasswordProvider : IVariableProvider
     private readonly IOnePasswordCli _cli;
 
     public OnePasswordProvider(JsonNode configuration)
-        : this(OnePasswordProviderConfiguration.Parse(configuration))
-    {
-    }
+        : this(OnePasswordProviderConfiguration.Parse(configuration)) { }
 
     public OnePasswordProvider(OnePasswordProviderConfiguration configuration)
-        : this(OnePasswordProviderDefinition.From(configuration))
-    {
-    }
+        : this(OnePasswordProviderDefinition.From(configuration)) { }
 
     public OnePasswordProvider(OnePasswordProviderDefinition definition)
         : this(definition, new OnePasswordCli(definition.ServiceAccountToken, definition.Account))
-    {
-    }
+    { }
 
     public OnePasswordProvider(OnePasswordProviderDefinition definition, IOnePasswordCli cli)
     {
@@ -35,14 +30,12 @@ public sealed class OnePasswordProvider : IVariableProvider
 
     public static string Type => "onepassword";
 
-    public Task<IReadOnlyList<string>> ListAsync(IVariableProviderContext context)
-        => OnePasswordErrorHandler.HandleCliException<IReadOnlyList<string>>(async () =>
+    public Task<IReadOnlyList<string>> ListAsync(IVariableProviderContext context) =>
+        OnePasswordErrorHandler.HandleCliException<IReadOnlyList<string>>(async () =>
         {
-            App.Log.Information(
-                $"Listing all items from 1Password vault '{_definition.Vault}'");
+            App.Log.Information($"Listing all items from 1Password vault '{_definition.Vault}'");
 
-            var items = await _cli.ListItemsAsync(_definition.Vault,
-                context.CancellationToken);
+            var items = await _cli.ListItemsAsync(_definition.Vault, context.CancellationToken);
 
             var paths = new HashSet<string>(StringComparer.Ordinal);
             foreach (var item in items)
@@ -61,47 +54,66 @@ public sealed class OnePasswordProvider : IVariableProvider
             return (IReadOnlyList<string>)paths.ToList();
         });
 
-    public Task<JsonNode> ResolveAsync(string path, IVariableProviderContext context)
-        => OnePasswordErrorHandler.HandleCliException<JsonNode>(async () =>
-        {
-            var (item, field) = ParsePath(path);
+    public Task<JsonNode> ResolveAsync(string path, IVariableProviderContext context) =>
+        OnePasswordErrorHandler.HandleCliException<JsonNode>(
+            async () =>
+            {
+                var (item, field) = ParsePath(path);
 
-            var value = await _cli.ReadAsync(_definition.Vault, item, field,
-                context.CancellationToken);
+                var value = await _cli.ReadAsync(
+                    _definition.Vault,
+                    item,
+                    field,
+                    context.CancellationToken
+                );
 
-            return JsonValue.Create(value)!;
-        }, path);
+                return JsonValue.Create(value)!;
+            },
+            path
+        );
 
     public Task<IReadOnlyDictionary<string, JsonNode>> ResolveManyAsync(
         IReadOnlyList<string> paths,
-        IVariableProviderContext context)
-        => paths.ResolveMany(ResolveAsync, context);
+        IVariableProviderContext context
+    ) => paths.ResolveMany(ResolveAsync, context);
 
-    public Task<string> SetAsync(string path, JsonNode value, IVariableProviderContext context)
-        => OnePasswordErrorHandler.HandleCliException(async () =>
-        {
-            if (value.GetSchemaValueType() != SchemaValueType.String)
+    public Task<string> SetAsync(string path, JsonNode value, IVariableProviderContext context) =>
+        OnePasswordErrorHandler.HandleCliException(
+            async () =>
             {
-                throw new NotSupportedException(
-                    "1Password only supports String values");
-            }
+                if (value.GetSchemaValueType() != SchemaValueType.String)
+                {
+                    throw new NotSupportedException("1Password only supports String values");
+                }
 
-            var (item, field) = ParsePath(path);
-            var stringValue = (string)value!;
+                var (item, field) = ParsePath(path);
+                var stringValue = (string)value!;
 
-            try
-            {
-                await _cli.EditItemFieldAsync(_definition.Vault, item, field,
-                    stringValue, context.CancellationToken);
-            }
-            catch (OnePasswordCliException)
-            {
-                await _cli.CreateItemAsync(_definition.Vault, item, field,
-                    stringValue, context.CancellationToken);
-            }
+                try
+                {
+                    await _cli.EditItemFieldAsync(
+                        _definition.Vault,
+                        item,
+                        field,
+                        stringValue,
+                        context.CancellationToken
+                    );
+                }
+                catch (OnePasswordCliException ex) when (OnePasswordErrorHandler.IsNotFound(ex))
+                {
+                    await _cli.CreateItemAsync(
+                        _definition.Vault,
+                        item,
+                        field,
+                        stringValue,
+                        context.CancellationToken
+                    );
+                }
 
-            return path;
-        }, path);
+                return path;
+            },
+            path
+        );
 
     public ValueTask DisposeAsync()
     {
@@ -134,9 +146,7 @@ public sealed class OnePasswordProvider : IVariableProvider
 
 file static class OnePasswordErrorHandler
 {
-    public static async Task<T> HandleCliException<T>(
-        Func<Task<T>> action,
-        string? path = null)
+    public static async Task<T> HandleCliException<T>(Func<Task<T>> action, string? path = null)
     {
         try
         {
@@ -144,41 +154,44 @@ file static class OnePasswordErrorHandler
         }
         catch (Win32Exception)
         {
-            throw new ExitException(
-                "The 1Password CLI (op) could not be found.")
+            throw new ExitException("The 1Password CLI (op) could not be found.")
             {
-                Help = "Install the 1Password CLI: https://developer.1password.com/docs/cli/get-started/"
+                Help =
+                    "Install the 1Password CLI: https://developer.1password.com/docs/cli/get-started/",
             };
         }
-        catch (OnePasswordCliException ex)
-            when (ex.Message.Contains("not found", StringComparison.OrdinalIgnoreCase) ||
-                  ex.Message.Contains("isn't an item", StringComparison.OrdinalIgnoreCase))
+        catch (OnePasswordCliException ex) when (IsNotFound(ex))
         {
             throw new VariableNotFoundException(path ?? string.Empty);
         }
         catch (OnePasswordCliException ex)
-            when (ex.Message.Contains("authentication", StringComparison.OrdinalIgnoreCase) ||
-                  ex.Message.Contains("unauthorized", StringComparison.OrdinalIgnoreCase))
+            when (ex.Message.Contains("authentication", StringComparison.OrdinalIgnoreCase)
+                || ex.Message.Contains("unauthorized", StringComparison.OrdinalIgnoreCase)
+            )
         {
             throw new ExitException("Authentication to 1Password failed.", ex)
             {
-                Help = "Check your service account token or run 'op signin' to authenticate."
+                Help = "Check your service account token or run 'op signin' to authenticate.",
             };
         }
         catch (OnePasswordCliException ex)
         {
-            throw new ExitException(
-                $"1Password CLI failed with exit code {ex.ExitCode}.", ex)
+            throw new ExitException($"1Password CLI failed with exit code {ex.ExitCode}.", ex)
             {
-                Details = ex.Message
+                Details = ex.Message,
             };
         }
     }
 
     public static async Task<string> HandleCliException(
         Func<Task<string>> action,
-        string? path = null)
+        string? path = null
+    )
     {
         return await HandleCliException<string>(action, path);
     }
+
+    public static bool IsNotFound(OnePasswordCliException ex) =>
+        ex.Message.Contains("not found", StringComparison.OrdinalIgnoreCase)
+        || ex.Message.Contains("isn't an item", StringComparison.OrdinalIgnoreCase);
 }
