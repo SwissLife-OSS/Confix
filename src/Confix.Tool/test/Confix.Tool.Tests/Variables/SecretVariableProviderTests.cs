@@ -179,4 +179,36 @@ public class SecretVariableProviderTests
         // assert
         ex.Message.Should().Be("Invalid password for private key");
     }
+
+    [Theory]
+    [InlineData(EncryptionPadding.OaepSHA256)]
+    [InlineData(EncryptionPadding.Pkcs1)]
+    public async Task SetAsync_Result_Is_A_Parseable_VariablePath(EncryptionPadding padding)
+    {
+        // arrange
+        SecretVariableProvider provider = new(new SecretVariableProviderDefinition(
+            SecretVariableProviderAlgorithm.RSA,
+            padding,
+            PUBLIC_KEY,
+            null,
+            PRIVATE_KEY,
+            null,
+            null)
+        );
+
+        var initialSecret = JsonValue.Create("I'm super secret string")!;
+
+        // act
+        var encryptedPath = await provider.SetAsync("not relevant here", initialSecret, default);
+
+        // assert
+        // The Base64-encoded ciphertext returned by SetAsync must round-trip through the
+        // `$secret:<ciphertext>` syntax used in configuration files (see VariablePath regex).
+        bool parsed = VariablePath.TryParse($"$secret:{encryptedPath}", out VariablePath? variablePath);
+        parsed.Should().BeTrue("the encrypted ciphertext must be a valid VariablePath");
+        variablePath!.Value.Path.Should().Be(encryptedPath);
+
+        var decrypted = await provider.ResolveAsync(variablePath.Value.Path, default);
+        decrypted.IsEquivalentTo(initialSecret).Should().BeTrue();
+    }
 }
