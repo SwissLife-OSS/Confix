@@ -30,9 +30,9 @@ public sealed class VariableResolver : IVariableResolver
 
         await using var provider = _variableProviderFactory.CreateProvider(configuration);
 
-        await provider.SetAsync(path.Path, value, context);
+        var resolvedPath = await provider.SetAsync(path.Path, value, context);
 
-        return path;
+        return new VariablePath(path.ProviderName, resolvedPath);
     }
 
     public async Task<IEnumerable<VariablePath>> ListVariables(IVariableProviderContext context)
