@@ -24,7 +24,7 @@ public sealed class ConfigurationFileConfiguration
 
     public static ConfigurationFileConfiguration Parse(JsonNode node)
     {
-        if (node.GetSchemaValueType() is SchemaValueType.String)
+        if (node.GetValueKind() is JsonValueKind.String)
         {
             // TODO const?
             return new ConfigurationFileConfiguration("inline", node);

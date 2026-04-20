@@ -1,6 +1,8 @@
 using System.Collections.Immutable;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
+using Confix.Utilities.Json;
 using Json.Schema;
 
 namespace Confix.Variables;
@@ -38,13 +40,13 @@ public sealed class VariableReplacerService : IVariableReplacerService
     {
         if (node is JsonValue value)
         {
-            return value.GetSchemaValueType() == SchemaValueType.String
+            return value.GetValueKind() == JsonValueKind.String
                 ? value.ToString().GetVariables()
                 : Enumerable.Empty<VariablePath>();
         }
 
         return JsonParser.ParseNode(node).Values
-                    .Where(v => v.GetSchemaValueType() == SchemaValueType.String)
+                    .Where(v => v.IsNonNullString())
                     .SelectMany(v => v!.ToString().GetVariables());
     }
 

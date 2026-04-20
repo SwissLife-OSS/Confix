@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Schema;
-using Json.More;
+using Confix.Utilities.Json;
 using Json.Schema;
 
 namespace Confix.Variables;
@@ -10,9 +10,9 @@ namespace Confix.Variables;
 public sealed class JsonVariableRewriter : JsonDocumentRewriter<JsonVariableRewriterContext>
 {
     protected override JsonNode Rewrite(JsonValue value, JsonVariableRewriterContext context)
-        => value.GetSchemaValueType() switch
+        => value.GetValueKind() switch
         {
-            SchemaValueType.String => RewriteVariable((string) value!, context),
+            JsonValueKind.String => RewriteVariable((string)value!, context),
             _ => value.Deserialize<JsonNode>()!
         };
 

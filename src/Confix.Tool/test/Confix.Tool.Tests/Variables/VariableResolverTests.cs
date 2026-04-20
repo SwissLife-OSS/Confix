@@ -1,8 +1,8 @@
 using System.Text.Json.Nodes;
 using Confix.Tool.Middlewares;
+using Confix.Utilities.Json;
 using Confix.Variables;
 using FluentAssertions;
-using Json.More;
 using Moq;
 
 namespace Confix.Tool.Tests;
@@ -144,7 +144,7 @@ public class VariableResolverTests
         // Arrange
         var factoryMock = new Mock<IVariableProviderFactory>();
         var configurations = new List<VariableProviderConfiguration>();
-        var resolver = new VariableResolver(factoryMock.Object,new VariableListCache(), configurations);
+        var resolver = new VariableResolver(factoryMock.Object, new VariableListCache(), configurations);
         var context = new VariableProviderContext(null!, CancellationToken.None);
 
         // Act & Assert
