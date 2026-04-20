@@ -28,6 +28,7 @@ public static class VariableCommandBuilderExtensions
         builder.AddVariableProvider(config => new AzureKeyVaultProvider(config));
         builder.AddVariableProvider((sp, config)
             => new GitVariableProvider(sp.GetRequiredService<IGitService>(), config));
+        builder.AddVariableProvider(config => new OnePasswordProvider(config));
 
         return builder;
     }

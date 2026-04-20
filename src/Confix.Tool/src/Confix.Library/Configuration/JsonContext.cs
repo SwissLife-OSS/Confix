@@ -12,6 +12,7 @@ namespace Confix.Extensions;
 [JsonSourceGenerationOptions(WriteIndented = true)]
 [JsonSerializable(typeof(LocalVariableProviderConfiguration))]
 [JsonSerializable(typeof(AzureKeyVaultProviderConfiguration))]
+[JsonSerializable(typeof(OnePasswordProviderConfiguration))]
 [JsonSerializable(typeof(SecretVariableProviderConfiguration))]
 [JsonSerializable(typeof(GitVariableProviderConfiguration))]
 [JsonSerializable(typeof(GitComponentProviderConfiguration))]
