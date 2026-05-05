@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using Json.Schema;
@@ -28,7 +29,7 @@ public sealed class PrefixJsonNamesRewriter : JsonDocumentRewriter<PrefixJsonNam
 
             if (field is RefKeyword.Name &&
                 value is JsonValue refValue &&
-                refValue.GetSchemaValueType() is SchemaValueType.String)
+                refValue.GetValueKind() is JsonValueKind.String)
             {
                 var parts = refValue.GetValue<object>().ToString()!.Split("/");
                 parts[^1] = $"{prefix}{parts[^1]}";

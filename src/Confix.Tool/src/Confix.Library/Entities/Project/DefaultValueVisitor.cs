@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Text.Json.Nodes;
 using Confix.Tool.Schema;
-using Json.More;
+using Confix.Utilities.Json;
 using Json.Schema;
 
 namespace Confix.Tool.Entities.Components.DotNet;

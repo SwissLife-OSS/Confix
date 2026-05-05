@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Utilities.Json;
 using Json.Schema;
@@ -25,7 +26,7 @@ public sealed class EnvironmentConfiguration
 
     public static EnvironmentConfiguration Parse(JsonNode node)
     {
-        if (node.GetSchemaValueType() is SchemaValueType.String)
+        if (node.GetValueKind() is JsonValueKind.String)
         {
             return new EnvironmentConfiguration(node.ExpectValue<string>(), null);
         }

@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Confix.Tool;
-using Json.More;
 using Json.Schema;
 using Spectre.Console;
 
@@ -12,6 +11,14 @@ namespace Confix.Utilities.Json;
 
 public static partial class JsonNodeExtensions
 {
+    /// <summary>
+    /// Checks if the JSON node is a non-null string value.
+    /// </summary>
+    /// <param name="node">The JSON node to check.</param>
+    /// <returns>True if the node is not null and is a string; otherwise, false.</returns>
+    public static bool IsNonNullString(this JsonNode? node)
+        => node is not null && node.GetValueKind() == JsonValueKind.String;
+
     public static bool TryGetNonNullPropertyValue(
         this JsonObject obj,
         string propertyName,
@@ -43,8 +50,8 @@ public static partial class JsonNodeExtensions
             (_, JsonValue nodeValue) => nodeValue,
             _ => throw new InvalidOperationException($"""
                     Cannot merge nodes of different types:
-                    Source: {source.GetSchemaValueType()}
-                    Node: {node.GetSchemaValueType()}
+                    Source: {source.GetValueKind()}
+                    Node: {node.GetValueKind()}
                 """)
         };
 
@@ -210,4 +217,178 @@ public static partial class JsonNodeExtensions
 
     [GeneratedRegex(@"^(?<name>.+?)\[(?<index>\d+)]$")]
     private static partial Regex ParseSegmentRegex();
+
+    /// <summary>
+    /// Creates a deep copy of the JSON node.
+    /// </summary>
+    /// <param name="node">The JSON node to copy.</param>
+    /// <returns>A deep copy of the JSON node.</returns>
+    public static JsonNode? Copy(this JsonNode? node)
+    {
+        if (node is null)
+        {
+            return null;
+        }
+
+        return node.GetValueKind() switch
+        {
+            JsonValueKind.Object => CopyObject((JsonObject)node),
+            JsonValueKind.Array => CopyArray((JsonArray)node),
+            _ => JsonValue.Create(JsonSerializer.Deserialize<JsonElement>(node.ToJsonString()))
+        };
+    }
+
+    private static JsonObject CopyObject(JsonObject source)
+    {
+        var copy = new JsonObject();
+        foreach (var (key, value) in source)
+        {
+            copy[key] = Copy(value);
+        }
+        return copy;
+    }
+
+    private static JsonArray CopyArray(JsonArray source)
+    {
+        var copy = new JsonArray();
+        foreach (var item in source)
+        {
+            copy.Add(Copy(item));
+        }
+        return copy;
+    }
+
+    /// <summary>
+    /// Determines if two JSON nodes are equivalent.
+    /// </summary>
+    /// <param name="a">The first JSON node.</param>
+    /// <param name="b">The second JSON node.</param>
+    /// <returns>True if the nodes are equivalent; otherwise, false.</returns>
+    public static bool IsEquivalentTo(this JsonNode? a, JsonNode? b)
+    {
+        if (ReferenceEquals(a, b))
+        {
+            return true;
+        }
+
+        if (a is null || b is null)
+        {
+            return false;
+        }
+
+        var aKind = a.GetValueKind();
+        var bKind = b.GetValueKind();
+
+        if (aKind != bKind)
+        {
+            return false;
+        }
+
+        return aKind switch
+        {
+            JsonValueKind.Object => AreObjectsEquivalent((JsonObject)a, (JsonObject)b),
+            JsonValueKind.Array => AreArraysEquivalent((JsonArray)a, (JsonArray)b),
+            JsonValueKind.String => AreValuesEquivalent(a, b),
+            JsonValueKind.Number => AreValuesEquivalent(a, b),
+            JsonValueKind.True => true,
+            JsonValueKind.False => true,
+            JsonValueKind.Null => true,
+            _ => false
+        };
+    }
+
+    private static bool AreObjectsEquivalent(JsonObject a, JsonObject b)
+    {
+        if (a.Count != b.Count)
+        {
+            return false;
+        }
+
+        foreach (var (key, aValue) in a)
+        {
+            if (!b.TryGetPropertyValue(key, out var bValue))
+            {
+                return false;
+            }
+
+            if (!IsEquivalentTo(aValue, bValue))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool AreArraysEquivalent(JsonArray a, JsonArray b)
+    {
+        if (a.Count != b.Count)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < a.Count; i++)
+        {
+            if (!IsEquivalentTo(a[i], b[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool AreValuesEquivalent(JsonNode a, JsonNode b)
+    {
+        var aString = a.ToJsonString();
+        var bString = b.ToJsonString();
+        return aString == bString;
+    }
+
+    /// <summary>
+    /// Gets a hash code for the JSON node that is consistent with equivalence comparison.
+    /// </summary>
+    /// <param name="node">The JSON node.</param>
+    /// <returns>A hash code value.</returns>
+    public static int GetEquivalenceHashCode(this JsonNode? node)
+    {
+        if (node is null)
+        {
+            return 0;
+        }
+
+        var kind = node.GetValueKind();
+
+        return kind switch
+        {
+            JsonValueKind.Object => GetObjectHashCode((JsonObject)node),
+            JsonValueKind.Array => GetArrayHashCode((JsonArray)node),
+            JsonValueKind.String or JsonValueKind.Number => node.ToJsonString().GetHashCode(),
+            JsonValueKind.True => true.GetHashCode(),
+            JsonValueKind.False => false.GetHashCode(),
+            JsonValueKind.Null => 0,
+            _ => 0
+        };
+    }
+
+    private static int GetObjectHashCode(JsonObject obj)
+    {
+        var hash = new HashCode();
+        foreach (var (key, value) in obj.OrderBy(x => x.Key))
+        {
+            hash.Add(key);
+            hash.Add(GetEquivalenceHashCode(value));
+        }
+        return hash.ToHashCode();
+    }
+
+    private static int GetArrayHashCode(JsonArray array)
+    {
+        var hash = new HashCode();
+        foreach (var item in array)
+        {
+            hash.Add(GetEquivalenceHashCode(item));
+        }
+        return hash.ToHashCode();
+    }
 }

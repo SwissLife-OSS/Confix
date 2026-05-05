@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
+using Confix.Utilities.Json;
 using Json.Schema;
 
 namespace Confix.Entities.Schema;
@@ -78,7 +78,7 @@ internal class MetadataKeywordJsonConverter : JsonConverter<MetadataKeyword>
     {
         var node = JsonSerializer.Deserialize<JsonArray>(ref reader, options);
 
-        return new MetadataKeyword(node);
+        return new MetadataKeyword(node ?? []);
     }
 
     public override void Write(

@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
+using Confix.Inputs;
 using Confix.Tool.Middlewares;
-using Json.More;
+using Confix.Utilities.Json;
 using Snapshooter.Xunit;
 
 namespace Confix.Entities.Component.Configuration.Middlewares;
@@ -50,11 +51,13 @@ public class MagicPathRewriterTests
         var result = rewriter.Rewrite(sampleObject, _context);
 
         // assert
-        Snapshot.Match(result.ToJsonString(new() { WriteIndented = true }));
+        var json = result.ToJsonString(new() { WriteIndented = true });
+        Snapshot.Match(SnapshotBuilder.NormalizePaths(json));
     }
 
     [Fact]
-    public void Rewrite_ProjectInNonProjectScope_Ignores(){
+    public void Rewrite_ProjectInNonProjectScope_Ignores()
+    {
         // arrange
         var sampleObject = new JsonObject()
         {
@@ -70,7 +73,8 @@ public class MagicPathRewriterTests
     }
 
     [Fact]
-    public void Rewrite_SolutionInNonSolutionScope_Ignores(){
+    public void Rewrite_SolutionInNonSolutionScope_Ignores()
+    {
         // arrange
         var sampleObject = new JsonObject()
         {
@@ -83,5 +87,157 @@ public class MagicPathRewriterTests
 
         // assert
         Assert.True(sampleObject.IsEquivalentTo(result));
+    }
+
+    [Fact]
+    public void Rewrite_ObjectWithNullValue_DoesNotThrow()
+    {
+        // arrange
+        var sampleObject = new JsonObject()
+        {
+            ["nullValue"] = null,
+            ["normalValue"] = "test"
+        };
+        var rewriter = new MagicPathRewriter();
+
+        // act
+        var result = rewriter.Rewrite(sampleObject, _context);
+
+        // assert
+        Assert.NotNull(result);
+        var resultObj = result as JsonObject;
+        Assert.NotNull(resultObj);
+        Assert.True(resultObj.ContainsKey("nullValue"));
+    }
+
+    [Fact]
+    public void Rewrite_ObjectWithNestedNullValues_DoesNotThrow()
+    {
+        // arrange
+        var sampleObject = new JsonObject()
+        {
+            ["nested"] = new JsonObject()
+            {
+                ["nullValue"] = null,
+                ["magicPath"] = "$home:/foo/bar"
+            }
+        };
+        var rewriter = new MagicPathRewriter();
+
+        // act
+        var result = rewriter.Rewrite(sampleObject, _context);
+
+        // assert
+        Assert.NotNull(result);
+    }
+
+    [Fact]
+    public void Rewrite_ArrayWithNullElements_DoesNotThrow()
+    {
+        // arrange
+        var sampleObject = new JsonObject()
+        {
+            ["items"] = new JsonArray(
+                null,
+                JsonValue.Create("./foo/bar"),
+                null,
+                JsonValue.Create("$home:/test")
+            )
+        };
+        var rewriter = new MagicPathRewriter();
+
+        // act
+        var result = rewriter.Rewrite(sampleObject, _context);
+
+        // assert
+        Assert.NotNull(result);
+    }
+
+    [Fact]
+    public void Rewrite_MixedNullAndMagicPaths_ReplacesCorrectly()
+    {
+        // arrange
+        var sampleObject = new JsonObject()
+        {
+            ["nullValue"] = null,
+            ["homePath"] = "$home:/config",
+            ["anotherNull"] = null,
+            ["filePath"] = "./local/file"
+        };
+        var rewriter = new MagicPathRewriter();
+
+        // act
+        var result = rewriter.Rewrite(sampleObject, _context);
+
+        // assert
+        Assert.NotNull(result);
+        var resultObj = result as JsonObject;
+        Assert.NotNull(resultObj);
+        
+        // Null values should be preserved
+        Assert.Null(resultObj["nullValue"]);
+        Assert.Null(resultObj["anotherNull"]);
+        
+        // Magic paths should be replaced (use platform-agnostic check)
+        Assert.Contains("home-location", resultObj["homePath"]?.ToString());
+        Assert.Contains("file-location", resultObj["filePath"]?.ToString());
+    }
+
+    [Fact]
+    public void Rewrite_NonStringValues_Untouched()
+    {
+        // arrange
+        var sampleObject = new JsonObject()
+        {
+            ["number"] = 42,
+            ["boolean"] = true,
+            ["decimal"] = 3.14,
+            ["nullValue"] = null
+        };
+        var rewriter = new MagicPathRewriter();
+
+        // act
+        var result = rewriter.Rewrite(sampleObject, _context);
+
+        // assert
+        Assert.NotNull(result);
+        var resultObj = result as JsonObject;
+        Assert.NotNull(resultObj);
+        Assert.Equal(42, resultObj["number"]?.GetValue<int>());
+        Assert.True(resultObj["boolean"]?.GetValue<bool>());
+        Assert.Equal(3.14, resultObj["decimal"]?.GetValue<double>());
+    }
+
+    [Fact]
+    public void Rewrite_DeeplyNestedWithNulls_DoesNotThrow()
+    {
+        // arrange
+        var sampleObject = new JsonObject()
+        {
+            ["level1"] = new JsonObject()
+            {
+                ["level2"] = new JsonObject()
+                {
+                    ["level3"] = null,
+                    ["items"] = new JsonArray(
+                        null,
+                        new JsonObject()
+                        {
+                            ["nested"] = null,
+                            ["path"] = "$solution:/deep/path"
+                        }
+                    )
+                },
+                ["nullHere"] = null
+            },
+            ["topLevelNull"] = null
+        };
+        var rewriter = new MagicPathRewriter();
+
+        // act
+        var result = rewriter.Rewrite(sampleObject, _context);
+
+        // assert
+        Assert.NotNull(result);
     }
 }

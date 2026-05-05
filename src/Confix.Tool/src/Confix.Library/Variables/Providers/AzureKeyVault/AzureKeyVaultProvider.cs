@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
@@ -64,7 +65,7 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     public Task<string> SetAsync(string path, JsonNode value, IVariableProviderContext context)
         => KeyVaultExtension.HandleKeyVaultException(async () =>
         {
-            if (value.GetSchemaValueType() != SchemaValueType.String)
+            if (value.GetValueKind() != JsonValueKind.String)
             {
                 throw new NotSupportedException("KeyVault only supports String secrets");
             }

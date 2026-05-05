@@ -1,8 +1,8 @@
 using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Abstractions;
+using Confix.Utilities.Json;
 using FluentAssertions;
-using Json.More;
 
 namespace Confix.Entities.Component.Configuration;
 
