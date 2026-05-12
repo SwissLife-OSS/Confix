@@ -38,7 +38,7 @@ public sealed class VariableGetPipeline : Pipeline
         var result = await resolver
             .ResolveOrThrowAsync(variablePath, variableContext);
 
-        context.Logger.PrintVariableResolved(variablePath, result.ToJsonString());
+        context.Logger.PrintVariableResolved(variablePath, result.ToString());
 
         context.SetOutput(result);
     }
