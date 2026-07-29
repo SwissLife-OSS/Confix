@@ -72,6 +72,45 @@ public class LocalVariableProviderTests : IDisposable
     }
 
     [Fact]
+    public async Task ResolveAsync_PathWithSlashSuffix_AppendsRemainingPathToResolvedValue()
+    {
+        // arrange
+        await PrepareFile(
+            """
+            {
+                "uat.myapp.com": "https://uat.myapp.com"
+            }
+            """);
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act
+        var result = await provider.ResolveAsync("uat.myapp.com/abc", default);
+
+        // assert
+        Assert.True(result.IsEquivalentTo(JsonValue.Create("https://uat.myapp.com/abc")));
+    }
+
+    [Fact]
+    public async Task ResolveAsync_PathWithSlashSuffix_WithNumericValue()
+    {
+        // arrange
+        await PrepareFile(
+            """
+            {
+                "uat.myapp.com": 42
+            }
+            """);
+        LocalVariableProvider provider = new(new LocalVariableProviderDefinition(tmpFilePath));
+
+        // act
+        var result = await provider.ResolveAsync("uat.myapp.com/abc", default);
+
+        // act & assert
+        await Assert.ThrowsAsync<VariableNotFoundException>(()
+            => provider.ResolveAsync("nonexistent", default));
+    }
+
+    [Fact]
     public async Task ResolveAsync_NonExistingPath_VariableNotFoundException()
     {
         // arrange

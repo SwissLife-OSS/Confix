@@ -50,6 +50,20 @@ public sealed class LocalVariableProvider : IVariableProvider
             return Task.FromResult(value.Copy()!);
         }
 
+        // If we have an url like uat.myapp.com/abc/ and only want uat.myapp.com as variable,
+        // we try to resolve the first part of the path
+        var pathParts = path.Split('/');
+        if (_parsedLocalFile.Value.TryGetValue(pathParts[0], out value))
+        {
+            var valueString = value.Copy()!.ToString();
+            var remainingPath = string.Join("/", pathParts[1..]);
+            var resolvedPath = string.IsNullOrEmpty(remainingPath)
+                ? valueString
+                : $"{valueString}/{remainingPath}";
+
+            return Task.FromResult<JsonNode>(JsonValue.Create(resolvedPath)!);
+        }
+
         throw new VariableNotFoundException(path);
     }
 
