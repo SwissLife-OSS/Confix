@@ -5,11 +5,12 @@ This might be useful to share variables across multiple repositories without hav
 
 ## Configuration
 
-| Field         | Value                                                                                                                  |
-| :------------ | :--------------------------------------------------------------------------------------------------------------------- |
-| RepositoryUrl | The Url to clone the repository                                                                                        |
-| FilePath      | The Path to the file within the repository. The file must be compatible with the [Local VariableProvider](./local.mdx) |
-| Arguments     | An optional array of arguments passed to `git clone`.These can be used to define the `branch` for example              |
+| Field           | Value                                                                                                                  |
+| :-------------- | :--------------------------------------------------------------------------------------------------------------------- |
+| RepositoryUrl   | The Url to clone the repository                                                                                        |
+| FilePath        | The Path to the file within the repository. The file must be compatible with the [Local VariableProvider](./local.mdx) |
+| SparseDirectory | The only directory being cloned to speed up cloning and save disk space (optional)                                     |
+| Arguments       | An optional array of arguments passed to `git clone`.These can be used to define the `branch` for example              |
 
 **Sample**
 
@@ -21,7 +22,8 @@ This might be useful to share variables across multiple repositories without hav
         "name": "git",
         "type": "git",
         "repositoryUrl": "https://github.com/SwissLife-OSS/Confix-Variables.git",
-        "filePath": "./variables.json",
+        "filePath": "./Confix/variables.json",
+		"sparseDirectory": "Confix",
         "arguments": ["--branch=main", "--depth=1"]
       }
     ]

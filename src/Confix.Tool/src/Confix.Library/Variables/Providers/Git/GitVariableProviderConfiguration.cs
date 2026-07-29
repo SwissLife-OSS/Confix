@@ -7,6 +7,7 @@ namespace Confix.Variables;
 public sealed record GitVariableProviderConfiguration(
     string? RepositoryUrl,
     string? FilePath,
+    string? SparseDirectory,
     string[]? Arguments = null
 )
 {
