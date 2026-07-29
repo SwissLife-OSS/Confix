@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "Confix.Tool": {
-      "commandName": "Project",
-      "commandLineArgs": "build --environment=d",
-      "workingDirectory": "C:\\Git\\myLifeNEXT-Intermediate\\src\\ProcessEventWorker"
-    }
-  }
-}
