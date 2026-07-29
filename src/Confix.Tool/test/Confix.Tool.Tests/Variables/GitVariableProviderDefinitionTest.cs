@@ -12,6 +12,7 @@ public class GitVariableProviderDefinitionTest
         var configuration = new GitVariableProviderConfiguration(
             "foo-bar",
             "some.file",
+            null,
             new[] { "--some-arg" }
         );
 
@@ -23,6 +24,7 @@ public class GitVariableProviderDefinitionTest
             new GitVariableProviderDefinition(
                 "foo-bar",
                 "some.file",
+                "",
                 new[] { "--some-arg" }
             )
         );
@@ -35,6 +37,7 @@ public class GitVariableProviderDefinitionTest
         var configuration = new GitVariableProviderConfiguration(
             null,
             "some.file",
+            null,
             new[] { "--some-arg" }
         );
 
@@ -64,6 +67,7 @@ public class GitVariableProviderDefinitionTest
             new GitVariableProviderDefinition(
                 "foo-bar",
                 "some.file",
+                "",
                 Array.Empty<string>()
             )
         );
@@ -75,6 +79,7 @@ public class GitVariableProviderDefinitionTest
         // arrange
         var configuration = new GitVariableProviderConfiguration(
             "foo-bar",
+            null,
             null,
             new[] { "--some-arg" }
         );

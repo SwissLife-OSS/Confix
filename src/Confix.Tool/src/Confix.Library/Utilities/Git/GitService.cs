@@ -109,6 +109,13 @@ public sealed class GitService : IGitService
         {
             "clone"
         };
+
+        bool sparseCheckout = !string.IsNullOrWhiteSpace(configuration.SparseDirectory);
+        if (sparseCheckout)
+        {
+            arguments.Add("--no-checkout");
+        }
+
         if (configuration.Arguments?.Length > 0)
         {
             arguments.AddRange(configuration.Arguments);
@@ -122,6 +129,20 @@ public sealed class GitService : IGitService
             App.Log.GitCloneStarted(configuration.RepositoryUrl, configuration.Location);
 
             var output = await ExecuteAsync(arguments, cancellationToken);
+            if (sparseCheckout)
+            {
+                string currentWorkingDirectory = Environment.CurrentDirectory;
+                Environment.CurrentDirectory = configuration.Location;
+                var sparseArguments = new List<string>()
+                {
+                    "checkout",
+                    "HEAD",
+                    "--",
+                    $"\"{configuration.SparseDirectory}\""
+                };
+                output += await ExecuteAsync(sparseArguments, cancellationToken);
+                Environment.CurrentDirectory = currentWorkingDirectory;
+            }
 
             App.Log.GitCloneOutput(output);
         }

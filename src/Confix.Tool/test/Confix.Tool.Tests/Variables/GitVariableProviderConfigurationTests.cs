@@ -41,6 +41,7 @@ public class GitVariableProviderConfigurationTests
             new GitVariableProviderConfiguration(
                 "foo-bar",
                 "some.file",
+                null,
                 new[] { "--some-arg" }
             )
         );
@@ -69,6 +70,7 @@ public class GitVariableProviderConfigurationTests
             new GitVariableProviderConfiguration(
                 "foo-bar",
                 "some.file",
+                null,
                 new[] { "--some-arg" }
             )
         );
