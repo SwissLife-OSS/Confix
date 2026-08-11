@@ -29,3 +29,18 @@ secrets in development.
   }
 }
 ```
+
+## Projects without a csproj file
+
+User secrets require a `UserSecretsId` which is stored in the `.csproj` file. When
+`useUserSecrets` is enabled but no `.csproj` file exists next to the `appsettings.json`,
+`confix build` writes the resolved configuration to an `appsettings.user.json` file next to the
+`appsettings.json` instead of overwriting it. This prevents resolved secrets from ending up in a
+file that is checked into source control.
+
+Make sure to add `appsettings.user.json` to your `.gitignore` and to load it in your host, for
+example:
+
+```csharp copy
+builder.Configuration.AddJsonFile("appsettings.user.json", optional: true, reloadOnChange: true);
+```
