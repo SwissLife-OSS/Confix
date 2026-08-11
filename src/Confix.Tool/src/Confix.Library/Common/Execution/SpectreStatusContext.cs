@@ -46,6 +46,7 @@ public sealed class SpectreStatusContext : IStatus, IAsyncDisposable
         if (_status is not null)
         {
             await _status.DisposeAsync();
+            _status = null;
         }
     }
 
