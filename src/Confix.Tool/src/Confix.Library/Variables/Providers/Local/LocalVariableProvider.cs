@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool;
@@ -14,7 +15,8 @@ public sealed class LocalVariableProvider : IVariableProvider
 {
     private static readonly JsonSerializerOptions _options = new()
     {
-        WriteIndented = true
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
     private readonly Lazy<Dictionary<string, JsonNode?>> _parsedLocalFile;

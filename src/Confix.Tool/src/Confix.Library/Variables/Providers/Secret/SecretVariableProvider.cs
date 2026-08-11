@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Nodes;
 using Confix.Tool;
+using Confix.Utilities.Json;
 
 namespace Confix.Variables;
 
@@ -47,7 +48,7 @@ public sealed class SecretVariableProvider : IVariableProvider
 
     public Task<string> SetAsync(string path, JsonNode value, IVariableProviderContext context)
     {
-        string valueToEncrypt = value.ToJsonString();
+        string valueToEncrypt = value.ToRelaxedJsonString();
         byte[] bytesToEncrypt = Encoding.UTF8.GetBytes(valueToEncrypt);
         byte[] encryptedValue = Encrypt(bytesToEncrypt, _publicKey.Value);
 

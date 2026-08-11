@@ -50,6 +50,14 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
                 output = new FileInfo(Path.Combine(userSecretsFolder.FullName, FileNames.Secrets));
                 context.Logger.UseUserSecretsConfigurationFile(output);
             }
+            else
+            {
+                // without a csproj there is no user secrets id, so we redirect to a sidecar file
+                // instead of writing the resolved secrets back into the checked in appsettings.json
+                output = new FileInfo(
+                    Path.Combine(input.Directory!.FullName, FileNames.UserAppSettings));
+                context.Logger.NoProjectFileForUserSecrets(input.Directory!.FullName, output);
+            }
         }
 
         context.Logger.FoundAppSettingsConfigurationFile(input);
@@ -72,6 +80,7 @@ file static class FileNames
 {
     public const string Secrets = "secrets.json";
     public const string AppSettings = "appsettings.json";
+    public const string UserAppSettings = "appsettings.user.json";
 }
 
 file static class Log
@@ -93,6 +102,15 @@ file static class Log
         FileInfo file)
     {
         console.Debug($"Use user secrets configuration file '{file}'");
+    }
+
+    public static void NoProjectFileForUserSecrets(
+        this IConsoleLogger console,
+        string projectDirectory,
+        FileInfo file)
+    {
+        console.Warning(
+            $"No .csproj file was found in '{projectDirectory}', so user secrets cannot be used. The configuration was written to '{file}' instead of '{FileNames.AppSettings}'. Make sure this file is git ignored and loaded by your host.");
     }
 
     public static void ProjectTreatedAsComponentOnly(
