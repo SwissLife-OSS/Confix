@@ -15,9 +15,9 @@ public sealed class VariableCopyPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .Use<VariableMiddleware>()
-            .AddOption(FromVariableNameOption.Instance)
-            .AddOption(ToVariableNameOption.Instance)
-            .AddOption(ToEnvironmentOption.Instance)
+            .Add(FromVariableNameOption.Instance)
+            .Add(ToVariableNameOption.Instance)
+            .Add(ToEnvironmentOption.Instance)
             .UseHandler(InvokeAsync);
     }
 

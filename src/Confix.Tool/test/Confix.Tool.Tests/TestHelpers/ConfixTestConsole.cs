@@ -1,5 +1,3 @@
-using System.CommandLine;
-using System.CommandLine.IO;
 using Snapshooter.Extensions;
 using Spectre.Console;
 using Spectre.Console.Rendering;
@@ -7,7 +5,7 @@ using Spectre.Console.Testing;
 
 namespace Confix.Inputs;
 
-public sealed class ConfixTestConsole : IAnsiConsole, IDisposable, IConsole
+public sealed class ConfixTestConsole : IAnsiConsole, IDisposable
 {
     private readonly IAnsiConsole _console;
     private readonly StringWriter _writer;
@@ -50,9 +48,10 @@ public sealed class ConfixTestConsole : IAnsiConsole, IDisposable, IConsole
     /// </summary>
     public bool EmitAnsiSequences { get; set; }
 
-    public IStandardStreamWriter Out { get; }
-
-    public IStandardStreamWriter Error { get; }
+    /// <summary>
+    /// Gets the writer that receives everything written to this console.
+    /// </summary>
+    public TextWriter Out => _writer;
 
     public bool IsOutputRedirected => false;
 
@@ -69,8 +68,6 @@ public sealed class ConfixTestConsole : IAnsiConsole, IDisposable, IConsole
 
         Input = new TestConsoleInput();
         EmitAnsiSequences = false;
-        Out = new Writer(this);
-        Error = new Writer(this);
 
         _console = AnsiConsole.Create(new AnsiConsoleSettings
         {
@@ -136,23 +133,5 @@ public sealed class ConfixTestConsole : IAnsiConsole, IDisposable, IConsole
     internal void SetCursor(IAnsiConsoleCursor? cursor)
     {
         _cursor = cursor;
-    }
-
-    private sealed class Writer : IStandardStreamWriter
-    {
-        private readonly ConfixTestConsole _console;
-
-        public Writer(ConfixTestConsole console)
-        {
-            _console = console;
-        }
-
-        public void Write(string? value)
-        {
-            if (value is { })
-            {
-                _console.Write(value, null);
-            }
-        }
     }
 }

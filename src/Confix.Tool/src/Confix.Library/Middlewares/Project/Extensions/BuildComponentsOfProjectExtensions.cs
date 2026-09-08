@@ -8,7 +8,7 @@ public static class BuildComponentsOfProjectExtensions
         this IPipelineDescriptor descriptor)
     {
         descriptor.Use<BuildComponentsOfProjectMiddleware>();
-        descriptor.AddOption(OnlyComponentsOption.Instance);
+        descriptor.Add(OnlyComponentsOption.Instance);
         return descriptor;
     }
 }

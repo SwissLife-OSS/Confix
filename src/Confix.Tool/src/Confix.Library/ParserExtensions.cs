@@ -1,14 +1,14 @@
 using System.CommandLine;
-using System.CommandLine.Parsing;
 
 namespace Confix.Tool;
 
 public static class ParserExtensions
 {
     public static Task<int> InvokeWithoutOutputFileAsync(
-        this Parser parser,
+        this ConfixCommandLineBuilder builder,
         string[] args,
-        IConsole? console = null)
+        InvocationConfiguration? configuration = null,
+        CancellationToken cancellationToken = default)
     {
         for (var i = 0; i < args.Length; i++)
         {
@@ -18,6 +18,11 @@ public static class ParserExtensions
             }
         }
 
-        return parser.InvokeAsync(args, console);
+        // the service provider has to exist before the action of a command is executed
+        builder.Build();
+
+        return builder.Command
+            .Parse(args)
+            .InvokeAsync(configuration ?? new InvocationConfiguration(), cancellationToken);
     }
 }

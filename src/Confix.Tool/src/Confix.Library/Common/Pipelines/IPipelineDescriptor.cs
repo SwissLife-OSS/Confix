@@ -32,8 +32,7 @@ public interface IPipelineDescriptor
     /// <typeparam name="TArgument">The type of the argument.</typeparam>
     /// <param name="argument">The argument to add.</param>
     /// <returns>The current command pipeline builder instance.</returns>
-    IPipelineDescriptor AddArgument<TArgument>(TArgument argument)
-        where TArgument : Argument;
+    IPipelineDescriptor Add(Argument argument);
 
     /// <summary>
     /// Adds an option to the command and maps it to the <see cref="IParameterCollection"/>.
@@ -41,8 +40,7 @@ public interface IPipelineDescriptor
     /// <typeparam name="TOption">The type of the option.</typeparam>
     /// <param name="option">The option to add.</param>
     /// <returns>The current command pipeline builder instance.</returns>
-    IPipelineDescriptor AddOption<TOption>(TOption option)
-        where TOption : Option;
+    IPipelineDescriptor Add(Option option);
 
     /// <summary>
     /// Adds a context data to the pipeline that can be used by the middleware components and

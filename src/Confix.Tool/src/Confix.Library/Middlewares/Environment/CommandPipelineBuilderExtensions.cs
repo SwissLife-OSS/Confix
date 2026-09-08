@@ -7,5 +7,5 @@ public static class CommandPipelineBuilderExtensions
     public static IPipelineDescriptor UseEnvironment(this IPipelineDescriptor builder)
         => builder
             .Use<EnvironmentMiddleware>()
-            .AddOption(ActiveEnvironmentOption.Instance);
+            .Add(ActiveEnvironmentOption.Instance);
 }

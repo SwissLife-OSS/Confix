@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using Confix.Extensions;
 using Confix.Tool.Middlewares;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +11,7 @@ public static class ComponentInputCommandLineBuilderExtensions
     private static Context.Key<Dictionary<string, Factory>> _key =
         new("Confix.Tool.Entities.Component.ComponentInputs");
 
-    public static CommandLineBuilder AddComponentInput<T>(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddComponentInput<T>(this ConfixCommandLineBuilder builder)
         where T : IComponentInput, new()
     {
         builder.GetComponentInputLookup().Add(T.Type, _ => new T());
@@ -21,7 +20,7 @@ public static class ComponentInputCommandLineBuilderExtensions
     }
 
     private static Dictionary<string, Factory> GetComponentInputLookup(
-        this CommandLineBuilder builder)
+        this ConfixCommandLineBuilder builder)
     {
         var contextData = builder.GetContextData();
 
@@ -36,7 +35,7 @@ public static class ComponentInputCommandLineBuilderExtensions
         return lookup;
     }
 
-    public static CommandLineBuilder RegisterComponentInputs(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder RegisterComponentInputs(this ConfixCommandLineBuilder builder)
     {
         builder.AddSingleton(sp
             => new BuildComponentInputMiddleware(

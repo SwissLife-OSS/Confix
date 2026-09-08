@@ -1,5 +1,4 @@
 using System.CommandLine;
-using System.CommandLine.Invocation;
 
 namespace Confix.Tool.Common.Pipelines;
 
@@ -40,12 +39,10 @@ public class Pipeline
 
     public IReadOnlySet<Option> Options { get; private set; } = new HashSet<Option>();
 
-    public PipelineExecutor BuildExecutor(InvocationContext context)
+    public PipelineExecutor BuildExecutor(IServiceProvider services)
     {
-        var services = context.BindingContext;
-
         // as we only use a single instance of the pipeline, we reuse the context data
-        var contextData = context.GetContextData();
+        var contextData = services.GetContextData();
         foreach (var (key, value) in ContextData)
         {
             contextData[key] = value;

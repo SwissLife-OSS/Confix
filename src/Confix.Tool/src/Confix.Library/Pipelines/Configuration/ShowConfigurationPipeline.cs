@@ -10,7 +10,7 @@ public sealed class ShowConfigurationPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddOption(FormatOptionWithDefault.Instance)
+            .Add(FormatOptionWithDefault.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseHandler(InvokeAsync);
     }

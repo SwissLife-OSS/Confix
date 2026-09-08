@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using Confix.ConfigurationFiles;
 using Confix.Tool.Commands.Configuration;
 using Confix.Tool.Commands.Logging;
@@ -9,7 +8,7 @@ namespace Confix.Tool.Middlewares;
 
 public static class ConfigurationFileCommandLineBuilderExtensions
 {
-    public static CommandLineBuilder RegisterConfigurationFiles(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder RegisterConfigurationFiles(this ConfixCommandLineBuilder builder)
     {
         builder.AddSingleton<WriteConfigurationFileMiddleware>();
         builder.AddSingleton(sp => new ReadConfigurationFileMiddleware(

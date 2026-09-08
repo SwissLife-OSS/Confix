@@ -13,8 +13,8 @@ public sealed class VariableGetPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .Use<VariableMiddleware>()
-            .AddOption(VariableNameOption.Instance)
-            .AddOption(FormatOption.Instance)
+            .Add(VariableNameOption.Instance)
+            .Add(FormatOption.Instance)
             .UseHandler(InvokeAsync);
     }
 

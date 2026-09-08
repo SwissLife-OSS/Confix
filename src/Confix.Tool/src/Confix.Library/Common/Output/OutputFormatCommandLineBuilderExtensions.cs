@@ -1,5 +1,5 @@
-using System.CommandLine.Builder;
-using System.CommandLine.IO;
+using System.CommandLine;
+using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
 namespace Confix.Tool.Commands.Logging;
@@ -9,7 +9,7 @@ public static class OutputFormatCommandLineBuilderExtensions
     private static Context.Key<List<IOutputFormatter>> _key =
         new("Confix.Tool.Common.OutputFormatter");
 
-    public static CommandLineBuilder AddOutputFormatter<T>(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddOutputFormatter<T>(this ConfixCommandLineBuilder builder)
         where T : IOutputFormatter, new()
     {
         builder.GetOutputFormatters().Add(new T());
@@ -18,63 +18,83 @@ public static class OutputFormatCommandLineBuilderExtensions
         return builder;
     }
 
-    public static CommandLineBuilder UseOutputFormat(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder UseOutputFormat(this ConfixCommandLineBuilder builder)
     {
-        builder.AddMiddleware(async (context, next) =>
-        {
-            var format =
-                context.ParseResult.GetValueForOption(FormatOption.Instance) ??
-                context.ParseResult.GetValueForOption(FormatOptionWithDefault.Instance);
-
-            if (format is not null)
-            {
-                context.SetContextData(Context.DisableStatus, true);
-
-                // we disable logging if the format option is specified
-                using (App.Log.SetVerbosity(Verbosity.Quiet))
-                {
-                    await next(context);
-                }
-
-                var outputFormatters = builder.GetOutputFormatters();
-
-                if (builder.GetOutput() is { } output)
-                {
-                    string? formattedValue = null;
-
-                    foreach (var outputFormatter in outputFormatters)
-                    {
-                        if (!outputFormatter.CanHandle(format.Value, output))
-                        {
-                            continue;
-                        }
-
-                        formattedValue =
-                            await outputFormatter.FormatAsync(format.Value, output);
-
-                        break;
-                    }
-
-                    context.Console.Out.Write(formattedValue);
-                    context.Console.Out.WriteLine();
-                }
-            }
-            else
-            {
-                await next(context);
-            }
-        });
+        builder.AddSingleton(new OutputFormatterCollection(builder.GetOutputFormatters()));
 
         return builder;
     }
 
-    private static List<IOutputFormatter> GetOutputFormatters(this CommandLineBuilder builder)
-        => builder.GetContextData().GetOrAddValue(_key);
-
-    private static object? GetOutput(this CommandLineBuilder context)
+    /// <summary>
+    /// Executes <paramref name="action" /> and writes its output using the formatter that
+    /// matches the <c>--format</c> option, if one was specified.
+    /// </summary>
+    public static async Task<int> ExecuteWithOutputFormatAsync(
+        this IServiceProvider services,
+        ParseResult parseResult,
+        Func<Task<int>> action)
     {
-        return context.GetContextData().Get(Context.Output);
+        var format =
+            parseResult.GetValue(FormatOption.Instance) ??
+            parseResult.GetValue(FormatOptionWithDefault.Instance);
+
+        if (format is null)
+        {
+            return await action();
+        }
+
+        services.SetContextData(Context.DisableStatus, true);
+
+        int exitCode;
+
+        // we disable logging if the format option is specified
+        using (App.Log.SetVerbosity(Verbosity.Quiet))
+        {
+            exitCode = await action();
+        }
+
+        var contextData = services.GetContextData();
+
+        if (contextData.Get(Context.Output) is { } output)
+        {
+            var outputFormatters =
+                services.GetRequiredService<OutputFormatterCollection>().Formatters;
+
+            string? formattedValue = null;
+
+            foreach (var outputFormatter in outputFormatters)
+            {
+                if (!outputFormatter.CanHandle(format.Value, output))
+                {
+                    continue;
+                }
+
+                formattedValue = await outputFormatter.FormatAsync(format.Value, output);
+
+                break;
+            }
+
+            services.GetRequiredService<IAnsiConsole>().WriteLine(formattedValue ?? string.Empty);
+        }
+
+        return exitCode;
     }
+
+    private static List<IOutputFormatter> GetOutputFormatters(this ConfixCommandLineBuilder builder)
+        => builder.GetContextData().GetOrAddValue(_key);
+}
+
+/// <summary>
+/// Holds the registered output formatters so that they can be resolved from the container.
+/// </summary>
+public sealed class OutputFormatterCollection
+{
+    public OutputFormatterCollection(List<IOutputFormatter> formatters)
+    {
+        Formatters = formatters;
+    }
+
+    public List<IOutputFormatter> Formatters { get; }
 }
 
 file sealed class CombinedOutputFormatter : IOutputFormatter

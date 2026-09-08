@@ -4,15 +4,12 @@ namespace Confix.Tool;
 
 public sealed class VerbosityOption : Option<Verbosity>
 {
-    public VerbosityOption() : base(
-        "--verbosity",
-        "Sets the verbosity level")
+    public VerbosityOption() : base("--verbosity")
     {
         Description = "Sets the verbosity level";
-        AddAlias("-v");
-        AddAlias("--verbosity");
-        SetDefaultValue(Verbosity.Normal);
-        this.FromAmong("diagnostic", "detailed", "normal", "minimal", "quiet");
+        Aliases.Add("-v");
+        DefaultValueFactory = _ => Verbosity.Normal;
+        this.AcceptOnlyFromAmong("diagnostic", "detailed", "normal", "minimal", "quiet");
     }
 
     public static VerbosityOption Instance { get; } = new();

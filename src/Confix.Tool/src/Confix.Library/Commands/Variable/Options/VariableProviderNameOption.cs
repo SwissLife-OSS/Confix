@@ -12,6 +12,6 @@ public sealed class VariableProviderNameOption : Option<string>
         Arity = ArgumentArity.ExactlyOne;
         Description = "The name of the provider to resolve the variable from";
 
-        AddAlias("-p");
+        Aliases.Add("-p");
     }
 }

@@ -4,12 +4,10 @@ namespace Confix.Tool;
 
 public sealed class FormatOption : Option<OutputFormat?>
 {
-    public FormatOption() : base("--format", "Sets the output format")
+    public FormatOption() : base("--format", "-f")
     {
         Description = "Sets the output format";
-        AddAlias("-f");
-        AddAlias("--format");
-        this.FromAmong("json");
+        this.AcceptOnlyFromAmong("json");
     }
 
     public static FormatOption Instance { get; } = new();
@@ -17,12 +15,10 @@ public sealed class FormatOption : Option<OutputFormat?>
 
 public sealed class FormatOptionWithDefault : Option<OutputFormat?>
 {
-    public FormatOptionWithDefault() : base("--format", "Sets the output format")
+    public FormatOptionWithDefault() : base("--format", "-f")
     {
         Description = "Sets the output format";
-        AddAlias("-f");
-        AddAlias("--format");
-        SetDefaultValue(OutputFormat.Json);
+        DefaultValueFactory = _ => OutputFormat.Json;
     }
 
     public static FormatOptionWithDefault Instance { get; } = new();

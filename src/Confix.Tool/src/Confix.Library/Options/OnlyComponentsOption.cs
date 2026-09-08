@@ -4,11 +4,10 @@ namespace Confix.Tool;
 
 public sealed class OnlyComponentsOption : Option<bool>
 {
-    public OnlyComponentsOption() : base(
-        "--only-components",
-        "If you specify this option, only the components will be built.")
+    public OnlyComponentsOption() : base("--only-components")
     {
-        IsRequired = false;
+        Description = "If you specify this option, only the components will be built.";
+        Required = false;
         Arity = ArgumentArity.ZeroOrOne;
     }
 

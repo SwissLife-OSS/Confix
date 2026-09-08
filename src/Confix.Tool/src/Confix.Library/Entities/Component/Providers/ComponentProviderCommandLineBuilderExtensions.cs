@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Entities.Components.Git;
@@ -13,24 +12,24 @@ public static class ComponentProviderCommandLineBuilderExtensions
     private static Context.Key<Dictionary<string, Factory<IComponentProvider>>> _key =
         new("Confix.Tool.Entites.Component.ComponentProviders");
 
-    public static CommandLineBuilder AddComponentProvider<T>(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddComponentProvider<T>(this ConfixCommandLineBuilder builder)
         where T : IComponentProvider, new()
         => builder.AddComponentProvider(T.Type, _ => new T());
 
-    public static CommandLineBuilder AddComponentProvider<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddComponentProvider<T>(
+        this ConfixCommandLineBuilder builder,
         Func<JsonNode, T> factory)
         where T : IComponentProvider
         => builder.AddComponentProvider(T.Type, (_, c) => factory(c));
 
-    public static CommandLineBuilder AddComponentProvider<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddComponentProvider<T>(
+        this ConfixCommandLineBuilder builder,
         Func<IServiceProvider, JsonNode, T> factory)
         where T : IComponentProvider
         => builder.AddComponentProvider(T.Type, (sp, c) => factory(sp, c));
 
-    public static CommandLineBuilder AddComponentProvider(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddComponentProvider(
+        this ConfixCommandLineBuilder builder,
         string name,
         Func<JsonNode, IComponentProvider> factory)
     {
@@ -39,8 +38,8 @@ public static class ComponentProviderCommandLineBuilderExtensions
         return builder;
     }
 
-    public static CommandLineBuilder AddComponentProvider(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddComponentProvider(
+        this ConfixCommandLineBuilder builder,
         string name,
         Factory<IComponentProvider> factory)
     {
@@ -50,7 +49,7 @@ public static class ComponentProviderCommandLineBuilderExtensions
     }
 
     private static Dictionary<string, Factory<IComponentProvider>> GetComponentProviderLookup(
-        this CommandLineBuilder builder)
+        this ConfixCommandLineBuilder builder)
     {
         var contextData = builder.GetContextData();
 
@@ -66,7 +65,7 @@ public static class ComponentProviderCommandLineBuilderExtensions
         return lookup;
     }
 
-    public static CommandLineBuilder RegisterComponentProviders(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder RegisterComponentProviders(this ConfixCommandLineBuilder builder)
     {
         builder.AddSingleton(sp
             => new BuildComponentProviderMiddleware(

@@ -14,11 +14,11 @@ public class BuildCommandPipeline : Pipeline
     {
         builder
             .Use<LoadConfigurationMiddleware>()
-            .AddOption(ActiveEnvironmentOption.Instance)
-            .AddOption(OutputFileOption.Instance)
-            .AddOption(EncryptionOption.Instance)
-            .AddOption(GitUsernameOptions.Instance)
-            .AddOption(GitTokenOptions.Instance)
+            .Add(ActiveEnvironmentOption.Instance)
+            .Add(OutputFileOption.Instance)
+            .Add(EncryptionOption.Instance)
+            .Add(GitUsernameOptions.Instance)
+            .Add(GitTokenOptions.Instance)
             .UseHandler(InvokeAsync);
     }
 

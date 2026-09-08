@@ -12,7 +12,7 @@ internal sealed class DotnetConfigurationOptions : Option<string>
         : base("--dotnet-configuration")
     {
         Arity = ArgumentArity.ExactlyOne;
-        SetDefaultValue(Default);
+        DefaultValueFactory = _ => Default;
         Description = "The configuration passed to dotnet commands. Defaults to 'Debug'.";
     }
 }

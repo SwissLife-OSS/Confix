@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using Factory =
     System.Func<System.IServiceProvider, Confix.Tool.Middlewares.IConfigurationAdapter>;
 
@@ -9,7 +8,7 @@ public static class ConfigurationAdapterCommandBuilderExtensions
     private static Context.Key<List<Factory>> _key =
         new("Confix.Tool.Entites.ConfigurationAdapters");
 
-    public static CommandLineBuilder AddConfigurationAdapter<T>(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddConfigurationAdapter<T>(this ConfixCommandLineBuilder builder)
         where T : IConfigurationAdapter, new()
     {
         builder.GetConfigurationAdapterLookup().Add(_ => new T());
@@ -17,7 +16,7 @@ public static class ConfigurationAdapterCommandBuilderExtensions
         return builder;
     }
 
-    private static IList<Factory> GetConfigurationAdapterLookup(this CommandLineBuilder builder)
+    private static IList<Factory> GetConfigurationAdapterLookup(this ConfixCommandLineBuilder builder)
     {
         var contextData = builder.GetContextData();
 

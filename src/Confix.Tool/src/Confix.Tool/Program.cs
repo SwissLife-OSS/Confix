@@ -1,3 +1,3 @@
 ﻿using Confix.Tool;
 
-return await new ConfixCommandLine().Build().InvokeWithoutOutputFileAsync(args);
+return await new ConfixCommandLine().InvokeWithoutOutputFileAsync(args);

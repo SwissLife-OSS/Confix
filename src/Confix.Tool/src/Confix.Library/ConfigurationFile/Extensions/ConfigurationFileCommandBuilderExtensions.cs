@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
 using Factory =
     System.Func<System.Text.Json.Nodes.JsonNode,
@@ -11,13 +10,13 @@ public static class ConfigurationFileCommandBuilderExtensions
     private static Context.Key<Dictionary<string, Factory>> _key =
         new("Confix.Tool.Entites.Configuration.ConfigurationFiles");
 
-    public static CommandLineBuilder AddConfigurationFileProvider<T>(
-        this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddConfigurationFileProvider<T>(
+        this ConfixCommandLineBuilder builder)
         where T : IConfigurationFileProvider, new()
         => builder.AddConfigurationFileProvider(T.Type, _ => new T());
 
-    public static CommandLineBuilder AddConfigurationFileProvider(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddConfigurationFileProvider(
+        this ConfixCommandLineBuilder builder,
         string name,
         Func<JsonNode, IConfigurationFileProvider> factory)
     {
@@ -27,7 +26,7 @@ public static class ConfigurationFileCommandBuilderExtensions
     }
 
     private static Dictionary<string, Factory> GetConfigurationFileProviderLookup(
-        this CommandLineBuilder builder)
+        this ConfixCommandLineBuilder builder)
     {
         var contextData = builder.GetContextData();
 
