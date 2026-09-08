@@ -7,7 +7,7 @@ namespace Confix.Tool.Schema;
 
 public static class SchemaHelpers
 {
-    public static async Task<ISchema> LoadSchemaAsync(
+    public static async Task<ISchemaDefinition> LoadSchemaAsync(
         string schemaPath,
         CancellationToken cancellationToken = default)
     {
@@ -29,7 +29,7 @@ public static class SchemaHelpers
         return schema;
     }
 
-    public static ISchema BuildSchema(string schema)
+    public static ISchemaDefinition BuildSchema(string schema)
     {
         var schemaDoc = Utf8GraphQLParser.Parse(schema);
 
@@ -55,9 +55,9 @@ public static class SchemaHelpers
             .AddType<DefaultValueDirective>()
             .AddType<MetadataDirective>()
             .AddType<DependencyDirective>()
+            .AddType(new AnyType("JSON"))
             .ModifyOptions(c =>
             {
-                c.PreserveSyntaxNodes = true;
                 c.QueryTypeName = rootTypeName;
                 c.StrictValidation = false;
                 c.StrictRuntimeTypeValidation = false;

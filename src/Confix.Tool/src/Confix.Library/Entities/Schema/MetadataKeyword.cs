@@ -1,17 +1,13 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-using Confix.Utilities.Json;
 using Json.Schema;
 
 namespace Confix.Entities.Schema;
 
 /// <summary>
-/// Handles `default`.
+/// Handles `metadata`.
 /// </summary>
-[SchemaKeyword(Name)]
-[JsonConverter(typeof(MetadataKeywordJsonConverter))]
-public class MetadataKeyword : IJsonSchemaKeyword, IEquatable<MetadataKeyword>
+public sealed class MetadataKeyword : IKeywordHandler
 {
     /// <summary>
     /// The JSON name of the keyword.
@@ -19,74 +15,69 @@ public class MetadataKeyword : IJsonSchemaKeyword, IEquatable<MetadataKeyword>
     public const string Name = "metadata";
 
     /// <summary>
-    /// The value to use as the default.
+    /// The singleton instance of the handler.
     /// </summary>
-    public JsonArray Value { get; }
+    public static readonly MetadataKeyword Instance = new();
 
-    /// <summary>
-    /// Creates a new <see cref="MetadataKeyword"/>.
-    /// </summary>
-    /// <param name="value">The value to use as the default.</param>
-    public MetadataKeyword(JsonArray value)
+    private static int _registered;
+
+    private MetadataKeyword()
     {
-        Value = value;
     }
 
     /// <summary>
-    /// Performs evaluation for the keyword.
+    /// Registers the handler on <see cref="Dialect.Default"/>. Calling this multiple times
+    /// has no additional effect.
     /// </summary>
-    /// <param name="context">Contextual details for the evaluation process.</param>
-    public void Evaluate(EvaluationContext context)
+    public static void Register()
     {
-        context.EnterKeyword(Name);
-        context.LocalResult.SetAnnotation(Name, Value);
-        context.ExitKeyword(Name, true);
+        if (Interlocked.Exchange(ref _registered, 1) is 0)
+        {
+            // Confix schemas carry additional annotations (for example `hasVariable`) that are
+            // not backed by a handler, so unknown keywords have to be tolerated.
+            Dialect.Default = Dialect.Default.With([Instance], allowUnknownKeywords: true);
+            BuildOptions.Default.Dialect = Dialect.Default;
+        }
     }
 
-    /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-    /// <param name="other">An object to compare with this object.</param>
-    /// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-    public bool Equals(MetadataKeyword? other)
+    /// <inheritdoc />
+    string IKeywordHandler.Name => Name;
+
+    /// <inheritdoc />
+    public object? ValidateKeywordValue(JsonElement value)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Value.IsEquivalentTo(other.Value);
+        if (value.ValueKind is not JsonValueKind.Array)
+        {
+            throw new JsonSchemaException($"'{Name}' keyword must contain an array.");
+        }
+
+        return value.Clone();
     }
 
-    /// <summary>Determines whether the specified object is equal to the current object.</summary>
-    /// <param name="obj">The object to compare with the current object.</param>
-    /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-    public override bool Equals(object? obj)
+    /// <inheritdoc />
+    public void BuildSubschemas(KeywordData keyword, BuildContext context)
     {
-        return Equals(obj as MetadataKeyword);
     }
 
-    /// <summary>Serves as the default hash function.</summary>
-    /// <returns>A hash code for the current object.</returns>
-    public override int GetHashCode()
-    {
-        return Value?.GetEquivalenceHashCode() ?? 0;
-    }
+    /// <inheritdoc />
+    public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+        => new()
+        {
+            Keyword = Name,
+            IsValid = true,
+            Annotation = (JsonElement) keyword.Value!
+        };
 }
 
-internal class MetadataKeywordJsonConverter : JsonConverter<MetadataKeyword>
+/// <summary>
+/// Registers the <see cref="MetadataKeyword"/> handler on the default dialect so that the
+/// keyword is recognized when schemas are built and evaluated.
+/// </summary>
+internal static class MetadataKeywordRegistration
 {
-    public override MetadataKeyword Read(
-        ref Utf8JsonReader reader,
-        Type typeToConvert,
-        JsonSerializerOptions options)
+    [ModuleInitializer]
+    internal static void Initialize()
     {
-        var node = JsonSerializer.Deserialize<JsonArray>(ref reader, options);
-
-        return new MetadataKeyword(node ?? []);
-    }
-
-    public override void Write(
-        Utf8JsonWriter writer,
-        MetadataKeyword value,
-        JsonSerializerOptions options)
-    {
-        writer.WritePropertyName(MetadataKeyword.Name);
-        JsonSerializer.Serialize(writer, value.Value, options);
+        MetadataKeyword.Register();
     }
 }

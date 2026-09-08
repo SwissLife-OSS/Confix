@@ -34,7 +34,7 @@ public readonly record struct DefaultLoggerMessage : ILoggerMessage
         // markup is by default not wrapped, so we need to add a newline 
         formatted += Environment.NewLine;
 
-        var markup = new Markup(formatted, Style ?? Style.Plain);
+        var markup = new Markup(formatted, Style ?? Spectre.Console.Style.Plain);
 
         console.Write(markup);
 

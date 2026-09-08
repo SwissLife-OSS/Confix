@@ -100,6 +100,12 @@ public sealed class ConfixTestConsole : IAnsiConsole, IDisposable, IConsole
     }
 
     /// <inheritdoc/>
+    public void WriteAnsi(Action<AnsiWriter> write)
+    {
+        _console.WriteAnsi(write);
+    }
+
+    /// <inheritdoc/>
     public void Write(IRenderable renderable)
     {
         if (EmitAnsiSequences)

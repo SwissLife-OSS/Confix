@@ -36,7 +36,7 @@ public sealed class ProjectComposer
             .Defs(defs)
             .Properties(properties)
             .Required(properties.Keys.ToArray())
-            .Build();
+            .BuildIsolated();
     }
 
     private static Dictionary<string, JsonSchema> GetPrefixedDefinitions(
@@ -50,7 +50,7 @@ public sealed class ProjectComposer
                     .PrefixTypes($"{componentDefinition.ComponentName}_")
                     .AddVariableIntellisense(new JsonObject()
                     {
-                        [RefKeyword.Name] = References.Urls.ConfixVariables
+                        [JsonSchemaKeywords.Ref] = References.Urls.ConfixVariables
                     });
 
             if (prefixedJsonSchema.GetDefs() is { } prefixedDefs)
@@ -108,7 +108,7 @@ file class SchemaNode
         {
             case > 1:
                 schema = new();
-                schema.AnyOf(Schemas.Select(x => x.Build()));
+                schema.AnyOf(Schemas.Select(x => x.BuildIsolated()));
                 break;
 
             case 1:
@@ -126,7 +126,7 @@ file class SchemaNode
             schema.Required(name);
         }
 
-        return schema.Build();
+        return schema.BuildIsolated();
     }
 
     public static SchemaNode FromComponents(IEnumerable<Component> components)

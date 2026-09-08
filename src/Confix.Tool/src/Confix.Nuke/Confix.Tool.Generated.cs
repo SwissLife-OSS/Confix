@@ -596,13 +596,7 @@ public partial class ConfixEncryptSettings : ToolOptions
     [Argument(Format = "--verbosity {value}")] public string Verbosity => Get<string>(() => Verbosity);
     /// <summary>The path to the file to encrypt or decrypt.</summary>
     [Argument(Format = "{value}")] public string InputFile => Get<string>(() => InputFile);
-    /// <summary>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</summary>
-    [Argument(Format = "{value}")] public string OutFile => Get<string>(() => OutFile);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
-}
-#endregion
-#region ConfixDecryptSettings
+    /// <summary>The file to write the encrypted or decrypted data to.     /// If not provided the input file will be overwritten.     /// Existing files will be overwritten.</summary>    [Argument(Format = "{value}")] public string OutFile => Get<string>(() => OutFile);    /// <summary></summary>    public string Framework => Get<string>(() => Framework);}#endregion#region ConfixDecryptSettings
 /// <inheritdoc cref="ConfixTasks.ConfixDecrypt(Confix.Nuke.ConfixDecryptSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
@@ -615,13 +609,7 @@ public partial class ConfixDecryptSettings : ToolOptions
     [Argument(Format = "--verbosity {value}")] public string Verbosity => Get<string>(() => Verbosity);
     /// <summary>The path to the file to encrypt or decrypt.</summary>
     [Argument(Format = "{value}")] public string InputFile => Get<string>(() => InputFile);
-    /// <summary>The file to write the encrypted or decrypted data to.  If not provided the input file will be overwritten.  Existing files will be overwritten.</summary>
-    [Argument(Format = "{value}")] public string OutFile => Get<string>(() => OutFile);
-    /// <summary></summary>
-    public string Framework => Get<string>(() => Framework);
-}
-#endregion
-#region ConfixConfigShowSettings
+    /// <summary>The file to write the encrypted or decrypted data to.     /// If not provided the input file will be overwritten.     /// Existing files will be overwritten.</summary>    [Argument(Format = "{value}")] public string OutFile => Get<string>(() => OutFile);    /// <summary></summary>    public string Framework => Get<string>(() => Framework);}#endregion#region ConfixConfigShowSettings
 /// <inheritdoc cref="ConfixTasks.ConfixConfigShow(Confix.Nuke.ConfixConfigShowSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]

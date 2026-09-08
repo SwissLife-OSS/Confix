@@ -1,177 +1,90 @@
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using Confix.Entities.Schema;
-using Confix.Utilities.Json;
+using Json.Schema;
 
 namespace Confix.Tool.Tests.Entities.Schema;
 
 public class MetadataKeywordTests
 {
+    private static readonly IKeywordHandler _handler = MetadataKeyword.Instance;
+
     [Fact]
-    public void Constructor_WithValidArray_SetsValue()
+    public void Name_IsMetadata()
     {
-        // arrange
-        var array = new JsonArray("item1", "item2");
-
-        // act
-        var keyword = new MetadataKeyword(array);
-
-        // assert
-        Assert.NotNull(keyword.Value);
-        Assert.Equal(2, keyword.Value.Count);
+        // act & assert
+        Assert.Equal("metadata", _handler.Name);
     }
 
     [Fact]
-    public void Constructor_WithEmptyArray_SetsEmptyValue()
+    public void ValidateKeywordValue_WithArray_ReturnsValue()
     {
         // arrange
-        var array = new JsonArray();
+        var value = JsonSerializer.Deserialize<JsonElement>("""["item1", "item2"]""");
 
         // act
-        var keyword = new MetadataKeyword(array);
+        var result = _handler.ValidateKeywordValue(value);
 
         // assert
-        Assert.NotNull(keyword.Value);
-        Assert.Empty(keyword.Value);
+        var element = Assert.IsType<JsonElement>(result);
+        Assert.Equal(JsonValueKind.Array, element.ValueKind);
+        Assert.Equal(2, element.GetArrayLength());
     }
 
     [Fact]
-    public void Equals_SameValues_ReturnsTrue()
+    public void ValidateKeywordValue_WithNonArray_Throws()
     {
         // arrange
-        var keyword1 = new MetadataKeyword(new JsonArray("item1", "item2"));
-        var keyword2 = new MetadataKeyword(new JsonArray("item1", "item2"));
+        var value = JsonSerializer.Deserialize<JsonElement>("""{"key": "value"}""");
 
         // act & assert
-        Assert.True(keyword1.Equals(keyword2));
+        Assert.Throws<JsonSchemaException>(() => _handler.ValidateKeywordValue(value));
     }
 
     [Fact]
-    public void Equals_DifferentValues_ReturnsFalse()
+    public void Evaluate_SchemaWithMetadata_ProducesAnnotation()
     {
         // arrange
-        var keyword1 = new MetadataKeyword(new JsonArray("item1"));
-        var keyword2 = new MetadataKeyword(new JsonArray("item2"));
+        var schema = JsonSchema.FromText(
+            """
+            {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "metadata": [{ "type": "dependency", "kind": "graphql" }]
+                }
+              }
+            }
+            """);
 
+        var instance = JsonSerializer.Deserialize<JsonElement>("""{"name": "confix"}""");
+
+        var options = new EvaluationOptions
+        {
+            OutputFormat = Json.Schema.OutputFormat.List,
+            PreserveDroppedAnnotations = true
+        };
+
+        // act
+        var results = schema.Evaluate(instance, options);
+
+        // assert
+        Assert.True(results.IsValid);
+        Assert.Contains(
+            results.Details,
+            x => x.Annotations?.ContainsKey(MetadataKeyword.Name) is true);
+    }
+
+    [Fact]
+    public void Build_SchemaWithInvalidMetadata_Throws()
+    {
         // act & assert
-        Assert.False(keyword1.Equals(keyword2));
-    }
-
-    [Fact]
-    public void Equals_Null_ReturnsFalse()
-    {
-        // arrange
-        var keyword = new MetadataKeyword(new JsonArray("item1"));
-
-        // act & assert
-        Assert.False(keyword.Equals(null));
-    }
-
-    [Fact]
-    public void Equals_SameReference_ReturnsTrue()
-    {
-        // arrange
-        var keyword = new MetadataKeyword(new JsonArray("item1"));
-
-        // act & assert
-        Assert.True(keyword.Equals(keyword));
-    }
-
-    [Fact]
-    public void GetHashCode_SameValues_ReturnsSameHash()
-    {
-        // arrange
-        var keyword1 = new MetadataKeyword(new JsonArray("item1", "item2"));
-        var keyword2 = new MetadataKeyword(new JsonArray("item1", "item2"));
-
-        // act & assert
-        Assert.Equal(keyword1.GetHashCode(), keyword2.GetHashCode());
-    }
-
-    [Fact]
-    public void JsonConverter_DeserializeValidArray_ReturnsKeyword()
-    {
-        // arrange
-        var json = """["item1", "item2", "item3"]""";
-
-        // act
-        var keyword = JsonSerializer.Deserialize<MetadataKeyword>(json);
-
-        // assert
-        Assert.NotNull(keyword);
-        Assert.Equal(3, keyword.Value.Count);
-    }
-
-    [Fact]
-    public void JsonConverter_DeserializeEmptyArray_ReturnsKeywordWithEmptyArray()
-    {
-        // arrange
-        var json = """[]""";
-
-        // act
-        var keyword = JsonSerializer.Deserialize<MetadataKeyword>(json);
-
-        // assert
-        Assert.NotNull(keyword);
-        Assert.Empty(keyword.Value);
-    }
-
-    [Fact]
-    public void JsonConverter_DeserializeNull_ReturnsNull()
-    {
-        // arrange - when JSON is literal "null", the serializer returns null
-        // without calling the converter (standard System.Text.Json behavior)
-        var json = """null""";
-
-        // act
-        var keyword = JsonSerializer.Deserialize<MetadataKeyword>(json);
-
-        // assert
-        Assert.Null(keyword);
-    }
-
-    [Fact]
-    public void JsonConverter_DeserializeComplexArray_ReturnsKeyword()
-    {
-        // arrange
-        var json = """[{"key": "value"}, null, "string", 42]""";
-
-        // act
-        var keyword = JsonSerializer.Deserialize<MetadataKeyword>(json);
-
-        // assert
-        Assert.NotNull(keyword);
-        Assert.Equal(4, keyword.Value.Count);
-    }
-
-    [Fact]
-    public void JsonConverter_SerializeKeyword_ReturnsValidJson()
-    {
-        // arrange
-        var keyword = new MetadataKeyword(new JsonArray("item1", "item2"));
-        var options = new JsonSerializerOptions { WriteIndented = false };
-
-        // act
-        var json = JsonSerializer.Serialize(keyword, options);
-
-        // assert
-        // Note: The custom converter writes property name, so we wrap it
-        Assert.Contains("metadata", json);
-    }
-
-    [Fact]
-    public void JsonConverter_RoundTrip_PreservesValue()
-    {
-        // arrange
-        var originalArray = new JsonArray("item1", 42, true);
-        var keyword = new MetadataKeyword(originalArray);
-
-        // act - serialize then deserialize the array directly
-        var json = keyword.Value.ToJsonString();
-        var deserializedKeyword = JsonSerializer.Deserialize<MetadataKeyword>(json);
-
-        // assert
-        Assert.NotNull(deserializedKeyword);
-        Assert.True(keyword.Value.IsEquivalentTo(deserializedKeyword.Value));
+        Assert.ThrowsAny<Exception>(() => JsonSchema.FromText(
+            """
+            {
+              "type": "object",
+              "metadata": "not-an-array"
+            }
+            """));
     }
 }

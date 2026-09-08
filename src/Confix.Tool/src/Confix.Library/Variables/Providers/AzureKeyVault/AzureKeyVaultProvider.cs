@@ -52,8 +52,10 @@ public sealed class AzureKeyVaultProvider : IVariableProvider
     public Task<JsonNode> ResolveAsync(string path, IVariableProviderContext context)
         => KeyVaultExtension.HandleKeyVaultException<JsonNode>(async () =>
         {
-            KeyVaultSecret result = await _client.GetSecretAsync(path.ToKeyVaultCompatiblePath(),
-                cancellationToken: context.CancellationToken);
+            KeyVaultSecret result = await _client.GetSecretAsync(
+                path.ToKeyVaultCompatiblePath(),
+                null,
+                context.CancellationToken);
             return JsonValue.Create(result.Value)!;
         }, path);
 
