@@ -1,11 +1,10 @@
-using System.CommandLine.Builder;
 using Confix.Tool.Commands.Logging;
 
 namespace Confix.Tool.Commands.Configuration;
 
 public static class OutputFormattersConfigurationFilesExtensions
 {
-    public static CommandLineBuilder AddOutputFormatters(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddOutputFormatters(this ConfixCommandLineBuilder builder)
     {
         builder.AddOutputFormatter<ComponentListOutputFormatter>();
         builder.AddOutputFormatter<ConfigurationFeatureOutputFormatter>();

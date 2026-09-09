@@ -8,7 +8,7 @@ public static class ConfigurationFilesCommandPipelineBuilderExtensions
 {
     public static IPipelineDescriptor UseWriteConfigurationFiles(this IPipelineDescriptor builder)
     {
-        builder.AddOption(EncryptionOption.Instance);
+        builder.Add(EncryptionOption.Instance);
         builder.Use<OptionalEncryptionMiddleware>();
         builder.Use<WriteConfigurationFileMiddleware>();
 
@@ -17,7 +17,7 @@ public static class ConfigurationFilesCommandPipelineBuilderExtensions
 
     public static IPipelineDescriptor UseReadConfigurationFiles(this IPipelineDescriptor builder)
     {
-        builder.AddOption(OutputFileOption.Instance);
+        builder.Add(OutputFileOption.Instance);
         builder.Use<ReadConfigurationFileMiddleware>();
 
         return builder;

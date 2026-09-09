@@ -6,8 +6,9 @@ public class ConfigValueArgument : Argument<string>
 {
     private const string _description = "The value to set as json";
 
-    public ConfigValueArgument() : base("value", _description)
+    public ConfigValueArgument() : base("value")
     {
+        Description = _description;
     }
 
     public static readonly ConfigValueArgument Instance = new();

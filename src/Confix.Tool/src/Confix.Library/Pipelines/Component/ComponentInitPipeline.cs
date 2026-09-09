@@ -13,7 +13,7 @@ public sealed class ComponentInitPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddArgument(ComponentNameArgument.Instance)
+            .Add(ComponentNameArgument.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseHandler(InvokeAsync);
     }

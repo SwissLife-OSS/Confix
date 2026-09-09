@@ -4,10 +4,10 @@ namespace Confix.Tool;
 
 public sealed class NoRestoreOptions : Option<bool>
 {
-    public NoRestoreOptions() : base("--no-restore", "Disables restoring of schemas")
+    public NoRestoreOptions() : base("--no-restore")
     {
         Description = "Disables restoring of schemas";
-        SetDefaultValue(false);
+        DefaultValueFactory = _ => false;
     }
 
     public static NoRestoreOptions Instance { get; } = new();

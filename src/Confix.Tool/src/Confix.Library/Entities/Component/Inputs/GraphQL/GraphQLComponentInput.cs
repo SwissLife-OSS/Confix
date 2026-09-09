@@ -47,7 +47,7 @@ public sealed class GraphQlComponentInput : IComponentInput
         var schema =
             await SchemaHelpers.LoadSchemaAsync(schemaGraphQlFile.FullName, cancellationToken);
 
-        var jsonSchema = schema.ToJsonSchema().Build();
+        var jsonSchema = schema.ToJsonSchema().BuildIsolated();
 
         if (schemaJsonFile.Exists)
         {

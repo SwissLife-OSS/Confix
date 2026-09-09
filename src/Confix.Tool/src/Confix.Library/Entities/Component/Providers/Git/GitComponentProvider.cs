@@ -165,7 +165,7 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
 
             context.Logger.FoundComponent(componentName, version);
 
-            var json = JsonSchema.FromFile(pathToComponent);
+            var json = ConfixJsonSchema.FromFile(pathToComponent);
             var component =
                 new Component(_name, componentName, version, true, definition.MountingPoints, json);
 

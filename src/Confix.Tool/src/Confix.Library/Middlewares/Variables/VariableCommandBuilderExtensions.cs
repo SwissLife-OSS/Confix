@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
 using Confix.Utilities;
 using Confix.Variables;
@@ -11,7 +10,7 @@ public static class VariableCommandBuilderExtensions
     private static Context.Key<Dictionary<string, Factory<IVariableProvider>>> _key =
         new("Confix.Tool.Entites.Variables.VariableProvider");
 
-    public static CommandLineBuilder RegisterVariableMiddleware(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder RegisterVariableMiddleware(this ConfixCommandLineBuilder builder)
     {
         builder.AddDefaultVariableProviders();
         builder.AddSingleton<VariableListCache>();
@@ -21,7 +20,7 @@ public static class VariableCommandBuilderExtensions
         return builder;
     }
 
-    private static CommandLineBuilder AddDefaultVariableProviders(this CommandLineBuilder builder)
+    private static ConfixCommandLineBuilder AddDefaultVariableProviders(this ConfixCommandLineBuilder builder)
     {
         builder.AddVariableProvider(config => new LocalVariableProvider(config));
         builder.AddVariableProvider(config => new SecretVariableProvider(config));
@@ -33,8 +32,8 @@ public static class VariableCommandBuilderExtensions
         return builder;
     }
 
-    public static CommandLineBuilder AddVariableProvider<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddVariableProvider<T>(
+        this ConfixCommandLineBuilder builder,
         Func<IServiceProvider, JsonNode, T> factory)
         where T : IVariableProvider
     {
@@ -43,8 +42,8 @@ public static class VariableCommandBuilderExtensions
         return builder;
     }
 
-    public static CommandLineBuilder AddVariableProvider<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddVariableProvider<T>(
+        this ConfixCommandLineBuilder builder,
         Func<JsonNode, T> factory)
         where T : IVariableProvider
     {
@@ -53,8 +52,8 @@ public static class VariableCommandBuilderExtensions
         return builder;
     }
 
-    public static CommandLineBuilder AddVariableProvider<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddVariableProvider<T>(
+        this ConfixCommandLineBuilder builder,
         string name,
         Func<JsonNode, T> factory)
         where T : IVariableProvider
@@ -64,8 +63,8 @@ public static class VariableCommandBuilderExtensions
         return builder;
     }
 
-    public static CommandLineBuilder AddVariableProvider<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddVariableProvider<T>(
+        this ConfixCommandLineBuilder builder,
         string name,
         Factory<T> factory)
         where T : IVariableProvider
@@ -76,7 +75,7 @@ public static class VariableCommandBuilderExtensions
     }
 
     private static Dictionary<string, Factory<IVariableProvider>> GetVariableProviderLookup(
-        this CommandLineBuilder builder)
+        this ConfixCommandLineBuilder builder)
     {
         var contextData = builder.GetContextData();
 

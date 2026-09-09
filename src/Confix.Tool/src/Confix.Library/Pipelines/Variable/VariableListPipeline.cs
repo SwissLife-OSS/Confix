@@ -15,7 +15,7 @@ public sealed class VariableListPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .Use<VariableMiddleware>()
-            .AddOption(VariableProviderNameOption.Instance)
+            .Add(VariableProviderNameOption.Instance)
             .UseHandler(InvokeAsync);
     }
 

@@ -16,8 +16,8 @@ public sealed class VariableSetPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .Use<VariableMiddleware>()
-            .AddOption(VariableNameOption.Instance)
-            .AddOption(VariableValueOption.Instance)
+            .Add(VariableNameOption.Instance)
+            .Add(VariableValueOption.Instance)
             .UseHandler(InvokeAsync);
     }
 

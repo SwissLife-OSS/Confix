@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
 using Confix.Tool.Middlewares.Encryption.Providers.Aes;
 using Confix.Tool.Middlewares.Encryption.Providers.AzureKeyvault;
@@ -11,7 +10,7 @@ public static class EncryptionCommandBuilderExtensions
     private static Context.Key<Dictionary<string, Func<JsonNode, IEncryptionProvider>>> _key =
         new("Confix.Tool.Entites.Encryption.EncryptionProviders");
 
-    public static CommandLineBuilder RegisterEncryptionMiddleware(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder RegisterEncryptionMiddleware(this ConfixCommandLineBuilder builder)
     {
         builder.AddDefaultVariableProviders();
         builder.AddTransient(sp
@@ -23,7 +22,7 @@ public static class EncryptionCommandBuilderExtensions
         return builder;
     }
 
-    private static CommandLineBuilder AddDefaultVariableProviders(this CommandLineBuilder builder)
+    private static ConfixCommandLineBuilder AddDefaultVariableProviders(this ConfixCommandLineBuilder builder)
     {
         builder.AddEncryptionProvider(
             config => new AzureKeyVaultEncryptionProvider(config));
@@ -33,8 +32,8 @@ public static class EncryptionCommandBuilderExtensions
         return builder;
     }
 
-    private static CommandLineBuilder AddEncryptionProvider<T>(
-        this CommandLineBuilder builder,
+    private static ConfixCommandLineBuilder AddEncryptionProvider<T>(
+        this ConfixCommandLineBuilder builder,
         Func<JsonNode, T> factory)
         where T : IEncryptionProvider
     {
@@ -44,7 +43,7 @@ public static class EncryptionCommandBuilderExtensions
     }
 
     private static Dictionary<string, Func<JsonNode, IEncryptionProvider>>
-        GetEncryptionProviderLookup(this CommandLineBuilder builder)
+        GetEncryptionProviderLookup(this ConfixCommandLineBuilder builder)
     {
         var contextData = builder.GetContextData();
         if (!contextData.TryGetValue(_key, out var lookup))

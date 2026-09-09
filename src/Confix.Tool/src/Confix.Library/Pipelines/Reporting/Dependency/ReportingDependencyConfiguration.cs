@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Utilities.Json;
 using Json.Schema;
@@ -60,7 +61,7 @@ file static class Extensions
 
         if (!configuration.Configuration.TryGetPropertyValue("Kind", out var kind) ||
             kind is not JsonValue value ||
-            value.GetSchemaValueType() is not SchemaValueType.String)
+            value.GetValueKind() is not JsonValueKind.String)
         {
             return null;
         }

@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.CommandLine.Help;
 using Confix.Tool.Commands;
 using Confix.Tool.Commands.Component;
 using Confix.Tool.Commands.Config;
@@ -13,20 +14,25 @@ internal sealed class ConfixRootCommand : Command
 {
     public ConfixRootCommand() : base("confix")
     {
-        AddGlobalOption(VerbosityOption.Instance);
+        // help is no longer added implicitly to a plain command
+        Add(new HelpOption());
+        Add(new System.CommandLine.VersionOption());
 
-        AddCommand(new ComponentCommand());
-        AddCommand(new ProjectCommand());
-        AddCommand(new SolutionCommand());
-        AddCommand(new VariableCommand());
+        VerbosityOption.Instance.Recursive = true;
+        Add(VerbosityOption.Instance);
 
-        AddCommand(new BuildCommand());
-        AddCommand(new RestoreCommand());
-        AddCommand(new ValidateCommand());
+        Add(new ComponentCommand());
+        Add(new ProjectCommand());
+        Add(new SolutionCommand());
+        Add(new VariableCommand());
 
-        AddCommand(new FileEncryptCommand());
-        AddCommand(new FileDecryptCommand());
+        Add(new BuildCommand());
+        Add(new RestoreCommand());
+        Add(new ValidateCommand());
 
-        AddCommand(new ConfigCommand());
+        Add(new FileEncryptCommand());
+        Add(new FileDecryptCommand());
+
+        Add(new ConfigCommand());
     }
 }

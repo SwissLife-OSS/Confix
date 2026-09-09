@@ -10,6 +10,6 @@ public sealed class DefaultValueDirective
 {
     internal const string Name = "defaultValue";
 
-    [GraphQLType(typeof(NonNullType<JsonType>))]
+    [GraphQLType("JSON!")]
     public JsonElement Value { get; set; }
 }

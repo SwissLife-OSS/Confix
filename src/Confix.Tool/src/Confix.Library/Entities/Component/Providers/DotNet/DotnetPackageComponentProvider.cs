@@ -185,7 +185,8 @@ public sealed class DotnetPackageComponentProvider : IComponentProvider
         var componentConfiguration = await LoadComponentConfigurationFromAssembly(componentConfig);
 
         await using var schemaStream = jsonSchema.GetStream();
-        var schema = await JsonSchema.FromStream(schemaStream);
+        using var schemaReader = new StreamReader(schemaStream);
+        var schema = ConfixJsonSchema.FromText(await schemaReader.ReadToEndAsync());
 
         if (componentConfiguration.Name is null)
         {

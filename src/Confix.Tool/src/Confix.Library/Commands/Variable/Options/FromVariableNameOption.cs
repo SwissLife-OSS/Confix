@@ -9,7 +9,7 @@ public sealed class FromVariableNameOption : Option<string>
     private FromVariableNameOption()
         : base("--from")
     {
-        IsRequired = false;
+        Required = false;
         Description = "The name of the new variable";
     }
 }

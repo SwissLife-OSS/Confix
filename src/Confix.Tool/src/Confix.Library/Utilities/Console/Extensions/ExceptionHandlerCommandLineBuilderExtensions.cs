@@ -1,5 +1,3 @@
-using System.CommandLine.Builder;
-using System.CommandLine.Invocation;
 using Confix.Tool.Commands.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
@@ -8,48 +6,47 @@ namespace Confix.Tool;
 
 public static class ExceptionHandlerCommandLineBuilderExtensions
 {
-    public static CommandLineBuilder AddExceptionHandler(this CommandLineBuilder builder)
-    {
-        builder.AddMiddleware(ExceptionMiddleware, MiddlewareOrder.ExceptionHandler);
-
-        return builder;
-    }
-
-    private static async Task ExceptionMiddleware(
-        InvocationContext context,
-        Func<InvocationContext, Task> next)
+    /// <summary>
+    /// Executes <paramref name="action" /> and renders any exception that occurred.
+    /// </summary>
+    /// <returns>The exit code of the execution.</returns>
+    public static async Task<int> ExecuteWithExceptionHandlingAsync(
+        this IServiceProvider services,
+        Func<Task<int>> action)
     {
         try
         {
-            await next(context);
+            return await action();
         }
         catch (AggregateException exception) when (
             exception.InnerExceptions.Any(e => e is ExitException or ValidationException))
         {
             foreach (var innerException in exception.InnerExceptions)
             {
-                context.HandleException(innerException);
+                services.HandleException(innerException);
             }
+
+            return ExitCodes.Error;
         }
         catch (Exception exception)
         {
-            context.HandleException(exception);
+            return services.HandleException(exception);
         }
     }
 }
 
 file static class LogExtensions
 {
-    public static void HandleException(this InvocationContext context, Exception exception)
+    public static int HandleException(this IServiceProvider services, Exception exception)
     {
-        var logger = context.BindingContext.GetRequiredService<IConsoleLogger>();
-        var console = context.BindingContext.GetRequiredService<IAnsiConsole>();
+        var logger = services.GetRequiredService<IConsoleLogger>();
+        var console = services.GetRequiredService<IAnsiConsole>();
 
         switch (exception)
         {
             case OperationCanceledException or TaskCanceledException:
                 // ignored on purpose
-                return;
+                return ExitCodes.Error;
 
             case ExitException exitException:
                 logger.ExitException(exitException);
@@ -67,7 +64,7 @@ file static class LogExtensions
                 break;
         }
 
-        context.ExitCode = ExitCodes.Error;
+        return ExitCodes.Error;
     }
 
     public static void ExitException(this IConsoleLogger logger, ExitException exception)

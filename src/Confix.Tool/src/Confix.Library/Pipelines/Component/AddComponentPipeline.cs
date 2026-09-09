@@ -18,8 +18,8 @@ public sealed class AddComponentPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddArgument(ComponentNameArgument.Instance)
-            .AddOption(VersionOption.Instance)
+            .Add(ComponentNameArgument.Instance)
+            .Add(VersionOption.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseReadConfigurationFiles()
             .Use<BuildComponentProviderMiddleware>()

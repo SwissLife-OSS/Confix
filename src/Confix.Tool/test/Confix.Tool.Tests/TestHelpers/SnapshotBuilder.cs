@@ -22,7 +22,13 @@ public sealed partial class SnapshotBuilder
 
     public SnapshotBuilder AddReplacement(string original, string replacement)
     {
-        _processors.Add(x => x.Replace(original, replacement));
+        var normalizedOriginal = original.Replace('\\', '/');
+
+        _processors.Add(x => x.Replace(normalizedOriginal, replacement));
+
+        var jsonEscaped = normalizedOriginal.Replace("/", "\\/");
+        _processors.Add(x => x.Replace(jsonEscaped, replacement));
+
         return this;
     }
 
@@ -33,7 +39,7 @@ public sealed partial class SnapshotBuilder
 
     public void MatchSnapshot()
     {
-        var content = _builder.ToString();
+        var content = NormalizePathSeparators(_builder.ToString());
         content = _processors
             .Aggregate(content, (current, processor) => processor(current));
 
@@ -43,9 +49,10 @@ public sealed partial class SnapshotBuilder
     public SnapshotBuilder RemoveLineThatStartsWith(string value)
     {
         _processors.Add(
-            x => x.Split(Environment.NewLine)
-                .Where(y => !y.StartsWith(value))
-                .Aggregate((a, b) => a + Environment.NewLine + b));
+            x => string.Join(
+                "\n",
+                x.Split(["\r\n", "\n"], StringSplitOptions.None)
+                    .Where(y => !y.StartsWith(value))));
         return this;
     }
 
@@ -59,6 +66,29 @@ public sealed partial class SnapshotBuilder
     }
 
     public static SnapshotBuilder New() => new();
+
+    public static string NormalizePaths(string content)
+    {
+        content = NormalizePathSeparators(content);
+        return WindowsDriveLetterRegex().Replace(content, "/");
+    }
+
+    private static string NormalizePathSeparators(string content)
+    {
+        content = JsonEscapeNotInPathRegex().Replace(content, "\x00$1");
+        content = content.Replace("\\", "/");
+        content = content.Replace("\x00", "\\");
+        return MultipleSlashesRegex().Replace(content, "/");
+    }
+
+    [GeneratedRegex(@"\\([""\/bfnrt](?![a-zA-Z0-9_])|u[0-9a-fA-F]{4})")]
+    private static partial Regex JsonEscapeNotInPathRegex();
+
+    [GeneratedRegex(@"(?<![a-zA-Z]{2,}:)/{2,}")]
+    private static partial Regex MultipleSlashesRegex();
+
+    [GeneratedRegex(@"(?<![A-Za-z])[A-Za-z]:/")]
+    private static partial Regex WindowsDriveLetterRegex();
 
     /// <summary>
     /// we cannot match the date times fully. We can only match the date part,

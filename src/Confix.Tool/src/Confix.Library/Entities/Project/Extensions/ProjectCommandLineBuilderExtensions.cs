@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using Confix.Tool;
 using Confix.Tool.Entities.Components.DotNet;
 
@@ -6,7 +5,7 @@ namespace Confix.Entities.Project.Extensions;
 
 public static class ProjectCommandLineBuilderExtensions
 {
-    public static CommandLineBuilder AddProjectServices(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddProjectServices(this ConfixCommandLineBuilder builder)
     {
         builder.AddSingleton<IProjectComposer, ProjectComposer>();
 

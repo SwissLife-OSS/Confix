@@ -1,6 +1,6 @@
 ﻿{
   "fileLinux": "/file-location/foo/bar",
-  "fileWindows": "/file-location/foo\\bar",
+  "fileWindows": "/file-location/foo/bar",
   "home": "/home-location/foo/bar",
   "tilde": "/home-location/foo/bar",
   "solution": "/solution-location/foo/bar",

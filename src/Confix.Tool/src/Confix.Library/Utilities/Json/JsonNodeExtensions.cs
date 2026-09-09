@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Confix.Tool;
-using Json.More;
 using Json.Schema;
 using Spectre.Console;
 
@@ -44,8 +43,8 @@ public static partial class JsonNodeExtensions
             (_, JsonValue nodeValue) => nodeValue,
             _ => throw new InvalidOperationException($"""
                     Cannot merge nodes of different types:
-                    Source: {source.GetSchemaValueType()}
-                    Node: {node.GetSchemaValueType()}
+                    Source: {source.GetValueKind()}
+                    Node: {node.GetValueKind()}
                 """)
         };
 
@@ -225,4 +224,20 @@ public static partial class JsonNodeExtensions
 
     [GeneratedRegex(@"^(?<name>.+?)\[(?<index>\d+)]$")]
     private static partial Regex ParseSegmentRegex();
+
+    /// <summary>
+    /// Creates a deep copy of the JSON node.
+    /// </summary>
+    /// <param name="node">The JSON node to copy.</param>
+    /// <returns>A deep copy of the JSON node.</returns>
+    internal static JsonNode? Copy(this JsonNode? node) => node?.DeepClone();
+
+    /// <summary>
+    /// Determines if two JSON nodes are equivalent.
+    /// </summary>
+    /// <param name="a">The first JSON node.</param>
+    /// <param name="b">The second JSON node.</param>
+    /// <returns>True if the nodes are equivalent; otherwise, false.</returns>
+    internal static bool IsEquivalentTo(this JsonNode? a, JsonNode? b)
+        => JsonNode.DeepEquals(a, b);
 }

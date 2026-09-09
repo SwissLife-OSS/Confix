@@ -29,20 +29,32 @@ public interface IPipelineDescriptor
     /// <summary>
     /// Adds an argument to the command and maps it to the <see cref="IParameterCollection"/>.
     /// </summary>
-    /// <typeparam name="TArgument">The type of the argument.</typeparam>
     /// <param name="argument">The argument to add.</param>
     /// <returns>The current command pipeline builder instance.</returns>
+    IPipelineDescriptor Add(Argument argument);
+
+    /// <summary>
+    /// Adds an argument to the command and maps it to the <see cref="IParameterCollection"/>.
+    /// </summary>
+    [Obsolete("Use Add(Argument) instead.")]
     IPipelineDescriptor AddArgument<TArgument>(TArgument argument)
-        where TArgument : Argument;
+        where TArgument : Argument
+        => Add(argument);
 
     /// <summary>
     /// Adds an option to the command and maps it to the <see cref="IParameterCollection"/>.
     /// </summary>
-    /// <typeparam name="TOption">The type of the option.</typeparam>
     /// <param name="option">The option to add.</param>
     /// <returns>The current command pipeline builder instance.</returns>
+    IPipelineDescriptor Add(Option option);
+
+    /// <summary>
+    /// Adds an option to the command and maps it to the <see cref="IParameterCollection"/>.
+    /// </summary>
+    [Obsolete("Use Add(Option) instead.")]
     IPipelineDescriptor AddOption<TOption>(TOption option)
-        where TOption : Option;
+        where TOption : Option
+        => Add(option);
 
     /// <summary>
     /// Adds a context data to the pipeline that can be used by the middleware components and

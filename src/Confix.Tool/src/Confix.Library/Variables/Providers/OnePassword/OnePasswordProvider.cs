@@ -81,7 +81,7 @@ public sealed class OnePasswordProvider : IVariableProvider
         OnePasswordErrorHandler.HandleCliException(
             async () =>
             {
-                if (value.GetSchemaValueType() != SchemaValueType.String)
+                if (value.GetValueKind() != JsonValueKind.String)
                 {
                     throw new NotSupportedException("1Password only supports String values");
                 }

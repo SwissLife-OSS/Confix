@@ -7,8 +7,8 @@ public sealed class ConfigCommand : Command
     public ConfigCommand() : base("config")
     {
         Description = "This command is used to manage config.";
-        AddCommand(new ConfigShowCommand());
-        AddCommand(new ConfigSetCommand());
-        AddCommand(new ConfigListCommand());
+        Add(new ConfigShowCommand());
+        Add(new ConfigSetCommand());
+        Add(new ConfigListCommand());
     }
 }

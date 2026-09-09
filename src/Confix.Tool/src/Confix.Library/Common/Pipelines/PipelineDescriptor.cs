@@ -37,8 +37,7 @@ public sealed class PipelineDescriptor
     }
 
     /// <inheritdoc />
-    public IPipelineDescriptor AddArgument<TArgument>(TArgument argument)
-        where TArgument : Argument
+    public IPipelineDescriptor Add(Argument argument)
     {
         Definition.Arguments.Add(argument);
 
@@ -46,8 +45,7 @@ public sealed class PipelineDescriptor
     }
 
     /// <inheritdoc />
-    public IPipelineDescriptor AddOption<TOption>(TOption option)
-        where TOption : Option
+    public IPipelineDescriptor Add(Option option)
     {
         Definition.Options.Add(option);
 

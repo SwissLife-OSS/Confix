@@ -1,4 +1,4 @@
-using System.CommandLine.Parsing;
+using System.CommandLine;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
@@ -31,7 +31,7 @@ public class TestConfixCommandline : IDisposable
         cli.AddTestService<IConsoleLogger>(_ => _consoleLogger);
         configure(cli);
 
-        Parser = cli.Build();
+        Cli = cli;
     }
 
     public ExecutionDirectories Directories { get; }
@@ -42,11 +42,22 @@ public class TestConfixCommandline : IDisposable
 
     public ExecutionContext ExecutionContext { get; set; }
 
-    public Parser Parser { get; }
+    public ConfixCommandLine Cli { get; }
 
-    public async Task RunAsync(string args) => await Parser.InvokeAsync(args.Split(" "), Console);
+    public async Task RunAsync(string args) => await RunAsync(args.Split(" "));
 
-    public async Task RunAsync(params string[] args) => await Parser.InvokeAsync(args, Console);
+    public async Task RunAsync(params string[] args)
+        => _ = await RunWithExitCodeAsync(args);
+
+    public Task<int> RunWithExitCodeAsync(params string[] args)
+        => Cli.InvokeWithoutOutputFileAsync(
+            args,
+            new InvocationConfiguration
+            {
+                Output = Console.Out,
+                Error = Console.Out,
+                EnableDefaultExceptionHandler = false
+            });
 
     public void ResetConsole() => _consoleLogger = new InMemoryConsoleLogger();
 

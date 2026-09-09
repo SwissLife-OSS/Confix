@@ -1,11 +1,10 @@
-using System.CommandLine.Builder;
 
 namespace Confix.Tool.Middlewares.JsonSchemas;
 
 public static class MiddlewareCommandLineBuilderExtensions
 {
-    public static CommandLineBuilder RegisterJsonSchemaCollectionMiddleware(
-        this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder RegisterJsonSchemaCollectionMiddleware(
+        this ConfixCommandLineBuilder builder)
     {
         builder.AddTransient<JsonSchemaCollectionMiddleware>();
 

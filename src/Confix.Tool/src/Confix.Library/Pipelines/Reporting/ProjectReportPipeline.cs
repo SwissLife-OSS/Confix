@@ -11,9 +11,9 @@ public sealed class ProjectReportPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddOption(NoRestoreOptions.Instance)
-            .AddOption(ActiveEnvironmentOption.Instance)
-            .AddOption(ReportOutputFileOption.Instance)
+            .Add(NoRestoreOptions.Instance)
+            .Add(ActiveEnvironmentOption.Instance)
+            .Add(ReportOutputFileOption.Instance)
             .Use<LoadConfigurationMiddleware>()
             .AddContextData(Context.DisableConfigurationWrite, true)
             .Use<ReadConfigurationFileMiddleware>()

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Confix.Entities.Schema;
@@ -22,10 +23,11 @@ public sealed class GraphQLDependencyProvider : IDependencyProvider
             var options = new EvaluationOptions()
             {
                 OutputFormat = Json.Schema.OutputFormat.List,
-                PreserveDroppedAnnotations = true,
-                ProcessCustomKeywords = true,
+                PreserveDroppedAnnotations = true
             };
-            results = document.Evaluate(context.Document, options);
+            results = document.Evaluate(
+                JsonSerializer.SerializeToElement(context.Document),
+                options);
             context.SetContextData(_contextDataKey, results);
         }
 
@@ -36,6 +38,7 @@ public sealed class GraphQLDependencyProvider : IDependencyProvider
                 .Where(x => x.InstanceLocation == pointer &&
                     x.Annotations?.ContainsKey(MetadataKeyword.Name) is true)
                 .Select(x => x.Annotations![MetadataKeyword.Name])
+                .Select(ToNode)
                 .OfType<JsonArray>()
                 .SelectMany(x => x)
                 .OfType<JsonObject>()
@@ -49,6 +52,9 @@ public sealed class GraphQLDependencyProvider : IDependencyProvider
             context.AddDependency(dependency);
         }
     }
+
+    private static JsonNode? ToNode(JsonElement annotation)
+        => JsonSerializer.SerializeToNode(annotation);
 
     private static bool IsDependency(JsonNode obj)
     {

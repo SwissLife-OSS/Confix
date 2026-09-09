@@ -10,55 +10,55 @@ namespace Confix.Tool.Schema;
 
 public static class SchemaExtensions
 {
-    public static JsonSchemaBuilder ToJsonSchema(this ISchema schema)
+    public static JsonSchemaBuilder ToJsonSchema(this ISchemaDefinition schema)
         => schema.QueryType
             .ToTypeDefinition()
             .Schema(MetaSchemas.Draft202012Id)
             .Type(SchemaValueType.Object)
             .Defs(schema.Types
                 .Where(x => !x.IsIntrospectionType())
-                .ToDictionary(t => t.Name, t => t.ToTypeDefinition(schema).Build()));
+                .ToDictionary(t => t.Name, t => t.ToTypeDefinition(schema).BuildIsolated()));
 
-    private static JsonSchemaBuilder ToTypeDefinition(this INamedType type, ISchema schema)
+    private static JsonSchemaBuilder ToTypeDefinition(this ITypeDefinition type, ISchemaDefinition schema)
         => type switch
         {
-            ObjectType t => t.ToTypeDefinition(),
-            InputObjectType t => throw t.ToException(),
-            UnionType t => t.ToTypeDefinition(schema),
-            InterfaceType t => t.ToTypeDefinition(schema),
-            ScalarType t => t.ToTypeDefinition(),
-            EnumType t => t.ToTypeDefinition(),
+            IObjectTypeDefinition t => t.ToTypeDefinition(),
+            IInputObjectTypeDefinition t => throw t.ToException(),
+            IUnionTypeDefinition t => t.ToTypeDefinition(schema),
+            IInterfaceTypeDefinition t => t.ToTypeDefinition(schema),
+            IScalarTypeDefinition t => t.ToTypeDefinition(),
+            IEnumTypeDefinition t => t.ToTypeDefinition(),
             _ => throw new NotImplementedException()
         };
 
-    private static bool IsIntrospectionType(this INamedType type)
+    private static bool IsIntrospectionType(this ITypeDefinition type)
         => type.Name.StartsWith("__");
 
-    private static JsonSchemaBuilder ToTypeDefinition(this UnionType type, ISchema schema)
+    private static JsonSchemaBuilder ToTypeDefinition(this IUnionTypeDefinition type, ISchemaDefinition schema)
         => type.ToAbstractTypeDefinition(schema);
 
-    private static JsonSchemaBuilder ToTypeDefinition(this InterfaceType type, ISchema schema)
+    private static JsonSchemaBuilder ToTypeDefinition(this IInterfaceTypeDefinition type, ISchemaDefinition schema)
         => type.ToAbstractTypeDefinition(schema);
 
-    private static JsonSchemaBuilder ToTypeDefinition(this EnumType type)
+    private static JsonSchemaBuilder ToTypeDefinition(this IEnumTypeDefinition type)
         => new JsonSchemaBuilder()
             .Type(SchemaValueType.String)
             .Enum(type.Values.Select(v => v.Name))
             .WithDescription(type.Description);
 
-    private static JsonSchemaBuilder ToTypeDefinition(this ObjectType type)
+    private static JsonSchemaBuilder ToTypeDefinition(this IObjectTypeDefinition type)
         => new JsonSchemaBuilder()
             .Type(SchemaValueType.Object)
             .Properties(type.Fields
                 .Where(x => !x.IsIntrospectionField)
-                .ToDictionary(x => x.Name, x => x.ToTypeReference().Build()))
+                .ToDictionary(x => x.Name, x => x.ToTypeReference().BuildIsolated()))
             .Required(type.Fields
                 .Where(x => !x.IsIntrospectionField && x.Type.IsNonNullType())
                 .Select(x => x.Name))
             .AdditionalProperties(false)
             .WithDescription(type.Description);
 
-    private static JsonSchemaBuilder ToTypeReference(this IOutputField field)
+    private static JsonSchemaBuilder ToTypeReference(this IOutputFieldDefinition field)
         => field.Type
             .ToTypeReferenceBuilder()
             .Deprecated(field.IsDeprecated)
@@ -66,26 +66,27 @@ public static class SchemaExtensions
             .WithMetadata(field.GetMetadata())
             .WithDescription(field.Description);
 
-    private static JsonNode? DefaultValueNode(this IOutputField field)
+    private static JsonNode? DefaultValueNode(this IOutputFieldDefinition field)
     {
-        var defaultValue = field.Directives.Where(x => x.Type.Name == DefaultValueDirective.Name)
-            .Select(x => x.AsValue<DefaultValueDirective>())
+        var defaultValue = field.Directives
+            .Where(x => x.Definition.Name == DefaultValueDirective.Name)
+            .Select(x => x.ToValue<DefaultValueDirective>())
             .FirstOrDefault();
 
         return defaultValue?.Value.AsNode();
     }
 
-    private static JsonArray? GetMetadata(this IOutputField field)
+    private static JsonArray? GetMetadata(this IOutputFieldDefinition field)
     {
         var metadata = field.Directives
-            .Where(x => x.Type.Name == MetadataDirective.Name)
-            .Select(x => x.AsValue<MetadataDirective>())
+            .Where(x => x.Definition.Name == MetadataDirective.Name)
+            .Select(x => x.ToValue<MetadataDirective>())
             .Select(x => x.Value.AsNode())
             .OfType<JsonNode>();
 
         var dependencies = field.Directives
-            .Where(x => x.Type.Name == DependencyDirective.Name)
-            .Select(x => x.AsValue<DependencyDirective>())
+            .Where(x => x.Definition.Name == DependencyDirective.Name)
+            .Select(x => x.ToValue<DependencyDirective>())
             .Select(x => new JsonObject { ["type"] = MetadataTypes.Dependency, ["kind"] = x.Kind })
             .OfType<JsonNode>();
 
@@ -104,21 +105,21 @@ public static class SchemaExtensions
     private static JsonSchemaBuilder ToTypeReferenceBuilder(this IType type, bool required = false)
         => type switch
         {
-            NonNullType t => t.Type.ToTypeReferenceBuilder(true),
+            NonNullType t => t.NullableType.ToTypeReferenceBuilder(true),
 
             ListType t => new JsonSchemaBuilder()
                 .Type(SchemaValueType.Array)
                 .Items(t.ElementType.ToTypeReference())
                 .Nullable(!required),
 
-            INamedType t => new JsonSchemaBuilder()
+            ITypeDefinition t => new JsonSchemaBuilder()
                 .Ref($"#/$defs/{t.Name}")
                 .Nullable(!required),
 
             _ => throw new NotImplementedException()
         };
 
-    private static JsonSchemaBuilder ToTypeDefinition(this ScalarType type) => (type.Name switch
+    private static JsonSchemaBuilder ToTypeDefinition(this IScalarTypeDefinition type) => (type.Name switch
         {
             "Int" or "Long" => new JsonSchemaBuilder().Type(Integer),
             "Float" or "Double" => new JsonSchemaBuilder().Type(Number),
@@ -172,18 +173,20 @@ public static class SchemaExtensions
         .HasVariables()
         .WithDescription(type.Description);
 
-    private static JsonSchemaBuilder ToAbstractTypeDefinition(this INamedType type, ISchema schema)
+    private static JsonSchemaBuilder ToAbstractTypeDefinition(
+        this ITypeDefinition type,
+        ISchemaDefinition schema)
         => new JsonSchemaBuilder()
             .Type(SchemaValueType.Object)
-            .AnyOf(schema.GetPossibleTypes(type).Select(t => t.ToTypeReference().Build()))
+            .AnyOf(schema.GetPossibleTypes(type).Select(t => t.ToTypeReference().BuildIsolated()))
             .WithDescription(type.Description);
 
-    private static Exception ToException(this InputObjectType t) =>
+    private static Exception ToException(this IInputObjectTypeDefinition t) =>
         throw new ExitException("Input object types are not supported.")
         {
             Help = $"""
                 You probably want to use an object type instead.
-                Check the type {t.Name} on ({t.SyntaxNode?.Location?.Line},{t.SyntaxNode?.Location?.Column})
+                Check the type {t.Name}
                 """
         };
 }

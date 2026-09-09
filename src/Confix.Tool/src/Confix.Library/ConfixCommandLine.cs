@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using System.CommandLine.Parsing;
 using Confix.Entities.Project.Extensions;
 using Confix.Entities.Schema.Extensions;
@@ -11,7 +10,7 @@ using ExecutionContext = Confix.Tool.Common.Pipelines.ExecutionContext;
 
 namespace Confix.Tool;
 
-public sealed class ConfixCommandLine : CommandLineBuilder
+public sealed class ConfixCommandLine : ConfixCommandLineBuilder
 {
     public ConfixCommandLine() : base(new ConfixRootCommand())
     {
@@ -23,11 +22,8 @@ public sealed class ConfixCommandLine : CommandLineBuilder
             .RegisterMiddlewares()
             .AddGit()
             .AddSingleton(DefaultConsole.Create())
-            .AddSingleton<IServiceProvider>(sp => sp)
             .AddSingleton<IExecutionContext>(_ => ExecutionContext.Create())
-            .UseDefaults()
             .UseVerbosity()
-            .UseOutputFormat()
-            .AddExceptionHandler();
+            .UseOutputFormat();
     }
 }

@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using System.Text.Json.Nodes;
 using Confix.Tool.Middlewares;
 using Confix.Utilities;
@@ -11,24 +10,24 @@ public static class DependencyProviderCommandLineBuilderExtensions
     private static Context.Key<Dictionary<string, Factory<IDependencyProvider>>> _key =
         new("Confix.Tool.Entites.Component.DependencyProviders");
 
-    public static CommandLineBuilder AddDependencyProvider<T>(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddDependencyProvider<T>(this ConfixCommandLineBuilder builder)
         where T : IDependencyProvider, new()
         => builder.AddDependencyProvider(T.Type, _ => new T());
 
-    public static CommandLineBuilder AddDependencyProvider<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddDependencyProvider<T>(
+        this ConfixCommandLineBuilder builder,
         Func<JsonNode, T> factory)
         where T : IDependencyProvider
         => builder.AddDependencyProvider(T.Type, (_, c) => factory(c));
 
-    public static CommandLineBuilder AddDependencyProvider<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddDependencyProvider<T>(
+        this ConfixCommandLineBuilder builder,
         Func<IServiceProvider, JsonNode, T> factory)
         where T : IDependencyProvider
         => builder.AddDependencyProvider(T.Type, (sp, c) => factory(sp, c));
 
-    public static CommandLineBuilder AddDependencyProvider(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddDependencyProvider(
+        this ConfixCommandLineBuilder builder,
         string name,
         Func<JsonNode, IDependencyProvider> factory)
     {
@@ -37,8 +36,8 @@ public static class DependencyProviderCommandLineBuilderExtensions
         return builder;
     }
 
-    public static CommandLineBuilder AddDependencyProvider(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddDependencyProvider(
+        this ConfixCommandLineBuilder builder,
         string name,
         Factory<IDependencyProvider> factory)
     {
@@ -48,7 +47,7 @@ public static class DependencyProviderCommandLineBuilderExtensions
     }
 
     private static Dictionary<string, Factory<IDependencyProvider>> GetDependencyProviderLookup(
-        this CommandLineBuilder builder)
+        this ConfixCommandLineBuilder builder)
     {
         var contextData = builder.GetContextData();
 
@@ -64,7 +63,7 @@ public static class DependencyProviderCommandLineBuilderExtensions
         return lookup;
     }
 
-    public static CommandLineBuilder RegisterDependencyProviders(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder RegisterDependencyProviders(this ConfixCommandLineBuilder builder)
     {
         builder.AddDependencyProvider(c => new RegexDependencyProvider(c));
         builder.AddDependencyProvider<GraphQLDependencyProvider>();

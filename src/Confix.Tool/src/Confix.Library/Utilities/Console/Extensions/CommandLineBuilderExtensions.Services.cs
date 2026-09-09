@@ -1,75 +1,54 @@
-using System.CommandLine.Builder;
-using Confix.Tool.Common.Pipelines;
-using static System.CommandLine.Invocation.MiddlewareOrder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Confix.Tool;
 
 public static partial class CommandLineBuilderExtensions
 {
-    public static CommandLineBuilder AddSingleton<T, TImpl>(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddSingleton<T, TImpl>(
+        this ConfixCommandLineBuilder builder)
         where TImpl : T, new()
-    {
-        var value = default(T);
+        => builder.AddSingleton<T>(_ => new TImpl());
 
-        builder.AddSingleton<T>(_ => value ??= new TImpl());
-
-        return builder;
-    }
-
-    public static CommandLineBuilder AddSingleton<T>(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddSingleton<T>(this ConfixCommandLineBuilder builder)
         where T : new()
-    {
-        builder.AddSingleton(_ => new T());
-        return builder;
-    }
+        => builder.AddSingleton(_ => new T());
 
-    public static CommandLineBuilder AddSingleton<T>(this CommandLineBuilder builder, T instance)
-    {
-        builder.AddSingleton(_ => instance);
-        return builder;
-    }
+    public static ConfixCommandLineBuilder AddSingleton<T>(
+        this ConfixCommandLineBuilder builder,
+        T instance)
+        => builder.AddSingleton(_ => instance);
 
-    public static CommandLineBuilder AddSingleton<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddSingleton<T>(
+        this ConfixCommandLineBuilder builder,
         Func<IServiceProvider, T> factory)
     {
-        builder.AddMiddleware(x =>
-            {
-                var cache = default(T);
-                x.BindingContext.AddService(sp => cache ??= factory(sp));
-            },
-            Configuration);
+        // Registrations replace earlier ones so that tests can override services.
+        builder.Services.Replace(ServiceDescriptor.Singleton(typeof(T), sp => factory(sp)!));
+
         return builder;
     }
 
-    public static CommandLineBuilder AddTransient<T, TImpl>(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddTransient<T, TImpl>(
+        this ConfixCommandLineBuilder builder)
         where TImpl : T, new()
-    {
-        T? value = default(T);
+        => builder.AddTransient<T>(_ => new TImpl());
 
-        builder.AddTransient<T>(_ => value ??= new TImpl());
-
-        return builder;
-    }
-
-    public static CommandLineBuilder AddTransient<T>(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder AddTransient<T>(this ConfixCommandLineBuilder builder)
         where T : class, new()
-    {
-        builder.AddTransient(_ => new T());
-        return builder;
-    }
+        => builder.AddTransient(_ => new T());
 
-    public static CommandLineBuilder AddTransient<T>(this CommandLineBuilder builder, T instance)
-    {
-        builder.AddTransient(_ => instance);
-        return builder;
-    }
+    public static ConfixCommandLineBuilder AddTransient<T>(
+        this ConfixCommandLineBuilder builder,
+        T instance)
+        => builder.AddTransient(_ => instance);
 
-    public static CommandLineBuilder AddTransient<T>(
-        this CommandLineBuilder builder,
+    public static ConfixCommandLineBuilder AddTransient<T>(
+        this ConfixCommandLineBuilder builder,
         Func<IServiceProvider, T> factory)
     {
-        builder.AddMiddleware(x => x.BindingContext.AddService(factory), Configuration);
+        builder.Services.Replace(ServiceDescriptor.Transient(typeof(T), sp => factory(sp)!));
+
         return builder;
     }
 }

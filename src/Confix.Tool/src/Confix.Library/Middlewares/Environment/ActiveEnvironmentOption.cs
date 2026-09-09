@@ -12,6 +12,6 @@ internal sealed class ActiveEnvironmentOption : Option<string>
         Arity = ArgumentArity.ExactlyOne;
         Description = "The name of the environment to run the command in. Overrules the active environment set in .confixrc";
 
-        AddAlias("--env");
+        Aliases.Add("--env");
     }
 }

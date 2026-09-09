@@ -15,7 +15,7 @@ public static class JsonSchemaExtensions
         var jsonSchemaAsNode = JsonSerializer.SerializeToNode(schema)!;
         var rewritten = visitor.Rewrite(jsonSchemaAsNode, context);
 
-        return rewritten.Deserialize<JsonSchema>()!;
+        return ConfixJsonSchema.FromText(rewritten.ToJsonString());
     }
 
     public static JsonSchema AddVariableIntellisense(this JsonSchema schema, JsonObject variableRef)
@@ -27,7 +27,7 @@ public static class JsonSchemaExtensions
         var jsonSchemaAsNode = JsonSerializer.SerializeToNode(schema)!;
         var rewritten = new VariableIntellisenseRewriter().Rewrite(jsonSchemaAsNode, context);
 
-        return rewritten.Deserialize<JsonSchema>()!;
+        return ConfixJsonSchema.FromText(rewritten.ToJsonString());
     }
 
     public static bool IsArray(this JsonSchema schema)

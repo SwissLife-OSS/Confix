@@ -11,9 +11,9 @@ public sealed class ProjectBuildPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddOption(NoRestoreOptions.Instance)
-            .AddOption(GitUsernameOptions.Instance)
-            .AddOption(GitTokenOptions.Instance)
+            .Add(NoRestoreOptions.Instance)
+            .Add(GitUsernameOptions.Instance)
+            .Add(GitTokenOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseReadConfigurationFiles()
             .UseEnvironment()
