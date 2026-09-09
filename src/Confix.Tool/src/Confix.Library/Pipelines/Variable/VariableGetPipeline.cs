@@ -1,7 +1,10 @@
+using System.Text.Json.Nodes;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
+using Confix.Utilities.Json;
 using Confix.Variables;
+using Spectre.Console;
 
 namespace Confix.Tool.Commands.Variable;
 
@@ -38,10 +41,17 @@ public sealed class VariableGetPipeline : Pipeline
         var result = await resolver
             .ResolveOrThrowAsync(variablePath, variableContext);
 
-        context.Logger.PrintVariableResolved(variablePath, result.ToJsonString());
+        await context.Status.StopAsync();
+
+        context.Logger.PrintVariableResolved(variablePath, ToDisplayValue(result));
 
         context.SetOutput(result);
     }
+
+    private static string ToDisplayValue(JsonNode result)
+        => result is JsonValue value && value.TryGetValue(out string? stringValue)
+            ? stringValue
+            : result.ToRelaxedJsonString();
 }
 
 file static class Log
@@ -51,6 +61,7 @@ file static class Log
         VariablePath variablePath,
         string value)
     {
-        console.Information($"[green]{variablePath}[/] -> [yellow]{value}[/]");
+        console.Information(
+            $"[green]{variablePath.ToString().EscapeMarkup()}[/] -> [yellow]{value.EscapeMarkup()}[/]");
     }
 }

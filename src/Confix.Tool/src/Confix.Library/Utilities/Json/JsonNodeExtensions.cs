@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -214,6 +215,20 @@ public static partial class JsonNodeExtensions
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             },
             cancellationToken);
+
+    public static string ToRelaxedJsonString(this JsonNode node)
+    {
+        using var buffer = new MemoryStream();
+        using (var writer = new Utf8JsonWriter(buffer, _relaxedWriterOptions))
+        {
+            node.WriteTo(writer);
+        }
+
+        return Encoding.UTF8.GetString(buffer.GetBuffer(), 0, (int) buffer.Length);
+    }
+
+    private static readonly JsonWriterOptions _relaxedWriterOptions =
+        new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
     [GeneratedRegex(@"^(?<name>.+?)\[(?<index>\d+)]$")]
     private static partial Regex ParseSegmentRegex();

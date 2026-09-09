@@ -136,6 +136,7 @@ public sealed class GitComponentProvider : IComponentProvider, IAsyncDisposable
             var cloneConfiguration = new GitCloneConfiguration(
                 gitUrl,
                 directory.FullName,
+                "",
                 cloneArgument.ToArray());
 
             await _git.CloneAsync(cloneConfiguration, context.CancellationToken);

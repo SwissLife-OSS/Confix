@@ -8,6 +8,10 @@ public class VariablePathTests
     [InlineData("$foo:bar", "foo", "bar")]
     [InlineData("$foo.bar:baz.x", "foo.bar", "baz.x")]
     [InlineData("$foo_bar:baz_x", "foo_bar", "baz_x")]
+    [InlineData("$secret:K2b8F2zG9HpJxMI", "secret", "K2b8F2zG9HpJxMI")]
+    [InlineData("$secret:abc+def/ghi==", "secret", "abc+def/ghi==")]
+    [InlineData("$secret:abc/def+ghi=", "secret", "abc/def+ghi=")]
+    [InlineData("$secret:abc-def_ghi", "secret", "abc-def_ghi")]
     public void Parse_ValidVariableName_CorrectResult(string variableName, string providerName, string path)
     {
         // arrange & act
@@ -31,6 +35,22 @@ public class VariablePathTests
         path!.Value.Path.Should().Be("baz.x");
     }
 
+    [Fact]
+    public void TryParse_Base64EncodedPath_CorrectResult()
+    {
+        // arrange
+        const string base64 = "K2b8F2zG9HpJxMImaYwlf0ByzArc+abc/def==";
+
+        // act
+        bool success = VariablePath.TryParse($"$secret:{base64}", out VariablePath? path);
+
+        // assert
+        success.Should().BeTrue();
+        path.HasValue.Should().BeTrue();
+        path!.Value.ProviderName.Should().Be("secret");
+        path.Value.Path.Should().Be(base64);
+    }
+
     [Theory]
     [InlineData("bar")]
     [InlineData("$foo.bar")]
@@ -43,5 +63,51 @@ public class VariablePathTests
         // assert
         success.Should().BeFalse();
         path.HasValue.Should().BeFalse();
+    }
+
+    [Fact]
+    public void GetVariables_Base64EncodedPath_ReturnsFullVariable()
+    {
+        // arrange
+        const string base64 = "K2b8F2zG9HpJxMImaYwlf0ByzArc+abc/def==";
+        string value = $"$secret:{base64}";
+
+        // act
+        var variables = value.GetVariables().ToArray();
+
+        // assert
+        variables.Should().HaveCount(1);
+        variables[0].ProviderName.Should().Be("secret");
+        variables[0].Path.Should().Be(base64);
+    }
+
+    [Fact]
+    public void GetVariables_InterpolatedBase64EncodedPath_ReturnsFullVariable()
+    {
+        // arrange
+        const string base64 = "K2b8F2zG9HpJxMImaYwlf0ByzArc+abc/def==";
+        string value = $"prefix-{{{{$secret:{base64}}}}}-suffix";
+
+        // act
+        var variables = value.GetVariables().ToArray();
+
+        // assert
+        variables.Should().HaveCount(1);
+        variables[0].ProviderName.Should().Be("secret");
+        variables[0].Path.Should().Be(base64);
+    }
+
+    [Fact]
+    public void ReplaceVariables_Base64EncodedPath_ReplacesFullVariable()
+    {
+        // arrange
+        const string base64 = "K2b8F2zG9HpJxMImaYwlf0ByzArc+abc/def==";
+        string value = $"$secret:{base64}";
+
+        // act
+        string result = value.ReplaceVariables(_ => "REPLACED");
+
+        // assert
+        result.Should().Be("REPLACED");
     }
 }

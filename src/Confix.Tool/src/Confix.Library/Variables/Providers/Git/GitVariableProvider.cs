@@ -129,7 +129,7 @@ public sealed class GitVariableProvider : IVariableProvider
             var gitUrl = GitUrl.Create(_definition.RepositoryUrl, context.Parameters);
             
             GitCloneConfiguration configuration =
-                new(gitUrl, _cloneDirectory, _definition.Arguments);
+                new(gitUrl, _cloneDirectory, _definition.SparseDirectory, _definition.Arguments);
 
             await _git.CloneAsync(configuration, ct);
         }

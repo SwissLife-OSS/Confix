@@ -5,6 +5,7 @@ namespace Confix.Variables;
 public sealed record GitVariableProviderDefinition(
     string RepositoryUrl,
     string FilePath,
+    string SparseDirectory,
     string[] Arguments)
 {
     public static GitVariableProviderDefinition From(GitVariableProviderConfiguration configuration)
@@ -29,6 +30,7 @@ public sealed record GitVariableProviderDefinition(
         return new(
             configuration.RepositoryUrl!,
             configuration.FilePath!,
+            configuration.SparseDirectory ?? string.Empty,
             configuration.Arguments ?? Array.Empty<string>()
         );
     }
