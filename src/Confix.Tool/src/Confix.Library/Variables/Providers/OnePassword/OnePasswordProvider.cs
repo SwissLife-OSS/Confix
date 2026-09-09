@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool;
 using Confix.Tool.Commands.Logging;
-using Json.Schema;
 
 namespace Confix.Variables;
 
@@ -81,7 +80,7 @@ public sealed class OnePasswordProvider : IVariableProvider
         OnePasswordErrorHandler.HandleCliException(
             async () =>
             {
-                if (value.GetSchemaValueType() != SchemaValueType.String)
+                if (value.GetValueKind() != JsonValueKind.String)
                 {
                     throw new NotSupportedException("1Password only supports String values");
                 }
