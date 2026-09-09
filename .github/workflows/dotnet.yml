@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  ci-build:
+  build-and-test:
     name: Build & Test ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -36,3 +36,14 @@ jobs:
         name: snapshot-mismatches-${{ matrix.os }}
         path: src/Confix.Tool/**/__mismatch__/**
         if-no-files-found: ignore
+
+  ci-build:
+    name: ci-build
+    if: ${{ always() }}
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Verify build and test results
+      env:
+        BUILD_RESULT: ${{ needs.build-and-test.result }}
+      run: test "$BUILD_RESULT" = "success"
