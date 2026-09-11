@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using Json.Schema;
@@ -26,15 +27,15 @@ public sealed class PrefixJsonNamesRewriter : JsonDocumentRewriter<PrefixJsonNam
                 continue;
             }
 
-            if (field is RefKeyword.Name &&
+            if (field is JsonSchemaKeywords.Ref &&
                 value is JsonValue refValue &&
-                refValue.GetSchemaValueType() is SchemaValueType.String)
+                refValue.GetValueKind() is JsonValueKind.String)
             {
                 var parts = refValue.GetValue<object>().ToString()!.Split("/");
                 parts[^1] = $"{prefix}{parts[^1]}";
                 newObject[field] = string.Join("/", parts);
             }
-            else if (field is DefsKeyword.Name && value is JsonObject jsonObject)
+            else if (field is JsonSchemaKeywords.Defs && value is JsonObject jsonObject)
             {
                 var defsObject = new JsonObject();
                 var definitionNames = jsonObject.Select(x => x.Key).ToArray();

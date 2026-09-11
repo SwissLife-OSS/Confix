@@ -62,7 +62,7 @@ public sealed class LocalComponentProvider : IComponentProvider, IAsyncDisposabl
                 continue;
             }
 
-            var schema = JsonSchema.FromFile(schemaFile.FullName);
+            var schema = ConfixJsonSchema.FromFile(schemaFile.FullName);
             var reference = references.FirstOrDefault(x => x.ComponentName == name);
 
             context.Components.Add(new Component(

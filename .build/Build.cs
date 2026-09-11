@@ -59,7 +59,7 @@ public class Build : NukeBuild
                     utf8JsonWriter.WriteString("name", EncodeName(property.Name));
                     utf8JsonWriter.WriteString("type", "string");
                     utf8JsonWriter.WriteString("format", $"--{property.Name} {{value}}");
-                    utf8JsonWriter.WriteString("help", property.Description?.Replace("\n", " "));
+                    utf8JsonWriter.WriteString("help", property.Description?.ReplaceLineEndings(" "));
                     utf8JsonWriter.WriteEndObject();
                 }
 
@@ -70,7 +70,7 @@ public class Build : NukeBuild
                     utf8JsonWriter.WriteString("name", EncodeName(property.Name));
                     utf8JsonWriter.WriteString("type", "string");
                     utf8JsonWriter.WriteString("format", "{value}");
-                    utf8JsonWriter.WriteString("help", property.Description?.Replace("\n", " "));
+                    utf8JsonWriter.WriteString("help", property.Description?.ReplaceLineEndings(" "));
                     utf8JsonWriter.WriteEndObject();
                 }
 

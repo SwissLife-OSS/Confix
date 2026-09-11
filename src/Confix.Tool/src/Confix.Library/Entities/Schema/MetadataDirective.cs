@@ -10,6 +10,6 @@ public sealed class MetadataDirective
 {
     internal const string Name = "metadata";
 
-    [GraphQLType(typeof(NonNullType<JsonType>))]
+    [GraphQLType("JSON!")]
     public JsonElement Value { get; set; }
 }

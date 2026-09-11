@@ -13,7 +13,7 @@ public sealed class ListConfigurationPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddOption(FormatOption.Instance)
+            .Add(FormatOption.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseHandler(InvokeAsync);
     }

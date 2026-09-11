@@ -46,7 +46,7 @@ public sealed class SchemaStore : ISchemaStore
             return false;
         }
 
-        schema = JsonSchema.FromFile(schemaFile.FullName);
+        schema = ConfixJsonSchema.FromFile(schemaFile.FullName);
         return true;
     }
 

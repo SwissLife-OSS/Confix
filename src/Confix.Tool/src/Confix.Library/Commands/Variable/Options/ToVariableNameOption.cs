@@ -9,7 +9,7 @@ public sealed class ToVariableNameOption : Option<string>
     private ToVariableNameOption()
         : base("--to")
     {
-        IsRequired = false;
+        Required = false;
         Description = "The name of the new variable";
     }
 }

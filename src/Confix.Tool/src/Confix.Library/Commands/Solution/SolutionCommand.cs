@@ -8,9 +8,9 @@ public sealed class SolutionCommand : Command
     {
         Description = "This command is used to manage solutions.";
 
-        AddCommand(new SolutionRestoreCommand());
-        AddCommand(new SolutionBuildCommand());
-        AddCommand(new SolutionInitCommand());
-        AddCommand(new SolutionValidateCommand());
+        Add(new SolutionRestoreCommand());
+        Add(new SolutionBuildCommand());
+        Add(new SolutionInitCommand());
+        Add(new SolutionValidateCommand());
     }
 }

@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Entities.Components;
 using Confix.Tool.Entities.Components.DotNet;
@@ -12,7 +11,7 @@ namespace Confix.Tool.Middlewares;
 
 public static class MiddlewareCommandLineBuilderExtensions
 {
-    public static CommandLineBuilder RegisterMiddlewares(this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder RegisterMiddlewares(this ConfixCommandLineBuilder builder)
     {
         builder
             .AddTransient<LoadConfigurationMiddleware>()

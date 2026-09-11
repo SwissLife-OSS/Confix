@@ -15,8 +15,8 @@ public sealed class SetConfigurationPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddArgument(ConfigPathArgument.Instance)
-            .AddArgument(ConfigValueArgument.Instance)
+            .Add(ConfigPathArgument.Instance)
+            .Add(ConfigValueArgument.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseHandler(InvokeAsync);
     }

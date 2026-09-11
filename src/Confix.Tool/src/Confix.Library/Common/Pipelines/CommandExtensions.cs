@@ -1,5 +1,6 @@
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
+using Confix.Tool.Commands.Logging;
 
 namespace Confix.Tool.Common.Pipelines;
 
@@ -9,30 +10,41 @@ public static class CommandExtensions
     {
         var definition = new T();
 
-        definition.Arguments.ForEach(command.AddArgument);
-        definition.Options.ForEach(command.AddOption);
+        definition.Arguments.ForEach(command.Add);
+        definition.Options.ForEach(command.Add);
 
-        command.SetHandler(Handler);
+        command.SetAction(Handler);
 
-        async Task<int> Handler(InvocationContext context)
+        async Task<int> Handler(ParseResult parseResult, CancellationToken cancellationToken)
         {
-            // create the pipeline from the definition with the binding context
-            var executor = definition.BuildExecutor(context);
+            var services = ConfixCommandLineBuilder.GetServices(parseResult);
 
-            command.Arguments.ForEach(argument =>
-            {
-                var value = context.ParseResult.GetValueForArgument(argument);
-                executor.AddParameter(argument, value);
-            });
+            // verbosity has to be applied before anything is logged
+            services.ApplyVerbosity(parseResult);
 
-            command.Options.ForEach(option =>
-            {
-                var value = context.ParseResult.GetValueForOption(option);
-                executor.AddParameter(option, value);
-            });
+            return await services.ExecuteWithExceptionHandlingAsync(
+                () => services.ExecuteWithOutputFormatAsync(
+                    parseResult,
+                    async () =>
+                    {
+                        // create the pipeline from the definition with the service provider
+                        var executor = definition.BuildExecutor(services);
 
-            // execute the pipeline
-            return await executor.ExecuteAsync(context.GetCancellationToken());
+                        command.Arguments.ForEach(argument
+                            => executor.AddParameter(argument, parseResult.GetValue(argument)));
+
+                        command.Options.ForEach(option
+                            => executor.AddParameter(option, parseResult.GetValue(option)));
+
+                        // execute the pipeline
+                        return await executor.ExecuteAsync(cancellationToken);
+                    }));
         }
     }
+
+    private static object? GetValue(this ParseResult parseResult, Argument argument)
+        => parseResult.GetResult(argument)?.GetValueOrDefault<object?>();
+
+    private static object? GetValue(this ParseResult parseResult, Option option)
+        => parseResult.GetResult(option)?.GetValueOrDefault<object?>();
 }

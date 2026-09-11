@@ -1,21 +1,15 @@
-using System.CommandLine.Builder;
-using System.CommandLine.Invocation;
 using Confix.Tool;
 
 namespace Confix.Inputs;
 
 public static class CommandLineBuilderExtensions
 {
-    public static CommandLineBuilder AddTestService<T>(
-        this CommandLineBuilder builder,
+    /// <summary>
+    /// Registers a test service. The factory is invoked on every resolve so that tests can swap
+    /// the underlying instance between runs (see <c>TestConfixCommandline.ResetConsole</c>).
+    /// </summary>
+    public static ConfixCommandLineBuilder AddTestService<T>(
+        this ConfixCommandLineBuilder builder,
         Func<IServiceProvider, T> factory)
-    {
-        builder.AddMiddleware(x =>
-            {
-                var cache = default(T);
-                x.BindingContext.AddService(sp => cache ??= factory(sp));
-            },
-            MiddlewareOrder.Configuration + 10);
-        return builder;
-    }
+        => builder.AddTransient(factory);
 }

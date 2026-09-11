@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Text.Json.Nodes;
 using Confix.Tool.Schema;
-using Json.More;
+using Confix.Utilities.Json;
 using Json.Schema;
 
 namespace Confix.Tool.Entities.Components.DotNet;
@@ -37,7 +37,7 @@ public sealed class DefaultValueVisitor : JsonDocumentRewriter<DefaultValueVisit
         foreach (var (field, propertySchema) in properties)
         {
             // cyclic dependency protection
-            if (context.Schemas.Contains(propertySchema))
+            if (context.IsVisiting(propertySchema))
             {
                 continue;
             }
@@ -170,7 +170,10 @@ file static class Extensions
         => schemas
             .Select(x => x.GetDefault())
             .OfType<JsonNode>()
-            .SingleOrNone();
+            .SingleOrNone()
+            // the schema nodes are cached, so the default has to be copied before it is
+            // attached to a document
+            ?.DeepClone();
 
     public static JsonObject AddRequiredFields(this JsonObject value, JsonSchema schema)
     {

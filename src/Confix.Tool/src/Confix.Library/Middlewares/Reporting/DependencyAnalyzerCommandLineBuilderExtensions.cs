@@ -1,4 +1,3 @@
-using System.CommandLine.Builder;
 using Confix.Tool.Middlewares.Reporting;
 using Confix.Tool.Reporting;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,8 +6,8 @@ namespace Confix.Tool.Middlewares;
 
 public static class DependencyAnalyzerCommandLineBuilderExtensions
 {
-    public static CommandLineBuilder RegisterDependencyAnalyzerMiddleware(
-        this CommandLineBuilder builder)
+    public static ConfixCommandLineBuilder RegisterDependencyAnalyzerMiddleware(
+        this ConfixCommandLineBuilder builder)
     {
         builder.AddSingleton(sp
             => new LoadDependencyAnalyzerMiddleware(

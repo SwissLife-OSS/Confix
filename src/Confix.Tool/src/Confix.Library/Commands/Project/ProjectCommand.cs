@@ -8,10 +8,10 @@ public sealed class ProjectCommand : Command
     {
         Description = "This command is used to manage projects.";
 
-        AddCommand(new ProjectRestoreCommand());
-        AddCommand(new ProjectBuildCommand());
-        AddCommand(new ProjectInitCommand());
-        AddCommand(new ProjectValidateCommand());
-        AddCommand(new ProjectReportCommand());
+        Add(new ProjectRestoreCommand());
+        Add(new ProjectBuildCommand());
+        Add(new ProjectInitCommand());
+        Add(new ProjectValidateCommand());
+        Add(new ProjectReportCommand());
     }
 }

@@ -6,8 +6,9 @@ public class ConfigPathArgument : Argument<string>
 {
     private const string _description = "The path to the configuration file";
 
-    public ConfigPathArgument() : base("path", _description)
+    public ConfigPathArgument() : base("path")
     {
+        Description = _description;
     }
 
     public static readonly ConfigPathArgument Instance = new();

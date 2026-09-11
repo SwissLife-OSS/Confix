@@ -9,9 +9,9 @@ public sealed class ComponentCommand : Command
     public ComponentCommand() : base("component")
     {
         Description = "This command is used to manage components.";
-        AddCommand(new BuildComponentCommand());
-        AddCommand(new ComponentInitCommand());
-        AddCommand(new ComponentListCommand());
-        AddCommand(new ComponentAddCommand());
+        Add(new BuildComponentCommand());
+        Add(new ComponentInitCommand());
+        Add(new ComponentListCommand());
+        Add(new ComponentAddCommand());
     }
 }

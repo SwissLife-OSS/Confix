@@ -9,7 +9,7 @@ public sealed class VariableValueOption : Option<string>
     private VariableValueOption()
         : base("--value")
     {
-        IsRequired = false;
+        Required = false;
         Description = "The value of the variable";
     }
 }

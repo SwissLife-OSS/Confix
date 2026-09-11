@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
@@ -35,8 +36,7 @@ public sealed class ValidationMiddleware : IMiddleware
 
         var evaluationOptions = new EvaluationOptions
         {
-            OutputFormat = Json.Schema.OutputFormat.Hierarchical,
-            Log = context.Logger.CreateLog(),
+            OutputFormat = Json.Schema.OutputFormat.Hierarchical
         };
 
         var failed = false;
@@ -45,7 +45,9 @@ public sealed class ValidationMiddleware : IMiddleware
         {
             var jsonFile = await file.GetContent(cancellationToken);
 
-            var result = loadSchema.Evaluate(jsonFile, evaluationOptions);
+            var result = loadSchema.Evaluate(
+                JsonSerializer.SerializeToElement(jsonFile),
+                evaluationOptions);
 
             if (!result.IsValid)
             {
@@ -97,24 +99,33 @@ file static class Extensions
 
         void ProcessResult(EvaluationResults root)
         {
-            var path = root.InstanceLocation.Segments.Select(x => x.Value).ToArray();
+            var path = root.InstanceLocation.GetSegments();
             if (!root.IsValid)
             {
-                if (root.HasErrors)
+                if (root.Errors is { Count: > 0 })
                 {
                     var node = Resolve(path);
-                    foreach (var (_, error) in root.Errors!)
+                    foreach (var (keyword, error) in root.Errors!)
                     {
+                        // applicator keywords only aggregate the errors of their subschemas,
+                        // which are reported by the nested results
+                        if (IsApplicator(keyword))
+                        {
+                            continue;
+                        }
+
                         node.AddNode(
                             $"{Glyph.Cross.ToMarkup()} {error.EscapeMarkup()}");
                     }
                 }
 
-                var details = root.Details;
-                if (details.Any(x => x.EvaluationPath.IsAnyOf() && x.Details.Count > 0))
+                // `Details` is not annotated as nullable but is null for leaf results.
+                IEnumerable<EvaluationResults> details =
+                    (IEnumerable<EvaluationResults>?) root.Details ?? [];
+                if (details.Any(x => x.EvaluationPath.IsAnyOf() && x.Details?.Count > 0))
                 {
                     details = details
-                        .Where(x => !x.EvaluationPath.IsAnyOf() || x.Details.Count > 0)
+                        .Where(x => !x.EvaluationPath.IsAnyOf() || x.Details?.Count > 0)
                         .ToArray();
                 }
 
@@ -146,14 +157,29 @@ file static class Extensions
         return tree;
     }
 
+    public static bool IsApplicator(string keyword)
+        => keyword is "properties" or "anyOf" or "oneOf" or "allOf" or "items" or
+            "additionalProperties" or "prefixItems" or "patternProperties";
+
+    public static string[] GetSegments(this JsonPointer pointer)
+    {
+        var segments = new string[pointer.SegmentCount];
+        for (var index = 0; index < segments.Length; index++)
+        {
+            segments[index] = pointer[index].ToString();
+        }
+
+        return segments;
+    }
+
     public static bool IsAnyOf(this JsonPointer pointer)
     {
-        if (pointer.Segments.Length < 2)
+        if (pointer.SegmentCount < 2)
         {
             return false;
         }
 
-        return pointer.Segments[^2] == "anyOf";
+        return pointer[pointer.SegmentCount - 2].ToString() == "anyOf";
     }
 
     public static JsonSchema GetSchema(
@@ -178,33 +204,5 @@ file static class Extensions
         var result = await file.TryLoadContentAsync(cancellationToken);
         return result ?? throw new ExitException(
             $"The configuration file '{file.InputFile.Name}' could not be found.");
-    }
-
-    public static CustomLogger CreateLog(this IConsoleLogger log)
-    {
-        return new CustomLogger(log);
-    }
-}
-
-/// <summary>
-/// Used to log processing details.
-/// </summary>
-file class CustomLogger : ILog
-{
-    private readonly IConsoleLogger _logger;
-
-    public CustomLogger(IConsoleLogger logger)
-    {
-        _logger = logger;
-    }
-
-    /// <summary>
-    /// Logs a message with a newline.
-    /// </summary>
-    /// <param name="message">The message.</param>
-    /// <param name="indent"></param>
-    public void Write(Func<string> message, int indent = 0)
-    {
-        _logger.Trace(message().EscapeMarkup());
     }
 }

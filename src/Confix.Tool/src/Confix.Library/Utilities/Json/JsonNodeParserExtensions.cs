@@ -18,7 +18,7 @@ public static class JsonNodeParserExtensions
             JsonValue =>
                 throw new JsonParseException(node, "Expected object but got value"),
 
-            _ => throw new JsonParseException(JsonNull.SignalNode,
+            _ => throw new JsonParseException(null,
                 "Expected object but got null")
         };
 
@@ -48,7 +48,7 @@ public static class JsonNodeParserExtensions
                 throw new JsonParseException(node, "Expected array but got value"),
 
             _ => throw new JsonParseException(
-                node ?? JsonNull.SignalNode,
+                node,
                 "Expected array but got null")
         };
 
@@ -67,7 +67,7 @@ public static class JsonNodeParserExtensions
                 $"Expected {typeof(T).Name} but got array"),
 
             _ => throw new JsonParseException(
-                JsonNull.SignalNode,
+                null,
                 $"Expected {typeof(T).Name} but got null")
         };
 

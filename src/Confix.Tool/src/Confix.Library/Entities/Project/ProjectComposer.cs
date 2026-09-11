@@ -30,13 +30,13 @@ public sealed class ProjectComposer
 
         var variableType = GetVariableType(variables);
 
-        defs.Add(References.ConfixVariables, variableType);
+        defs.Add(References.ConfixVariables, variableType.BuildIsolated());
 
         return new JsonSchemaBuilder()
             .Defs(defs)
             .Properties(properties)
             .Required(properties.Keys.ToArray())
-            .Build();
+            .BuildIsolated();
     }
 
     private static Dictionary<string, JsonSchema> GetPrefixedDefinitions(
@@ -50,7 +50,7 @@ public sealed class ProjectComposer
                     .PrefixTypes($"{componentDefinition.ComponentName}_")
                     .AddVariableIntellisense(new JsonObject()
                     {
-                        [RefKeyword.Name] = References.Urls.ConfixVariables
+                        [JsonSchemaKeywords.Ref] = References.Urls.ConfixVariables
                     });
 
             if (prefixedJsonSchema.GetDefs() is { } prefixedDefs)
@@ -67,7 +67,8 @@ public sealed class ProjectComposer
                 .Required(prefixedJsonSchema.GetRequired() ?? Array.Empty<string>())
                 .AdditionalProperties(prefixedJsonSchema.GetAdditionalProperties() ?? false)
                 .Examples(prefixedJsonSchema.GetExamples() ?? Array.Empty<JsonNode>())
-                .Title(prefixedJsonSchema.GetTitle() ?? string.Empty);
+                .Title(prefixedJsonSchema.GetTitle() ?? string.Empty)
+                .BuildIsolated();
         }
 
         return defs;
@@ -108,7 +109,7 @@ file class SchemaNode
         {
             case > 1:
                 schema = new();
-                schema.AnyOf(Schemas.Select(x => x.Build()));
+                schema.AnyOf(Schemas.Select(x => x.BuildIsolated()));
                 break;
 
             case 1:
@@ -126,7 +127,7 @@ file class SchemaNode
             schema.Required(name);
         }
 
-        return schema.Build();
+        return schema.BuildIsolated();
     }
 
     public static SchemaNode FromComponents(IEnumerable<Component> components)

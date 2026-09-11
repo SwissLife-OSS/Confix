@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Confix.Utilities.Json;
 using Confix.Utilities.Parsing;
@@ -48,7 +49,7 @@ public sealed class ComponentReferenceConfiguration
                 "The component key must be in the format '@provider/componentName'.");
         }
 
-        if (node.GetSchemaValueType() is SchemaValueType.String)
+        if (node.GetValueKind() is JsonValueKind.String)
         {
             return new ComponentReferenceConfiguration(
                 provider,
@@ -58,7 +59,7 @@ public sealed class ComponentReferenceConfiguration
                 null);
         }
 
-        if (node.GetSchemaValueType() is SchemaValueType.Boolean)
+        if (node.GetValueKind() is JsonValueKind.True || node.GetValueKind() is JsonValueKind.False)
         {
             return new ComponentReferenceConfiguration(
                 provider,
@@ -76,7 +77,7 @@ public sealed class ComponentReferenceConfiguration
 
         var mountingPoints =
             obj.TryGetNonNullPropertyValue(FieldNames.MountingPoint, out var mountingPointNode)
-                ? mountingPointNode.GetSchemaValueType() is SchemaValueType.Array
+                ? mountingPointNode.GetValueKind() is JsonValueKind.Array
                     ? mountingPointNode
                         .ExpectArray()
                         .WhereNotNull()

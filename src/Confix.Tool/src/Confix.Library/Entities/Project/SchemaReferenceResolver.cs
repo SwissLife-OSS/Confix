@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using Confix.Tool.Schema;
 using Json.Schema;
 
 namespace Confix.Tool.Entities.Components.DotNet;

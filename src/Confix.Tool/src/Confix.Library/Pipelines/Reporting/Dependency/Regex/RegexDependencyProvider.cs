@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Json.More;
@@ -30,7 +31,7 @@ public sealed class RegexDependencyProvider : IDependencyProvider
 
     public void Analyze(DependencyAnalyzerContext context, JsonNode node)
     {
-        if (node.GetSchemaValueType() is not SchemaValueType.String)
+        if (node.GetValueKind() is not JsonValueKind.String)
         {
             return;
         }

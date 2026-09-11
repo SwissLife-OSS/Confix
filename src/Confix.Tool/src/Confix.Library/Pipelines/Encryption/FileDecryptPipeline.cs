@@ -15,8 +15,8 @@ public sealed class FileDecryptPipeline : Pipeline
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .Use<EncryptionMiddleware>()
-            .AddArgument(InputFileArgument.Instance)
-            .AddArgument(OutputFileArgument.Instance)
+            .Add(InputFileArgument.Instance)
+            .Add(OutputFileArgument.Instance)
             .UseHandler(InvokeAsync);
     }
 

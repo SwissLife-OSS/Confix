@@ -12,9 +12,9 @@ public sealed class RestoreCommandPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .AddOption(DotnetConfigurationOptions.Instance)
-            .AddOption(GitUsernameOptions.Instance)
-            .AddOption(GitTokenOptions.Instance)
+            .Add(DotnetConfigurationOptions.Instance)
+            .Add(GitUsernameOptions.Instance)
+            .Add(GitTokenOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .UseEnvironment()
             .UseHandler(InvokeAsync);

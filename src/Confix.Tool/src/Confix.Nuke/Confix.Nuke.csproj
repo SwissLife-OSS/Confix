@@ -4,7 +4,7 @@
         <AssemblyName>Confix.Nuke</AssemblyName>
         <RootNamespace>Confix</RootNamespace>
         <IsPublishable>true</IsPublishable>
-        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
         <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
@@ -25,6 +25,9 @@
 
     <ItemGroup>
         <PackageReference Include="Nuke.Common"/>
+        <!-- Pin patched versions of vulnerable transitive NUKE dependencies. -->
+        <PackageReference Include="NuGet.Packaging"/>
+        <PackageReference Include="System.Security.Cryptography.Xml"/>
     </ItemGroup>
 
 </Project>
