@@ -62,67 +62,141 @@ public sealed class RunnerBoundaryTests
                 """);
             await File.WriteAllTextAsync(Path.Combine(folder, ".confix.project"), "{}");
             await File.WriteAllTextAsync(Path.Combine(folder, ".confix.solution"), "{}");
+
             var input = Path.Combine(folder, "appsettings.json");
             var output = Path.Combine(folder, "rendered.json");
-            await File.WriteAllTextAsync(input, "{\"Mail\":{\"Host\":\"server\",\"Port\":5}}");
-            var cli = Path.Combine(root, "src/Confix.Tool/src/Confix.Tool/bin",
-                BuildConfiguration, TargetFramework, "Confix.dll");
+            var cli = Path.Combine(
+                root,
+                "src/Confix.Tool/src/Confix.Tool/bin",
+                BuildConfiguration,
+                TargetFramework,
+                "Confix.dll");
+
             File.Exists(cli).Should().BeTrue($"the CLI must be built at {cli}");
+
+            // Valid configuration builds without ever running the application itself.
+            await File.WriteAllTextAsync(input, "{\"Mail\":{\"Host\":\"server\",\"Port\":5}}");
+
             var valid = await Run(folder, cli, "build", "--output-file", output);
+
             valid.Exit.Should().Be(0, valid.Output);
             File.Exists(Path.Combine(folder, "application-started")).Should().BeFalse();
             File.Exists(Path.Combine(folder, "confix.ide.schema.json")).Should().BeFalse();
+
+            // A failing build reports the member path, leaks no values and keeps the old output.
             var previous = await File.ReadAllTextAsync(output);
-            await File.WriteAllTextAsync(input, "{\"Mail\":{\"Host\":\"sensitive-marker\",\"Port\":99}}");
+            await File.WriteAllTextAsync(
+                input,
+                "{\"Mail\":{\"Host\":\"sensitive-marker\",\"Port\":99}}");
+
             var invalid = await Run(folder, cli, "build", "--output-file", output);
+
             invalid.Exit.Should().NotBe(0);
             invalid.Output.Should().Contain("Mail:Port").And.NotContain("sensitive-marker");
             (await File.ReadAllTextAsync(output)).Should().Be(previous);
+
             // Both configurations are present; Release must not accidentally execute Debug contracts.
             await File.WriteAllTextAsync(input, "{\"Mail\":{\"Host\":\"server\",\"Port\":25}}");
-            var rcPath = Path.Combine(folder, ".confixrc");
-            var rc = JsonNode.Parse(await File.ReadAllTextAsync(rcPath))!;
-            rc["project"]!["exportSchema"] = true;
-            await File.WriteAllTextAsync(rcPath, rc.ToJsonString());
-            var release = await Run(folder, cli, "build", "--output-file", output, "--dotnet-configuration", "Release");
+            await EnableSchemaExportAsync(folder);
+
+            var release = await Run(
+                folder,
+                cli,
+                "build",
+                "--output-file", output,
+                "--dotnet-configuration", "Release");
+
             release.Exit.Should().Be(0, release.Output);
-            var schema = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(folder, "confix.ide.schema.json")));
+
+            var exported = Path.Combine(folder, "confix.ide.schema.json");
+            var schema = JsonNode.Parse(await File.ReadAllTextAsync(exported));
+
             schema!["properties"]!["Mail"].Should().NotBeNull();
             File.Exists(Path.Combine(folder, ".vscode/settings.json")).Should().BeTrue();
             File.Exists(Path.Combine(folder, "application-started")).Should().BeFalse();
         }
-        finally { Directory.Delete(folder, recursive: true); }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    private static async Task EnableSchemaExportAsync(string folder)
+    {
+        var path = Path.Combine(folder, ".confixrc");
+        var settings = JsonNode.Parse(await File.ReadAllTextAsync(path))!;
+
+        settings["project"]!["exportSchema"] = true;
+
+        await File.WriteAllTextAsync(path, settings.ToJsonString());
     }
 
     // The test assembly lives in bin/<configuration>/<targetFramework>, which the host must match.
     private static string TargetFramework => new DirectoryInfo(AppContext.BaseDirectory).Name;
 
-    private static string BuildConfiguration => new DirectoryInfo(AppContext.BaseDirectory).Parent!.Name;
+    private static string BuildConfiguration =>
+        new DirectoryInfo(AppContext.BaseDirectory).Parent!.Name;
 
     private static string PackageVersion(string root, string package)
-        => XDocument.Load(Path.Combine(root, "Directory.Packages.props"))
+    {
+        return XDocument.Load(Path.Combine(root, "Directory.Packages.props"))
             .Descendants("PackageVersion")
             .First(element => (string?)element.Attribute("Include") == package)
-            .Attribute("Version")!.Value;
+            .Attribute("Version")!
+            .Value;
+    }
 
     private static string FindRoot([CallerFilePath] string source = "")
     {
         var directory = new DirectoryInfo(Path.GetDirectoryName(source)!);
-        while (!File.Exists(Path.Combine(directory.FullName, "Directory.Packages.props"))) directory = directory.Parent!;
+
+        while (!File.Exists(Path.Combine(directory.FullName, "Directory.Packages.props")))
+        {
+            directory = directory.Parent!;
+        }
+
         return directory.FullName;
     }
 
-    private static async Task<(int Exit, string Output)> Run(string directory, params string[] args)
+    private static async Task<(int Exit, string Output)> Run(
+        string directory,
+        params string[] args)
     {
-        var start = new ProcessStartInfo("dotnet") { WorkingDirectory = directory, RedirectStandardOutput = true,
-            RedirectStandardError = true, UseShellExecute = false };
-        foreach (var arg in args) start.ArgumentList.Add(arg);
+        var start = new ProcessStartInfo("dotnet")
+        {
+            WorkingDirectory = directory,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+
+        foreach (var arg in args)
+        {
+            start.ArgumentList.Add(arg);
+        }
+
         using var process = Process.Start(start)!;
+
         var output = process.StandardOutput.ReadToEndAsync();
         var error = process.StandardError.ReadToEndAsync();
+
         using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(3));
-        using var kill = timeout.Token.Register(() => { try { process.Kill(true); } catch (InvalidOperationException) { } });
+        using var kill = timeout.Token.Register(() => Stop(process));
+
         await process.WaitForExitAsync(timeout.Token);
+
         return (process.ExitCode, await output + await error);
+    }
+
+    private static void Stop(Process process)
+    {
+        try
+        {
+            process.Kill(entireProcessTree: true);
+        }
+        catch (InvalidOperationException)
+        {
+            // The process has already exited.
+        }
     }
 }

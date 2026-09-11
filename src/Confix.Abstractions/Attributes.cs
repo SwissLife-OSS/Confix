@@ -4,6 +4,7 @@ namespace Confix;
 public sealed class ConfixSectionAttribute(string path) : Attribute
 {
     public string Path { get; } = path;
+
     public bool Required { get; set; } = true;
 }
 
@@ -17,6 +18,8 @@ public sealed class ConfixModuleAttribute(Type type) : Attribute
     public Type Type { get; } = type;
 }
 
-/// <summary>Requires each collection item to be nonnull; use Required separately for the collection.</summary>
+/// <summary>
+/// Requires each collection item to be nonnull; use Required separately for the collection.
+/// </summary>
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class ConfixRequiredItemsAttribute : Attribute;

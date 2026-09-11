@@ -16,8 +16,11 @@ public sealed class SmtpOptions
 {
     [Required]
     public string Host { get; set; } = "";
+
     [Range(1, 65535)]
     public int Port { get; set; } = 587;
-    [Required, EmailAddress]
+
+    [Required]
+    [EmailAddress]
     public string Sender { get; set; } = "";
 }

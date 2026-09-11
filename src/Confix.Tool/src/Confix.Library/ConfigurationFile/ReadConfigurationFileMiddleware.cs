@@ -2,6 +2,7 @@ using Confix.Tool.Abstractions;
 using Confix.Tool.Commands.Logging;
 using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
+using Confix.Tool.Validation;
 using Microsoft.Extensions.Logging;
 
 namespace Confix.Tool.Middlewares;
@@ -31,7 +32,8 @@ public sealed class ReadConfigurationFileMiddleware : IMiddleware
 
             var factoryContext = new ConfigurationFileContext
             {
-                ReadOnly = context.Features.TryGet<Confix.Tool.Validation.ConfigurationReadOnlyFeature>(out var mode) && mode.ReadOnly,
+                ReadOnly = context.Features.TryGet<ConfigurationReadOnlyFeature>(out var mode) &&
+                    mode.ReadOnly,
                 Logger = context.Logger,
                 Definition = file,
                 Project = project

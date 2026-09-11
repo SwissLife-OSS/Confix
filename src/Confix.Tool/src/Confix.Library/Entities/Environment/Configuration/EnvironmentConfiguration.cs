@@ -18,7 +18,9 @@ public sealed class EnvironmentConfiguration
 
     public EnvironmentConfiguration(
         string? name,
-        bool? enabled, ValidationConfiguration? validation = null, bool? exportSchema = null)
+        bool? enabled,
+        ValidationConfiguration? validation = null,
+        bool? exportSchema = null)
     {
         Name = name;
         Validation = validation;
@@ -33,6 +35,7 @@ public sealed class EnvironmentConfiguration
     public bool? ExportSchema { get; }
 
     public string? Name { get; }
+
     public bool? Enabled { get; }
 
     public static EnvironmentConfiguration Parse(JsonNode node)
@@ -43,23 +46,27 @@ public sealed class EnvironmentConfiguration
         }
 
         var obj = node.ExpectObject();
-        if (obj.ContainsKey("codeFirst"))
-            throw new ArgumentException("Replace codeFirst with validation: { type: \"dotnet-options\" }; move exportSchema to its parent object.");
+
+        ValidationConfiguration.EnsureNoSupersededKeys(obj);
 
         var name = obj.MaybeProperty(FieldNames.Name)?.ExpectValue<string>();
 
         var enabled = obj.MaybeProperty(FieldNames.Enabled)?.ExpectValue<bool>();
 
-        return new EnvironmentConfiguration(name, enabled,
-            ValidationConfiguration.Parse(obj.MaybeProperty(FieldNames.Validation)),
-            obj.MaybeProperty(FieldNames.ExportSchema)?.ExpectValue<bool>());
+        var validation = ValidationConfiguration.Parse(obj.MaybeProperty(FieldNames.Validation));
+
+        var exportSchema = obj.MaybeProperty(FieldNames.ExportSchema)?.ExpectValue<bool>();
+
+        return new EnvironmentConfiguration(name, enabled, validation, exportSchema);
     }
 
     public EnvironmentConfiguration Merge(EnvironmentConfiguration other)
     {
         var name = other.Name ?? Name;
         var enabled = other.Enabled ?? Enabled;
+        var validation = Validation?.Merge(other.Validation) ?? other.Validation;
+        var exportSchema = other.ExportSchema ?? ExportSchema;
 
-        return new EnvironmentConfiguration(name, enabled, Validation?.Merge(other.Validation) ?? other.Validation, other.ExportSchema ?? ExportSchema);
+        return new EnvironmentConfiguration(name, enabled, validation, exportSchema);
     }
 }

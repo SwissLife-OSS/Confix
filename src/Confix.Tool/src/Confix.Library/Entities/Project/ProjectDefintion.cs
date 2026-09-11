@@ -20,7 +20,9 @@ public sealed class ProjectDefinition
         IReadOnlyList<ConfigurationFileDefinition> configurationFiles,
         IReadOnlyList<ProjectDefinition> subprojects,
         ProjectType projectType,
-        DirectoryInfo? directory, ValidationConfiguration? validation = null, bool? exportSchema = null)
+        DirectoryInfo? directory,
+        ValidationConfiguration? validation = null,
+        bool? exportSchema = null)
     {
         Name = name;
         Validation = validation;
@@ -36,10 +38,10 @@ public sealed class ProjectDefinition
         Directory = directory;
     }
 
-    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ValidationConfiguration? Validation { get; }
 
-    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? ExportSchema { get; }
 
     public string Name { get; }
@@ -197,7 +199,9 @@ public sealed class ProjectDefinition
             configurationFiles,
             subprojects,
             projectType,
-            lastConfigurationFile?.File.Directory, configuration.Validation, configuration.ExportSchema);
+            lastConfigurationFile?.File.Directory,
+            configuration.Validation,
+            configuration.ExportSchema);
     }
 
     private static string GetProjectName(ProjectConfiguration configuration)

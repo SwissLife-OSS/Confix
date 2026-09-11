@@ -4,6 +4,7 @@ using Confix.Tool.Commands.Project;
 using Confix.Tool.Commands.Solution;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
+using Confix.Tool.Validation;
 
 namespace Confix.Tool.Commands;
 
@@ -13,7 +14,7 @@ public class BuildCommandPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
-            .Add(Confix.Tool.Validation.ConfigurationValidationPipeline.ExportSchemaOption)
+            .Add(ConfigurationValidationPipeline.ExportSchemaOption)
             .Add(DotnetConfigurationOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .Add(ActiveEnvironmentOption.Instance)
