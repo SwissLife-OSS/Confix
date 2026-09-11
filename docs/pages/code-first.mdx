@@ -121,8 +121,34 @@ and constructors execute normally and must not start the application themselves.
 Strict coverage checks both directions: every configured section must belong to an active
 contract, and every required active contract must be present. Nested members belong to their
 root contract; structural parents need no separate attribute. Framework sections such as
-Logging need typed declarations as well. `[ConfixSection("")]` supports a single root contract,
-including scalar root keys. Do not combine a root contract with independently mounted contracts.
+Logging need typed declarations as well. `[ConfixSection("")]` supports a root contract,
+including scalar root keys.
+
+## Nested contracts
+
+A contract may be mounted inside another contract's section — the common .NET layout where
+libraries contribute sections such as `Lukla:Adsvum` beneath an application-owned `Lukla`:
+
+```csharp
+[ConfixSection("Lukla")]
+public sealed class LuklaOptions { [Required] public string ProjectName { get; set; } = ""; }
+
+[ConfixSection("Lukla:Adsvum")]
+public sealed class AdsvumOptions { [Required] public string Url { get; set; } = ""; }
+```
+
+This requires no opt-in, because it is only permitted when the parent type cannot bind the
+delegated key: if `LuklaOptions` declared an `Adsvum` property (or were a dictionary,
+collection, or scalar, which consume every key), registration fails naming the conflicting
+key and both types. The same data can therefore never have two owners. Registration order
+does not matter, and a root contract can host nested contracts under the same rule.
+
+Each contract validates exactly its own subtree. Keys owned by nested contracts are not
+unknown keys of the parent; typos next to them still are. Delegation may pass through purely
+structural keys (`Lukla:Integrations:Email` under `Lukla`) — stray keys inside such
+containers are reported. A required nested contract still reports its section when absent.
+The exported IDE schema grafts nested contracts into the parent schema, so editor
+completion sees the combined shape.
 
 For gradual adoption, set CLI `coverage` to `registeredSections`: unowned root sections are
 allowed, while registered sections still validate. To select the equivalent runtime policy,

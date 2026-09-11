@@ -237,16 +237,16 @@ public sealed class OptionsTests
     }
 
     [Fact]
-    public void OverlappingSectionsAreRejectedWithBothPaths()
+    public void NestingThroughABoundKeyIsRejectedWithBothPaths()
     {
         using var configuration = Config("{\"Mail\":{\"Host\":\"server\"}}");
         var services = new ServiceCollection();
         services.AddConfixOptions<Mail>(configuration);
 
-        Action nested = () => services.AddConfixOptions<Nested>(configuration, "Mail:Inner");
+        Action nested = () => services.AddConfixOptions<Nested>(configuration, "Mail:Host");
 
         nested.Should().Throw<InvalidOperationException>()
-            .WithMessage("*Mail:Inner*Mail*");
+            .WithMessage("*Mail:Host*Mail*");
     }
 
     private static ConfigurationRoot Config(string json)

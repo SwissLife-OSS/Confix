@@ -65,30 +65,90 @@ public sealed class RegistrationTests
     [Theory]
     [InlineData("Mail", "Mail")]
     [InlineData("Mail", "mail")]
-    [InlineData("Mail", "Mail:Inner")]
-    [InlineData("Mail:Inner", "Mail")]
-    public void OverlappingSectionsAreRejectedNamingBothPaths(string first, string second)
+    public void ClaimingTheSameSectionTwiceIsRejected(string first, string second)
     {
         using var configuration = Config("{}");
         var services = new ServiceCollection();
         services.AddConfixOptions<Mail>(configuration, first, "first");
 
-        Action overlapping = () => services.AddConfixOptions<Other>(configuration, second, "second");
+        Action duplicate = () => services.AddConfixOptions<Other>(configuration, second, "second");
 
-        overlapping.Should().Throw<InvalidOperationException>()
-            .Which.Message.Should().Contain(first).And.Contain(second);
+        duplicate.Should().Throw<InvalidOperationException>()
+            .Which.Message.Should().Contain("already claimed").And.Contain("Mail");
     }
 
     [Fact]
-    public void ARootContractCannotBeCombinedWithMountedContracts()
+    public void NestingThroughABoundKeyIsRejectedNamingTheKey()
     {
         using var configuration = Config("{}");
         var services = new ServiceCollection();
         services.AddConfixOptions<Mail>(configuration);
 
-        Action root = () => services.AddConfixOptions<Other>(configuration, "");
+        Action nested = () => services.AddConfixOptions<Other>(configuration, "Mail:Host");
 
-        root.Should().Throw<InvalidOperationException>().WithMessage("*(root)*");
+        nested.Should().Throw<InvalidOperationException>()
+            .Which.Message.Should().Contain("'Host' is bound by Mail");
+    }
+
+    [Fact]
+    public void ABindingParentRegisteredAfterItsChildIsAlsoRejected()
+    {
+        using var configuration = Config("{}");
+        var services = new ServiceCollection();
+        services.AddConfixOptions<Other>(configuration, "Mail:Host");
+
+        Action parent = () => services.AddConfixOptions<Mail>(configuration);
+
+        parent.Should().Throw<InvalidOperationException>()
+            .Which.Message.Should().Contain("'Host' is bound by Mail");
+    }
+
+    [Fact]
+    public void NestingUnderAnUnboundKeyIsAllowedInEitherOrder()
+    {
+        using var configuration = Config("{}");
+
+        var parentFirst = new ServiceCollection();
+        parentFirst.AddConfixOptions<Mail>(configuration);
+        Action nested = () => parentFirst.AddConfixOptions<Other>(configuration, "Mail:Other");
+
+        nested.Should().NotThrow();
+
+        var childFirst = new ServiceCollection();
+        childFirst.AddConfixOptions<Other>(configuration, "Mail:Other");
+        Action parent = () => childFirst.AddConfixOptions<Mail>(configuration);
+
+        parent.Should().NotThrow();
+    }
+
+    [Fact]
+    public void NestingUnderADictionaryContractIsRejected()
+    {
+        using var configuration = Config("{}");
+        var services = new ServiceCollection();
+        services.AddConfixOptions<Lookup>(configuration);
+
+        Action nested = () => services.AddConfixOptions<Other>(configuration, "Lookup:Sub");
+
+        nested.Should().Throw<InvalidOperationException>()
+            .Which.Message.Should().Contain("'Sub' is bound by Lookup");
+    }
+
+    [Fact]
+    public void ARootContractMayHostNestedContractsUnderUnboundKeys()
+    {
+        using var configuration = Config("{}");
+        var services = new ServiceCollection();
+        services.AddConfixOptions<Other>(configuration, "");
+
+        Action nested = () => services.AddConfixOptions<Mail>(configuration);
+
+        nested.Should().NotThrow();
+
+        Action bound = () => services.AddConfixOptions<Mail>(configuration, "Value", "bound");
+
+        bound.Should().Throw<InvalidOperationException>()
+            .Which.Message.Should().Contain("'Value' is bound by Other");
     }
 
     [Fact]
@@ -196,6 +256,9 @@ public sealed class RegistrationTests
     {
         public string Value { get; set; } = "";
     }
+
+    [ConfixSection("Lookup")]
+    public sealed class Lookup : Dictionary<string, string>;
 
     [ConfixSection("Optional", Required = false)]
     public sealed class OptionalSection

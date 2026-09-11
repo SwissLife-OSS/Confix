@@ -38,7 +38,7 @@ public static class ContractValidation
 
         var errors = new List<string>();
 
-        CheckOverlaps(contracts, errors);
+        CheckContractConflicts(contracts, errors);
 
         var hasRootContract = contracts.Any(contract => contract.Section.Length == 0);
 
@@ -55,21 +55,76 @@ public static class ContractValidation
         return errors;
     }
 
-    private static void CheckOverlaps(IConfixContract[] contracts, List<string> errors)
+    private static void CheckContractConflicts(IConfixContract[] contracts, List<string> errors)
     {
         for (var i = 0; i < contracts.Length; i++)
         {
             for (var j = i + 1; j < contracts.Length; j++)
             {
-                if (IsNestedIn(contracts[i].Section, contracts[j].Section) ||
-                    IsNestedIn(contracts[j].Section, contracts[i].Section))
+                var first = contracts[i];
+                var second = contracts[j];
+
+                if (first.Section.Equals(second.Section, StringComparison.OrdinalIgnoreCase))
                 {
                     errors.Add(
-                        $"{contracts[i].Section} and {contracts[j].Section}: " +
-                        "overlapping Confix sections are not supported.");
+                        $"{Display(first.Section)}: multiple contracts " +
+                        $"({first.OptionsType.Name}, {second.OptionsType.Name}) claim this section.");
+
+                    continue;
+                }
+
+                var (parent, child) = IsNestedIn(first.Section, second.Section)
+                    ? (second, first)
+                    : IsNestedIn(second.Section, first.Section)
+                        ? (first, second)
+                        : (null, null);
+
+                if (parent is not null &&
+                    NestingConflict(parent.Section, parent.OptionsType, child!.Section, child.OptionsType) is { } conflict)
+                {
+                    errors.Add(conflict);
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// A contract may live inside another contract's section only when the parent type cannot
+    /// bind the delegated key, so the same data can never have two owners.
+    /// </summary>
+    internal static string? NestingConflict(
+        string parentSection,
+        Type parentType,
+        string childSection,
+        Type childType)
+    {
+        var relative = parentSection.Length == 0
+            ? childSection
+            : childSection[(parentSection.Length + 1)..];
+        var key = relative.Split(':')[0];
+
+        return ConsumesKey(parentType, key)
+            ? $"Section '{Display(childSection)}' of {childType.Name} conflicts with " +
+                $"'{Display(parentSection)}' of {parentType.Name}: '{key}' is bound by {parentType.Name}."
+            : null;
+    }
+
+    internal static bool ConsumesKey(Type type, string key)
+    {
+        type = Nullable.GetUnderlyingType(type) ?? type;
+
+        // Scalars, dictionaries and collections bind every child key.
+        if (Scalar(type) || ItemType(type) is not null)
+        {
+            return true;
+        }
+
+        return Properties(type).Any(p => Key(p).Equals(key, StringComparison.OrdinalIgnoreCase));
+    }
+
+    internal static string Display(string section)
+    {
+        return section.Length == 0 ? "(root)" : section;
     }
 
     private static void ValidateContract(
@@ -140,6 +195,16 @@ public static class ContractValidation
         string path,
         List<string> errors)
     {
+        CheckKeys(section, type, path, errors, []);
+    }
+
+    internal static void CheckKeys(
+        IConfiguration section,
+        Type type,
+        string path,
+        List<string> errors,
+        IReadOnlyCollection<string> delegated)
+    {
         type = Nullable.GetUnderlyingType(type) ?? type;
 
         if (Scalar(type))
@@ -189,18 +254,75 @@ public static class ContractValidation
 
         foreach (var child in section.GetChildren())
         {
+            if (IsDelegated(child.Key, delegated))
+            {
+                continue;
+            }
+
             var property = properties
                 .FirstOrDefault(p => Key(p).Equals(child.Key, StringComparison.OrdinalIgnoreCase));
 
-            if (property is null)
+            if (property is not null)
             {
-                errors.Add($"{path}:{child.Key}: unknown configuration key.");
+                // Registration guarantees delegation never passes through a bound key.
+                CheckKeys(child, property.PropertyType, path + ":" + child.Key, errors);
+            }
+            else if (Nested(child.Key, delegated) is { Count: > 0 } nested)
+            {
+                CheckDelegatedContainer(child, nested, path + ":" + child.Key, errors);
             }
             else
             {
-                CheckKeys(child, property.PropertyType, path + ":" + child.Key, errors);
+                errors.Add($"{path}:{child.Key}: unknown configuration key.");
             }
         }
+    }
+
+    /// <summary>Walks an unbound structural key that only exists to host nested contracts.</summary>
+    private static void CheckDelegatedContainer(
+        IConfigurationSection section,
+        IReadOnlyCollection<string> delegated,
+        string path,
+        List<string> errors)
+    {
+        if (section.Value is { Length: > 0 })
+        {
+            errors.Add($"{path}: expected a configuration section container.");
+
+            return;
+        }
+
+        foreach (var child in section.GetChildren())
+        {
+            if (IsDelegated(child.Key, delegated))
+            {
+                continue;
+            }
+
+            if (Nested(child.Key, delegated) is { Count: > 0 } nested)
+            {
+                CheckDelegatedContainer(child, nested, path + ":" + child.Key, errors);
+            }
+            else
+            {
+                errors.Add($"{path}:{child.Key}: unknown configuration key.");
+            }
+        }
+    }
+
+    private static bool IsDelegated(string key, IReadOnlyCollection<string> delegated)
+    {
+        return delegated.Any(d => d.Equals(key, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static IReadOnlyCollection<string> Nested(
+        string key,
+        IReadOnlyCollection<string> delegated)
+    {
+        return delegated
+            .Where(d => d.StartsWith(key + ":", StringComparison.OrdinalIgnoreCase))
+            .Select(d => d[(key.Length + 1)..])
+            .ToArray();
     }
 
     internal static void ValidateObject(
@@ -367,6 +489,21 @@ public static class ContractValidation
 
     private static bool IsNestedIn(string section, string parent)
     {
-        return section.StartsWith(parent + ":", StringComparison.OrdinalIgnoreCase);
+        return parent.Length == 0
+            ? section.Length > 0
+            : section.StartsWith(parent + ":", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>Relative paths of contracts mounted inside the given contract's section.</summary>
+    internal static IReadOnlyCollection<string> DelegatedPaths(
+        IEnumerable<IConfixContract> contracts,
+        IConfixContract parent)
+    {
+        return contracts
+            .Where(c => !ReferenceEquals(c, parent) && IsNestedIn(c.Section, parent.Section))
+            .Select(c => parent.Section.Length == 0
+                ? c.Section
+                : c.Section[(parent.Section.Length + 1)..])
+            .ToArray();
     }
 }

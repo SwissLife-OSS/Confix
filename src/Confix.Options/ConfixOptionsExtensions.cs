@@ -113,27 +113,34 @@ public static class ConfixOptionsExtensions
                     $"{typeof(T).Name} is already registered under the name '{name}'.");
             }
 
-            if (Overlaps(contract.Section, section))
+            if (contract.Section.Equals(section, StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException(
-                    $"Confix section '{Display(section)}' of {typeof(T).Name} overlaps " +
-                    $"'{Display(contract.Section)}' of {contract.OptionsType.Name}.");
+                    $"Section '{ContractValidation.Display(section)}' is already claimed by " +
+                    $"{contract.OptionsType.Name}.");
+            }
+
+            // Nesting is legal in either registration order when the parent cannot bind the key.
+            var conflict = IsNestedIn(section, contract.Section)
+                ? ContractValidation.NestingConflict(
+                    contract.Section, contract.OptionsType, section, typeof(T))
+                : IsNestedIn(contract.Section, section)
+                    ? ContractValidation.NestingConflict(
+                        section, typeof(T), contract.Section, contract.OptionsType)
+                    : null;
+
+            if (conflict is not null)
+            {
+                throw new InvalidOperationException(conflict);
             }
         }
     }
 
-    private static bool Overlaps(string left, string right)
+    private static bool IsNestedIn(string section, string parent)
     {
-        return left.Length == 0 ||
-            right.Length == 0 ||
-            left.Equals(right, StringComparison.OrdinalIgnoreCase) ||
-            left.StartsWith(right + ":", StringComparison.OrdinalIgnoreCase) ||
-            right.StartsWith(left + ":", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static string Display(string section)
-    {
-        return section.Length == 0 ? "(root)" : section;
+        return parent.Length == 0
+            ? section.Length > 0
+            : section.StartsWith(parent + ":", StringComparison.OrdinalIgnoreCase);
     }
 
     internal static bool HasSection(IConfiguration configuration, string path)
@@ -201,7 +208,10 @@ public static class ConfixOptionsExtensions
                 ? configuration
                 : configuration.GetSection(contract.Section);
 
-            ContractValidation.CheckKeys(section, typeof(T), contract.Section, errors);
+            var delegated = ContractValidation.DelegatedPaths(
+                services.GetServices<IConfixContract>(), contract);
+
+            ContractValidation.CheckKeys(section, typeof(T), contract.Section, errors, delegated);
             ContractValidation.ValidateObject(options, contract.Section, services, errors);
 
             if (errors.Count > 0)

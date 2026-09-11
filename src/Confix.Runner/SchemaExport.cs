@@ -20,21 +20,33 @@ internal static class SchemaExport
     public static JsonObject Export(IEnumerable<IConfixContract> contracts, bool strict)
     {
         var options = new JsonSerializerOptions { TypeInfoResolver = CreateResolver() };
-        var root = CreateObject(strict);
+
+        // Parents mount before the contracts nested inside them.
+        var ordered = contracts
+            .OrderBy(c => c.Section.Length == 0 ? 0 : c.Section.Split(':').Length)
+            .ToArray();
+
+        JsonObject root;
+        var remaining = ordered.AsEnumerable();
+
+        if (ordered.Length > 0 && ordered[0].Section.Length == 0)
+        {
+            root = options
+                .GetJsonSchemaAsNode(ordered[0].OptionsType, CreateExporterOptions())
+                .AsObject();
+            RewriteReferences(root, "#");
+            remaining = ordered.Skip(1);
+        }
+        else
+        {
+            root = CreateObject(strict);
+        }
+
         root["$schema"] = SchemaDialect;
 
-        foreach (var contract in contracts)
+        foreach (var contract in remaining)
         {
             var schema = options.GetJsonSchemaAsNode(contract.OptionsType, CreateExporterOptions());
-
-            if (contract.Section.Length == 0)
-            {
-                var exported = schema.AsObject();
-                exported["$schema"] = SchemaDialect;
-                RewriteReferences(exported, "#");
-
-                return exported;
-            }
 
             Mount(root, schema, contract, strict);
         }
@@ -172,11 +184,21 @@ internal static class SchemaExport
 
         for (var i = 0; i < segments.Length; i++)
         {
-            var properties = current["properties"]!.AsObject();
+            // A nested contract grafts into the parent's exported schema, which may not
+            // declare properties or required members of its own.
+            if (current["properties"] is not JsonObject properties)
+            {
+                properties = new JsonObject();
+                current["properties"] = properties;
+            }
 
             if (contract.Required)
             {
-                var required = current["required"]!.AsArray();
+                if (current["required"] is not JsonArray required)
+                {
+                    required = [];
+                    current["required"] = required;
+                }
 
                 if (!required.Any(n => n?.GetValue<string>() == segments[i]))
                 {
