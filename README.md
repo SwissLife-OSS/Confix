@@ -65,3 +65,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgements
 
 Thanks to all our [contributors](https://github.com/SwissLife-OSS/confix/graphs/contributors).
+### Code-first .NET configuration
+
+Opt into `project.validation` in `.confixrc` to validate appsettings using `ConfixSection`,
+`AddConfixOptions`, and data annotations. See [the guide](docs/pages/code-first.mdx) and
+[the example](examples/CodeFirst). Existing GraphQL/dotnet inputs remain supported.

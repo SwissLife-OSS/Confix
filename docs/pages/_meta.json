@@ -6,5 +6,6 @@
   "variables": "Variables",
   "components": "Components",
   "configuration-files": "Configuration Files",
-  "file-structure": "File Structure"
+  "file-structure": "File Structure",
+  "code-first": "Code-first configuration"
 }

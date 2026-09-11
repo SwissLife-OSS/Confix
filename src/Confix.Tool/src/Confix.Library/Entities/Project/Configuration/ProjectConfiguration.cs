@@ -30,9 +30,12 @@ public sealed class ProjectConfiguration
         IReadOnlyList<ConfigurationFileConfiguration>? configurationFiles,
         IReadOnlyList<ProjectConfiguration>? subprojects,
         string? projectType,
-        IReadOnlyList<JsonFile> sourceFiles)
+        IReadOnlyList<JsonFile> sourceFiles,
+        ValidationConfiguration? validation = null, bool? exportSchema = null)
     {
         Name = name;
+        Validation = validation;
+        ExportSchema = exportSchema;
         Environments = environments;
         Components = components;
         Repositories = repositories;
@@ -43,6 +46,14 @@ public sealed class ProjectConfiguration
         ProjectType = projectType;
         SourceFiles = sourceFiles;
     }
+
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public ValidationConfiguration? Validation { get; }
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public bool? ExportSchema { get; }
+    public bool ShouldSerializeExportSchema() => ExportSchema is not null;
+
+    public bool ShouldSerializeValidation() => Validation is not null;
 
     public string? Name { get; }
 
@@ -70,6 +81,8 @@ public sealed class ProjectConfiguration
     public static ProjectConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> sourceFiles)
     {
         var obj = node.ExpectObject();
+        if (obj.ContainsKey("codeFirst"))
+            throw new ArgumentException("Replace codeFirst with validation: { type: \"dotnet-options\" }; move exportSchema to its parent object.");
 
         var name = obj.MaybeProperty(FieldNames.Name)?.ExpectValue<string>();
 
@@ -137,7 +150,7 @@ public sealed class ProjectConfiguration
             configurationFiles,
             subprojects,
             projectType,
-            sourceFiles);
+            sourceFiles, ValidationConfiguration.Parse(obj["validation"]), obj["exportSchema"]?.GetValue<bool>());
     }
 
     public ProjectConfiguration Merge(ProjectConfiguration? other)
@@ -185,7 +198,7 @@ public sealed class ProjectConfiguration
             configurationFiles,
             subprojects,
             projectType,
-            sourceFiles);
+            sourceFiles, Validation?.Merge(other.Validation) ?? other.Validation, other.ExportSchema ?? ExportSchema);
     }
 
     public static ProjectConfiguration? LoadFromFiles(IEnumerable<JsonFile> files)

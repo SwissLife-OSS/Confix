@@ -15,12 +15,21 @@ public sealed class EnvironmentConfiguration
 
     public EnvironmentConfiguration(
         string? name,
-        bool? enabled)
+        bool? enabled, ValidationConfiguration? validation = null, bool? exportSchema = null)
     {
         Name = name;
+        Validation = validation;
+        ExportSchema = exportSchema;
         Enabled = enabled;
     }
 
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public ValidationConfiguration? Validation { get; }
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public bool? ExportSchema { get; }
+    public bool ShouldSerializeExportSchema() => ExportSchema is not null;
+
+    public bool ShouldSerializeValidation() => Validation is not null;
     public string? Name { get; }
     public bool? Enabled { get; }
 
@@ -32,12 +41,14 @@ public sealed class EnvironmentConfiguration
         }
 
         var obj = node.ExpectObject();
+        if (obj.ContainsKey("codeFirst"))
+            throw new ArgumentException("Replace codeFirst with validation: { type: \"dotnet-options\" }; move exportSchema to its parent object.");
 
         var name = obj.MaybeProperty(FieldNames.Name)?.ExpectValue<string>();
 
         var enabled = obj.MaybeProperty(FieldNames.Enabled)?.ExpectValue<bool>();
 
-        return new EnvironmentConfiguration(name, enabled);
+        return new EnvironmentConfiguration(name, enabled, ValidationConfiguration.Parse(obj["validation"]), obj["exportSchema"]?.GetValue<bool>());
     }
 
     public EnvironmentConfiguration Merge(EnvironmentConfiguration other)
@@ -45,6 +56,6 @@ public sealed class EnvironmentConfiguration
         var name = other.Name ?? Name;
         var enabled = other.Enabled ?? Enabled;
 
-        return new EnvironmentConfiguration(name, enabled);
+        return new EnvironmentConfiguration(name, enabled, Validation?.Merge(other.Validation) ?? other.Validation, other.ExportSchema ?? ExportSchema);
     }
 }

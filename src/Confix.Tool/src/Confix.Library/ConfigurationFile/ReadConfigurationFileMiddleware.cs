@@ -31,6 +31,7 @@ public sealed class ReadConfigurationFileMiddleware : IMiddleware
 
             var factoryContext = new ConfigurationFileContext
             {
+                ReadOnly = context.Features.TryGet<Confix.Tool.Validation.ConfigurationReadOnlyFeature>(out var mode) && mode.ReadOnly,
                 Logger = context.Logger,
                 Definition = file,
                 Project = project

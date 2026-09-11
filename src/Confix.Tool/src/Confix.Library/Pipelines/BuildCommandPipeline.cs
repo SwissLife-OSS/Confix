@@ -13,6 +13,8 @@ public class BuildCommandPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
+            .Add(Confix.Tool.Validation.ConfigurationValidationPipeline.ExportSchemaOption)
+            .Add(DotnetConfigurationOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
             .Add(ActiveEnvironmentOption.Instance)
             .Add(OutputFileOption.Instance)

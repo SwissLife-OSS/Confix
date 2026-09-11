@@ -13,6 +13,8 @@ public sealed class SolutionValidatePipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
+            .Add(Confix.Tool.Validation.ConfigurationValidationPipeline.ExportSchemaOption)
+            .Add(DotnetConfigurationOptions.Instance)
             .Add(GitUsernameOptions.Instance)
             .Add(GitTokenOptions.Instance)
             .Use<LoadConfigurationMiddleware>()

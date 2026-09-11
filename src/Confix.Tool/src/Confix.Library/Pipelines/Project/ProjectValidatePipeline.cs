@@ -10,9 +10,12 @@ public sealed class ProjectValidatePipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
+            .Add(Confix.Tool.Validation.ConfigurationValidationPipeline.ExportSchemaOption)
+            .Add(DotnetConfigurationOptions.Instance)
             .Add(GitUsernameOptions.Instance)
             .Add(GitTokenOptions.Instance)
             .Use<LoadConfigurationMiddleware>()
+            .Use((context, next) => Confix.Tool.Validation.ConfigurationValidationPipeline.DispatchAsync(context, next, false))
             .UseReadConfigurationFiles()
             .UseEnvironment()
             .UseBuildComponentsOfProject()

@@ -51,4 +51,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Confix.Library\Confix.Library.csproj" />
     </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../../Confix.Runner/Confix.Runner.csproj" PrivateAssets="all" />
+    </ItemGroup>
 </Project>

@@ -16,4 +16,10 @@
     <Folder Include="Inputs\__snapshots__\__mismatch__\" />
     <Folder Include="Reporting\__snapshots__\__mismatch__\" />
   </ItemGroup>
+  <ItemGroup><ProjectReference Include="../../../Confix.Options/Confix.Options.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../../Confix.CodeGeneration/Confix.CodeGeneration.csproj" />
+    <Reference Include="Microsoft.CodeAnalysis" HintPath="$(MSBuildBinPath)/Roslyn/bincore/Microsoft.CodeAnalysis.dll" />
+    <Reference Include="Microsoft.CodeAnalysis.CSharp" HintPath="$(MSBuildBinPath)/Roslyn/bincore/Microsoft.CodeAnalysis.CSharp.dll" />
+  </ItemGroup>
 </Project>

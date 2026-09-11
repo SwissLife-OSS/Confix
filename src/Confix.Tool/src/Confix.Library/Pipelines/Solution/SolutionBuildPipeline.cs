@@ -14,6 +14,8 @@ public sealed class SolutionBuildPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
+            .Add(Confix.Tool.Validation.ConfigurationValidationPipeline.ExportSchemaOption)
+            .Add(DotnetConfigurationOptions.Instance)
             .Add(EncryptionOption.Instance)
             .Add(GitUsernameOptions.Instance)
             .Add(GitTokenOptions.Instance)
