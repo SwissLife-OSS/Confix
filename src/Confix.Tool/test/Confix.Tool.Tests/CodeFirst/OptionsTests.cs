@@ -226,12 +226,14 @@ public sealed class OptionsTests
         services.AddConfixOptions<Collection>(configuration);
         using var provider = services.BuildServiceProvider();
 
-        ContractValidation.Validate(provider, configuration).Should().NotBeEmpty();
+        ContractValidation.Validate(provider, configuration).Should()
+            .Contain(e => e.Contains("Collection:Items:0: null items are not allowed."));
 
         using var invalid = Config("{\"Mail\":{\"Host\":\"valid\",\"Port\":{\"unexpected\":1}}}");
         using var other = Services(invalid).BuildServiceProvider();
 
-        ContractValidation.Validate(other, invalid).Should().NotBeEmpty();
+        ContractValidation.Validate(other, invalid).Should()
+            .Contain(e => e.Contains("expected a scalar configuration value"));
     }
 
     [Fact]
@@ -312,7 +314,7 @@ public sealed class OptionsTests
     public sealed class Collection
     {
         [ConfixRequiredItems]
-        public List<Mail?> Items { get; set; } = [];
+        public List<string?> Items { get; set; } = [];
     }
 
     [ConfixSection("ServiceChecked")]

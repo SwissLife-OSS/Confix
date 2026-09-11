@@ -19,7 +19,9 @@ public sealed class ConfixModuleAttribute(Type type) : Attribute
 }
 
 /// <summary>
-/// Requires each collection item to be nonnull; use Required separately for the collection.
+/// Rejects null entries in a collection or dictionary of scalars; use Required separately for
+/// the collection itself. The binder materializes null object entries, so a collection of
+/// objects is checked through the rules declared on the item type.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class ConfixRequiredItemsAttribute : Attribute;

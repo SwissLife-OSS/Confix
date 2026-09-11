@@ -109,8 +109,10 @@ and constructors execute normally and must not start the application themselves.
 - Initializers supply runtime defaults. C# `required` and nullable annotations do not replace
   validation attributes. Defaults are not written back into source appsettings.
 - Nested objects, collection items, and dictionary values are recursively validated.
-  `[ConfixRequiredItems]` rejects null collection items; `[Required]` on a collection checks
-  the collection itself, not each item.
+  `[ConfixRequiredItems]` rejects null entries in collections and dictionaries of scalars;
+  `[Required]` on a collection checks the collection itself, not each item. A null entry in a
+  collection of objects is materialized into an instance by the binder, so declare the rules
+  on that item type instead.
 - DataAnnotations, custom ValidationAttribute implementations, Compare, IValidatableObject,
   and registered IValidateOptions validators execute in .NET. Validation is synchronous.
 - Binding uses Microsoft.Extensions.Configuration, including ConfigurationKeyName and normal
