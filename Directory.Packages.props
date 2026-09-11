@@ -9,6 +9,7 @@
     <PackageVersion Include="HotChocolate" Version="16.6.4" />
     <PackageVersion Include="JsonPointer.Net" Version="7.0.3" />
     <PackageVersion Include="JsonSchema.Net" Version="9.4.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
     <PackageVersion Include="Nuke.Build" Version="10.1.0" />
     <PackageVersion Include="Nuke.Tooling.Generator" Version="10.1.0" />
     <PackageVersion Include="Nuke.Common" Version="10.1.0" />

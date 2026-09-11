@@ -1,0 +1,229 @@
+# Code-first configuration
+
+Code-first is an opt-in .NET 10 feature. Build tooling requires SDK 10.0.401 or later. It validates configuration against the options
+classes your application registers. Existing GraphQL and dotnet component inputs continue
+working through the existing schema workflow. Component inputs describe how components are
+authored and packaged; the validation provider independently selects how project configuration is checked.
+
+## Enable it
+
+Add the following to the project's `.confixrc` (or inherit it from a repository `.confixrc`):
+
+```json
+{
+  "project": {
+    "validation": {
+      "type": "dotnet-options",
+      "coverage": "strict"
+    },
+    "exportSchema": false
+  }
+}
+```
+
+Project settings override inherited values individually. Selecting `validation.type: "json-schema"`
+restores the existing workflow; omitting validation also defaults to that workflow. Switching provider
+clears inherited provider settings. Environments can override validation properties through
+`project.environments[].validation` and export independently through `project.environments[].exportSchema`. The effective environment is selected through
+Confix's existing environment mechanism.
+
+Add `Confix.Options` to the application and `Confix.CodeGeneration` as a private build dependency:
+
+```xml
+<ItemGroup>
+  <PackageReference Include="Confix.Options" />
+  <PackageReference Include="Confix.CodeGeneration" PrivateAssets="all" />
+</ItemGroup>
+```
+
+The `dotnet-options` provider builds the selected host and uses a separate process to execute its
+registered contracts with that application's runtime and dependencies. It does not invoke `Main`
+or start hosted services. Registration modules, constructors and validators do execute; the
+runner is process isolation, not a security sandbox.
+
+The validation runner ships with the CLI; it is not copied into every application or options library.
+The host receives a generated activation catalog. The runner verifies that the application's
+`Confix.Options` and `Confix.Abstractions` versions match the CLI's and fails with an explicit
+version-mismatch error otherwise. Projects without central package
+management must specify versions. A library that only declares options can reference
+`Confix.Abstractions` instead. Neither runtime package includes CLI, cloud-provider, compiler,
+Hot Chocolate, or JSON Schema validation dependencies. Only the host needs the registration
+catalog generator; types from referenced libraries are available through normal references.
+
+## Declare and register options
+
+```csharp
+[ConfixSection("Messaging:Smtp")]
+public sealed class SmtpOptions
+{
+    [Required]
+    public string Host { get; set; } = "";
+
+    [Range(1, 65535)]
+    public int Port { get; set; } = 587;
+}
+
+builder.Services.AddConfixOptions<SmtpOptions>(builder.Configuration);
+```
+
+The registration returns `OptionsBuilder<T>` and enables startup validation through the standard
+.NET host. A standalone ServiceCollection application must invoke `IStartupValidator.Validate()`
+explicitly, as the example does. Continue using
+`IOptions<T>`, `IOptionsSnapshot<T>`, and `IOptionsMonitor<T>`. Runtime registration does not
+read `.confixrc`: startup validation remains enabled even when CLI code-first mode is disabled.
+
+The generator automatically handles standalone, unconditional top-level `AddConfixOptions`
+calls, with constant section/name arguments. Other patterns require a shared module:
+
+```csharp
+[assembly: ConfixModule(typeof(ConfigurationSetup))]
+
+builder.Services.AddConfixModule<ConfigurationSetup>(builder.Configuration);
+
+public sealed class ConfigurationSetup : IConfixModule
+{
+    public void Configure(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddConfixOptions<SmtpOptions>(configuration)
+            .Validate(o => o.Port != 25);
+        // Register any services needed by custom validators here.
+    }
+}
+```
+
+Put all option configuration in shared modules when using module declarations. The CLI
+executes the declared modules with a minimal service collection, without running application
+Main or starting hosted services. Chained callbacks, conditional activation, and package
+registration extensions belong in these modules. `CONFIX001` diagnoses unsupported direct
+registration forms rather than silently skipping them. Module classes must be public and
+constructible with a parameterless constructor. Application-specific validators, callbacks,
+and constructors execute normally and must not start the application themselves.
+
+## Validation rules
+
+- Sections are required by default. `[ConfixSection("Mail", Required = false)]` explicitly
+  permits absence; absent optional sections skip validation.
+- `[Required]` checks the bound value, including null, empty, and whitespace-only strings.
+- `[ConfixRequiredKey]` requires an explicit key. `[Required]` on an integer cannot distinguish
+  a missing key from its default value.
+- Initializers supply runtime defaults. C# `required` and nullable annotations do not replace
+  validation attributes. Defaults are not written back into source appsettings.
+- Nested objects, collection items, and dictionary values are recursively validated.
+  `[ConfixRequiredItems]` rejects null entries in collections and dictionaries of scalars;
+  `[Required]` on a collection checks the collection itself, not each item. A null entry in a
+  collection of objects is materialized into an instance by the binder, so declare the rules
+  on that item type instead.
+- DataAnnotations, custom ValidationAttribute implementations, Compare, IValidatableObject,
+  and registered IValidateOptions validators execute in .NET. Validation is synchronous.
+- Binding uses Microsoft.Extensions.Configuration, including ConfigurationKeyName and normal
+  conversions. Invalid shapes, missing required keys, and unknown properties fail validation.
+
+Strict coverage checks both directions: every configured section must belong to an active
+contract, and every required active contract must be present. Nested members belong to their
+root contract; structural parents need no separate attribute. Framework sections such as
+Logging need typed declarations as well. `[ConfixSection("")]` supports a root contract,
+including scalar root keys.
+
+## Nested contracts
+
+A contract may be mounted inside another contract's section — the common .NET layout where
+libraries contribute sections such as `Lukla:Adsvum` beneath an application-owned `Lukla`:
+
+```csharp
+[ConfixSection("Lukla")]
+public sealed class LuklaOptions { [Required] public string ProjectName { get; set; } = ""; }
+
+[ConfixSection("Lukla:Adsvum")]
+public sealed class AdsvumOptions { [Required] public string Url { get; set; } = ""; }
+```
+
+This requires no opt-in, because it is only permitted when the parent type cannot bind the
+delegated key: if `LuklaOptions` declared an `Adsvum` property (or were a dictionary,
+collection, or scalar, which consume every key), registration fails naming the conflicting
+key and both types. The same data can therefore never have two owners. Registration order
+does not matter, and a root contract can host nested contracts under the same rule.
+
+Each contract validates exactly its own subtree. Keys owned by nested contracts are not
+unknown keys of the parent; typos next to them still are. Delegation may pass through purely
+structural keys (`Lukla:Integrations:Email` under `Lukla`) — stray keys inside such
+containers are reported. A required nested contract still reports its section when absent.
+The exported IDE schema grafts nested contracts into the parent schema, so editor
+completion sees the combined shape.
+
+For gradual adoption, set CLI `coverage` to `registeredSections`: unowned root sections are
+allowed, while registered sections still validate. To select the equivalent runtime policy,
+configure `ConfixValidationSettings.StrictCoverage = false` in shared setup. The default
+startup root-coverage check examines JSON providers and does not treat unrelated environment
+variables as configuration errors. For other application sources, explicitly set
+`ConfixValidationSettings.Sources`. Bound option values always use final IConfiguration,
+including environment and command-line overrides. Build validation checks the deployment
+snapshot; startup checks the application's actual inputs, so different outcomes are possible.
+
+## Build and validate
+
+```shell
+confix validate
+confix build
+confix build --export-schema
+```
+
+Code-first mode does not require component files or schema restore. Its `--no-restore` flag is
+rejected; required validation is never bypassed. Use `project.validation.framework` to select
+one framework from a multi-target project and `--dotnet-configuration Release` to select the
+build configuration. There must be one host `.csproj` in the project directory.
+
+Variables and secrets are resolved before validation. `validate` does not publish appsettings,
+create user-secret IDs, or change editor settings. `build` validates all project outputs before
+staging publication; validation failure leaves previous outputs intact. Configuration passed
+to the runner uses stdin, not command-line arguments. Custom error text is suppressed to avoid
+leaking secret values; diagnostics identify the failing contract/member path.
+
+Existing user-secrets and explicit output destinations are retained. If input and output would
+otherwise be the same file, code-first defaults to a sibling `appsettings.confix.json`. Load that
+file explicitly in your application or choose `--output-file` for deployment. An explicit output
+path may request in-place writing. Exclude resolved output files from version control when they
+contain secrets. Source property defaults are not materialized into output.
+Encrypted output is validated before encryption. File replacement is staged per project, not
+an atomic transaction across multiple filesystems.
+
+To merge partial JSON overlays before variable resolution, declare them explicitly:
+
+```json
+{
+  "project": {
+    "validation": {
+      "type": "dotnet-options",
+      "overlays": ["appsettings.{environment}.json"]
+    }
+  }
+}
+```
+
+Overlay paths are relative to the project and must resolve inside the project directory. Declared
+files must exist; a missing or unparsable overlay fails the command. Objects merge by key;
+arrays/scalars/null replace previous values. Each configured base input is combined with these
+overlays and validated as a complete configuration, rather than validating a partial overlay alone.
+
+## Optional editor schema
+
+`project.exportSchema: true` or `--export-schema` on build writes `confix.ide.schema.json` and a VS Code
+association in `.vscode/settings.json` for `dotnet-options`. Without export enablement, this provider
+does no schema/editor work. The `json-schema` provider retains its existing schema workflow;
+this optional IDE export setting does not disable the schemas that workflow needs.
+Export does not participate in validation. Delete the export at any time without changing
+build/startup validation behavior.
+
+The System.Text.Json exporter supplies type shape; Confix adapts configuration key names,
+required keys, basic integer ranges, string/collection lengths, and variable expressions.
+Custom/cross-property rules and framework-specific format or regex semantics remain .NET-only.
+The IDE schema is an approximation, not evidence that every runtime rule has passed. Use
+`confix validate` for authoritative checks. Partial overlays can appear incomplete to an editor
+using the full application schema; CLI coverage checks the merged document.
+
+See `examples/CodeFirst` for a runnable project. Existing component resources are not removed
+when the feature is enabled. Remove obsolete project-specific component settings manually only
+when they are no longer needed by other consumers. Cache optimization is separate from this feature.
+
+A raw JSON null section is rejected by the CLI. Some IConfiguration providers represent an
+empty object and a null section identically; startup presence checks cannot reconstruct that
+distinction from those providers. Value annotations still run against the bound options.
