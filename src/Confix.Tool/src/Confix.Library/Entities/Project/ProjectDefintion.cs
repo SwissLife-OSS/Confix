@@ -38,11 +38,9 @@ public sealed class ProjectDefinition
 
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
     public ValidationConfiguration? Validation { get; }
+
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
     public bool? ExportSchema { get; }
-    public bool ShouldSerializeExportSchema() => ExportSchema is not null;
-
-    public bool ShouldSerializeValidation() => Validation is not null;
 
     public string Name { get; }
 
@@ -70,11 +68,14 @@ public sealed class ProjectDefinition
         writer.WriteStartObject();
 
         writer.WriteString(FieldNames.Name, Name);
-        if (ExportSchema is { } exportSchema) writer.WriteBoolean("exportSchema", exportSchema);
+        if (ExportSchema is { } exportSchema)
+        {
+            writer.WriteBoolean(ProjectConfiguration.FieldNames.ExportSchema, exportSchema);
+        }
         if (Validation is not null)
         {
-            writer.WritePropertyName("validation");
-            JsonSerializer.Serialize(writer, Validation, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            writer.WritePropertyName(ProjectConfiguration.FieldNames.Validation);
+            JsonSerializer.Serialize(writer, Validation, ValidationConfiguration.SerializerOptions);
         }
 
         writer.WritePropertyName(FieldNames.Environments);

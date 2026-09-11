@@ -17,19 +17,18 @@ public static class ContractValidation
             for (var j = i + 1; j < contracts.Length; j++)
                 if (contracts[i].Section.StartsWith(contracts[j].Section + ":", StringComparison.OrdinalIgnoreCase) ||
                     contracts[j].Section.StartsWith(contracts[i].Section + ":", StringComparison.OrdinalIgnoreCase))
-                    errors.Add("Overlapping Confix sections are not supported.");
+                    errors.Add($"{contracts[i].Section} and {contracts[j].Section}: overlapping Confix sections are not supported.");
         if (strict && !contracts.Any(c => c.Section.Length == 0)) CheckCoverage(configuration, "", contracts, errors);
         foreach (var contract in contracts)
         {
             if (!contract.Required && !ConfixOptionsExtensions.HasSection(configuration, contract.Section)) continue;
             try { contract.Validate(services); }
             catch (ConfixValidationException ex) { errors.AddRange(ex.Failures); }
-            catch (Microsoft.Extensions.Options.OptionsValidationException ex)
+            catch (Microsoft.Extensions.Options.OptionsValidationException)
             {
                 // Only Confix's own errors are exposed by the object validator; user-supplied
                 // IValidateOptions messages may contain values, so the runner uses safe paths.
                 errors.Add($"{contract.Section}: options validation failed.");
-                _ = ex;
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             { errors.Add($"{contract.Section}: validation could not complete."); }
@@ -52,8 +51,11 @@ public static class ContractValidation
         }
     }
 
-    internal static PropertyInfo[] Properties(Type type) => type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-        .Where(p => p.GetIndexParameters().Length == 0 && p.GetMethod is not null).ToArray();
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, PropertyInfo[]> _properties = new();
+
+    internal static PropertyInfo[] Properties(Type type) => _properties.GetOrAdd(type,
+        static t => t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.GetIndexParameters().Length == 0 && p.GetMethod is not null).ToArray());
     internal static string Key(PropertyInfo property) => property.GetCustomAttribute<ConfigurationKeyNameAttribute>()?.Name ?? property.Name;
     internal static bool Scalar(Type type)
     {
@@ -116,19 +118,20 @@ public static class ContractValidation
             }
             var results = new List<ValidationResult>();
             var context = new ValidationContext(value, services, null);
+            var properties = Properties(value.GetType());
             try
             {
                 Validator.TryValidateObject(value, context, results, validateAllProperties: true);
                 foreach (var result in results)
                 {
-                    var members = result.MemberNames.Where(m => Properties(value.GetType()).Any(p => p.Name == m)).ToArray();
+                    var members = result.MemberNames.Where(m => properties.Any(p => p.Name == m)).ToArray();
                     foreach (var member in members.Length == 0 ? [""] : members)
                         errors.Add($"{path}{(member.Length == 0 ? "" : ":" + member)}: declared validation rule failed.");
                 }
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             { errors.Add($"{path}: declared validator could not complete."); }
-            foreach (var property in Properties(value.GetType()))
+            foreach (var property in properties)
             {
                 var child = property.GetValue(value);
                 if (property.IsDefined(typeof(ConfixRequiredItemsAttribute)) && child is IEnumerable items)

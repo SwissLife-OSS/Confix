@@ -20,24 +20,36 @@ internal sealed class CoverageValidator(IServiceProvider services, CoverageSourc
     public ValidateOptionsResult Validate(string? name, CoverageOptions options)
     {
         var settings = services.GetService<IOptions<ConfixValidationSettings>>()?.Value ?? new();
-        if (!settings.StrictCoverage) return ValidateOptionsResult.Success;
+        if (!settings.StrictCoverage)
+        {
+            return ValidateOptionsResult.Success;
+        }
         if (settings.Sources is { } selected)
         {
-            var selectedErrors = new List<string>();
-            var active = services.GetServices<IConfixContract>().ToArray();
-            if (!active.Any(c => c.Section.Length == 0)) ContractValidation.CheckCoverage(selected, "", active, selectedErrors);
-            return selectedErrors.Count == 0 ? ValidateOptionsResult.Success : ValidateOptionsResult.Fail(selectedErrors);
+            return ValidateCoverage(selected);
         }
         if (source.Configuration is not IConfigurationRoot root)
+        {
             return ValidateOptionsResult.Fail("Confix startup coverage needs an IConfigurationRoot with explicit JSON sources.");
+        }
         var data = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
         foreach (var provider in root.Providers.Where(p => p.GetType().Namespace == "Microsoft.Extensions.Configuration.Json"))
+        {
             Collect(provider, null, data);
+        }
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(data).Build();
         using var owned = (IDisposable)configuration;
+        return ValidateCoverage(configuration);
+    }
+
+    private ValidateOptionsResult ValidateCoverage(IConfiguration configuration)
+    {
         var contracts = services.GetServices<IConfixContract>().ToArray();
         var errors = new List<string>();
-        if (!contracts.Any(c => c.Section.Length == 0)) ContractValidation.CheckCoverage(configuration, "", contracts, errors);
+        if (!contracts.Any(contract => contract.Section.Length == 0))
+        {
+            ContractValidation.CheckCoverage(configuration, "", contracts, errors);
+        }
         return errors.Count == 0 ? ValidateOptionsResult.Success : ValidateOptionsResult.Fail(errors);
     }
 
@@ -46,7 +58,10 @@ internal sealed class CoverageValidator(IServiceProvider services, CoverageSourc
         foreach (var key in provider.GetChildKeys([], parent).Distinct(StringComparer.OrdinalIgnoreCase))
         {
             var path = parent is null ? key : parent + ":" + key;
-            if (provider.TryGet(path, out var value)) data[path] = value;
+            if (provider.TryGet(path, out var value))
+            {
+                data[path] = value;
+            }
             Collect(provider, path, data);
         }
     }

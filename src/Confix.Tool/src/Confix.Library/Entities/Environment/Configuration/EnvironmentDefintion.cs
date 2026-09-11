@@ -9,10 +9,6 @@ public sealed record EnvironmentDefinition(
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] ValidationConfiguration? Validation = null,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] bool? ExportSchema = null)
 {
-    public bool ShouldSerializeExportSchema() => ExportSchema is not null;
-
-    public bool ShouldSerializeValidation() => Validation is not null;
-
     public static EnvironmentDefinition From(EnvironmentConfiguration configuration)
     {
         if (string.IsNullOrWhiteSpace(configuration.Name))
@@ -33,11 +29,14 @@ public sealed record EnvironmentDefinition(
         writer.WriteStartObject();
         writer.WriteString(EnvironmentConfiguration.FieldNames.Name, Name);
         writer.WriteBoolean(EnvironmentConfiguration.FieldNames.Enabled, Enabled);
-        if (ExportSchema is { } exportSchema) writer.WriteBoolean("exportSchema", exportSchema);
+        if (ExportSchema is { } exportSchema)
+        {
+            writer.WriteBoolean(EnvironmentConfiguration.FieldNames.ExportSchema, exportSchema);
+        }
         if (Validation is not null)
         {
-            writer.WritePropertyName("validation");
-            JsonSerializer.Serialize(writer, Validation, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            writer.WritePropertyName(EnvironmentConfiguration.FieldNames.Validation);
+            JsonSerializer.Serialize(writer, Validation, ValidationConfiguration.SerializerOptions);
         }
         writer.WriteEndObject();
     }

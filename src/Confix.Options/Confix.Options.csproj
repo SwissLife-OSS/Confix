@@ -1,9 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><Description>Thin .NET options binding and validation for Confix.</Description></PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="../Confix.Abstractions/Confix.Abstractions.csproj" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
-  </ItemGroup>
-  <PropertyGroup><PackageReadmeFile>README.md</PackageReadmeFile><PackageLicenseExpression>MIT</PackageLicenseExpression></PropertyGroup>
-  <ItemGroup><None Include="README.md" Pack="true" PackagePath="/" /></ItemGroup>
+
+    <PropertyGroup>
+        <Description>Thin .NET options binding and validation for Confix.</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../Confix.Abstractions/Confix.Abstractions.csproj" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
 </Project>
+

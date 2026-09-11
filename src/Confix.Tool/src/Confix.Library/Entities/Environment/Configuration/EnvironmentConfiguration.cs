@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Confix.Utilities.Json;
 using Json.Schema;
 
@@ -11,6 +12,8 @@ public sealed class EnvironmentConfiguration
     {
         public const string Name = "name";
         public const string Enabled = "enabled";
+        public const string Validation = "validation";
+        public const string ExportSchema = "exportSchema";
     }
 
     public EnvironmentConfiguration(
@@ -23,13 +26,12 @@ public sealed class EnvironmentConfiguration
         Enabled = enabled;
     }
 
-    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ValidationConfiguration? Validation { get; }
-    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
-    public bool? ExportSchema { get; }
-    public bool ShouldSerializeExportSchema() => ExportSchema is not null;
 
-    public bool ShouldSerializeValidation() => Validation is not null;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? ExportSchema { get; }
+
     public string? Name { get; }
     public bool? Enabled { get; }
 
@@ -48,7 +50,9 @@ public sealed class EnvironmentConfiguration
 
         var enabled = obj.MaybeProperty(FieldNames.Enabled)?.ExpectValue<bool>();
 
-        return new EnvironmentConfiguration(name, enabled, ValidationConfiguration.Parse(obj["validation"]), obj["exportSchema"]?.GetValue<bool>());
+        return new EnvironmentConfiguration(name, enabled,
+            ValidationConfiguration.Parse(obj.MaybeProperty(FieldNames.Validation)),
+            obj.MaybeProperty(FieldNames.ExportSchema)?.ExpectValue<bool>());
     }
 
     public EnvironmentConfiguration Merge(EnvironmentConfiguration other)

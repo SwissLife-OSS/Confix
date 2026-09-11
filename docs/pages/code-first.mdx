@@ -42,7 +42,9 @@ or start hosted services. Registration modules, constructors and validators do e
 runner is process isolation, not a security sandbox.
 
 The validation runner ships with the CLI; it is not copied into every application or options library.
-The host receives a generated activation catalog. Use the matching versions of the CLI and new packages. Projects without central package
+The host receives a generated activation catalog. The runner verifies that the application's
+`Confix.Options` and `Confix.Abstractions` versions match the CLI's and fails with an explicit
+version-mismatch error otherwise. Projects without central package
 management must specify versions. A library that only declares options can reference
 `Confix.Abstractions` instead. Neither runtime package includes CLI, cloud-provider, compiler,
 Hot Chocolate, or JSON Schema validation dependencies. Only the host needs the registration
@@ -169,7 +171,8 @@ To merge partial JSON overlays before variable resolution, declare them explicit
 }
 ```
 
-Overlay paths are relative to the project. Declared files must exist. Objects merge by key;
+Overlay paths are relative to the project and must resolve inside the project directory. Declared
+files must exist; a missing or unparsable overlay fails the command. Objects merge by key;
 arrays/scalars/null replace previous values. Each configured base input is combined with these
 overlays and validated as a complete configuration, rather than validating a partial overlay alone.
 

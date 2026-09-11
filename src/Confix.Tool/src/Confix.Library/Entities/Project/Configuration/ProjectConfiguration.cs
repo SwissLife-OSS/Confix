@@ -18,6 +18,8 @@ public sealed class ProjectConfiguration
         public const string ConfigurationFiles = "configurationFiles";
         public const string Subprojects = "subprojects";
         public const string ProjectType = "type";
+        public const string Validation = "validation";
+        public const string ExportSchema = "exportSchema";
     }
 
     public ProjectConfiguration(
@@ -49,11 +51,9 @@ public sealed class ProjectConfiguration
 
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
     public ValidationConfiguration? Validation { get; }
+
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
     public bool? ExportSchema { get; }
-    public bool ShouldSerializeExportSchema() => ExportSchema is not null;
-
-    public bool ShouldSerializeValidation() => Validation is not null;
 
     public string? Name { get; }
 
@@ -150,7 +150,9 @@ public sealed class ProjectConfiguration
             configurationFiles,
             subprojects,
             projectType,
-            sourceFiles, ValidationConfiguration.Parse(obj["validation"]), obj["exportSchema"]?.GetValue<bool>());
+            sourceFiles,
+            ValidationConfiguration.Parse(obj.MaybeProperty(FieldNames.Validation)),
+            obj.MaybeProperty(FieldNames.ExportSchema)?.ExpectValue<bool>());
     }
 
     public ProjectConfiguration Merge(ProjectConfiguration? other)
