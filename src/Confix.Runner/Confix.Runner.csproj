@@ -11,4 +11,8 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="Confix.Tool.Tests" />
+    </ItemGroup>
+
 </Project>

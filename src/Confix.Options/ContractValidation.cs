@@ -152,14 +152,18 @@ public static class ContractValidation
             return;
         }
 
-        if (section is IConfigurationSection { Value: not null })
+        var itemType = ItemType(type);
+
+        // An empty JSON array arrives as an empty value rather than as a childless container.
+        if (section is IConfigurationSection { Value: { } value } &&
+            !(value.Length == 0 && itemType is not null))
         {
             errors.Add($"{path}: expected structured configuration.");
 
             return;
         }
 
-        if (ItemType(type) is { } itemType)
+        if (itemType is not null)
         {
             foreach (var child in section.GetChildren())
             {

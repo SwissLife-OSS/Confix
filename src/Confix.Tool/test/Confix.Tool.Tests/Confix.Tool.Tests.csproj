@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../../Confix.Options/Confix.Options.csproj" />
+    <ProjectReference Include="../../../Confix.Runner/Confix.Runner.csproj" />
     <ProjectReference Include="../../../Confix.CodeGeneration/Confix.CodeGeneration.csproj" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>

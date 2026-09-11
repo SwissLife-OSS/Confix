@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Schema;
@@ -30,6 +31,7 @@ internal static class SchemaExport
             {
                 var exported = schema.AsObject();
                 exported["$schema"] = SchemaDialect;
+                RewriteReferences(exported, "#");
 
                 return exported;
             }
@@ -209,6 +211,35 @@ internal static class SchemaExport
         return value.Replace("~", "~0").Replace("/", "~1");
     }
 
+    /// <summary>
+    /// Wrapping each property in an anyOf adds a level the exporter's own pointers do not know
+    /// about, so every traversal through a property has to step into the first alternative.
+    /// </summary>
+    private static string AdaptPointer(string pointer)
+    {
+        var segments = pointer.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var adapted = new StringBuilder();
+
+        for (var i = 0; i < segments.Length; i++)
+        {
+            adapted.Append('/').Append(segments[i]);
+
+            if (segments[i] != "properties" || i + 1 >= segments.Length)
+            {
+                continue;
+            }
+
+            adapted.Append('/').Append(segments[++i]);
+
+            if (i + 1 < segments.Length)
+            {
+                adapted.Append("/anyOf/0");
+            }
+        }
+
+        return adapted.ToString();
+    }
+
     private static void RewriteReferences(JsonNode? node, string prefix)
     {
         switch (node)
@@ -218,7 +249,7 @@ internal static class SchemaExport
                     reference.TryGetValue<string>(out var value) &&
                     value.StartsWith('#'))
                 {
-                    obj["$ref"] = prefix + value[1..];
+                    obj["$ref"] = prefix + AdaptPointer(value[1..]);
                 }
 
                 foreach (var property in obj.ToArray())
