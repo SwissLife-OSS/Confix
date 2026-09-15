@@ -159,11 +159,11 @@ public sealed class ExternalSectionTests
     public void ClaimsCanBeNestedUnderAContractThatDoesNotBindTheKey()
     {
         using var configuration = Config("""
-            {"Lukla":{"Host":"server","Telemetry":{"Anything":true}}}
+            {"Portal":{"Host":"server","Telemetry":{"Anything":true}}}
             """);
         var services = new ServiceCollection();
-        services.AddConfixOptions<Annotated>(configuration, "Lukla");
-        services.AddConfixSection(configuration, "Lukla:Telemetry");
+        services.AddConfixOptions<Annotated>(configuration, "Portal");
+        services.AddConfixSection(configuration, "Portal:Telemetry");
         using var provider = services.BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should().BeEmpty();

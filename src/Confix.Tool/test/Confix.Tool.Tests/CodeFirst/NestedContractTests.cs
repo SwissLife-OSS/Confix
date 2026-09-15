@@ -19,10 +19,10 @@ public sealed class NestedContractTests
     public void ParentAndNestedContractsValidateTheirOwnSubtrees()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Adsvum":{"Url":"https://adsvum"},
-             "Sonar":{"EnterpriseId":"e1"}}}
+            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
+             "Search":{"EnterpriseId":"e1"}}}
             """);
-        using var provider = LuklaServices(configuration).BuildServiceProvider();
+        using var provider = PortalServices(configuration).BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should().BeEmpty();
     }
@@ -31,10 +31,10 @@ public sealed class NestedContractTests
     public void NestedSectionsAreNotUnknownKeysOfTheParent()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Adsvum":{"Url":"https://adsvum"},
-             "Sonar":{"EnterpriseId":"e1"}}}
+            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
+             "Search":{"EnterpriseId":"e1"}}}
             """);
-        using var provider = LuklaServices(configuration).BuildServiceProvider();
+        using var provider = PortalServices(configuration).BuildServiceProvider();
 
         var errors = ContractValidation.Validate(provider, configuration);
 
@@ -45,39 +45,39 @@ public sealed class NestedContractTests
     public void TyposNextToNestedSectionsAreStillUnknownKeys()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Adsvun":{"Url":"x"},
-             "Adsvum":{"Url":"https://adsvum"},"Sonar":{"EnterpriseId":"e1"}}}
+            {"Portal":{"ProjectName":"portal","Billinh":{"Url":"x"},
+             "Billing":{"Url":"https://billing"},"Search":{"EnterpriseId":"e1"}}}
             """);
-        using var provider = LuklaServices(configuration).BuildServiceProvider();
+        using var provider = PortalServices(configuration).BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should()
-            .ContainSingle().Which.Should().Be("Lukla:Adsvun: unknown configuration key.");
+            .ContainSingle().Which.Should().Be("Portal:Billinh: unknown configuration key.");
     }
 
     [Fact]
     public void NestedContractRulesAreEnforcedWithTheirFullPath()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Adsvum":{"Url":""},
-             "Sonar":{"EnterpriseId":"e1"}}}
+            {"Portal":{"ProjectName":"portal","Billing":{"Url":""},
+             "Search":{"EnterpriseId":"e1"}}}
             """);
-        using var provider = LuklaServices(configuration).BuildServiceProvider();
+        using var provider = PortalServices(configuration).BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should()
-            .ContainSingle().Which.Should().Be("Lukla:Adsvum:Url: declared validation rule failed.");
+            .ContainSingle().Which.Should().Be("Portal:Billing:Url: declared validation rule failed.");
     }
 
     [Fact]
     public void AMissingRequiredNestedSectionIsReportedByTheNestedContract()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Sonar":{"EnterpriseId":"e1"}}}
+            {"Portal":{"ProjectName":"portal","Search":{"EnterpriseId":"e1"}}}
             """);
-        using var provider = LuklaServices(configuration).BuildServiceProvider();
+        using var provider = PortalServices(configuration).BuildServiceProvider();
 
         var errors = ContractValidation.Validate(provider, configuration);
 
-        errors.Should().Contain("Lukla:Adsvum: required section is missing.");
+        errors.Should().Contain("Portal:Billing: required section is missing.");
         errors.Should().NotContain(e => e.Contains("unknown configuration key"));
     }
 
@@ -85,9 +85,9 @@ public sealed class NestedContractTests
     public void OptionalNestedSectionsMayBeAbsent()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Adsvum":{"Url":"https://adsvum"}}}
+            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"}}}
             """);
-        using var provider = LuklaServices(configuration).BuildServiceProvider();
+        using var provider = PortalServices(configuration).BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should().BeEmpty();
     }
@@ -96,11 +96,11 @@ public sealed class NestedContractTests
     public void DeepNestingWalksUnboundStructuralContainers()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Adsvum":{"Url":"https://adsvum"},
+            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
              "Integrations":{"Email":{"Sender":"a@b.c"}}}}
             """);
-        var services = LuklaServices(configuration);
-        services.AddConfixOptions<EmailOptions>(configuration, "Lukla:Integrations:Email");
+        var services = PortalServices(configuration);
+        services.AddConfixOptions<EmailOptions>(configuration, "Portal:Integrations:Email");
         using var provider = services.BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should().BeEmpty();
@@ -110,45 +110,45 @@ public sealed class NestedContractTests
     public void StrayKeysInsideStructuralContainersAreUnknown()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Adsvum":{"Url":"https://adsvum"},
+            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
              "Integrations":{"Email":{"Sender":"a@b.c"},"Stray":{"a":1}}}}
             """);
-        var services = LuklaServices(configuration);
-        services.AddConfixOptions<EmailOptions>(configuration, "Lukla:Integrations:Email");
+        var services = PortalServices(configuration);
+        services.AddConfixOptions<EmailOptions>(configuration, "Portal:Integrations:Email");
         using var provider = services.BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should()
-            .ContainSingle().Which.Should().Be("Lukla:Integrations:Stray: unknown configuration key.");
+            .ContainSingle().Which.Should().Be("Portal:Integrations:Stray: unknown configuration key.");
     }
 
     [Fact]
     public void AScalarWhereAStructuralContainerIsExpectedIsRejected()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Adsvum":{"Url":"https://adsvum"},
+            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
              "Integrations":"scalar"}}
             """);
-        var services = LuklaServices(configuration);
-        services.AddConfixOptions<EmailOptions>(configuration, "Lukla:Integrations:Email");
+        var services = PortalServices(configuration);
+        services.AddConfixOptions<EmailOptions>(configuration, "Portal:Integrations:Email");
         using var provider = services.BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should()
-            .Contain(e => e.Contains("Lukla:Integrations: expected a configuration section container."));
+            .Contain(e => e.Contains("Portal:Integrations: expected a configuration section container."));
     }
 
     [Fact]
     public void StartupValidationAcceptsNestedContracts()
     {
         using var configuration = Config("""
-            {"Lukla":{"ProjectName":"lukla","Adsvum":{"Url":"https://adsvum"},
-             "Sonar":{"EnterpriseId":"e1"}}}
+            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
+             "Search":{"EnterpriseId":"e1"}}}
             """);
-        using var provider = LuklaServices(configuration).BuildServiceProvider();
+        using var provider = PortalServices(configuration).BuildServiceProvider();
 
         Action start = () => provider.GetRequiredService<IStartupValidator>().Validate();
 
         start.Should().NotThrow();
-        provider.GetRequiredService<IOptions<AdsvumOptions>>().Value.Url.Should().Be("https://adsvum");
+        provider.GetRequiredService<IOptions<BillingOptions>>().Value.Url.Should().Be("https://billing");
     }
 
     [Fact]
@@ -170,11 +170,11 @@ public sealed class NestedContractTests
     {
         // The runner receives contracts through the generated catalog; a hand-built collection
         // can bypass AddConfixOptions, so Validate re-checks the invariant.
-        using var configuration = Config("{\"Lukla\":{\"ProjectName\":\"x\"}}");
+        using var configuration = Config("{\"Portal\":{\"ProjectName\":\"x\"}}");
         var services = new ServiceCollection();
-        services.AddSingleton<IConfixContract>(new FakeContract("Lukla", typeof(ParentOptions)));
+        services.AddSingleton<IConfixContract>(new FakeContract("Portal", typeof(ParentOptions)));
         services.AddSingleton<IConfixContract>(
-            new FakeContract("Lukla:ProjectName", typeof(MailOptions)));
+            new FakeContract("Portal:ProjectName", typeof(MailOptions)));
         using var provider = services.BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should()
@@ -185,19 +185,19 @@ public sealed class NestedContractTests
     public void SchemasGraftNestedContractsIntoTheParent()
     {
         using var configuration = Config("{}");
-        using var provider = LuklaServices(configuration).BuildServiceProvider();
+        using var provider = PortalServices(configuration).BuildServiceProvider();
 
         var schema = SchemaExport.Export(provider.GetServices<IConfixContract>(), strict: true);
 
-        var parent = schema["properties"]!["Lukla"]!;
+        var parent = schema["properties"]!["Portal"]!;
 
         parent["properties"]!["ProjectName"].Should().NotBeNull();
-        parent["properties"]!["Adsvum"]!["properties"]!["Url"].Should().NotBeNull();
-        parent["properties"]!["Sonar"].Should().NotBeNull();
+        parent["properties"]!["Billing"]!["properties"]!["Url"].Should().NotBeNull();
+        parent["properties"]!["Search"].Should().NotBeNull();
 
         var required = parent["required"]!.AsArray().Select(n => n!.GetValue<string>()).ToArray();
 
-        required.Should().Contain("Adsvum").And.NotContain("Sonar");
+        required.Should().Contain("Billing").And.NotContain("Search");
     }
 
     [Fact]
@@ -205,13 +205,13 @@ public sealed class NestedContractTests
     {
         using var configuration = Config("{}");
         var services = new ServiceCollection();
-        services.AddConfixOptions<AdsvumOptions>(configuration);
+        services.AddConfixOptions<BillingOptions>(configuration);
         services.AddConfixOptions<ParentOptions>(configuration);
         using var provider = services.BuildServiceProvider();
 
         var schema = SchemaExport.Export(provider.GetServices<IConfixContract>(), strict: true);
 
-        schema["properties"]!["Lukla"]!["properties"]!["Adsvum"].Should().NotBeNull();
+        schema["properties"]!["Portal"]!["properties"]!["Billing"].Should().NotBeNull();
     }
 
     [Fact]
@@ -230,12 +230,12 @@ public sealed class NestedContractTests
         schema["required"]!.AsArray().Select(n => n!.GetValue<string>()).Should().Contain("Mail");
     }
 
-    private static ServiceCollection LuklaServices(IConfiguration configuration)
+    private static ServiceCollection PortalServices(IConfiguration configuration)
     {
         var services = new ServiceCollection();
         services.AddConfixOptions<ParentOptions>(configuration);
-        services.AddConfixOptions<AdsvumOptions>(configuration);
-        services.AddConfixOptions<SonarOptions>(configuration);
+        services.AddConfixOptions<BillingOptions>(configuration);
+        services.AddConfixOptions<SearchOptions>(configuration);
 
         return services;
     }
@@ -247,29 +247,29 @@ public sealed class NestedContractTests
             .Build();
     }
 
-    [ConfixSection("Lukla")]
+    [ConfixSection("Portal")]
     public sealed class ParentOptions
     {
         [Required]
         public string ProjectName { get; set; } = "";
     }
 
-    [ConfixSection("Lukla:Adsvum")]
-    public sealed class AdsvumOptions
+    [ConfixSection("Portal:Billing")]
+    public sealed class BillingOptions
     {
         [Required]
         [Url]
         public string Url { get; set; } = "";
     }
 
-    [ConfixSection("Lukla:Sonar", Required = false)]
-    public sealed class SonarOptions
+    [ConfixSection("Portal:Search", Required = false)]
+    public sealed class SearchOptions
     {
         [Required]
         public string EnterpriseId { get; set; } = "";
     }
 
-    [ConfixSection("Lukla:Integrations:Email")]
+    [ConfixSection("Portal:Integrations:Email")]
     public sealed class EmailOptions
     {
         [Required]
