@@ -4,6 +4,7 @@ using Confix;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Confix.CodeFirst.Tests;
 
@@ -80,19 +81,13 @@ public sealed class ContractValidationTests
     }
 
     [Fact]
-    public void CollectionItemsAreValidatedByIndex()
+    public void CollectionItemsAreOnlyValidatedWhenEnumerationIsRequested()
     {
-        Validate<Collections>("{\"Collections\":{\"Items\":[{\"Name\":\"ok\"},{\"Name\":\"\"}]}}").Should()
-            .Contain(e => e.Contains("Collections:Items:1:Name"));
-    }
+        Validate<Collections>("{\"Collections\":{\"Items\":[{\"Name\":\"ok\"},{\"Name\":\"\"}]}}")
+            .Should().Contain(e => e.Contains("Collections:Items:1:Name"));
 
-    [Fact]
-    public void RequiredItemsRejectsNullScalarEntriesButAllowsAnEmptyCollection()
-    {
-        Validate<Collections>("{\"Collections\":{\"NonNull\":[\"a\",null]}}").Should()
-            .Contain(e => e.Contains("Collections:NonNull:1: null items are not allowed."));
-        Validate<Collections>("{\"Collections\":{\"NonNull\":[]}}").Should().BeEmpty();
-        Validate<Collections>("{\"Collections\":{\"NonNull\":[\"a\"]}}").Should().BeEmpty();
+        // NonNull carries no ValidateEnumeratedItems, so its entries are shape-checked only.
+        Validate<Collections>("{\"Collections\":{\"NonNull\":[\"a\",null]}}").Should().BeEmpty();
     }
 
     [Fact]
@@ -102,13 +97,6 @@ public sealed class ContractValidationTests
         // null; its required members are what surface the problem.
         Validate<Collections>("{\"Collections\":{\"Items\":[null]}}").Should()
             .ContainSingle().Which.Should().Be("Collections:Items:0:Name: declared validation rule failed.");
-    }
-
-    [Fact]
-    public void RequiredItemsAlsoChecksDictionaryValues()
-    {
-        Validate<Collections>("{\"Collections\":{\"Lookup\":{\"a\":null}}}").Should()
-            .Contain(e => e.Contains("Collections:Lookup:0: null items are not allowed."));
     }
 
     [Fact]
@@ -227,6 +215,7 @@ public sealed class ContractValidationTests
     [ConfixSection("Root")]
     public sealed class Root
     {
+        [ValidateObjectMembers]
         public Child Child { get; set; } = new();
     }
 
@@ -261,18 +250,18 @@ public sealed class ContractValidationTests
     [ConfixSection("Dictionaries")]
     public sealed class Dictionaries
     {
+        [ValidateEnumeratedItems]
         public Dictionary<string, Child> Entries { get; set; } = [];
     }
 
     [ConfixSection("Collections")]
     public sealed class Collections
     {
+        [ValidateEnumeratedItems]
         public List<Child> Items { get; set; } = [];
 
-        [ConfixRequiredItems]
         public List<string?> NonNull { get; set; } = [];
 
-        [ConfixRequiredItems]
         public Dictionary<string, string?> Lookup { get; set; } = [];
     }
 

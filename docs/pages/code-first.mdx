@@ -148,15 +148,15 @@ and constructors execute normally and must not start the application themselves.
   a missing key from its default value.
 - Initializers supply runtime defaults. C# `required` and nullable annotations do not replace
   validation attributes. Defaults are not written back into source appsettings.
-- Nested objects, collection items, and dictionary values are recursively validated.
-  `[ConfixRequiredItems]` rejects null entries in collections and dictionaries of scalars;
-  `[Required]` on a collection checks the collection itself, not each item. A null entry in a
-  collection of objects is materialized into an instance by the binder, so declare the rules
-  on that item type instead.
+- Recursion into nested objects and collection items is opt-in through the standard
+  `Microsoft.Extensions.Options` attributes `[ValidateObjectMembers]` and
+  `[ValidateEnumeratedItems]`, so confix reports what the application reports at startup.
+  `[Required]` on a collection checks the collection itself, not each item.
 - DataAnnotations, custom ValidationAttribute implementations, Compare, IValidatableObject,
   and registered IValidateOptions validators execute in .NET. Validation is synchronous.
 - Binding uses Microsoft.Extensions.Configuration, including ConfigurationKeyName and normal
   conversions. Invalid shapes, missing required keys, and unknown properties fail validation.
+  Shape checks always cover the whole subtree, independently of the recursion attributes.
 
 Strict coverage checks both directions: every configured section must belong to an active
 contract, and every required active contract must be present. Nested members belong to their
@@ -164,31 +164,28 @@ root contract; structural parents need no separate attribute. Framework sections
 Logging are owned with `AddConfixSection`. `[ConfixSection("")]` supports a root contract,
 including scalar root keys.
 
-## Nested contracts
+## Namespace sections
 
-A contract may be mounted inside another contract's section — the common .NET layout where
-libraries contribute sections such as `Portal:Billing` beneath an application-owned `Portal`:
+Several components often contribute sections under a shared prefix. The prefix is a namespace:
+no type binds it, and each component owns one section beneath it.
 
 ```csharp
-[ConfixSection("Portal")]
+[ConfixSection("Portal:Core")]
 public sealed class PortalOptions { [Required] public string ProjectName { get; set; } = ""; }
 
 [ConfixSection("Portal:Billing")]
 public sealed class BillingOptions { [Required] public string Url { get; set; } = ""; }
 ```
 
-This requires no opt-in, because it is only permitted when the parent type cannot bind the
-delegated key: if `PortalOptions` declared a `Billing` property (or were a dictionary,
-collection, or scalar, which consume every key), registration fails naming the conflicting
-key and both types. The same data can therefore never have two owners. Registration order
-does not matter, and a root contract can host nested contracts under the same rule.
+A section is either bound to an options type or a namespace for other sections, never both.
+Registering `Portal` alongside `Portal:Billing` fails, in either order, because the same keys
+would have two owners — something the configuration binder cannot express. Move the parent's
+own settings into a section of their own, as `Portal:Core` does here.
 
-Each contract validates exactly its own subtree. Keys owned by nested contracts are not
-unknown keys of the parent; typos next to them still are. Delegation may pass through purely
-structural keys (`Portal:Integrations:Email` under `Portal`) — stray keys inside such
-containers are reported. A required nested contract still reports its section when absent.
-The exported IDE schema grafts nested contracts into the parent schema, so editor
-completion sees the combined shape.
+Each contract validates exactly its own subtree. Namespaces may be several levels deep
+(`Portal:Integrations:Email`); stray keys inside them are reported against the namespace. A
+required contract still reports its section when absent. The exported IDE schema mounts every
+contract under its namespace, so editor completion sees the combined shape.
 
 For gradual adoption, set CLI `coverage` to `registeredSections`: unowned root sections are
 allowed, while registered sections still validate. To select the equivalent runtime policy,

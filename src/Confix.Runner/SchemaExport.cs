@@ -187,8 +187,7 @@ internal static class SchemaExport
 
         for (var i = 0; i < segments.Length; i++)
         {
-            // A nested contract grafts into the parent's exported schema, which may not
-            // declare properties or required members of its own.
+            // Intermediate segments are namespaces created on demand, never contract schemas.
             if (current["properties"] is not JsonObject properties)
             {
                 properties = new JsonObject();

@@ -154,18 +154,16 @@ public static class ConfixOptionsExtensions
                     $"{contract.OptionsType.Name}.");
             }
 
-            // Nesting is legal in either registration order when the parent cannot bind the key.
-            var conflict = IsNestedIn(section, contract.Section)
-                ? ContractValidation.NestingConflict(
-                    contract.Section, contract.OptionsType, section, optionsType)
-                : IsNestedIn(contract.Section, section)
-                    ? ContractValidation.NestingConflict(
-                        section, optionsType, contract.Section, contract.OptionsType)
-                    : null;
-
-            if (conflict is not null)
+            if (IsNestedIn(section, contract.Section))
             {
-                throw new InvalidOperationException(conflict);
+                throw new InvalidOperationException(ContractValidation.NestingError(
+                    contract.Section, contract.OptionsType, section, optionsType));
+            }
+
+            if (IsNestedIn(contract.Section, section))
+            {
+                throw new InvalidOperationException(ContractValidation.NestingError(
+                    section, optionsType, contract.Section, contract.OptionsType));
             }
         }
     }
@@ -264,10 +262,7 @@ public static class ConfixOptionsExtensions
                 ? configuration
                 : configuration.GetSection(contract.Section);
 
-            var delegated = ContractValidation.DelegatedPaths(
-                services.GetServices<IConfixContract>(), contract);
-
-            ContractValidation.CheckKeys(section, typeof(T), contract.Section, errors, delegated);
+            ContractValidation.CheckKeys(section, typeof(T), contract.Section, errors);
             ContractValidation.ValidateObject(options, contract.Section, services, errors);
 
             if (errors.Count > 0)

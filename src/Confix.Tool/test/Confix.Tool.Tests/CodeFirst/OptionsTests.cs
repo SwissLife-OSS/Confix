@@ -219,16 +219,8 @@ public sealed class OptionsTests
     }
 
     [Fact]
-    public void RejectsNullItemsAndWrongScalarShapes()
+    public void RejectsWrongScalarShapes()
     {
-        using var configuration = Config("{\"Collection\":{\"Items\":[null]}}");
-        var services = new ServiceCollection();
-        services.AddConfixOptions<Collection>(configuration);
-        using var provider = services.BuildServiceProvider();
-
-        ContractValidation.Validate(provider, configuration).Should()
-            .Contain(e => e.Contains("Collection:Items:0: null items are not allowed."));
-
         using var invalid = Config("{\"Mail\":{\"Host\":\"valid\",\"Port\":{\"unexpected\":1}}}");
         using var other = Services(invalid).BuildServiceProvider();
 
@@ -277,6 +269,7 @@ public sealed class OptionsTests
     [ConfixSection("Nested")]
     public sealed class Nested
     {
+        [ValidateEnumeratedItems]
         public List<Mail> Items { get; set; } = [];
 
         [ConfixRequiredKey]
@@ -313,7 +306,6 @@ public sealed class OptionsTests
     [ConfixSection("Collection")]
     public sealed class Collection
     {
-        [ConfixRequiredItems]
         public List<string?> Items { get; set; } = [];
     }
 

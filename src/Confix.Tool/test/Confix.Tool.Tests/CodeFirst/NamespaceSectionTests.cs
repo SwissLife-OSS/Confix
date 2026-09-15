@@ -10,16 +10,17 @@ using Microsoft.Extensions.Options;
 namespace Confix.CodeFirst.Tests;
 
 /// <summary>
-/// Covers contracts mounted inside another contract's section, mirroring the common .NET
-/// layout where libraries contribute nested sections the parent type does not bind.
+/// Covers sibling contracts that share a namespace section, the layout the .NET options
+/// documentation uses when several components contribute settings under a common prefix.
+/// No type is bound to the namespace itself.
 /// </summary>
-public sealed class NestedContractTests
+public sealed class NamespaceSectionTests
 {
     [Fact]
-    public void ParentAndNestedContractsValidateTheirOwnSubtrees()
+    public void SiblingContractsValidateTheirOwnSubtrees()
     {
         using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
+            {"Portal":{"Core":{"ProjectName":"portal"},"Billing":{"Url":"https://billing"},
              "Search":{"EnterpriseId":"e1"}}}
             """);
         using var provider = PortalServices(configuration).BuildServiceProvider();
@@ -28,50 +29,38 @@ public sealed class NestedContractTests
     }
 
     [Fact]
-    public void NestedSectionsAreNotUnknownKeysOfTheParent()
+    public void TyposInsideTheNamespaceAreReported()
     {
         using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
-             "Search":{"EnterpriseId":"e1"}}}
-            """);
-        using var provider = PortalServices(configuration).BuildServiceProvider();
-
-        var errors = ContractValidation.Validate(provider, configuration);
-
-        errors.Should().NotContain(e => e.Contains("unknown configuration key"));
-    }
-
-    [Fact]
-    public void TyposNextToNestedSectionsAreStillUnknownKeys()
-    {
-        using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Billinh":{"Url":"x"},
+            {"Portal":{"Core":{"ProjectName":"portal"},"Billinh":{"Url":"x"},
              "Billing":{"Url":"https://billing"},"Search":{"EnterpriseId":"e1"}}}
             """);
         using var provider = PortalServices(configuration).BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should()
-            .ContainSingle().Which.Should().Be("Portal:Billinh: unknown configuration key.");
+            .ContainSingle().Which.Should()
+            .Be("Portal:Billinh: no active Confix contract owns this section.");
     }
 
     [Fact]
-    public void NestedContractRulesAreEnforcedWithTheirFullPath()
+    public void ContractRulesAreEnforcedWithTheirFullPath()
     {
         using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Billing":{"Url":""},
+            {"Portal":{"Core":{"ProjectName":"portal"},"Billing":{"Url":""},
              "Search":{"EnterpriseId":"e1"}}}
             """);
         using var provider = PortalServices(configuration).BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should()
-            .ContainSingle().Which.Should().Be("Portal:Billing:Url: declared validation rule failed.");
+            .ContainSingle().Which.Should()
+            .Be("Portal:Billing:Url: declared validation rule failed.");
     }
 
     [Fact]
-    public void AMissingRequiredNestedSectionIsReportedByTheNestedContract()
+    public void AMissingRequiredSectionIsReportedByItsOwnContract()
     {
         using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Search":{"EnterpriseId":"e1"}}}
+            {"Portal":{"Core":{"ProjectName":"portal"},"Search":{"EnterpriseId":"e1"}}}
             """);
         using var provider = PortalServices(configuration).BuildServiceProvider();
 
@@ -82,10 +71,10 @@ public sealed class NestedContractTests
     }
 
     [Fact]
-    public void OptionalNestedSectionsMayBeAbsent()
+    public void OptionalSectionsMayBeAbsent()
     {
         using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"}}}
+            {"Portal":{"Core":{"ProjectName":"portal"},"Billing":{"Url":"https://billing"}}}
             """);
         using var provider = PortalServices(configuration).BuildServiceProvider();
 
@@ -93,10 +82,10 @@ public sealed class NestedContractTests
     }
 
     [Fact]
-    public void DeepNestingWalksUnboundStructuralContainers()
+    public void DeepNamespacesAreWalked()
     {
         using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
+            {"Portal":{"Core":{"ProjectName":"portal"},"Billing":{"Url":"https://billing"},
              "Integrations":{"Email":{"Sender":"a@b.c"}}}}
             """);
         var services = PortalServices(configuration);
@@ -107,10 +96,10 @@ public sealed class NestedContractTests
     }
 
     [Fact]
-    public void StrayKeysInsideStructuralContainersAreUnknown()
+    public void StrayKeysInsideNamespacesAreReported()
     {
         using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
+            {"Portal":{"Core":{"ProjectName":"portal"},"Billing":{"Url":"https://billing"},
              "Integrations":{"Email":{"Sender":"a@b.c"},"Stray":{"a":1}}}}
             """);
         var services = PortalServices(configuration);
@@ -118,14 +107,15 @@ public sealed class NestedContractTests
         using var provider = services.BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should()
-            .ContainSingle().Which.Should().Be("Portal:Integrations:Stray: unknown configuration key.");
+            .ContainSingle().Which.Should()
+            .Be("Portal:Integrations:Stray: no active Confix contract owns this section.");
     }
 
     [Fact]
-    public void AScalarWhereAStructuralContainerIsExpectedIsRejected()
+    public void AScalarWhereANamespaceIsExpectedIsRejected()
     {
         using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
+            {"Portal":{"Core":{"ProjectName":"portal"},"Billing":{"Url":"https://billing"},
              "Integrations":"scalar"}}
             """);
         var services = PortalServices(configuration);
@@ -137,10 +127,10 @@ public sealed class NestedContractTests
     }
 
     [Fact]
-    public void StartupValidationAcceptsNestedContracts()
+    public void StartupValidationAcceptsNamespacedContracts()
     {
         using var configuration = Config("""
-            {"Portal":{"ProjectName":"portal","Billing":{"Url":"https://billing"},
+            {"Portal":{"Core":{"ProjectName":"portal"},"Billing":{"Url":"https://billing"},
              "Search":{"EnterpriseId":"e1"}}}
             """);
         using var provider = PortalServices(configuration).BuildServiceProvider();
@@ -148,25 +138,12 @@ public sealed class NestedContractTests
         Action start = () => provider.GetRequiredService<IStartupValidator>().Validate();
 
         start.Should().NotThrow();
-        provider.GetRequiredService<IOptions<BillingOptions>>().Value.Url.Should().Be("https://billing");
+        provider.GetRequiredService<IOptions<BillingOptions>>().Value.Url
+            .Should().Be("https://billing");
     }
 
     [Fact]
-    public void ARootContractCanHostNestedContracts()
-    {
-        using var configuration = Config("""
-            {"Name":"app","Mail":{"Host":"server"}}
-            """);
-        var services = new ServiceCollection();
-        services.AddConfixOptions<RootOptions>(configuration);
-        services.AddConfixOptions<MailOptions>(configuration);
-        using var provider = services.BuildServiceProvider();
-
-        ContractValidation.Validate(provider, configuration).Should().BeEmpty();
-    }
-
-    [Fact]
-    public void ValidationReportsConflictsForContractsRegisteredWithoutTheGuard()
+    public void ValidationReportsNestingForContractsRegisteredWithoutTheGuard()
     {
         // The runner receives contracts through the generated catalog; a hand-built collection
         // can bypass AddConfixOptions, so Validate re-checks the invariant.
@@ -174,34 +151,34 @@ public sealed class NestedContractTests
         var services = new ServiceCollection();
         services.AddSingleton<IConfixContract>(new FakeContract("Portal", typeof(ParentOptions)));
         services.AddSingleton<IConfixContract>(
-            new FakeContract("Portal:ProjectName", typeof(MailOptions)));
+            new FakeContract("Portal:ProjectName", typeof(BillingOptions)));
         using var provider = services.BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should()
-            .Contain(e => e.Contains("'ProjectName' is bound by ParentOptions"));
+            .Contain(e => e.Contains("cannot be nested inside 'Portal' of ParentOptions"));
     }
 
     [Fact]
-    public void SchemasGraftNestedContractsIntoTheParent()
+    public void SchemasMountSiblingsUnderANamespaceNode()
     {
         using var configuration = Config("{}");
         using var provider = PortalServices(configuration).BuildServiceProvider();
 
         var schema = SchemaExport.Export(provider.GetServices<IConfixContract>(), strict: true);
 
-        var parent = schema["properties"]!["Portal"]!;
+        var portal = schema["properties"]!["Portal"]!;
 
-        parent["properties"]!["ProjectName"].Should().NotBeNull();
-        parent["properties"]!["Billing"]!["properties"]!["Url"].Should().NotBeNull();
-        parent["properties"]!["Search"].Should().NotBeNull();
+        portal["properties"]!["Core"]!["properties"]!["ProjectName"].Should().NotBeNull();
+        portal["properties"]!["Billing"]!["properties"]!["Url"].Should().NotBeNull();
+        portal["properties"]!["Search"].Should().NotBeNull();
 
-        var required = parent["required"]!.AsArray().Select(n => n!.GetValue<string>()).ToArray();
+        var required = portal["required"]!.AsArray().Select(n => n!.GetValue<string>()).ToArray();
 
         required.Should().Contain("Billing").And.NotContain("Search");
     }
 
     [Fact]
-    public void SchemaGraftingIsIndependentOfRegistrationOrder()
+    public void SchemaMountingIsIndependentOfRegistrationOrder()
     {
         using var configuration = Config("{}");
         var services = new ServiceCollection();
@@ -211,23 +188,10 @@ public sealed class NestedContractTests
 
         var schema = SchemaExport.Export(provider.GetServices<IConfixContract>(), strict: true);
 
-        schema["properties"]!["Portal"]!["properties"]!["Billing"].Should().NotBeNull();
-    }
+        var portal = schema["properties"]!["Portal"]!;
 
-    [Fact]
-    public void RootContractSchemasReceiveGraftsToo()
-    {
-        using var configuration = Config("{}");
-        var services = new ServiceCollection();
-        services.AddConfixOptions<RootOptions>(configuration);
-        services.AddConfixOptions<MailOptions>(configuration);
-        using var provider = services.BuildServiceProvider();
-
-        var schema = SchemaExport.Export(provider.GetServices<IConfixContract>(), strict: true);
-
-        schema["properties"]!["Name"].Should().NotBeNull();
-        schema["properties"]!["Mail"]!["properties"]!["Host"].Should().NotBeNull();
-        schema["required"]!.AsArray().Select(n => n!.GetValue<string>()).Should().Contain("Mail");
+        portal["properties"]!["Billing"].Should().NotBeNull();
+        portal["properties"]!["Core"].Should().NotBeNull();
     }
 
     private static ServiceCollection PortalServices(IConfiguration configuration)
@@ -247,7 +211,7 @@ public sealed class NestedContractTests
             .Build();
     }
 
-    [ConfixSection("Portal")]
+    [ConfixSection("Portal:Core")]
     public sealed class ParentOptions
     {
         [Required]
@@ -274,20 +238,6 @@ public sealed class NestedContractTests
     {
         [Required]
         public string Sender { get; set; } = "";
-    }
-
-    [ConfixSection("")]
-    public sealed class RootOptions
-    {
-        [Required]
-        public string Name { get; set; } = "";
-    }
-
-    [ConfixSection("Mail")]
-    public sealed class MailOptions
-    {
-        [Required]
-        public string Host { get; set; } = "";
     }
 
     private sealed record FakeContract(string Section, Type OptionsType) : IConfixContract

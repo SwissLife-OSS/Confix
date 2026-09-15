@@ -79,53 +79,32 @@ public static class ContractValidation
                         ? (first, second)
                         : (null, null);
 
-                if (parent is not null &&
-                    NestingConflict(parent.Section, parent.OptionsType, child!.Section, child.OptionsType) is { } conflict)
+                if (parent is not null)
                 {
-                    errors.Add(conflict);
+                    errors.Add(NestingError(
+                        parent.Section, parent.OptionsType, child!.Section, child.OptionsType));
                 }
             }
         }
     }
 
     /// <summary>
-    /// A contract may live inside another contract's section only when the parent type cannot
-    /// bind the delegated key, so the same data can never have two owners.
+    /// A section is either bound to an options type or a namespace for other sections. Allowing
+    /// both would give the same keys two owners, which the configuration binder cannot express.
     /// </summary>
-    internal static string? NestingConflict(
+    internal static string NestingError(
         string parentSection,
         Type parentType,
         string childSection,
         Type childType)
     {
-        var relative = parentSection.Length == 0
-            ? childSection
-            : childSection[(parentSection.Length + 1)..];
-        var key = relative.Split(':')[0];
+        var parent = parentType == typeof(ConfixSectionClaim)
+            ? $"claimed section '{Display(parentSection)}'"
+            : $"'{Display(parentSection)}' of {parentType.Name}";
 
-        if (parentType == typeof(ConfixSectionClaim))
-        {
-            return $"Section '{Display(childSection)}' of {childType.Name} cannot be nested " +
-                $"inside claimed section '{Display(parentSection)}'.";
-        }
-
-        return ConsumesKey(parentType, key)
-            ? $"Section '{Display(childSection)}' of {childType.Name} conflicts with " +
-                $"'{Display(parentSection)}' of {parentType.Name}: '{key}' is bound by {parentType.Name}."
-            : null;
-    }
-
-    internal static bool ConsumesKey(Type type, string key)
-    {
-        type = Nullable.GetUnderlyingType(type) ?? type;
-
-        // Scalars, dictionaries and collections bind every child key, as does an opaque claim.
-        if (type == typeof(ConfixSectionClaim) || Scalar(type) || ItemType(type) is not null)
-        {
-            return true;
-        }
-
-        return Properties(type).Any(p => Key(p).Equals(key, StringComparison.OrdinalIgnoreCase));
+        return $"Section '{Display(childSection)}' of {childType.Name} cannot be nested inside " +
+            $"{parent}. A section is either bound to an options type or a namespace for other " +
+            "sections, not both.";
     }
 
     internal static string Display(string section)
@@ -201,16 +180,6 @@ public static class ContractValidation
         string path,
         List<string> errors)
     {
-        CheckKeys(section, type, path, errors, []);
-    }
-
-    internal static void CheckKeys(
-        IConfiguration section,
-        Type type,
-        string path,
-        List<string> errors,
-        IReadOnlyCollection<string> delegated)
-    {
         type = Nullable.GetUnderlyingType(type) ?? type;
 
         if (Scalar(type))
@@ -260,75 +229,18 @@ public static class ContractValidation
 
         foreach (var child in section.GetChildren())
         {
-            if (IsDelegated(child.Key, delegated))
-            {
-                continue;
-            }
-
             var property = properties
                 .FirstOrDefault(p => Key(p).Equals(child.Key, StringComparison.OrdinalIgnoreCase));
 
             if (property is not null)
             {
-                // Registration guarantees delegation never passes through a bound key.
                 CheckKeys(child, property.PropertyType, path + ":" + child.Key, errors);
             }
-            else if (Nested(child.Key, delegated) is { Count: > 0 } nested)
-            {
-                CheckDelegatedContainer(child, nested, path + ":" + child.Key, errors);
-            }
             else
             {
                 errors.Add($"{path}:{child.Key}: unknown configuration key.");
             }
         }
-    }
-
-    /// <summary>Walks an unbound structural key that only exists to host nested contracts.</summary>
-    private static void CheckDelegatedContainer(
-        IConfigurationSection section,
-        IReadOnlyCollection<string> delegated,
-        string path,
-        List<string> errors)
-    {
-        if (section.Value is { Length: > 0 })
-        {
-            errors.Add($"{path}: expected a configuration section container.");
-
-            return;
-        }
-
-        foreach (var child in section.GetChildren())
-        {
-            if (IsDelegated(child.Key, delegated))
-            {
-                continue;
-            }
-
-            if (Nested(child.Key, delegated) is { Count: > 0 } nested)
-            {
-                CheckDelegatedContainer(child, nested, path + ":" + child.Key, errors);
-            }
-            else
-            {
-                errors.Add($"{path}:{child.Key}: unknown configuration key.");
-            }
-        }
-    }
-
-    private static bool IsDelegated(string key, IReadOnlyCollection<string> delegated)
-    {
-        return delegated.Any(d => d.Equals(key, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static IReadOnlyCollection<string> Nested(
-        string key,
-        IReadOnlyCollection<string> delegated)
-    {
-        return delegated
-            .Where(d => d.StartsWith(key + ":", StringComparison.OrdinalIgnoreCase))
-            .Select(d => d[(key.Length + 1)..])
-            .ToArray();
     }
 
     internal static void ValidateObject(
@@ -356,47 +268,58 @@ public static class ContractValidation
 
         try
         {
-            if (value is IDictionary dictionary)
-            {
-                foreach (DictionaryEntry entry in dictionary)
-                {
-                    Walk(entry.Value, path + ":" + entry.Key, services, errors, ancestors);
-                }
-
-                return;
-            }
-
-            if (value is IEnumerable enumerable)
-            {
-                var index = 0;
-
-                foreach (var item in enumerable)
-                {
-                    Walk(item, path + ":" + index++, services, errors, ancestors);
-                }
-
-                return;
-            }
-
             var properties = Properties(value.GetType());
 
             CheckDeclaredRules(value, path, services, properties, errors);
 
+            // Recursion is opt-in through the same attributes Microsoft.Extensions.Options uses,
+            // so confix reports exactly what the application reports at startup.
             foreach (var property in properties)
             {
                 var child = property.GetValue(value);
+                var childPath = path + ":" + Key(property);
 
-                if (property.IsDefined(typeof(ConfixRequiredItemsAttribute)))
+                if (property.IsDefined(typeof(ValidateObjectMembersAttribute)))
                 {
-                    CheckRequiredItems(child, path + ":" + Key(property), errors);
+                    Walk(child, childPath, services, errors, ancestors);
                 }
-
-                Walk(child, path + ":" + Key(property), services, errors, ancestors);
+                else if (property.IsDefined(typeof(ValidateEnumeratedItemsAttribute)))
+                {
+                    WalkItems(child, childPath, services, errors, ancestors);
+                }
             }
         }
         finally
         {
             ancestors.Remove(value);
+        }
+    }
+
+    private static void WalkItems(
+        object? value,
+        string path,
+        IServiceProvider services,
+        List<string> errors,
+        HashSet<object> ancestors)
+    {
+        if (value is IDictionary dictionary)
+        {
+            foreach (DictionaryEntry entry in dictionary)
+            {
+                Walk(entry.Value, path + ":" + entry.Key, services, errors, ancestors);
+            }
+
+            return;
+        }
+
+        if (value is IEnumerable enumerable)
+        {
+            var index = 0;
+
+            foreach (var item in enumerable)
+            {
+                Walk(item, path + ":" + index++, services, errors, ancestors);
+            }
         }
     }
 
@@ -433,26 +356,6 @@ public static class ContractValidation
                 var suffix = member.Length == 0 ? string.Empty : ":" + member;
                 errors.Add($"{path}{suffix}: declared validation rule failed.");
             }
-        }
-    }
-
-    private static void CheckRequiredItems(object? value, string path, List<string> errors)
-    {
-        if (value is not IEnumerable items)
-        {
-            return;
-        }
-
-        var index = 0;
-
-        foreach (var item in value is IDictionary dictionary ? dictionary.Values : items)
-        {
-            if (item is null)
-            {
-                errors.Add($"{path}:{index}: null items are not allowed.");
-            }
-
-            index++;
         }
     }
 
@@ -500,16 +403,4 @@ public static class ContractValidation
             : section.StartsWith(parent + ":", StringComparison.OrdinalIgnoreCase);
     }
 
-    /// <summary>Relative paths of contracts mounted inside the given contract's section.</summary>
-    internal static IReadOnlyCollection<string> DelegatedPaths(
-        IEnumerable<IConfixContract> contracts,
-        IConfixContract parent)
-    {
-        return contracts
-            .Where(c => !ReferenceEquals(c, parent) && IsNestedIn(c.Section, parent.Section))
-            .Select(c => parent.Section.Length == 0
-                ? c.Section
-                : c.Section[(parent.Section.Length + 1)..])
-            .ToArray();
-    }
 }

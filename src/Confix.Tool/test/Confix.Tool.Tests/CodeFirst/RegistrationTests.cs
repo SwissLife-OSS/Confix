@@ -79,7 +79,7 @@ public sealed class RegistrationTests
     }
 
     [Fact]
-    public void NestingThroughABoundKeyIsRejectedNamingTheKey()
+    public void NestingInsideAnotherContractIsRejected()
     {
         using var configuration = Config("{}");
         var services = new ServiceCollection();
@@ -88,11 +88,11 @@ public sealed class RegistrationTests
         Action nested = () => services.AddConfixOptions<Other>(configuration, "Mail:Host");
 
         nested.Should().Throw<InvalidOperationException>()
-            .Which.Message.Should().Contain("'Host' is bound by Mail");
+            .Which.Message.Should().Contain("cannot be nested inside 'Mail' of Mail");
     }
 
     [Fact]
-    public void ABindingParentRegisteredAfterItsChildIsAlsoRejected()
+    public void AParentRegisteredAfterItsChildIsAlsoRejected()
     {
         using var configuration = Config("{}");
         var services = new ServiceCollection();
@@ -101,11 +101,11 @@ public sealed class RegistrationTests
         Action parent = () => services.AddConfixOptions<Mail>(configuration);
 
         parent.Should().Throw<InvalidOperationException>()
-            .Which.Message.Should().Contain("'Host' is bound by Mail");
+            .Which.Message.Should().Contain("cannot be nested inside 'Mail' of Mail");
     }
 
     [Fact]
-    public void NestingUnderAnUnboundKeyIsAllowedInEitherOrder()
+    public void NestingIsRejectedEvenWhenTheParentCannotBindTheKey()
     {
         using var configuration = Config("{}");
 
@@ -113,13 +113,15 @@ public sealed class RegistrationTests
         parentFirst.AddConfixOptions<Mail>(configuration);
         Action nested = () => parentFirst.AddConfixOptions<Other>(configuration, "Mail:Other");
 
-        nested.Should().NotThrow();
+        nested.Should().Throw<InvalidOperationException>()
+            .Which.Message.Should().Contain("not both");
 
         var childFirst = new ServiceCollection();
         childFirst.AddConfixOptions<Other>(configuration, "Mail:Other");
         Action parent = () => childFirst.AddConfixOptions<Mail>(configuration);
 
-        parent.Should().NotThrow();
+        parent.Should().Throw<InvalidOperationException>()
+            .Which.Message.Should().Contain("not both");
     }
 
     [Fact]
@@ -132,11 +134,11 @@ public sealed class RegistrationTests
         Action nested = () => services.AddConfixOptions<Other>(configuration, "Lookup:Sub");
 
         nested.Should().Throw<InvalidOperationException>()
-            .Which.Message.Should().Contain("'Sub' is bound by Lookup");
+            .Which.Message.Should().Contain("cannot be nested inside 'Lookup' of Lookup");
     }
 
     [Fact]
-    public void ARootContractMayHostNestedContractsUnderUnboundKeys()
+    public void ARootContractLeavesNoRoomForOtherContracts()
     {
         using var configuration = Config("{}");
         var services = new ServiceCollection();
@@ -144,12 +146,8 @@ public sealed class RegistrationTests
 
         Action nested = () => services.AddConfixOptions<Mail>(configuration);
 
-        nested.Should().NotThrow();
-
-        Action bound = () => services.AddConfixOptions<Mail>(configuration, "Value", "bound");
-
-        bound.Should().Throw<InvalidOperationException>()
-            .Which.Message.Should().Contain("'Value' is bound by Other");
+        nested.Should().Throw<InvalidOperationException>()
+            .Which.Message.Should().Contain("cannot be nested inside '(root)' of Other");
     }
 
     [Fact]

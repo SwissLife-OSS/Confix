@@ -156,17 +156,18 @@ public sealed class ExternalSectionTests
     }
 
     [Fact]
-    public void ClaimsCanBeNestedUnderAContractThatDoesNotBindTheKey()
+    public void ClaimsCannotBeNestedInsideAContract()
     {
         using var configuration = Config("""
             {"Portal":{"Host":"server","Telemetry":{"Anything":true}}}
             """);
         var services = new ServiceCollection();
         services.AddConfixOptions<Annotated>(configuration, "Portal");
-        services.AddConfixSection(configuration, "Portal:Telemetry");
-        using var provider = services.BuildServiceProvider();
 
-        ContractValidation.Validate(provider, configuration).Should().BeEmpty();
+        Action claim = () => services.AddConfixSection(configuration, "Portal:Telemetry");
+
+        claim.Should().Throw<InvalidOperationException>()
+            .Which.Message.Should().Contain("cannot be nested inside 'Portal' of Annotated");
     }
 
     [Fact]
