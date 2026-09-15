@@ -57,21 +57,6 @@ public sealed class GeneratorTests
     }
 
     [Fact]
-    public void ModuleActivationWithoutAnAssemblyDeclarationIsRejected()
-    {
-        var result = Run("""
-            services.AddConfixModule<Setup>(configuration);
-            public sealed class Setup : IConfixModule
-            {
-                public void Configure(IServiceCollection services, IConfiguration configuration) { }
-            }
-            """);
-
-        result.Diagnostics.Should()
-            .ContainSingle().Which.GetMessage().Should().Contain("assembly declaration");
-    }
-
-    [Fact]
     public void DeclaringModulesForbidsRegistrationOutsideThem()
     {
         var result = Run("""
@@ -109,6 +94,60 @@ public sealed class GeneratorTests
 
         catalog.IndexOf("\"First\"", StringComparison.Ordinal).Should()
             .BeLessThan(catalog.IndexOf("\"Second\"", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void TopLevelModuleActivationNeedsNoAssemblyDeclaration()
+    {
+        var result = Run("""
+            services.AddConfixModule<Setup>(configuration);
+            public sealed class Setup : IConfixModule
+            {
+                public void Configure(IServiceCollection services, IConfiguration configuration)
+                    => services.AddConfixOptions<Mail>(configuration);
+            }
+            """);
+
+        result.Diagnostics.Should().BeEmpty();
+        Catalog(result.Output).Should()
+            .Contain("AddConfixModule<global::Setup>(services, configuration);");
+        result.Output.GetDiagnostics().Should()
+            .NotContain(d => d.Severity == DiagnosticSeverity.Error);
+    }
+
+    [Fact]
+    public void ModuleActivationOutsideTopLevelStillNeedsAnAssemblyDeclaration()
+    {
+        var result = Run("""
+            if (true) services.AddConfixModule<Setup>(configuration);
+            public sealed class Setup : IConfixModule
+            {
+                public void Configure(IServiceCollection services, IConfiguration configuration) { }
+            }
+            """);
+
+        result.Diagnostics.Should()
+            .ContainSingle().Which.GetMessage().Should().Contain("assembly declaration");
+    }
+
+    [Fact]
+    public void ADeclaredModuleIsNotActivatedTwice()
+    {
+        var result = Run("""
+            services.AddConfixModule<Setup>(configuration);
+            public sealed class Setup : IConfixModule
+            {
+                public void Configure(IServiceCollection services, IConfiguration configuration)
+                    => services.AddConfixOptions<Mail>(configuration);
+            }
+            """, "[assembly: ConfixModule(typeof(Setup))]");
+
+        result.Diagnostics.Should().BeEmpty();
+
+        var catalog = Catalog(result.Output);
+
+        catalog.Should().Contain("new global::Setup().Configure(services, configuration);");
+        catalog.Should().NotContain("AddConfixModule<");
     }
 
     [Fact]

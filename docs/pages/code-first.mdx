@@ -106,11 +106,10 @@ explicitly, as the example does. Continue using
 read `.confixrc`: startup validation remains enabled even when CLI code-first mode is disabled.
 
 The generator automatically handles standalone, unconditional top-level `AddConfixOptions` and
-`AddConfixSection` calls, with constant arguments. Other patterns require a shared module:
+`AddConfixSection` calls, with constant arguments, and top-level `AddConfixModule<T>` activation.
+Other patterns require an assembly declaration:
 
 ```csharp
-[assembly: ConfixModule(typeof(ConfigurationSetup))]
-
 builder.Services.AddConfixModule<ConfigurationSetup>(builder.Configuration);
 
 public sealed class ConfigurationSetup : IConfixModule
@@ -124,7 +123,15 @@ public sealed class ConfigurationSetup : IConfixModule
 }
 ```
 
-Put all option configuration in shared modules when using module declarations. The CLI
+A module's own setup is never diagnosed, because it runs whenever the module runs. When the
+activation itself cannot be seen — inside a method, behind a condition, or in a referenced
+library — name the module at assembly level instead:
+
+```csharp
+[assembly: ConfixModule(typeof(ConfigurationSetup))]
+```
+
+Declaring modules this way makes them the only supported place for option setup: the CLI
 executes the declared modules with a minimal service collection, without running application
 Main or starting hosted services. Chained callbacks, conditional activation, and package
 registration extensions belong in these modules. `CONFIX001` diagnoses unsupported direct

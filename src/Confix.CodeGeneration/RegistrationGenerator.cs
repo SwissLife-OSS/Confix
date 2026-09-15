@@ -99,7 +99,10 @@ public sealed class RegistrationGenerator : IIncrementalGenerator
         var location = LocationInfo.From(call.GetLocation());
         if (symbol.Name == "AddConfixModule")
         {
-            return new Registration(RegistrationKind.ModuleActivation, null, null, false, location);
+            var (activation, activationReason) = TryReplayModule(call, symbol);
+
+            return new Registration(
+                RegistrationKind.ModuleActivation, activation, activationReason, false, location);
         }
         if (symbol.Name == "AddConfixSection")
         {
@@ -127,6 +130,29 @@ public sealed class RegistrationGenerator : IIncrementalGenerator
 
         return ownerType is not null &&
             ownerType.AllInterfaces.Any(i => i.ToDisplayString() == ModuleInterface);
+    }
+
+    /// <summary>
+    /// A top-level activation names its module directly, so no assembly declaration is needed.
+    /// </summary>
+    private static (string? Statement, string? Reason) TryReplayModule(
+        InvocationExpressionSyntax call, IMethodSymbol symbol)
+    {
+        if (call.Parent is not ExpressionStatementSyntax statement ||
+            statement.Parent is not GlobalStatementSyntax)
+        {
+            return (null, "module activation needs an assembly declaration");
+        }
+
+        if (symbol.TypeArguments.Length != 1)
+        {
+            return (null, "the module type must be explicit");
+        }
+
+        var module = symbol.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+        return ($"global::Confix.ConfixOptionsExtensions.AddConfixModule<{module}>("
+            + "services, configuration);", null);
     }
 
     private static (string? Statement, string? Reason) TryReplayClaim(
@@ -225,11 +251,13 @@ public sealed class RegistrationGenerator : IIncrementalGenerator
         {
             foreach (var registration in ordered)
             {
-                if (registration.Kind == RegistrationKind.ModuleActivation)
+                // Setup inside a module runs when that module runs, wherever it is activated.
+                if (registration.InsideModule)
                 {
-                    Report(context, registration.Location, "module activation needs an assembly declaration");
+                    continue;
                 }
-                else if (registration.Statement is { } replayed)
+
+                if (registration.Statement is { } replayed)
                 {
                     statements.Add(replayed);
                 }
