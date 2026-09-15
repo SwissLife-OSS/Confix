@@ -80,6 +80,29 @@ public sealed class ValidationRunnerTests
         document["version"]!.GetValue<int>().Should().Be(1);
     }
 
+    [Theory]
+    [InlineData("2.1.0.0", "2.1.0.0", true)]
+    [InlineData("2.0.0.0", "2.1.0.0", true)]
+    [InlineData("2.1.0.0", "2.2.0.0", true)]
+    [InlineData("2.2.0.0", "2.1.0.0", false)]
+    [InlineData("1.9.0.0", "2.0.0.0", false)]
+    [InlineData("3.0.0.0", "2.9.0.0", false)]
+    public void OlderMinorsOfTheSameMajorAreCompatibleWithTheCli(
+        string application,
+        string cli,
+        bool compatible)
+    {
+        ValidationRunner.IsCompatible(Version.Parse(application), Version.Parse(cli))
+            .Should().Be(compatible);
+    }
+
+    [Fact]
+    public void UnknownVersionsAreNeverCompatible()
+    {
+        ValidationRunner.IsCompatible(null, new Version(2, 1)).Should().BeFalse();
+        ValidationRunner.IsCompatible(new Version(2, 1), null).Should().BeFalse();
+    }
+
     private static string Self => typeof(ValidationRunnerTests).Assembly.Location;
 
     private static JsonObject RequestNode()

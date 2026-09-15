@@ -8,8 +8,19 @@
 
     <ItemGroup>
         <ProjectReference Include="../Confix.Abstractions/Confix.Abstractions.csproj" />
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+        <!-- Build-only: the generator ships inside this package as an analyzer. -->
+        <ProjectReference Include="../Confix.CodeGeneration/Confix.CodeGeneration.csproj"
+                          PrivateAssets="all" ReferenceOutputAssembly="false" />
+        <!-- Keep the dependency floor low so applications are not forced to upgrade. -->
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" VersionOverride="10.0.0" />
     </ItemGroup>
+
+    <Target Name="PackRegistrationGenerator" BeforeTargets="_GetPackageFiles">
+        <ItemGroup>
+            <None Include="$(MSBuildThisFileDirectory)../Confix.CodeGeneration/bin/$(Configuration)/netstandard2.0/Confix.CodeGeneration.dll"
+                  Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+        </ItemGroup>
+    </Target>
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="/" />

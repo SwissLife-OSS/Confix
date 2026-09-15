@@ -43,12 +43,41 @@ runner is process isolation, not a security sandbox.
 
 The validation runner ships with the CLI; it is not copied into every application or options library.
 The host receives a generated activation catalog. The runner verifies that the application's
-`Confix.Options` and `Confix.Abstractions` versions match the CLI's and fails with an explicit
-version-mismatch error otherwise. Projects without central package
+`Confix.Options` and `Confix.Abstractions` versions are compatible with the CLI: an older minor
+of the same major version is accepted, a newer package than the CLI is rejected with an explicit
+error. Projects without central package
 management must specify versions. A library that only declares options can reference
 `Confix.Abstractions` instead. Neither runtime package includes CLI, cloud-provider, compiler,
 Hot Chocolate, or JSON Schema validation dependencies. Only the host needs the registration
 catalog generator; types from referenced libraries are available through normal references.
+
+Libraries can ship first-class contracts: annotate option types with `ConfixSection`
+(`Confix.Abstractions` is dependency-free) and expose either a lean registration method or an
+`IConfixModule` of their own. Hosts include it from their module — modules compose through
+`AddConfixModule`. Library registration methods intended for validation must only register
+option contracts; hosted services and other side effects belong in separate methods.
+
+## Sections owned elsewhere
+
+Not every section can be annotated. Two primitives cover the rest, so strict coverage stays
+reachable without forking anyone's option types:
+
+```csharp
+// A public type from another package: you choose the mount point, it keeps its own shape.
+services.AddConfixOptions<MongoOptions>(configuration, "MongoDb");
+
+// A section whose contents belong to a framework: owned for coverage, contents not inspected.
+services.AddConfixSection(configuration, "Logging", required: false);
+```
+
+`AddConfixOptions` only needs `ConfixSection` when no section is supplied; an explicit section
+also overrides the attribute, and `required` overrides the attribute's requiredness. Mounted
+types are validated exactly like annotated ones, including unknown keys and their own
+DataAnnotations.
+
+`AddConfixSection` claims a subtree without looking inside it. A claimed section counts towards
+coverage, is checked for presence when required, and exports as a permissive object in the IDE
+schema. Because its contents are not described, nothing may be nested inside a claim.
 
 ## Declare and register options
 

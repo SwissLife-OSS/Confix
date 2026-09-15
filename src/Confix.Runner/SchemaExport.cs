@@ -46,7 +46,10 @@ internal static class SchemaExport
 
         foreach (var contract in remaining)
         {
-            var schema = options.GetJsonSchemaAsNode(contract.OptionsType, CreateExporterOptions());
+            // A claimed section is owned for coverage only, so the editor must not restrict it.
+            var schema = contract.OptionsType == typeof(ConfixSectionClaim)
+                ? new JsonObject { ["type"] = "object" }
+                : options.GetJsonSchemaAsNode(contract.OptionsType, CreateExporterOptions());
 
             Mount(root, schema, contract, strict);
         }

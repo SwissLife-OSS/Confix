@@ -103,6 +103,12 @@ public static class ContractValidation
             : childSection[(parentSection.Length + 1)..];
         var key = relative.Split(':')[0];
 
+        if (parentType == typeof(ConfixSectionClaim))
+        {
+            return $"Section '{Display(childSection)}' of {childType.Name} cannot be nested " +
+                $"inside claimed section '{Display(parentSection)}'.";
+        }
+
         return ConsumesKey(parentType, key)
             ? $"Section '{Display(childSection)}' of {childType.Name} conflicts with " +
                 $"'{Display(parentSection)}' of {parentType.Name}: '{key}' is bound by {parentType.Name}."
@@ -113,8 +119,8 @@ public static class ContractValidation
     {
         type = Nullable.GetUnderlyingType(type) ?? type;
 
-        // Scalars, dictionaries and collections bind every child key.
-        if (Scalar(type) || ItemType(type) is not null)
+        // Scalars, dictionaries and collections bind every child key, as does an opaque claim.
+        if (type == typeof(ConfixSectionClaim) || Scalar(type) || ItemType(type) is not null)
         {
             return true;
         }

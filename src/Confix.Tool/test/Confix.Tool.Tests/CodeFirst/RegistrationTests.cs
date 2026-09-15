@@ -19,7 +19,8 @@ public sealed class RegistrationTests
 
         Action register = () => services.AddConfixOptions<Undeclared>(configuration);
 
-        register.Should().Throw<InvalidOperationException>().WithMessage("*requires ConfixSection*");
+        register.Should().Throw<InvalidOperationException>()
+            .WithMessage("*no ConfixSection attribute*section must be supplied*");
     }
 
     [Theory]

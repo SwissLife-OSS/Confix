@@ -112,6 +112,33 @@ public sealed class GeneratorTests
     }
 
     [Fact]
+    public void ClaimedSectionsAreReplayedIntoTheCatalog()
+    {
+        var result = Run("""
+            services.AddConfixSection(configuration, "Logging", required: false);
+            services.AddConfixSection(configuration, "Security");
+            """);
+
+        result.Diagnostics.Should().BeEmpty();
+
+        var catalog = Catalog(result.Output);
+
+        catalog.Should().Contain("AddConfixSection(services, configuration, section: \"Logging\", required: false)");
+        catalog.Should().Contain("AddConfixSection(services, configuration, section: \"Security\")");
+        result.Output.GetDiagnostics().Should()
+            .NotContain(d => d.Severity == DiagnosticSeverity.Error);
+    }
+
+    [Fact]
+    public void ClaimedSectionsOutsideTopLevelNeedAModule()
+    {
+        var result = Run("if (true) services.AddConfixSection(configuration, \"Logging\");");
+
+        result.Diagnostics.Should()
+            .ContainSingle().Which.Id.Should().Be("CONFIX001");
+    }
+
+    [Fact]
     public void StandaloneRegistrationProducesCompilableCatalog()
     {
         var result = Run("services.AddConfixOptions<Mail>(configuration, name: \"primary\");");
@@ -171,7 +198,7 @@ public sealed class GeneratorTests
     [Fact]
     public void RerunningWithoutChangesReusesCachedResults()
     {
-        var compilation = Compile("services.AddConfixOptions<Mail>(configuration);", "");
+        var compilation = Compile("services.AddConfixOptions<Mail>(configuration);", "", OutputKind.ConsoleApplication);
         var options = new GeneratorDriverOptions(
             IncrementalGeneratorOutputKind.None,
             trackIncrementalGeneratorSteps: true);
@@ -191,11 +218,28 @@ public sealed class GeneratorTests
             .And.OnlyContain(output => output.Reason == IncrementalStepRunReason.Cached);
     }
 
+    [Fact]
+    public void LibrariesMayRegisterFromOrdinaryMethodsWithoutACatalog()
+    {
+        var result = Run("""
+            public static class Setup
+            {
+                public static void Add(IServiceCollection services, IConfiguration configuration)
+                    => services.AddConfixOptions<Mail>(configuration);
+            }
+            """, outputKind: OutputKind.DynamicallyLinkedLibrary);
+
+        result.Diagnostics.Should().BeEmpty();
+        result.Output.SyntaxTrees.Should()
+            .NotContain(t => t.FilePath.EndsWith("ConfixContractCatalog.g.cs", StringComparison.Ordinal));
+    }
+
     private static (Compilation Output, ImmutableArray<Diagnostic> Diagnostics) Run(
         string registration,
-        string assemblyAttribute = "")
+        string assemblyAttribute = "",
+        OutputKind outputKind = OutputKind.ConsoleApplication)
     {
-        var compilation = Compile(registration, assemblyAttribute);
+        var compilation = Compile(registration, assemblyAttribute, outputKind);
 
         GeneratorDriver driver = CSharpGeneratorDriver.Create(
             new RegistrationGenerator().AsSourceGenerator());
@@ -205,7 +249,10 @@ public sealed class GeneratorTests
         return (output, diagnostics);
     }
 
-    private static CSharpCompilation Compile(string registration, string assemblyAttribute)
+    private static CSharpCompilation Compile(
+        string registration,
+        string assemblyAttribute,
+        OutputKind outputKind = OutputKind.ConsoleApplication)
     {
         var source = $$"""
             using Confix;
@@ -232,6 +279,6 @@ public sealed class GeneratorTests
             "CatalogTest",
             [CSharpSyntaxTree.ParseText(source)],
             paths.Select(p => MetadataReference.CreateFromFile(p)),
-            new CSharpCompilationOptions(OutputKind.ConsoleApplication));
+            new CSharpCompilationOptions(outputKind));
     }
 }

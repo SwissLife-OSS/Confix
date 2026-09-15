@@ -7,6 +7,8 @@
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <!-- Shipped as an analyzer inside Confix.Options. -->
+        <IsPackable>false</IsPackable>
         <Description>Build-only registration catalog generator for Confix.</Description>
         <!-- Release tracking files are not maintained for this single build-only rule. -->
         <NoWarn>$(NoWarn);RS2008</NoWarn>

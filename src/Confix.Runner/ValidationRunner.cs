@@ -128,8 +128,9 @@ internal static class ValidationRunner
     }
 
     /// <summary>
-    /// The runner already loaded the CLI's copies of the Confix runtime assemblies, so a different
-    /// application version would bind silently and fail later as an unexplained missing member.
+    /// The runner already loaded the CLI's copies of the Confix runtime assemblies, so an
+    /// incompatible application version would bind silently and fail later as an unexplained
+    /// missing member.
     /// </summary>
     private static void EnsureCompatible(AssemblyDependencyResolver resolver)
     {
@@ -148,13 +149,27 @@ internal static class ValidationRunner
 
             var version = AssemblyName.GetAssemblyName(path).Version;
 
-            if (version != name.Version)
+            if (!IsCompatible(version, name.Version))
             {
                 throw new RunnerException(
-                    $"{name.Name} {version} in the application does not match " +
-                    $"{name.Version} in the Confix CLI. Align the CLI and package versions.");
+                    $"{name.Name} {version} in the application is not compatible with " +
+                    $"{name.Version} in the Confix CLI. The application may reference an older " +
+                    "minor of the same major version, never a newer one; update the CLI or " +
+                    "downgrade the package.");
             }
         }
+    }
+
+    /// <summary>
+    /// The CLI's copy is loaded and is backward compatible within its major version, so
+    /// contracts compiled against an older minor are safe; newer APIs would be missing.
+    /// </summary>
+    internal static bool IsCompatible(Version? application, Version? cli)
+    {
+        return application is not null &&
+            cli is not null &&
+            application.Major == cli.Major &&
+            application <= cli;
     }
 
     /// <summary>

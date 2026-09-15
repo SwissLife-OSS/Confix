@@ -12,24 +12,27 @@ public static class ConfixOptionsExtensions
         this IServiceCollection services,
         IConfiguration configuration,
         string? section = null,
-        string? name = null)
+        string? name = null,
+        bool? required = null)
         where T : class
     {
-        var attribute = typeof(T).GetCustomAttribute<ConfixSectionAttribute>()
-            ?? throw new InvalidOperationException($"{typeof(T).Name} requires ConfixSection.");
+        var attribute = typeof(T).GetCustomAttribute<ConfixSectionAttribute>();
 
-        section ??= attribute.Path;
-        name ??= Options.DefaultName;
-
-        if (section.Length > 0 && section.Split(':').Any(string.IsNullOrWhiteSpace))
+        // Types owned by another package cannot be annotated, so the caller mounts them instead.
+        if (attribute is null && section is null)
         {
             throw new InvalidOperationException(
-                "A Confix section must contain nonempty path segments.");
+                $"{typeof(T).Name} has no ConfixSection attribute, so a section must be supplied.");
         }
 
-        EnsureUniqueRegistration<T>(services, section, name);
+        section ??= attribute!.Path;
+        name ??= Options.DefaultName;
+        required ??= attribute?.Required ?? true;
 
-        var contract = new Contract<T>(section, name, attribute.Required, configuration);
+        EnsureValidSection(section);
+        EnsureSectionAvailable(services, section, typeof(T), name);
+
+        var contract = new Contract<T>(section, name, required.Value, configuration);
 
         services.AddSingleton<IConfixContract>(contract);
         services.AddSingleton<IValidateOptions<T>>(
@@ -41,7 +44,7 @@ public static class ConfixOptionsExtensions
         services.AddSingleton<IOptionsChangeTokenSource<T>>(
             new ConfigurationChangeTokenSource<T>(name, configuration));
 
-        if (attribute.Required || HasSection(configuration, section))
+        if (required.Value || HasSection(configuration, section))
         {
             builder.ValidateOnStart();
         }
@@ -49,6 +52,36 @@ public static class ConfixOptionsExtensions
         AddCoverageValidation(services, configuration);
 
         return builder;
+    }
+
+    /// <summary>
+    /// Claims a section that another component owns: it counts towards coverage and is checked
+    /// for presence, but its contents are validated by whoever defines them.
+    /// </summary>
+    public static IServiceCollection AddConfixSection(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string section,
+        bool required = true)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(section);
+
+        EnsureValidSection(section);
+        EnsureSectionAvailable(services, section, typeof(ConfixSectionClaim), name: null);
+
+        services.AddSingleton<IConfixContract>(new Claim(section, required, configuration));
+        AddCoverageValidation(services, configuration);
+
+        return services;
+    }
+
+    private static void EnsureValidSection(string section)
+    {
+        if (section.Length > 0 && section.Split(':').Any(string.IsNullOrWhiteSpace))
+        {
+            throw new InvalidOperationException(
+                "A Confix section must contain nonempty path segments.");
+        }
     }
 
     public static IServiceCollection AddConfixModule<T>(
@@ -95,10 +128,11 @@ public static class ConfixOptionsExtensions
         services.AddOptions<CoverageOptions>().ValidateOnStart();
     }
 
-    private static void EnsureUniqueRegistration<T>(
+    private static void EnsureSectionAvailable(
         IServiceCollection services,
         string section,
-        string name)
+        Type optionsType,
+        string? name)
     {
         var contracts = services
             .Where(descriptor => descriptor.ServiceType == typeof(IConfixContract))
@@ -107,10 +141,10 @@ public static class ConfixOptionsExtensions
 
         foreach (var contract in contracts)
         {
-            if (contract.OptionsType == typeof(T) && contract.Name == name)
+            if (name is not null && contract.OptionsType == optionsType && contract.Name == name)
             {
                 throw new InvalidOperationException(
-                    $"{typeof(T).Name} is already registered under the name '{name}'.");
+                    $"{optionsType.Name} is already registered under the name '{name}'.");
             }
 
             if (contract.Section.Equals(section, StringComparison.OrdinalIgnoreCase))
@@ -123,10 +157,10 @@ public static class ConfixOptionsExtensions
             // Nesting is legal in either registration order when the parent cannot bind the key.
             var conflict = IsNestedIn(section, contract.Section)
                 ? ContractValidation.NestingConflict(
-                    contract.Section, contract.OptionsType, section, typeof(T))
+                    contract.Section, contract.OptionsType, section, optionsType)
                 : IsNestedIn(contract.Section, section)
                     ? ContractValidation.NestingConflict(
-                        section, typeof(T), contract.Section, contract.OptionsType)
+                        section, optionsType, contract.Section, contract.OptionsType)
                     : null;
 
             if (conflict is not null)
@@ -174,6 +208,28 @@ public static class ConfixOptionsExtensions
             }
 
             _ = services.GetRequiredService<IOptionsMonitor<T>>().Get(Name);
+        }
+    }
+
+    /// <summary>Owns a section for coverage without inspecting what it contains.</summary>
+    private sealed record Claim(
+        string Section,
+        bool Required,
+        IConfiguration Configuration) : IConfixContract
+    {
+        public Type OptionsType => typeof(ConfixSectionClaim);
+
+        public string Name => Options.DefaultName;
+
+        public void Validate(IServiceProvider services)
+        {
+            if (Required && !HasSection(Configuration, Section))
+            {
+                throw new ConfixValidationException(
+                    Name,
+                    typeof(ConfixSectionClaim),
+                    [$"{Section}: required section is missing."]);
+            }
         }
     }
 

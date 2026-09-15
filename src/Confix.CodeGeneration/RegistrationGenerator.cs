@@ -23,6 +23,12 @@ public sealed class RegistrationGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        // Only the application the validation runner loads needs a catalog; libraries are free
+        // to call AddConfixOptions from ordinary methods.
+        var isApplication = context.CompilationProvider.Select(static (compilation, _) =>
+            compilation.Options.OutputKind is OutputKind.ConsoleApplication
+                or OutputKind.WindowsApplication);
+
         var modules = context.SyntaxProvider
             .ForAttributeWithMetadataName(ModuleAttribute,
                 static (_, _) => true,
@@ -38,8 +44,16 @@ public sealed class RegistrationGenerator : IIncrementalGenerator
             .Select(static (registration, _) => registration!)
             .Collect();
 
-        context.RegisterSourceOutput(modules.Combine(registrations),
-            static (production, source) => Generate(production, source.Left, source.Right));
+        context.RegisterSourceOutput(isApplication.Combine(modules.Combine(registrations)),
+            static (production, source) =>
+            {
+                if (!source.Left)
+                {
+                    return;
+                }
+
+                Generate(production, source.Right.Left, source.Right.Right);
+            });
     }
 
     private static bool IsCandidate(SyntaxNode node)
@@ -51,7 +65,7 @@ public sealed class RegistrationGenerator : IIncrementalGenerator
         };
 
     private static bool IsCandidateName(SimpleNameSyntax name)
-        => name.Identifier.Text is "AddConfixOptions" or "AddConfixModule";
+        => name.Identifier.Text is "AddConfixOptions" or "AddConfixModule" or "AddConfixSection";
 
     private static ImmutableArray<ModuleDeclaration> GetModules(GeneratorAttributeSyntaxContext context)
     {
@@ -87,20 +101,65 @@ public sealed class RegistrationGenerator : IIncrementalGenerator
         {
             return new Registration(RegistrationKind.ModuleActivation, null, null, false, location);
         }
+        if (symbol.Name == "AddConfixSection")
+        {
+            var (claim, claimReason) = TryReplayClaim(context.SemanticModel, call, symbol);
+
+            return new Registration(
+                RegistrationKind.Options, claim, claimReason, InsideModule(context, call), location);
+        }
         if (symbol.Name != "AddConfixOptions")
         {
             return null;
         }
 
+        var (statement, reason) = TryReplay(context.SemanticModel, call, symbol);
+        return new Registration(
+            RegistrationKind.Options, statement, reason, InsideModule(context, call), location);
+    }
+
+    private static bool InsideModule(GeneratorSyntaxContext context, InvocationExpressionSyntax call)
+    {
         var owner = call.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
         var ownerType = owner is null
             ? null
             : context.SemanticModel.GetDeclaredSymbol(owner) as INamedTypeSymbol;
-        var insideModule = ownerType is not null &&
-            ownerType.AllInterfaces.Any(i => i.ToDisplayString() == ModuleInterface);
 
-        var (statement, reason) = TryReplay(context.SemanticModel, call, symbol);
-        return new Registration(RegistrationKind.Options, statement, reason, insideModule, location);
+        return ownerType is not null &&
+            ownerType.AllInterfaces.Any(i => i.ToDisplayString() == ModuleInterface);
+    }
+
+    private static (string? Statement, string? Reason) TryReplayClaim(
+        SemanticModel model, InvocationExpressionSyntax call, IMethodSymbol symbol)
+    {
+        if (call.Parent is not ExpressionStatementSyntax statement ||
+            statement.Parent is not GlobalStatementSyntax)
+        {
+            return (null, "only standalone top-level calls are automatic");
+        }
+
+        var arguments = new List<string>();
+        var offset = symbol.IsExtensionMethod && symbol.ReducedFrom is null ? 1 : 0;
+
+        for (var i = offset + 1; i < call.ArgumentList.Arguments.Count; i++)
+        {
+            var argument = call.ArgumentList.Arguments[i];
+            var name = argument.NameColon?.Name.Identifier.Text
+                ?? (i - offset == 1 ? "section" : "required");
+            var constant = model.GetConstantValue(argument.Expression);
+
+            if (!constant.HasValue || !(constant.Value is string || constant.Value is bool))
+            {
+                return (null, "section/required must be constants");
+            }
+
+            arguments.Add(constant.Value is string text
+                ? $", {name}: {SymbolDisplay.FormatLiteral(text, true)}"
+                : $", {name}: {constant.Value.ToString()!.ToLowerInvariant()}");
+        }
+
+        return ($"global::Confix.ConfixOptionsExtensions.AddConfixSection(services, configuration"
+            + string.Concat(arguments) + ");", null);
     }
 
     /// <summary>Only unconditional top-level standalone registrations can be replayed verbatim.</summary>
