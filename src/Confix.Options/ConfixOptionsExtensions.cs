@@ -8,7 +8,7 @@ namespace Confix;
 
 public static class ConfixOptionsExtensions
 {
-    public static OptionsBuilder<T> AddConfixOptions<T>(
+    public static ConfixOptionsBuilder<T> AddConfixOptions<T>(
         this IServiceCollection services,
         IConfiguration configuration,
         string? section = null,
@@ -38,8 +38,10 @@ public static class ConfixOptionsExtensions
         services.AddSingleton<IValidateOptions<T>>(
             sp => new ContractValidator<T>(contract, configuration, sp));
 
-        var builder = services.AddOptions<T>(name)
-            .Configure(value => Bind(value, configuration, section, name));
+        var builder = new ConfixOptionsBuilder<T>(
+            services.AddOptions(), name, configuration, section, required.Value);
+
+        builder.Configure(value => Bind(value, configuration, section, name));
 
         services.AddSingleton<IOptionsChangeTokenSource<T>>(
             new ConfigurationChangeTokenSource<T>(name, configuration));
@@ -85,7 +87,7 @@ public static class ConfixOptionsExtensions
     }
 
     // Binder exception messages can contain supplied values, so they never reach the caller.
-    private static void Bind<T>(T value, IConfiguration configuration, string section, string name)
+    internal static void Bind<T>(T value, IConfiguration configuration, string section, string name)
         where T : class
     {
         try

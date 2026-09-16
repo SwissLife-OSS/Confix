@@ -122,6 +122,19 @@ abstract, generic, or nested — are skipped, as are types that only declare a s
 Use it for the common case and call `AddConfixOptions` directly when you need a named options
 instance or an explicit section.
 
+Registration alone never binds. When a composition-time decision genuinely cannot wait for
+the container — selecting a transport, wiring a third-party builder — materialize the value
+from the same registration instead of reading the section by hand:
+
+```csharp
+var smtp = builder.Services.AddSmtpOptions(builder.Configuration).Materialize();
+```
+
+`Materialize` binds immediately and runs the contract's shape and declared-rule validation, so
+an early read is never less safe than resolving `IOptions<T>`. Options pipeline callbacks such
+as `PostConfigure` are not applied to the materialized value, and an absent optional section
+yields the type's declared defaults. Prefer `IOptions<T>` everywhere else.
+
 ## How validation sees your application
 
 `confix validate` composes the application's real host: it stages the candidate configuration

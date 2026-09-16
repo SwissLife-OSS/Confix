@@ -100,7 +100,7 @@ public sealed class OptionsExtensionsGenerator : IIncrementalGenerator
         builder.AppendLine($"    /// <summary>Registers <see cref=\"{qualified}\"/> for the");
         builder.AppendLine($"    /// <c>{section}</c> configuration section.</summary>");
         builder.AppendLine(
-            $"    {accessibility} static global::Microsoft.Extensions.Options.OptionsBuilder<{qualified}> {type.MethodName}(");
+            $"    {accessibility} static global::Confix.ConfixOptionsBuilder<{qualified}> {type.MethodName}(");
         builder.AppendLine(
             "        this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services,");
         builder.AppendLine(

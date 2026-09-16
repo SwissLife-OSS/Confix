@@ -4,7 +4,15 @@ using FluentAssertions;
 
 namespace Confix.CodeFirst.Tests;
 
+[CollectionDefinition("runner-process-state", DisableParallelization = true)]
+public sealed class RunnerProcessStateCollection;
+
 /// <summary>Covers the stdin/stdout protocol and failure reporting of the validation runner.</summary>
+/// <remarks>
+/// Host capture switches the process working directory while composing, which races tests
+/// that resolve relative paths, so this class never runs in parallel with others.
+/// </remarks>
+[Collection("runner-process-state")]
 public sealed class ValidationRunnerTests
 {
     [Fact]
