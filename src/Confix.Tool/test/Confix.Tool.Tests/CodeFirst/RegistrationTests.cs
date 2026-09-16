@@ -151,16 +151,32 @@ public sealed class RegistrationTests
     }
 
     [Fact]
-    public void CoverageValidationIsRegisteredOnlyOncePerCollection()
+    public void ADescribedSectionIsValidatedButNotBoundByConfix()
     {
-        using var configuration = Config("{}");
+        using var configuration = Config("""{"Other":{"Value":"configured"}}""");
         var services = new ServiceCollection();
-        services.AddConfixOptions<Mail>(configuration, "First", "first");
-        services.AddConfixOptions<Mail>(configuration, "Second", "second");
-        services.AddConfixOptions<Other>(configuration, "Third");
+        services.AddConfixSection<Other>(configuration);
+        using var provider = services.BuildServiceProvider();
 
-        services.Count(d => d.ServiceType == typeof(CoverageSource)).Should().Be(1);
-        services.Count(d => d.ServiceType == typeof(IValidateOptions<CoverageOptions>)).Should().Be(1);
+        // The caller owns the binding, so Confix leaves the value untouched.
+        provider.GetRequiredService<IOptions<Other>>().Value.Value.Should().BeEmpty();
+        provider.GetServices<IConfixContract>().Should().ContainSingle();
+    }
+
+    [Fact]
+    public void ADescribedSectionStillRejectsUnknownKeys()
+    {
+        using var configuration = Config("""{"Other":{"Vale":"typo"}}""");
+        var services = new ServiceCollection();
+        services.AddConfixSection<Other>(configuration);
+
+        // A description is only enforced once the application itself uses Confix.
+        services.AddConfixOptions<OptionalSection>(configuration);
+        using var provider = services.BuildServiceProvider();
+
+        Action resolve = () => _ = provider.GetRequiredService<IOptions<Other>>().Value;
+
+        resolve.Should().Throw<ConfixValidationException>().Which.Message.Should().Contain("Vale");
     }
 
     [Fact]

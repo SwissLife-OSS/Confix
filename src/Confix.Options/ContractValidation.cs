@@ -38,6 +38,8 @@ public static class ContractValidation
 
         var errors = new List<string>();
 
+        errors.AddRange(services.GetServices<ConfixConflict>().Select(c => c.Message));
+
         CheckContractConflicts(contracts, errors);
 
         var hasRootContract = contracts.Any(contract => contract.Section.Length == 0);
