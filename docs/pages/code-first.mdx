@@ -127,8 +127,13 @@ the container — selecting a transport, wiring a third-party builder — materi
 from the same registration instead of reading the section by hand:
 
 ```csharp
-var smtp = builder.Services.AddSmtpOptions(builder.Configuration).Materialize();
+var smtp = builder.AddSmtpOptions().Materialize();
 ```
+
+In projects that reference hosting, the extension is also generated for
+`IHostApplicationBuilder` (and therefore `WebApplicationBuilder`), so `services` and
+`configuration` need not be passed separately. Class libraries without a hosting reference
+get only the `IServiceCollection` form.
 
 `Materialize` binds immediately and runs the contract's shape and declared-rule validation, so
 an early read is never less safe than resolving `IOptions<T>`. Options pipeline callbacks such

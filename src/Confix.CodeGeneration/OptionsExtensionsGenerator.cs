@@ -13,12 +13,16 @@ public sealed class OptionsExtensionsGenerator : IIncrementalGenerator
 {
     private const string SectionAttribute = "Confix.ConfixSectionAttribute";
     private const string ExtensionsType = "Confix.ConfixOptionsExtensions";
+    private const string HostBuilderType = "Microsoft.Extensions.Hosting.IHostApplicationBuilder";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Without Confix.Options the generated call would not compile.
-        var hasExtensions = context.CompilationProvider.Select(static (compilation, _) =>
-            compilation.GetTypeByMetadataName(ExtensionsType) is not null);
+        // Without Confix.Options the generated call would not compile; the host-builder
+        // overload additionally needs hosting to be referenced.
+        var environment = context.CompilationProvider.Select(static (compilation, _) =>
+            new GenerationEnvironment(
+                compilation.GetTypeByMetadataName(ExtensionsType) is not null,
+                compilation.GetTypeByMetadataName(HostBuilderType) is not null));
 
         var types = context.SyntaxProvider
             .ForAttributeWithMetadataName(SectionAttribute,
@@ -27,12 +31,12 @@ public sealed class OptionsExtensionsGenerator : IIncrementalGenerator
             .Where(static type => type is not null)
             .Select(static (type, _) => type!);
 
-        context.RegisterSourceOutput(types.Combine(hasExtensions),
+        context.RegisterSourceOutput(types.Combine(environment),
             static (production, source) =>
             {
-                if (source.Right)
+                if (source.Right.HasConfixOptions)
                 {
-                    Generate(production, source.Left);
+                    Generate(production, source.Left, source.Right.HasHostBuilder);
                 }
             });
     }
@@ -75,7 +79,7 @@ public sealed class OptionsExtensionsGenerator : IIncrementalGenerator
             ? "Add" + typeName
             : "Add" + typeName + "Options";
 
-    private static void Generate(SourceProductionContext context, OptionsType type)
+    private static void Generate(SourceProductionContext context, OptionsType type, bool hostBuilder)
     {
         var qualified = type.Namespace is null
             ? "global::" + type.Name
@@ -107,6 +111,20 @@ public sealed class OptionsExtensionsGenerator : IIncrementalGenerator
             "        global::Microsoft.Extensions.Configuration.IConfiguration configuration)");
         builder.AppendLine(
             $"        => global::Confix.ConfixOptionsExtensions.AddConfixOptions<{qualified}>(services, configuration);");
+
+        if (hostBuilder)
+        {
+            builder.AppendLine();
+            builder.AppendLine($"    /// <summary>Registers <see cref=\"{qualified}\"/> for the");
+            builder.AppendLine($"    /// <c>{section}</c> configuration section.</summary>");
+            builder.AppendLine(
+                $"    {accessibility} static global::Confix.ConfixOptionsBuilder<{qualified}> {type.MethodName}(");
+            builder.AppendLine(
+                "        this global::Microsoft.Extensions.Hosting.IHostApplicationBuilder builder)");
+            builder.AppendLine(
+                $"        => global::Confix.ConfixOptionsExtensions.AddConfixOptions<{qualified}>(builder.Services, builder.Configuration);");
+        }
+
         builder.AppendLine("}");
 
         var hint = type.Namespace is null
@@ -122,4 +140,6 @@ public sealed class OptionsExtensionsGenerator : IIncrementalGenerator
         string MethodName,
         string Section,
         bool IsPublic);
+
+    private sealed record GenerationEnvironment(bool HasConfixOptions, bool HasHostBuilder);
 }

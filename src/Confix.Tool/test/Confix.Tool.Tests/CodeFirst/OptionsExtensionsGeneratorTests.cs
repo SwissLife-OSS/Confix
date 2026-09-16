@@ -81,6 +81,36 @@ public sealed class OptionsExtensionsGeneratorTests
             .NotContain(t => t.FilePath.EndsWith("ConfixOptions.g.cs", StringComparison.Ordinal));
     }
 
+    [Fact]
+    public void HostingApplicationsGetAHostBuilderOverload()
+    {
+        var result = Run("""
+            [ConfixSection("Sonar")]
+            public class SonarOptions { public string EnterpriseId { get; set; } = ""; }
+            """);
+
+        Generated(result.Output).Should()
+            .Contain("IHostApplicationBuilder builder").And
+            .Contain("builder.Services, builder.Configuration");
+        result.Output.GetDiagnostics().Should()
+            .NotContain(d => d.Severity == DiagnosticSeverity.Error);
+    }
+
+    [Fact]
+    public void LibrariesWithoutHostingOnlyGetTheServiceCollectionForm()
+    {
+        var result = Run("""
+            [ConfixSection("Sonar")]
+            public class SonarOptions { public string EnterpriseId { get; set; } = ""; }
+            """, withHosting: false);
+
+        Generated(result.Output).Should()
+            .Contain("IServiceCollection services").And
+            .NotContain("IHostApplicationBuilder");
+        result.Output.GetDiagnostics().Should()
+            .NotContain(d => d.Severity == DiagnosticSeverity.Error);
+    }
+
     private static string Generated(Compilation compilation)
         => compilation.SyntaxTrees
             .Single(t => t.FilePath.EndsWith("ConfixOptions.g.cs", StringComparison.Ordinal))
@@ -88,7 +118,8 @@ public sealed class OptionsExtensionsGeneratorTests
 
     private static (Compilation Output, ImmutableArray<Diagnostic> Diagnostics) Run(
         string declaration,
-        bool withOptionsPackage = true)
+        bool withOptionsPackage = true,
+        bool withHosting = true)
     {
         var source = $$"""
             using Confix;
@@ -107,9 +138,11 @@ public sealed class OptionsExtensionsGeneratorTests
                 typeof(ConfixOptionsExtensions).Assembly.Location
             ])
             .Distinct()
-            // The test host references every assembly, so drop it to model a library that does not.
+            // The test host references every assembly, so drop some to model leaner libraries.
             .Where(p => withOptionsPackage
-                || !Path.GetFileName(p).Equals("Confix.Options.dll", StringComparison.Ordinal));
+                || !Path.GetFileName(p).Equals("Confix.Options.dll", StringComparison.Ordinal))
+            .Where(p => withHosting
+                || !Path.GetFileName(p).StartsWith("Microsoft.Extensions.Hosting", StringComparison.Ordinal));
 
         var compilation = CSharpCompilation.Create(
             "OptionsExtensionsTest",
