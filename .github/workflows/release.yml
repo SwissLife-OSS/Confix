@@ -7,9 +7,6 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src/Confix.Tool
     env:
       VERSION: ${{ github.event.release.tag_name }}
       NUGET_TOKEN: ${{ secrets.NUGET_API_KEY }}
@@ -20,14 +17,17 @@ jobs:
         with:
           dotnet-version: 10.0.401
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore All.sln
       - name: Build
-        run: dotnet build --configuration Release /p:Version=${VERSION}
+        run: dotnet build All.sln --configuration Release /p:Version=${VERSION}
+      # The analyzer Confix.Options embeds is produced by the solution build above.
       - name: Pack
-        run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
-      - name: Push Library
-        run: dotnet nuget push Confix.Library.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
-      - name: Push Nuke
-        run: dotnet nuget push Confix.Nuke.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
-      - name: Push Tool
-        run: dotnet nuget push Confix.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
+        run: dotnet pack All.sln --configuration Release /p:Version=${VERSION} --output ./artifacts
+      - name: Push
+        working-directory: ./artifacts
+        run: |
+          for package in Confix.Library Confix.Nuke Confix Confix.Abstractions Confix.Options; do
+            dotnet nuget push "${package}.${VERSION}.nupkg" \
+              --source https://api.nuget.org/v3/index.json \
+              --api-key "${NUGET_TOKEN}"
+          done
