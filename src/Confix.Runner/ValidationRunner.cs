@@ -15,10 +15,11 @@ namespace Confix.Runner;
 internal static class ValidationRunner
 {
     private const int ProtocolVersion = 1;
-    private const string CatalogTypeName = "Confix.Generated.ContractCatalog";
+
+    private static readonly TimeSpan _composeTimeout = TimeSpan.FromMinutes(2);
 
     private const string GenericFailure =
-        "Validation runner failed. Check catalog, module services, and target runtime compatibility.";
+        "Validation runner failed. Check host composition and target runtime compatibility.";
 
     private static readonly JsonSerializerOptions _responseFormat =
         new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
@@ -69,12 +70,14 @@ internal static class ValidationRunner
         var assembly = LoadApplication(args[0]);
         var configuration = Build(document);
 
-        using var provider = CreateProvider(assembly, configuration);
+        using var host = Capture(assembly, document);
 
-        var contracts = provider.GetServices<IConfixContract>().ToArray();
+        var contracts = host.Services.GetServices<IConfixContract>().ToArray();
         var strict = payload["coverage"]?.GetValue<string>() != "registeredSections";
 
-        var errors = ContractValidation.Validate(provider, configuration, strict).ToList();
+        // Coverage and shape checks run over the candidate document alone, so environment
+        // variables of the validation process are never reported as configuration.
+        var errors = ContractValidation.Validate(host.Services, configuration, strict).ToList();
         CheckSectionObjects(document, contracts, errors);
 
         var schema = errors.Count == 0 && payload["exportSchema"]?.GetValue<bool>() == true
@@ -91,21 +94,44 @@ internal static class ValidationRunner
         return new ConfigurationBuilder().AddJsonStream(new MemoryStream(bytes)).Build();
     }
 
-    private static ServiceProvider CreateProvider(Assembly assembly, IConfiguration configuration)
+    /// <summary>
+    /// Composes the application's real host with the candidate configuration staged as its
+    /// appsettings, so the validated contracts are exactly the registrations the app performs.
+    /// </summary>
+    private static CapturedHost Capture(Assembly assembly, JsonNode document)
     {
-        var catalog = assembly.GetType(CatalogTypeName)
-            ?? throw new RunnerException(
-                "The application has no generated Confix catalog. " +
-                "Reference Confix.CodeGeneration from the host project.");
+        var staging = Directory.CreateTempSubdirectory("confix-validate-");
+        var original = Directory.GetCurrentDirectory();
 
-        var register = catalog.GetMethod("Register", BindingFlags.Public | BindingFlags.Static)
-            ?? throw new RunnerException("The generated Confix catalog is malformed.");
+        try
+        {
+            File.WriteAllText(
+                Path.Combine(staging.FullName, "appsettings.json"),
+                document.ToJsonString());
 
-        var services = new ServiceCollection();
-        services.AddSingleton(configuration);
-        register.Invoke(null, [services, configuration]);
+            // Deterministic composition: production branch, no user secrets, no reload loops.
+            Environment.SetEnvironmentVariable("CONFIX_VALIDATION", "true");
+            Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Production");
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Production");
+            Environment.SetEnvironmentVariable("DOTNET_hostBuilder__reloadConfigOnChange", "false");
 
-        return services.BuildServiceProvider();
+            Directory.SetCurrentDirectory(staging.FullName);
+
+            return HostCapture.Run(assembly, _composeTimeout);
+        }
+        finally
+        {
+            Directory.SetCurrentDirectory(original);
+
+            try
+            {
+                staging.Delete(recursive: true);
+            }
+            catch (IOException)
+            {
+                // The host may hold the staged file briefly; the OS temp cleanup owns leftovers.
+            }
+        }
     }
 
     private static Assembly LoadApplication(string path)

@@ -14,9 +14,10 @@ public sealed class RunnerBoundaryTests
     {
         var root = FindRoot();
         var configurationJson = PackageVersion(root, "Microsoft.Extensions.Configuration.Json");
-        var dependencyInjection = PackageVersion(root, "Microsoft.Extensions.DependencyInjection");
+        var hosting = PackageVersion(root, "Microsoft.Extensions.Hosting");
         var folder = Path.Combine(Path.GetTempPath(), "confix-boundary-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(folder);
+        var marker = Path.Combine(folder, "application-started").Replace('\\', '/');
         try
         {
             await File.WriteAllTextAsync(Path.Combine(folder, "Host.csproj"), $"""
@@ -24,26 +25,22 @@ public sealed class RunnerBoundaryTests
                   <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>{TargetFramework}</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
                   <ItemGroup>
                     <ProjectReference Include="{root}/src/Confix.Options/Confix.Options.csproj" />
-                    <ProjectReference Include="{root}/src/Confix.CodeGeneration/Confix.CodeGeneration.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
                     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="{configurationJson}" />
-                    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="{dependencyInjection}" />
+                    <PackageReference Include="Microsoft.Extensions.Hosting" Version="{hosting}" />
                   </ItemGroup>
                 </Project>
                 """);
-            await File.WriteAllTextAsync(Path.Combine(folder, "Program.cs"), """
+            await File.WriteAllTextAsync(Path.Combine(folder, "Program.cs"), $$"""
                 using System.ComponentModel.DataAnnotations;
                 using Confix;
-                using Microsoft.Extensions.Configuration;
                 using Microsoft.Extensions.DependencyInjection;
-                [assembly: ConfixModule(typeof(Setup))]
-                File.WriteAllText("application-started", "incorrect");
-                public sealed class Setup : IConfixModule
-                {
-                    public void Configure(IServiceCollection services, IConfiguration configuration)
-                    {
-                        services.AddConfixOptions<Mail>(configuration).PostConfigure(o => o.Sender = "injected@example.com");
-                    }
-                }
+                using Microsoft.Extensions.Hosting;
+                var builder = Host.CreateApplicationBuilder(args);
+                builder.Services.AddConfixOptions<Mail>(builder.Configuration)
+                    .PostConfigure(o => o.Sender = "injected@example.com");
+                var host = builder.Build();
+                File.WriteAllText("{{marker}}", "incorrect");
+                host.Run();
                 [ConfixSection("Mail")]
                 public sealed class Mail
                 {
@@ -80,7 +77,7 @@ public sealed class RunnerBoundaryTests
             var valid = await Run(folder, cli, "build", "--output-file", output);
 
             valid.Exit.Should().Be(0, valid.Output);
-            File.Exists(Path.Combine(folder, "application-started")).Should().BeFalse();
+            File.Exists(marker).Should().BeFalse();
             File.Exists(Path.Combine(folder, "confix.ide.schema.json")).Should().BeFalse();
 
             // A failing build reports the member path, leaks no values and keeps the old output.
@@ -113,7 +110,7 @@ public sealed class RunnerBoundaryTests
 
             schema!["properties"]!["Mail"].Should().NotBeNull();
             File.Exists(Path.Combine(folder, ".vscode/settings.json")).Should().BeTrue();
-            File.Exists(Path.Combine(folder, "application-started")).Should().BeFalse();
+            File.Exists(marker).Should().BeFalse();
         }
         finally
         {
@@ -251,16 +248,15 @@ public sealed class RunnerBoundaryTests
     private static async Task WriteHostAsync(string root, string folder, string contract)
     {
         var configurationJson = PackageVersion(root, "Microsoft.Extensions.Configuration.Json");
-        var dependencyInjection = PackageVersion(root, "Microsoft.Extensions.DependencyInjection");
+        var hosting = PackageVersion(root, "Microsoft.Extensions.Hosting");
 
         await File.WriteAllTextAsync(Path.Combine(folder, "Host.csproj"), $"""
             <Project Sdk="Microsoft.NET.Sdk">
               <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>{TargetFramework}</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
               <ItemGroup>
                 <ProjectReference Include="{root}/src/Confix.Options/Confix.Options.csproj" />
-                <ProjectReference Include="{root}/src/Confix.CodeGeneration/Confix.CodeGeneration.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
                 <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="{configurationJson}" />
-                <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="{dependencyInjection}" />
+                <PackageReference Include="Microsoft.Extensions.Hosting" Version="{hosting}" />
               </ItemGroup>
             </Project>
             """);
@@ -268,11 +264,11 @@ public sealed class RunnerBoundaryTests
         await File.WriteAllTextAsync(Path.Combine(folder, "Program.cs"), $$"""
             using System.ComponentModel.DataAnnotations;
             using Confix;
-            using Microsoft.Extensions.Configuration;
             using Microsoft.Extensions.DependencyInjection;
-            var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            var services = new ServiceCollection();
-            services.AddConfixOptions<Mail>(configuration);
+            using Microsoft.Extensions.Hosting;
+            var builder = Host.CreateApplicationBuilder(args);
+            builder.Services.AddConfixOptions<Mail>(builder.Configuration);
+            builder.Build().Run();
             {{contract}}
             """);
 

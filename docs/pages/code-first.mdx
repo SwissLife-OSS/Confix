@@ -122,39 +122,27 @@ abstract, generic, or nested — are skipped, as are types that only declare a s
 Use it for the common case and call `AddConfixOptions` directly when you need a named options
 instance or an explicit section.
 
-The generator automatically handles standalone, unconditional top-level `AddConfixOptions` and
-`AddConfixSection` calls, with constant arguments, and top-level `AddConfixModule<T>` activation.
-Other patterns require an assembly declaration:
+## How validation sees your application
 
-```csharp
-builder.Services.AddConfixModule<ConfigurationSetup>(builder.Configuration);
+`confix validate` composes the application's real host: it stages the candidate configuration
+as the app's `appsettings.json`, invokes the entry point, and captures the built host through
+the hosting diagnostics — the same design-time mechanism Entity Framework tooling and
+`WebApplicationFactory` use. The host is aborted the moment it is built, so hosted services
+never start. The contracts examined are exactly the registrations the application performs;
+helpers, conditionals, and packages all work because real code runs instead of being
+reconstructed.
 
-public sealed class ConfigurationSetup : IConfixModule
-{
-    public void Configure(IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddConfixOptions<SmtpOptions>(configuration)
-            .Validate(o => o.Port != 25);
-        // Register any services needed by custom validators here.
-    }
-}
-```
+Consequences to be aware of:
 
-A module's own setup is never diagnosed, because it runs whenever the module runs. When the
-activation itself cannot be seen — inside a method, behind a condition, or in a referenced
-library — name the module at assembly level instead:
-
-```csharp
-[assembly: ConfixModule(typeof(ConfigurationSetup))]
-```
-
-Declaring modules this way makes them the only supported place for option setup: the CLI
-executes the declared modules with a minimal service collection, without running application
-Main or starting hosted services. Chained callbacks, conditional activation, and package
-registration extensions belong in these modules. `CONFIX001` diagnoses unsupported direct
-registration forms rather than silently skipping them. Module classes must be public and
-constructible with a parameterless constructor. Application-specific validators, callbacks,
-and constructors execute normally and must not start the application themselves.
+- The application must build its host with `Microsoft.Extensions.Hosting`
+  (`Host.CreateApplicationBuilder` or `WebApplication.CreateBuilder`).
+- Code in `Program.cs` up to `Build()` executes at validation time. Registration lambdas stay
+  lazy, so clients are not constructed — but guard genuinely side-effectful startup work with
+  the `CONFIX_VALIDATION` environment variable, which the runner sets to `true`.
+- The runner forces the `Production` environment so composition is deterministic: no user
+  secrets, no `Development`-only overrides, the production branch of environment conditionals.
+- Coverage and unknown-key reporting are scoped to the candidate document, so environment
+  variables of the validation process are never reported as configuration.
 
 ## Validation rules
 

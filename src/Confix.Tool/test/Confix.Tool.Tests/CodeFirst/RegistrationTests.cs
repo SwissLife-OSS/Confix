@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace Confix.CodeFirst.Tests;
 
-/// <summary>Covers the guard rails of AddConfixOptions and AddConfixModule.</summary>
+/// <summary>Covers the guard rails of AddConfixOptions.</summary>
 public sealed class RegistrationTests
 {
     [Fact]
@@ -191,20 +191,6 @@ public sealed class RegistrationTests
     }
 
     [Fact]
-    public void ModulesConfigureTheCollectionTheyAreGiven()
-    {
-        using var configuration = Config("{\"Mail\":{\"Host\":\"server\"}}");
-        var services = new ServiceCollection();
-
-        services.AddConfixModule<Module>(configuration);
-
-        using var provider = services.BuildServiceProvider();
-
-        provider.GetServices<IConfixContract>().Should().ContainSingle();
-        provider.GetRequiredService<IOptions<Mail>>().Value.Port.Should().Be(2525);
-    }
-
-    [Fact]
     public void BindingFailuresDoNotEchoConfiguredValues()
     {
         using var configuration = Config("{\"Mail\":{\"Host\":\"server\",\"Port\":\"not-a-number\"}}");
@@ -263,13 +249,5 @@ public sealed class RegistrationTests
     public sealed class OptionalSection
     {
         public string Value { get; set; } = "";
-    }
-
-    public sealed class Module : IConfixModule
-    {
-        public void Configure(IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddConfixOptions<Mail>(configuration).PostConfigure(o => o.Port = 2525);
-        }
     }
 }

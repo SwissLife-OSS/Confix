@@ -84,16 +84,6 @@ public static class ConfixOptionsExtensions
         }
     }
 
-    public static IServiceCollection AddConfixModule<T>(
-        this IServiceCollection services,
-        IConfiguration configuration)
-        where T : IConfixModule, new()
-    {
-        new T().Configure(services, configuration);
-
-        return services;
-    }
-
     // Binder exception messages can contain supplied values, so they never reach the caller.
     private static void Bind<T>(T value, IConfiguration configuration, string section, string name)
         where T : class

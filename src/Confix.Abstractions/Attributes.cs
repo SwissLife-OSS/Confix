@@ -10,10 +10,3 @@ public sealed class ConfixSectionAttribute(string path) : Attribute
 
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class ConfixRequiredKeyAttribute : Attribute;
-
-/// <summary>Declares configuration setup shared by the application and validation runner.</summary>
-[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-public sealed class ConfixModuleAttribute(Type type) : Attribute
-{
-    public Type Type { get; } = type;
-}

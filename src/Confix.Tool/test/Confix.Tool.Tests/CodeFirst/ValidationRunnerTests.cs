@@ -47,13 +47,14 @@ public sealed class ValidationRunnerTests
     }
 
     [Fact]
-    public async Task AnAssemblyWithoutAGeneratedCatalogExplainsTheMissingReference()
+    public async Task AnApplicationThatBuildsNoHostIsRejected()
     {
+        // The test assembly's entry point runs and exits without ever building a host.
         var (exit, response) = await RunAsync([Self], Request());
 
         exit.Should().Be(2);
         Errors(response).Should().ContainSingle()
-            .Which.Should().Contain("Confix.CodeGeneration");
+            .Which.Should().Contain("without building a host");
     }
 
     [Fact]
