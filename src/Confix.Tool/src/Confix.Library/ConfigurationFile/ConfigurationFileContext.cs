@@ -5,6 +5,8 @@ namespace Confix.Tool.Middlewares;
 
 public sealed class ConfigurationFileContext : IConfigurationFileContext
 {
+    public bool ReadOnly { get; init; }
+
     public required ConfigurationFileDefinition Definition { get; init; }
 
     public required ProjectDefinition Project { get; init; }

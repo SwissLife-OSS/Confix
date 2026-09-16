@@ -13,7 +13,7 @@
         <PackageId>Confix.Nuke</PackageId>
         <IsPackable>true</IsPackable>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageLicenseUrl>https://github.com/SwissLife-OSS/Confix/blob/main/LICENSE</PackageLicenseUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RepositoryUrl>https://github.com/SwissLife-OSS/Confix.git</RepositoryUrl>
         <PackageIconUrl>https://raw.githubusercontent.com/SwissLife-OSS/Confix/main/images/logo_small.png</PackageIconUrl>

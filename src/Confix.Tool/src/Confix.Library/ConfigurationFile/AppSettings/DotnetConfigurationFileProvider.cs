@@ -39,7 +39,7 @@ public sealed class AppSettingsConfigurationFileProvider : IConfigurationFilePro
 
         var output = input;
 
-        if (configuration.UseUserSecrets is true)
+        if (configuration.UseUserSecrets is true && !context.ReadOnly)
         {
             context.Logger.UseUserSecrets();
             var csproj = DotnetHelpers.FindProjectFileInPath(context.Project.Directory!);

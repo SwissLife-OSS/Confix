@@ -5,6 +5,7 @@ using Confix.Tool.Commands.Temp;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
+using Confix.Tool.Validation;
 
 namespace Confix.Tool.Commands.Solution;
 
@@ -14,6 +15,8 @@ public sealed class SolutionBuildPipeline : Pipeline
     protected override void Configure(IPipelineDescriptor builder)
     {
         builder
+            .Add(ConfigurationValidationPipeline.ExportSchemaOption)
+            .Add(DotnetConfigurationOptions.Instance)
             .Add(EncryptionOption.Instance)
             .Add(GitUsernameOptions.Instance)
             .Add(GitTokenOptions.Instance)

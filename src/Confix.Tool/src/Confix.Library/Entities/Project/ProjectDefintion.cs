@@ -20,9 +20,13 @@ public sealed class ProjectDefinition
         IReadOnlyList<ConfigurationFileDefinition> configurationFiles,
         IReadOnlyList<ProjectDefinition> subprojects,
         ProjectType projectType,
-        DirectoryInfo? directory)
+        DirectoryInfo? directory,
+        ValidationConfiguration? validation = null,
+        bool? exportSchema = null)
     {
         Name = name;
+        Validation = validation;
+        ExportSchema = exportSchema;
         Environments = environments;
         Components = components;
         Repositories = repositories;
@@ -33,6 +37,12 @@ public sealed class ProjectDefinition
         ProjectType = projectType;
         Directory = directory;
     }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ValidationConfiguration? Validation { get; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? ExportSchema { get; }
 
     public string Name { get; }
 
@@ -60,6 +70,15 @@ public sealed class ProjectDefinition
         writer.WriteStartObject();
 
         writer.WriteString(FieldNames.Name, Name);
+        if (ExportSchema is { } exportSchema)
+        {
+            writer.WriteBoolean(ProjectConfiguration.FieldNames.ExportSchema, exportSchema);
+        }
+        if (Validation is not null)
+        {
+            writer.WritePropertyName(ProjectConfiguration.FieldNames.Validation);
+            JsonSerializer.Serialize(writer, Validation, ValidationConfiguration.SerializerOptions);
+        }
 
         writer.WritePropertyName(FieldNames.Environments);
         writer.WriteStartArray();
@@ -180,7 +199,9 @@ public sealed class ProjectDefinition
             configurationFiles,
             subprojects,
             projectType,
-            lastConfigurationFile?.File.Directory);
+            lastConfigurationFile?.File.Directory,
+            configuration.Validation,
+            configuration.ExportSchema);
     }
 
     private static string GetProjectName(ProjectConfiguration configuration)

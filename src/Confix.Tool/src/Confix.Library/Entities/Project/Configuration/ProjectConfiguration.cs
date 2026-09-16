@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Confix.Tool.Middlewares;
 using Confix.Tool.Schema;
 using Confix.Utilities.Json;
@@ -18,6 +19,8 @@ public sealed class ProjectConfiguration
         public const string ConfigurationFiles = "configurationFiles";
         public const string Subprojects = "subprojects";
         public const string ProjectType = "type";
+        public const string Validation = "validation";
+        public const string ExportSchema = "exportSchema";
     }
 
     public ProjectConfiguration(
@@ -30,9 +33,13 @@ public sealed class ProjectConfiguration
         IReadOnlyList<ConfigurationFileConfiguration>? configurationFiles,
         IReadOnlyList<ProjectConfiguration>? subprojects,
         string? projectType,
-        IReadOnlyList<JsonFile> sourceFiles)
+        IReadOnlyList<JsonFile> sourceFiles,
+        ValidationConfiguration? validation = null,
+        bool? exportSchema = null)
     {
         Name = name;
+        Validation = validation;
+        ExportSchema = exportSchema;
         Environments = environments;
         Components = components;
         Repositories = repositories;
@@ -43,6 +50,12 @@ public sealed class ProjectConfiguration
         ProjectType = projectType;
         SourceFiles = sourceFiles;
     }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ValidationConfiguration? Validation { get; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? ExportSchema { get; }
 
     public string? Name { get; }
 
@@ -70,6 +83,8 @@ public sealed class ProjectConfiguration
     public static ProjectConfiguration Parse(JsonNode? node, IReadOnlyList<JsonFile> sourceFiles)
     {
         var obj = node.ExpectObject();
+
+        ValidationConfiguration.EnsureNoSupersededKeys(obj);
 
         var name = obj.MaybeProperty(FieldNames.Name)?.ExpectValue<string>();
 
@@ -137,7 +152,9 @@ public sealed class ProjectConfiguration
             configurationFiles,
             subprojects,
             projectType,
-            sourceFiles);
+            sourceFiles,
+            ValidationConfiguration.Parse(obj.MaybeProperty(FieldNames.Validation)),
+            obj.MaybeProperty(FieldNames.ExportSchema)?.ExpectValue<bool>());
     }
 
     public ProjectConfiguration Merge(ProjectConfiguration? other)
@@ -185,7 +202,9 @@ public sealed class ProjectConfiguration
             configurationFiles,
             subprojects,
             projectType,
-            sourceFiles);
+            sourceFiles,
+            Validation?.Merge(other.Validation) ?? other.Validation,
+            other.ExportSchema ?? ExportSchema);
     }
 
     public static ProjectConfiguration? LoadFromFiles(IEnumerable<JsonFile> files)

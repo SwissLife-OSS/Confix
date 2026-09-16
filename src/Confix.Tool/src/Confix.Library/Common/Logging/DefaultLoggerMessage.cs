@@ -30,7 +30,11 @@ public readonly record struct DefaultLoggerMessage : ILoggerMessage
             message = $"  {message}";
         }
 
-        var formatted = string.Format(message, Arguments ?? Array.Empty<object>());
+        // Without arguments the template is literal text that may legitimately contain braces.
+        var formatted = Arguments is { Length: > 0 } arguments
+            ? string.Format(message, arguments)
+            : message;
+
         // markup is by default not wrapped, so we need to add a newline 
         formatted += Environment.NewLine;
 

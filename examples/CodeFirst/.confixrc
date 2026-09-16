@@ -1,0 +1,9 @@
+{
+  "isRoot": true,
+  "project": {
+    "validation": { "type": "dotnet-options", "coverage": "strict" },
+    "exportSchema": false,
+    "configurationFiles": [{ "type": "appsettings", "useUserSecrets": false }],
+    "environments": [{ "name": "dev" }]
+  }
+}
