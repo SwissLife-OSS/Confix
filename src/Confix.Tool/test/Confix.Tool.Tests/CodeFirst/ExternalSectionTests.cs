@@ -66,6 +66,18 @@ public sealed class ExternalSectionTests
     }
 
     [Fact]
+    public void AnUnannotatedTypeIsRequiredByDefault()
+    {
+        using var configuration = Config("{}");
+        var services = new ServiceCollection();
+        services.AddConfixOptions<ExternalOptions>(configuration, "MongoDb");
+        using var provider = services.BuildServiceProvider();
+
+        ContractValidation.Validate(provider, configuration).Should()
+            .Contain("MongoDb: required section is missing.");
+    }
+
+    [Fact]
     public void RequirednessCanBeOverriddenAtTheRegistrationSite()
     {
         using var configuration = Config("{}");
