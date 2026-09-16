@@ -16,44 +16,48 @@ public static class ConfixOptionsExtensions
         bool? required = null)
         where T : class
     {
-        var attribute = typeof(T).GetCustomAttribute<ConfixSectionAttribute>();
-
-        // Types owned by another package cannot be annotated, so the caller mounts them instead.
-        if (attribute is null && section is null)
-        {
-            throw new InvalidOperationException(
-                $"{typeof(T).Name} has no ConfixSection attribute, so a section must be supplied.");
-        }
-
-        section ??= attribute!.Path;
-        name ??= Options.DefaultName;
-        required ??= attribute?.Required ?? true;
-
-        EnsureValidSection(section);
-        EnsureSectionAvailable(services, section, typeof(T), name);
-
-        var contract = new Contract<T>(section, name, required.Value, configuration);
-
-        services.AddSingleton<IConfixContract>(contract);
-        services.AddSingleton<IValidateOptions<T>>(
-            sp => new ContractValidator<T>(contract, configuration, sp));
+        var contract = AddContract<T>(
+            services, configuration, section, name, required, ConfixEnforcement.Always);
 
         var builder = new ConfixOptionsBuilder<T>(
-            services.AddOptions(), name, configuration, section, required.Value);
+            services.AddOptions(),
+            contract.Name,
+            configuration,
+            contract.Section,
+            contract.Required);
 
-        builder.Configure(value => Bind(value, configuration, section, name));
+        builder.Configure(value => Bind(value, configuration, contract.Section, contract.Name));
 
         services.AddSingleton<IOptionsChangeTokenSource<T>>(
-            new ConfigurationChangeTokenSource<T>(name, configuration));
+            new ConfigurationChangeTokenSource<T>(contract.Name, configuration));
 
-        if (required.Value || HasSection(configuration, section))
+        if (contract.Required || HasSection(configuration, contract.Section))
         {
             builder.ValidateOnStart();
         }
 
-        AddCoverageValidation(services, configuration);
-
         return builder;
+    }
+
+    /// <summary>
+    /// Describes a section that the caller binds itself: its shape is validated and <c>confix</c>
+    /// can see it. Use this from libraries that already own their options registration.
+    /// <para>
+    /// Safe to call unconditionally. The description is inert until the application itself uses
+    /// Confix, or until <c>confix validate</c> inspects the application.
+    /// </para>
+    /// </summary>
+    public static IServiceCollection AddConfixSection<T>(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string? section = null,
+        string? name = null,
+        bool? required = null)
+        where T : class
+    {
+        AddContract<T>(services, configuration, section, name, required, ConfixEnforcement.WhenActive);
+
+        return services;
     }
 
     /// <summary>
@@ -69,12 +73,89 @@ public static class ConfixOptionsExtensions
         ArgumentException.ThrowIfNullOrWhiteSpace(section);
 
         EnsureValidSection(section);
-        EnsureSectionAvailable(services, section, typeof(ConfixSectionClaim), name: null);
+
+        // Libraries claim sections too, so an overlap is reported by validation rather than
+        // thrown into the face of an application that does not use Confix.
+        try
+        {
+            EnsureSectionAvailable(services, section, typeof(ConfixSectionClaim), name: null);
+        }
+        catch (InvalidOperationException ex)
+        {
+            services.AddSingleton(new ConfixConflict(ex.Message));
+
+            return services;
+        }
 
         services.AddSingleton<IConfixContract>(new Claim(section, required, configuration));
-        AddCoverageValidation(services, configuration);
 
         return services;
+    }
+
+    private static Contract<T> AddContract<T>(
+        IServiceCollection services,
+        IConfiguration configuration,
+        string? section,
+        string? name,
+        bool? required,
+        ConfixEnforcement enforcement)
+        where T : class
+    {
+        var attribute = typeof(T).GetCustomAttribute<ConfixSectionAttribute>();
+
+        // Types owned by another package cannot be annotated, so the caller mounts them instead.
+        if (attribute is null && section is null)
+        {
+            throw new InvalidOperationException(
+                $"{typeof(T).Name} has no ConfixSection attribute, so a section must be supplied.");
+        }
+
+        section ??= attribute!.Path;
+        name ??= Options.DefaultName;
+        required ??= attribute?.Required ?? true;
+
+        EnsureValidSection(section);
+
+        var contract = new Contract<T>(
+            section, name, required.Value, configuration, enforcement);
+
+        if (enforcement is ConfixEnforcement.Always)
+        {
+            EnsureSectionAvailable(services, section, typeof(T), name);
+            services.TryAddSingleton(new ConfixApplicationMarker());
+        }
+        else if (!TryReserveSection(services, contract))
+        {
+            // A library must never crash an application that does not use Confix, so an
+            // overlapping description is reported by validation instead of thrown here.
+            return contract;
+        }
+
+        // The runner resolves IOptionsMonitor<T>, so the open generics must be present even
+        // when the caller owns the binding.
+        services.AddOptions();
+        services.AddSingleton<IConfixContract>(contract);
+        services.AddSingleton<IValidateOptions<T>>(
+            sp => new ContractValidator<T>(contract, configuration, sp));
+
+        return contract;
+    }
+
+    private static bool TryReserveSection<T>(IServiceCollection services, Contract<T> contract)
+        where T : class
+    {
+        try
+        {
+            EnsureSectionAvailable(services, contract.Section, typeof(T), contract.Name);
+
+            return true;
+        }
+        catch (InvalidOperationException ex)
+        {
+            services.AddSingleton(new ConfixConflict(ex.Message));
+
+            return false;
+        }
     }
 
     private static void EnsureValidSection(string section)
@@ -102,22 +183,6 @@ public static class ConfixOptionsExtensions
                 typeof(T),
                 [$"{section}: configuration binding failed."]);
         }
-    }
-
-    // ValidateOnStart accumulates callbacks, so coverage is wired up only for the first contract.
-    private static void AddCoverageValidation(
-        IServiceCollection services,
-        IConfiguration configuration)
-    {
-        if (services.Any(descriptor => descriptor.ServiceType == typeof(CoverageSource)))
-        {
-            return;
-        }
-
-        services.AddSingleton(new CoverageSource(configuration));
-        services.TryAddEnumerable(
-            ServiceDescriptor.Singleton<IValidateOptions<CoverageOptions>, CoverageValidator>());
-        services.AddOptions<CoverageOptions>().ValidateOnStart();
     }
 
     private static void EnsureSectionAvailable(
@@ -185,7 +250,8 @@ public static class ConfixOptionsExtensions
         string Section,
         string Name,
         bool Required,
-        IConfiguration Configuration) : IConfixContract
+        IConfiguration Configuration,
+        ConfixEnforcement Enforcement) : IConfixContract
         where T : class
     {
         public Type OptionsType => typeof(T);
@@ -224,7 +290,7 @@ public static class ConfixOptionsExtensions
     }
 
     private sealed class ContractValidator<T>(
-        IConfixContract contract,
+        Contract<T> contract,
         IConfiguration configuration,
         IServiceProvider services) : IValidateOptions<T>
         where T : class
@@ -232,6 +298,12 @@ public static class ConfixOptionsExtensions
         public ValidateOptionsResult Validate(string? name, T options)
         {
             if (name != contract.Name)
+            {
+                return ValidateOptionsResult.Skip;
+            }
+
+            if (contract.Enforcement is ConfixEnforcement.WhenActive &&
+                !ConfixActivation.IsActive(services))
             {
                 return ValidateOptionsResult.Skip;
             }

@@ -211,13 +211,32 @@ required contract still reports its section when absent. The exported IDE schema
 contract under its namespace, so editor completion sees the combined shape.
 
 For gradual adoption, set CLI `coverage` to `registeredSections`: unowned root sections are
-allowed, while registered sections still validate. To select the equivalent runtime policy,
-configure `ConfixValidationSettings.StrictCoverage = false` in shared setup. The default
-startup root-coverage check examines JSON providers and does not treat unrelated environment
-variables as configuration errors. For other application sources, explicitly set
-`ConfixValidationSettings.Sources`. Bound option values always use final IConfiguration,
-including environment and command-line overrides. Build validation checks the deployment
-snapshot; startup checks the application's actual inputs, so different outcomes are possible.
+allowed, while registered sections still validate.
+
+Coverage is a build-time concern only. `confix validate` and `confix build` check the deployment
+snapshot for keys that no contract owns, because at that point the configuration artifact is
+unambiguous. At runtime an unread key cannot break the application, so startup never fails over
+one — it enforces the other direction: a required section must be present, and keys inside an
+owned section must match its type. Bound option values always use final IConfiguration,
+including environment and command-line overrides.
+
+## Describing a section you bind yourself
+
+Libraries usually register and bind their own options. `AddConfixSection<T>` describes such a
+section without taking over the binding, so the shape is validated and `confix` can see it:
+
+```csharp
+services
+    .AddOptions<SmtpOptions>()
+    .BindConfiguration(SmtpOptions.SectionName)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+services.AddConfixSection<SmtpOptions>(configuration);
+```
+
+Use `AddConfixOptions<T>` when Confix should own the registration outright, and the untyped
+`AddConfixSection("Path")` to claim a section whose contents another component validates.
 
 ## Build and validate
 

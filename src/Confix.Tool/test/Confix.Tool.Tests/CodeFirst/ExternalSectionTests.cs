@@ -86,7 +86,7 @@ public sealed class ExternalSectionTests
         using var provider = services.BuildServiceProvider();
 
         ContractValidation.Validate(provider, configuration).Should().BeEmpty();
-        provider.GetRequiredService<IStartupValidator>().Validate();
+        provider.GetService<IStartupValidator>()?.Validate();
     }
 
     [Fact]
@@ -161,10 +161,11 @@ public sealed class ExternalSectionTests
         using var configuration = Config("{}");
         var services = new ServiceCollection();
         services.AddConfixOptions<Annotated>(configuration);
+        services.AddConfixSection(configuration, "Mail");
+        using var provider = services.BuildServiceProvider();
 
-        Action claim = () => services.AddConfixSection(configuration, "Mail");
-
-        claim.Should().Throw<InvalidOperationException>().WithMessage("*already claimed*");
+        ContractValidation.Validate(provider, configuration).Should()
+            .Contain(error => error.Contains("already claimed"));
     }
 
     [Fact]
@@ -175,11 +176,11 @@ public sealed class ExternalSectionTests
             """);
         var services = new ServiceCollection();
         services.AddConfixOptions<Annotated>(configuration, "Portal");
+        services.AddConfixSection(configuration, "Portal:Telemetry");
+        using var provider = services.BuildServiceProvider();
 
-        Action claim = () => services.AddConfixSection(configuration, "Portal:Telemetry");
-
-        claim.Should().Throw<InvalidOperationException>()
-            .Which.Message.Should().Contain("cannot be nested inside 'Portal' of Annotated");
+        ContractValidation.Validate(provider, configuration).Should()
+            .Contain(error => error.Contains("cannot be nested inside 'Portal' of Annotated"));
     }
 
     [Fact]
