@@ -105,6 +105,23 @@ explicitly, as the example does. Continue using
 `IOptions<T>`, `IOptionsSnapshot<T>`, and `IOptionsMonitor<T>`. Runtime registration does not
 read `.confixrc`: startup validation remains enabled even when CLI code-first mode is disabled.
 
+Every annotated type also gets a generated extension named after it, so the registration does not
+have to be repeated by hand next to each options class:
+
+```csharp
+builder.Services.AddSmtpOptions(builder.Configuration);
+```
+
+The name is `Add` followed by the type name, with `Options` appended when the type name does not
+already end in it: `SmtpOptions` becomes `AddSmtpOptions`, `Mail` becomes `AddMailOptions`. The
+extension is emitted into the type's own namespace and matches its accessibility. It appears
+wherever `Confix.Options` is referenced, including class libraries. Types that cannot be bound —
+abstract, generic, or nested — are skipped, as are types that only declare a section through
+`AddConfixOptions<T>(configuration, "Section")`, since their section is not on the type.
+
+Use it for the common case and call `AddConfixOptions` directly when you need a named options
+instance or an explicit section.
+
 The generator automatically handles standalone, unconditional top-level `AddConfixOptions` and
 `AddConfixSection` calls, with constant arguments, and top-level `AddConfixModule<T>` activation.
 Other patterns require an assembly declaration:
