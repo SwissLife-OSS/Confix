@@ -56,6 +56,10 @@ public static class ConfigurationValidationPipeline
                     await continuePipeline(current);
                 })
                 .Use<VariableMiddleware>()
+                // Build scaffolds missing sections from the contract schema before validating.
+                .When(_ => write, scaffold => scaffold
+                    .Use<RestoreDotnetSchemaMiddleware>()
+                    .Use<InitializeConfigurationDefaultValues>())
                 .Use<BuildProjectMiddleware>()
                 .Use((current, _) => ValidateAsync(current, validator, settings, write, exportSchema)))
             .ExecuteAsync(context);

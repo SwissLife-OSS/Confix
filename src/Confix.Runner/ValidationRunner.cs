@@ -80,7 +80,9 @@ internal static class ValidationRunner
         var errors = ContractValidation.Validate(host.Services, configuration, strict).ToList();
         CheckSectionObjects(document, contracts, errors);
 
-        var schema = errors.Count == 0 && payload["exportSchema"]?.GetValue<bool>() == true
+        // The schema comes from the contracts alone, so scaffolding tooling can request it
+        // precisely when the document is still invalid.
+        var schema = payload["exportSchema"]?.GetValue<bool>() == true
             ? SchemaExport.Export(contracts, strict)
             : null;
 

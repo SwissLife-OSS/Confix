@@ -1,5 +1,6 @@
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Reporting;
+using Confix.Tool.Validation;
 using Confix.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,8 @@ public static class ProjectMiddlewareExtensions
                 sp.GetRequiredService<ISchemaStore>()))
             .AddTransient(sp =>
                 new InitializeConfigurationDefaultValues(sp.GetRequiredService<ISchemaStore>()))
+            .AddTransient(sp =>
+                new RestoreDotnetSchemaMiddleware(sp.GetRequiredService<ISchemaStore>()))
             .AddTransient<BuildComponentsOfProjectMiddleware>()
             .AddTransient<InitProjectMiddleware>()
             .AddTransient<BuildProjectMiddleware>()
