@@ -5,6 +5,7 @@ using Confix.Tool.Entities.Components;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Middlewares.JsonSchemas;
 using Confix.Tool.Schema;
+using Confix.Tool.Validation;
 using Confix.Variables;
 
 namespace Confix.Tool.Middlewares.Project;
@@ -40,6 +41,32 @@ public class RestoreProjectMiddleware : IMiddleware
 
         var project = configuration.EnsureProject();
         var solution = configuration.EnsureSolution();
+
+        // Code-first projects derive their schema from the option contracts instead of components.
+        var validation = DotnetOptionsSchemaComposer.ResolveSettings(context);
+
+        if (validation?.EffectiveType == ValidationConfiguration.DotnetOptions)
+        {
+            var storedSchema = await DotnetOptionsSchemaComposer.ComposeAndStoreAsync(
+                context, validation, _schemaStore);
+
+            jsonSchemas.Schemas.Add(new JsonSchemaDefinition
+            {
+                Project = project,
+                Solution = solution.Directory!,
+                FileMatch = files
+                    .Select(x => x.InputFile.RelativeTo(solution.Directory!))
+                    .ToList(),
+                SchemaFile = storedSchema,
+                RelativePathToProject = Path.GetRelativePath(
+                    solution.Directory!.FullName,
+                    project.Directory!.FullName)
+            });
+
+            context.Logger.LogSchemaCompositionCompleted(project);
+
+            return;
+        }
 
         context.SetStatus("Loading components...");
         var components = await context.Features.Get<ComponentProviderExecutorFeature>()

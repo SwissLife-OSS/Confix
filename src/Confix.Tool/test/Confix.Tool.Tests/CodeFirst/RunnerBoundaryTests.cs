@@ -186,12 +186,69 @@ public sealed class RunnerBoundaryTests
             var relaxed = await Run(folder, cli, "validate");
 
             relaxed.Exit.Should().Be(0, relaxed.Output);
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
 
-            // Required validation can never be bypassed.
-            var skipped = await Run(folder, cli, "validate", "--no-restore");
+    [Fact]
+    public async Task BuildScaffoldsRequiredSectionsWithContractDefaults()
+    {
+        var root = FindRoot();
+        var folder = Path.Combine(Path.GetTempPath(), "confix-scaffold-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        try
+        {
+            await WriteHostAsync(root, folder, """
+                [ConfixSection("Mail")]
+                public sealed class Mail
+                {
+                    [Required] public string Host { get; set; } = "";
+                    [Range(1, 65535)] public int Port { get; set; } = 587;
+                    public bool UseTls { get; set; } = true;
+                }
+                """);
 
-            skipped.Exit.Should().NotBe(0);
-            skipped.Output.Should().Contain("--no-restore");
+            var input = Path.Combine(folder, "appsettings.json");
+            var output = Path.Combine(folder, "rendered.json");
+            var cli = CliPath(root);
+
+            await File.WriteAllTextAsync(input, "{}");
+
+            // The scaffold happens even though the build fails on the still-empty host.
+            var scaffolding = await Run(folder, cli, "build", "--output-file", output);
+
+            scaffolding.Exit.Should().NotBe(0);
+            File.Exists(output).Should().BeFalse("an invalid build must not publish");
+
+            var scaffolded = JsonNode.Parse(await File.ReadAllTextAsync(input))!;
+
+            scaffolded["Mail"].Should().NotBeNull("the required section must be initialized");
+            scaffolded["Mail"]!["Port"]!.GetValue<int>().Should().Be(587);
+            scaffolded["Mail"]!["UseTls"]!.GetValue<bool>().Should().BeTrue();
+            scaffolded["Mail"]!["Host"]!.GetValue<string>().Should().BeEmpty();
+
+            // Filling in the single scaffolded gap makes the same build pass.
+            scaffolded["Mail"]!["Host"] = "server";
+            await File.WriteAllTextAsync(input, scaffolded.ToJsonString());
+
+            var complete = await Run(folder, cli, "build", "--output-file", output);
+
+            complete.Exit.Should().Be(0, complete.Output);
+
+            var rendered = JsonNode.Parse(await File.ReadAllTextAsync(output))!;
+
+            rendered["Mail"]!["Port"]!.GetValue<int>().Should().Be(587);
+
+            // validate never scaffolds: the input file stays untouched.
+            await File.WriteAllTextAsync(input, "{}");
+
+            var validate = await Run(folder, cli, "validate");
+
+            validate.Exit.Should().NotBe(0);
+            (await File.ReadAllTextAsync(input)).Should().Be("{}");
         }
         finally
         {

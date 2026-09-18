@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
@@ -120,6 +121,7 @@ internal static class SchemaExport
                 }
 
                 ApplyAnnotations(obj, member);
+                ApplyDefault(obj, member);
 
                 // Any value may instead be a variable expression that Confix resolves on build.
                 return new JsonObject
@@ -138,7 +140,6 @@ internal static class SchemaExport
         {
             schema["description"] = description.Description;
         }
-
         if (member.GetCustomAttribute<RangeAttribute>() is { Minimum: int min, Maximum: int max })
         {
             schema["minimum"] = min;
@@ -170,6 +171,67 @@ internal static class SchemaExport
             schema["pattern"] = "\\S";
         }
     }
+
+    /// <summary>
+    /// Surfaces property initializers as schema defaults so scaffolding can write real values.
+    /// </summary>
+    private static void ApplyDefault(JsonObject schema, PropertyInfo member)
+    {
+        var declaringType = member.DeclaringType;
+
+        if (declaringType is null)
+        {
+            return;
+        }
+
+        var instance = _instances.GetOrAdd(declaringType, static type =>
+        {
+            try
+            {
+                return Activator.CreateInstance(type);
+            }
+            catch
+            {
+                return null;
+            }
+        });
+
+        if (instance is null)
+        {
+            return;
+        }
+
+        object? value;
+
+        try
+        {
+            value = member.GetValue(instance);
+        }
+        catch
+        {
+            return;
+        }
+
+        // A value equal to the CLR default is indistinguishable from "no initializer".
+        JsonNode? defaultNode = value switch
+        {
+            string s => JsonValue.Create(s),
+            true => JsonValue.Create(true),
+            Enum e => JsonValue.Create(e.ToString()),
+            sbyte or byte or short or ushort or int or uint or long or ulong
+                when Convert.ToInt64(value) != 0 => JsonValue.Create(Convert.ToInt64(value)),
+            float or double or decimal
+                when Convert.ToDecimal(value) != 0 => JsonValue.Create(Convert.ToDecimal(value)),
+            _ => null
+        };
+
+        if (defaultNode is not null)
+        {
+            schema["default"] = defaultNode;
+        }
+    }
+
+    private static readonly ConcurrentDictionary<Type, object?> _instances = new();
 
     private static void Mount(
         JsonObject root,
