@@ -146,18 +146,26 @@ internal static class ValidationRunner
         var application = Path.GetFullPath(path);
         var resolver = new AssemblyDependencyResolver(application);
 
+        // Registered before the first Confix type is touched, so that resolving it does not
+        // fall back to the application's dependency graph.
+        AssemblyLoadContext.Default.Resolving += (_, name) => Resolve(resolver, name);
+
         EnsureCompatible(resolver);
 
-        AssemblyLoadContext.Default.Resolving += (_, name) =>
-        {
-            var resolved = resolver.ResolveAssemblyToPath(name);
-
-            return resolved is null
-                ? null
-                : AssemblyLoadContext.Default.LoadFromAssemblyPath(resolved);
-        };
-
         return AssemblyLoadContext.Default.LoadFromAssemblyPath(application);
+    }
+
+    /// <summary>
+    /// Confix assemblies are supplied by <see cref="ConfixRuntimeResolver"/>; everything else
+    /// the runner needs comes from the application it validates.
+    /// </summary>
+    private static Assembly? Resolve(AssemblyDependencyResolver resolver, AssemblyName name)
+    {
+        var resolved = resolver.ResolveAssemblyToPath(name);
+
+        return resolved is null
+            ? null
+            : AssemblyLoadContext.Default.LoadFromAssemblyPath(resolved);
     }
 
     /// <summary>
