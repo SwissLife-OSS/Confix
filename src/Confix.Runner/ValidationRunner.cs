@@ -45,7 +45,10 @@ internal static class ValidationRunner
         {
             await WriteAsync(
                 output,
-                new Response(ProtocolVersion, [$"{GenericFailure} ({ex.GetType().Name})"], null));
+                new Response(
+                    ProtocolVersion,
+                    [$"{GenericFailure} ({ex.GetType().Name}){Diagnostics.Detail(ex)}"],
+                    null));
 
             return 2;
         }

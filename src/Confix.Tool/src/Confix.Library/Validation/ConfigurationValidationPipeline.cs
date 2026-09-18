@@ -86,6 +86,8 @@ public static class ConfigurationValidationPipeline
 
         var schema = await validator.ValidateAsync(context, settings, exportSchema);
 
+        context.Logger.Information("Configuration validation succeeded.");
+
         if (write)
         {
             await new Pipeline(builder => builder
@@ -109,7 +111,5 @@ public static class ConfigurationValidationPipeline
                 context.Logger.Information("Exported confix.ide.schema.json.");
             }
         }
-
-        context.Logger.Information("Configuration validation succeeded.");
     }
 }
