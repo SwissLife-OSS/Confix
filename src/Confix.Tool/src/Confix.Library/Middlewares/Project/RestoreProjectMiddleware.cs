@@ -42,29 +42,11 @@ public class RestoreProjectMiddleware : IMiddleware
         var project = configuration.EnsureProject();
         var solution = configuration.EnsureSolution();
 
-        // Code-first projects derive their schema from the option contracts instead of components.
+        // Code-first contracts live in the application, so there is no schema to restore.
         var validation = DotnetOptionsSchemaComposer.ResolveSettings(context);
 
         if (validation?.EffectiveType == ValidationConfiguration.DotnetOptions)
         {
-            var storedSchema = await DotnetOptionsSchemaComposer.ComposeAndStoreAsync(
-                context, validation, _schemaStore);
-
-            jsonSchemas.Schemas.Add(new JsonSchemaDefinition
-            {
-                Project = project,
-                Solution = solution.Directory!,
-                FileMatch = files
-                    .Select(x => x.InputFile.RelativeTo(solution.Directory!))
-                    .ToList(),
-                SchemaFile = storedSchema,
-                RelativePathToProject = Path.GetRelativePath(
-                    solution.Directory!.FullName,
-                    project.Directory!.FullName)
-            });
-
-            context.Logger.LogSchemaCompositionCompleted(project);
-
             return;
         }
 

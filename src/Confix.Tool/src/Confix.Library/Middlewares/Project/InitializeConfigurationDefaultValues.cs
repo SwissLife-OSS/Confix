@@ -5,6 +5,7 @@ using Confix.Tool.Commands.Solution;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Entities.Components.DotNet;
 using Confix.Tool.Schema;
+using Confix.Tool.Validation;
 using Confix.Utilities.Json;
 using Json.Schema;
 
@@ -29,6 +30,14 @@ public sealed class InitializeConfigurationDefaultValues : IMiddleware
         var configuration = context.Features.Get<ConfigurationFeature>();
 
         configuration.EnsureProjectScope();
+
+        if (DotnetOptionsSchemaComposer.ResolveSettings(context)?.EffectiveType
+            == ValidationConfiguration.DotnetOptions)
+        {
+            await next(context);
+
+            return;
+        }
 
         var project = configuration.EnsureProject();
         var solution = configuration.EnsureSolution();
