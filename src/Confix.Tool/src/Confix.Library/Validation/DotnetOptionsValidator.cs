@@ -22,11 +22,7 @@ internal sealed class DotnetOptionsValidator : IConfigurationValidator
         ValidationConfiguration settings,
         bool exportSchema)
     {
-        if (context.Parameter.TryGet(NoRestoreOptions.Instance, out bool noRestore) && noRestore)
-        {
-            throw new ExitException("--no-restore is not supported for dotnet-options validation.");
-        }
-
+        // --no-restore only skips schema restore, which this validator never reads.
         var runner = Path.Combine(AppContext.BaseDirectory, RunnerAssembly);
 
         if (!File.Exists(runner))

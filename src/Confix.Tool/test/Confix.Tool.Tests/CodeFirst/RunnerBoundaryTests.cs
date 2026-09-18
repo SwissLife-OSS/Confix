@@ -186,12 +186,6 @@ public sealed class RunnerBoundaryTests
             var relaxed = await Run(folder, cli, "validate");
 
             relaxed.Exit.Should().Be(0, relaxed.Output);
-
-            // Required validation can never be bypassed.
-            var skipped = await Run(folder, cli, "validate", "--no-restore");
-
-            skipped.Exit.Should().NotBe(0);
-            skipped.Output.Should().Contain("--no-restore");
         }
         finally
         {

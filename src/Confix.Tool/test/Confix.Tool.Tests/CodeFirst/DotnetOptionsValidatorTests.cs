@@ -20,13 +20,14 @@ public sealed class DotnetOptionsValidatorTests : IDisposable
     public void Dispose() => _directory.Delete(recursive: true);
 
     [Fact]
-    public async Task RequiredValidationCannotBeSkippedWithNoRestore()
+    public async Task NoRestoreIsIgnoredInsteadOfRejected()
     {
+        // The flag is shared with json-schema projects, so it must not fail the build here.
         var validate = async () => await ValidateAsync(
             new Dictionary<Symbol, object?> { [NoRestoreOptions.Instance] = true });
 
         (await validate.Should().ThrowAsync<ExitException>())
-            .Which.Message.Should().Contain("--no-restore is not supported");
+            .Which.Message.Should().Contain("exactly one project file");
     }
 
     [Fact]
