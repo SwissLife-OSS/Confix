@@ -59,7 +59,9 @@ Further documentation can be accessed on our [documentation page](https://swissl
 ## Code-first .NET configuration
 
 Opt into `project.validation` in `.confixrc` to validate appsettings using `ConfixSection`,
-`AddConfixOptions`, and data annotations. See [the guide](docs/pages/code-first.mdx) and
+`AddConfixOptions`, and data annotations. `confix build` also initializes the keys your
+application cannot supply itself, so a missing setting appears as an empty slot to fill.
+See [the guide](docs/pages/code-first.mdx) and
 [the example](examples/CodeFirst). Existing GraphQL/dotnet inputs remain supported.
 
 ## Roadmap: .NET 11 alignment

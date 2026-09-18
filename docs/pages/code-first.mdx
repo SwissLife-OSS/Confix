@@ -157,6 +157,9 @@ Consequences to be aware of:
 - Code in `Program.cs` up to `Build()` executes at validation time. Registration lambdas stay
   lazy, so clients are not constructed — but guard genuinely side-effectful startup work with
   the `CONFIX_VALIDATION` environment variable, which the runner sets to `true`.
+- When host composition fails, confix reports the exception type only, because application
+  messages can contain configuration values. Set `CONFIX_DIAGNOSTICS=1` to print the full
+  exception while debugging.
 - The runner forces the `Production` environment so composition is deterministic: no user
   secrets, no `Development`-only overrides, the production branch of environment conditionals.
 - Coverage and unknown-key reporting are scoped to the candidate document, so environment
@@ -169,8 +172,9 @@ Consequences to be aware of:
 - `[Required]` checks the bound value, including null, empty, and whitespace-only strings.
 - `[ConfixRequiredKey]` requires an explicit key. `[Required]` on an integer cannot distinguish
   a missing key from its default value.
-- Initializers supply runtime defaults. C# `required` and nullable annotations do not replace
-  validation attributes. Defaults are not written back into source appsettings.
+- Initializers supply runtime defaults and are never written into configuration. C# `required`
+  and nullable annotations do not replace validation attributes, but they do tell `confix build`
+  which keys it has to initialize — see [Initializing missing configuration](#initializing-missing-configuration).
 - Recursion into nested objects and collection items is opt-in through the standard
   `Microsoft.Extensions.Options` attributes `[ValidateObjectMembers]` and
   `[ValidateEnumeratedItems]`, so confix reports what the application reports at startup.
@@ -238,6 +242,55 @@ services.AddConfixSection<SmtpOptions>(configuration);
 Use `AddConfixOptions<T>` when Confix should own the registration outright, and the untyped
 `AddConfixSection("Path")` to claim a section whose contents another component validates.
 
+## Initializing missing configuration
+
+`confix build` writes the keys your application cannot answer on its own into the source
+configuration files, so a missing setting shows up as an empty slot to fill instead of a
+validation error you have to translate back into JSON. `confix validate` never writes.
+
+```csharp
+[ConfixSection("Jetbrains")]
+public sealed class JetbrainsOptions
+{
+    public string ProfileId { get; set; } = null!;
+}
+```
+
+```json
+{
+  "Jetbrains": {
+    "ProfileId": null
+  }
+}
+```
+
+Whether a property is initialized follows the strongest declaration on it:
+
+| Rank | Declaration | Initialized | Beats an initializer |
+| --- | --- | --- | --- |
+| 1 | `[ConfixRequiredKey]`, C# `required` | yes | yes |
+| 2 | property initializer | no | — |
+| 3 | `[Required]`, non-nullable reference | yes | no |
+
+An initializer means the application already has an answer, so the key stays out of
+configuration until someone overrides it. That is why `Instance = "https://login.microsoftonline.com/"`
+never appears, while `[Required] public string Audience { get; set; } = ""` does — an empty
+string is not an answer. `[ConfixRequiredKey]` and `required` outrank an initializer, because
+both exist to demand an explicit value.
+
+Inference stops where a declaration is ambiguous:
+
+- Value types are never inferred: `= 0` and "no initializer" are indistinguishable through
+  reflection. Use `required` or `[ConfixRequiredKey]` for an `int` or `bool` that must be configured.
+- `string?` is optional; null is a legitimate answer.
+- Projects compiled without nullable reference types fall back to attributes alone.
+
+Scaffolding runs after variables are resolved, so the application composes its host with real
+values, while the defaults are written to the files as they are on disk — resolved secrets never
+reach your source. Files are rewritten only when something is actually added, so repeated builds
+are idempotent. An application that cannot compose its host reports a warning and the build
+continues without initializing.
+
 ## Build and validate
 
 ```shell
@@ -246,10 +299,12 @@ confix build
 confix build --export-schema
 ```
 
-Code-first mode does not require component files or schema restore. Its `--no-restore` flag is
-rejected; required validation is never bypassed. Use `project.validation.framework` to select
-one framework from a multi-target project and `--dotnet-configuration Release` to select the
-build configuration. There must be one host `.csproj` in the project directory.
+Code-first mode does not require component files or schema restore, and it produces no schema
+files: the contracts live in the application. `--no-restore` is accepted and ignored, so the flag
+can stay in a shared pipeline that also builds `json-schema` projects. Use
+`project.validation.framework` to select one framework from a multi-target project and
+`--dotnet-configuration Release` to select the build configuration. There must be one host
+`.csproj` in the project directory.
 
 Variables and secrets are resolved before validation. `validate` does not publish appsettings,
 create user-secret IDs, or change editor settings. `build` validates all project outputs before

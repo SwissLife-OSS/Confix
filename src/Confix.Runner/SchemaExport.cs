@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -84,8 +85,7 @@ internal static class SchemaExport
 
                 property.AttributeProvider = member;
                 property.Get = member.GetValue;
-                property.IsRequired = member.IsDefined(typeof(ConfixRequiredKeyAttribute))
-                    || (member.IsDefined(typeof(RequiredAttribute)) && !HasInitializer(member));
+                property.IsRequired = MustBeConfigured(member);
 
                 if (member.SetMethod?.IsPublic == true)
                 {
@@ -170,6 +170,30 @@ internal static class SchemaExport
             schema["minLength"] = 1;
             schema["pattern"] = "\\S";
         }
+    }
+
+    /// <summary>
+    /// Scaffolding writes the keys the user has to supply. A value the application already has
+    /// an answer for is not one of them, and neither is a property that may legitimately be null.
+    /// </summary>
+    private static bool MustBeConfigured(PropertyInfo member)
+    {
+        // An explicit demand outranks any answer the application could supply itself.
+        if (member.IsDefined(typeof(ConfixRequiredKeyAttribute))
+            || member.IsDefined(typeof(RequiredMemberAttribute)))
+        {
+            return true;
+        }
+
+        if (HasInitializer(member))
+        {
+            return false;
+        }
+
+        // A non-nullable reference declares that the application expects a value it does not have.
+        return member.IsDefined(typeof(RequiredAttribute))
+            || (!member.PropertyType.IsValueType
+                && new NullabilityInfoContext().Create(member).ReadState == NullabilityState.NotNull);
     }
 
     /// <summary>

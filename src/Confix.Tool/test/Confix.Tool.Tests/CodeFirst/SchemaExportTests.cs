@@ -174,6 +174,30 @@ public sealed class SchemaExportTests
         schema["properties"]!["Simple"].Should().NotBeNull();
     }
 
+    [Theory]
+    // The application cannot answer these, so configuration has to.
+    [InlineData("NonNullable", true)]
+    [InlineData("Annotated", true)]
+    [InlineData("RequiredModifier", true)]
+    [InlineData("RequiredValueType", true)]
+    [InlineData("ClaimedKey", true)]
+    [InlineData("EmptyStringInitializer", true)]
+    // The application already has an answer, or null is a legitimate one.
+    [InlineData("Nullable", false)]
+    [InlineData("Initialized", false)]
+    [InlineData("AnnotatedWithInitializer", false)]
+    [InlineData("EnumWithInitializer", false)]
+    [InlineData("ValueType", false)]
+    [InlineData("NullableValueType", false)]
+    public void RequirednessFollowsTheStrongestDeclaration(string property, bool required)
+    {
+        var schema = Section<Declarations>("Declarations");
+
+        var names = schema["required"]?.AsArray().Select(n => n!.GetValue<string>()) ?? [];
+
+        names.Contains(property).Should().Be(required);
+    }
+
     private static JsonNode Member<T>(string section, string property) where T : class
     {
         return Section<T>(section)["properties"]![property]!;
@@ -268,6 +292,45 @@ public sealed class SchemaExportTests
     {
         [Required]
         public string Host { get; set; } = "";
+    }
+
+    [ConfixSection("Declarations")]
+    public sealed class Declarations
+    {
+        public string NonNullable { get; set; } = null!;
+
+        public string? Nullable { get; set; }
+
+        public string Initialized { get; set; } = "value";
+
+        // An empty string is indistinguishable from no initializer at all.
+        public string EmptyStringInitializer { get; set; } = "";
+
+        [Required]
+        public string? Annotated { get; set; }
+
+        [Required]
+        public string? AnnotatedWithInitializer { get; set; } = "value";
+
+        public required string? RequiredModifier { get; set; }
+
+        public required int RequiredValueType { get; set; }
+
+        [ConfixRequiredKey]
+        public string ClaimedKey { get; set; } = "value";
+
+        public TimeSpan ValueType { get; set; }
+
+        public int? NullableValueType { get; set; }
+
+        public EntraIdIssuerVersionStub EnumWithInitializer { get; set; }
+            = EntraIdIssuerVersionStub.V2;
+    }
+
+    public enum EntraIdIssuerVersionStub
+    {
+        V1 = 1,
+        V2 = 2
     }
 
     [ConfixSection("Optional", Required = false)]
