@@ -84,7 +84,8 @@ internal static class SchemaExport
 
                 property.AttributeProvider = member;
                 property.Get = member.GetValue;
-                property.IsRequired = member.IsDefined(typeof(ConfixRequiredKeyAttribute));
+                property.IsRequired = member.IsDefined(typeof(ConfixRequiredKeyAttribute))
+                    || (member.IsDefined(typeof(RequiredAttribute)) && !HasInitializer(member));
 
                 if (member.SetMethod?.IsPublic == true)
                 {
@@ -121,7 +122,6 @@ internal static class SchemaExport
                 }
 
                 ApplyAnnotations(obj, member);
-                ApplyDefault(obj, member);
 
                 // Any value may instead be a variable expression that Confix resolves on build.
                 return new JsonObject
@@ -173,15 +173,13 @@ internal static class SchemaExport
     }
 
     /// <summary>
-    /// Surfaces property initializers as schema defaults so scaffolding can write real values.
+    /// A property the application can supply itself is not something the user must configure.
     /// </summary>
-    private static void ApplyDefault(JsonObject schema, PropertyInfo member)
+    private static bool HasInitializer(PropertyInfo member)
     {
-        var declaringType = member.DeclaringType;
-
-        if (declaringType is null)
+        if (member.DeclaringType is not { } declaringType)
         {
-            return;
+            return false;
         }
 
         var instance = _instances.GetOrAdd(declaringType, static type =>
@@ -198,7 +196,7 @@ internal static class SchemaExport
 
         if (instance is null)
         {
-            return;
+            return false;
         }
 
         object? value;
@@ -209,26 +207,21 @@ internal static class SchemaExport
         }
         catch
         {
-            return;
+            return false;
         }
 
         // A value equal to the CLR default is indistinguishable from "no initializer".
-        JsonNode? defaultNode = value switch
+        return value switch
         {
-            string s => JsonValue.Create(s),
-            true => JsonValue.Create(true),
-            Enum e => JsonValue.Create(e.ToString()),
-            sbyte or byte or short or ushort or int or uint or long or ulong
-                when Convert.ToInt64(value) != 0 => JsonValue.Create(Convert.ToInt64(value)),
-            float or double or decimal
-                when Convert.ToDecimal(value) != 0 => JsonValue.Create(Convert.ToDecimal(value)),
-            _ => null
+            string s => s.Length > 0,
+            bool b => b,
+            Enum e => Convert.ToInt64(e) != 0,
+            sbyte or byte or short or ushort or int or uint or long or ulong =>
+                Convert.ToInt64(value) != 0,
+            float or double or decimal => Convert.ToDecimal(value) != 0,
+            null => false,
+            _ => true
         };
-
-        if (defaultNode is not null)
-        {
-            schema["default"] = defaultNode;
-        }
     }
 
     private static readonly ConcurrentDictionary<Type, object?> _instances = new();

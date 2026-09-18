@@ -194,7 +194,7 @@ public sealed class RunnerBoundaryTests
     }
 
     [Fact]
-    public async Task BuildScaffoldsRequiredSectionsWithContractDefaults()
+    public async Task BuildScaffoldsOnlyTheValuesTheApplicationCannotSupplyItself()
     {
         var root = FindRoot();
         var folder = Path.Combine(Path.GetTempPath(), "confix-scaffold-" + Guid.NewGuid().ToString("N"));
@@ -206,6 +206,7 @@ public sealed class RunnerBoundaryTests
                 public sealed class Mail
                 {
                     [Required] public string Host { get; set; } = "";
+                    [Required] public string Sender { get; set; } = "postmaster@example.com";
                     [Range(1, 65535)] public int Port { get; set; } = 587;
                     public bool UseTls { get; set; } = true;
                 }
@@ -224,23 +225,33 @@ public sealed class RunnerBoundaryTests
             File.Exists(output).Should().BeFalse("an invalid build must not publish");
 
             var scaffolded = JsonNode.Parse(await File.ReadAllTextAsync(input))!;
+            var mail = scaffolded["Mail"]!.AsObject();
 
-            scaffolded["Mail"].Should().NotBeNull("the required section must be initialized");
-            scaffolded["Mail"]!["Port"]!.GetValue<int>().Should().Be(587);
-            scaffolded["Mail"]!["UseTls"]!.GetValue<bool>().Should().BeTrue();
-            scaffolded["Mail"]!["Host"]!.GetValue<string>().Should().BeEmpty();
+            // Only the required value without an initializer has to come from configuration.
+            mail.Should().ContainKey("Host");
+            mail["Host"].Should().BeNull();
+            mail.Should().NotContainKey("Sender", "the application already supplies it");
+            mail.Should().NotContainKey("Port", "the application already supplies it");
+            mail.Should().NotContainKey("UseTls", "the application already supplies it");
 
             // Filling in the single scaffolded gap makes the same build pass.
-            scaffolded["Mail"]!["Host"] = "server";
+            mail["Host"] = "server";
             await File.WriteAllTextAsync(input, scaffolded.ToJsonString());
 
             var complete = await Run(folder, cli, "build", "--output-file", output);
 
             complete.Exit.Should().Be(0, complete.Output);
 
+            // Defaults stay in code, so they are absent from the rendered output too.
             var rendered = JsonNode.Parse(await File.ReadAllTextAsync(output))!;
 
-            rendered["Mail"]!["Port"]!.GetValue<int>().Should().Be(587);
+            rendered["Mail"]!.AsObject().Should().NotContainKey("Port");
+
+            // A second build is idempotent.
+            var before = await File.ReadAllTextAsync(input);
+
+            (await Run(folder, cli, "build", "--output-file", output)).Exit.Should().Be(0);
+            (await File.ReadAllTextAsync(input)).Should().Be(before);
 
             // validate never scaffolds: the input file stays untouched.
             await File.WriteAllTextAsync(input, "{}");
