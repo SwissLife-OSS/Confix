@@ -16,8 +16,7 @@ public static class ProjectMiddlewareExtensions
                 sp.GetRequiredService<ISchemaStore>()))
             .AddTransient(sp =>
                 new InitializeConfigurationDefaultValues(sp.GetRequiredService<ISchemaStore>()))
-            .AddTransient(sp =>
-                new RestoreDotnetSchemaMiddleware(sp.GetRequiredService<ISchemaStore>()))
+            .AddTransient<ScaffoldDotnetDefaultsMiddleware>()
             .AddTransient<BuildComponentsOfProjectMiddleware>()
             .AddTransient<InitProjectMiddleware>()
             .AddTransient<BuildProjectMiddleware>()

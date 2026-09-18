@@ -20,11 +20,24 @@ internal static class DotnetOptionsSchemaComposer
         ISchemaStore schemaStore)
     {
         var configuration = context.Features.Get<ConfigurationFeature>();
+        var schema = await DeriveAsync(context, settings);
+
+        return await schemaStore.StoreAsync(
+            configuration.EnsureSolution(),
+            configuration.EnsureProject(),
+            schema,
+            context.CancellationToken);
+    }
+
+    public static async Task<JsonSchema> DeriveAsync(
+        IMiddlewareContext context,
+        ValidationConfiguration settings)
+    {
+        var configuration = context.Features.Get<ConfigurationFeature>();
 
         configuration.EnsureProjectScope();
 
         var project = configuration.EnsureProject();
-        var solution = configuration.EnsureSolution();
         var directory = project.Directory!.FullName;
 
         context.SetStatus("Deriving the schema from the option contracts...");
@@ -58,9 +71,7 @@ internal static class DotnetOptionsSchemaComposer
                 string.Join('\n', response.Errors.DefaultIfEmpty("The runner returned no schema.")));
         }
 
-        var schema = JsonSchema.FromText(response.Schema.ToJsonString());
-
-        return await schemaStore.StoreAsync(solution, project, schema, context.CancellationToken);
+        return JsonSchema.FromText(response.Schema.ToJsonString());
     }
 
     /// <summary>The validation settings that apply to the project in the current context.</summary>

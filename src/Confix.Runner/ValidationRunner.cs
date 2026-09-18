@@ -41,9 +41,11 @@ internal static class ValidationRunner
 
             return 2;
         }
-        catch
+        catch (Exception ex)
         {
-            await WriteAsync(output, new Response(ProtocolVersion, [GenericFailure], null));
+            await WriteAsync(
+                output,
+                new Response(ProtocolVersion, [$"{GenericFailure} ({ex.GetType().Name})"], null));
 
             return 2;
         }

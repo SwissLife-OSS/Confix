@@ -91,10 +91,22 @@ internal sealed class HostCapture :
                 : new RunnerException(
                     "The application failed while composing its host: " +
                     $"{failure.GetType().Name}. Guard code that cannot run at validation time " +
-                    "with the CONFIX_VALIDATION environment variable.");
+                    "with the CONFIX_VALIDATION environment variable." +
+                    Detail(failure));
         }
 
         throw new RunnerException("Timed out waiting for the application to build its host.");
+    }
+
+    /// <summary>
+    /// Host composition failures come from application code, so their messages may contain
+    /// configuration values and are only shown when explicitly requested.
+    /// </summary>
+    private static string Detail(Exception failure)
+    {
+        return Environment.GetEnvironmentVariable("CONFIX_DIAGNOSTICS") is "1" or "true"
+            ? $"\n{failure}"
+            : "\nSet CONFIX_DIAGNOSTICS=1 to see the application's exception.";
     }
 
     void IObserver<DiagnosticListener>.OnNext(DiagnosticListener listener)
