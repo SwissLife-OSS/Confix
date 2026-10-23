@@ -3,6 +3,7 @@ using Confix.Tool.Commands.Logging;
 using Confix.Tool.Common.Pipelines;
 using Confix.Tool.Middlewares;
 using Confix.Variables;
+using Spectre.Console;
 
 namespace Confix.Tool.Commands.Variable;
 
@@ -54,7 +55,7 @@ file static class Log
     {
         foreach (var variable in variables)
         {
-            console.Information(variable.ToString());
+            console.Information(variable.ToString().EscapeMarkup());
         }
     }
 }
