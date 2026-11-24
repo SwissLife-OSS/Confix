@@ -12,15 +12,24 @@ internal static class DotnetOptionsRunner
     private const string DefaultConfiguration = "Debug";
 
     public static string ResolveRunner()
+        => ResolveRunner(
+            AppContext.BaseDirectory,
+            Path.GetDirectoryName(typeof(DotnetOptionsRunner).Assembly.Location));
+
+    internal static string ResolveRunner(params string?[] directories)
     {
-        var runner = Path.Combine(AppContext.BaseDirectory, RunnerAssembly);
+        var candidates = directories
+            .Where(d => !string.IsNullOrEmpty(d))
+            .Select(d => Path.Combine(Path.GetFullPath(d!), RunnerAssembly))
+            .Distinct()
+            .ToArray();
 
-        if (!File.Exists(runner))
-        {
-            throw new ExitException("The Confix installation is missing its validation runner.");
-        }
-
-        return runner;
+        return candidates.FirstOrDefault(File.Exists)
+            ?? throw new ExitException(
+                "The Confix installation is missing its validation runner. " +
+                $"Looked for: {string.Join(", ", candidates)}. " +
+                $"Hosts embedding Confix.Library need {RunnerAssembly} next to the host " +
+                "executable or Confix.Library.dll; the Confix.Library package copies it there.");
     }
 
     /// <summary>

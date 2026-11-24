@@ -59,6 +59,28 @@ public sealed class DotnetOptionsValidatorTests : IDisposable
         File.Exists(runner).Should().BeTrue();
     }
 
+    [Fact]
+    public void TheRunnerIsFoundNextToTheLibraryWhenTheHostDirectoryLacksIt()
+    {
+        var host = _directory.CreateSubdirectory("host");
+        var library = _directory.CreateSubdirectory("library");
+        var runner = Path.Combine(library.FullName, "Confix.Runner.dll");
+        File.WriteAllText(runner, "");
+
+        DotnetOptionsRunner.ResolveRunner(host.FullName, library.FullName).Should().Be(runner);
+    }
+
+    [Fact]
+    public void AMissingRunnerReportsTheProbedPaths()
+    {
+        var resolve = () => DotnetOptionsRunner.ResolveRunner(_directory.FullName, null);
+
+        resolve.Should().Throw<ExitException>()
+            .Which.Message.Should()
+            .Contain(Path.Combine(_directory.FullName, "Confix.Runner.dll"))
+            .And.Contain("Confix.Library");
+    }
+
     private async Task ValidateAsync(IReadOnlyDictionary<Symbol, object?>? parameters = null)
     {
         var features = new FeatureCollection();
