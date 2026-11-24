@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
@@ -306,6 +307,38 @@ public sealed class RunnerBoundaryTests
             var rendered = JsonNode.Parse(await File.ReadAllTextAsync(output))!;
 
             rendered["Mail"]!["Host"]!.GetValue<string>().Should().Be("resolved-server");
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task LibraryPackageShipsTheRunnerForEmbeddingHosts()
+    {
+        var root = FindRoot();
+        var folder = Path.Combine(Path.GetTempPath(), "confix-package-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        try
+        {
+            var result = await Run(
+                root,
+                "pack",
+                Path.Combine(root, "src/Confix.Tool/src/Confix.Library/Confix.Library.csproj"),
+                "--no-build",
+                "--configuration", BuildConfiguration,
+                "--output", folder,
+                "--nologo");
+
+            result.Exit.Should().Be(0, result.Output);
+
+            using var package = ZipFile.OpenRead(Directory.GetFiles(folder, "*.nupkg").Single());
+            var entries = package.Entries.Select(entry => entry.FullName).ToArray();
+
+            entries.Should().Contain("runner/Confix.Runner.dll");
+            entries.Should().Contain("buildTransitive/Confix.Library.targets");
+            entries.Should().NotContain(entry => entry.StartsWith("lib/") && entry.Contains("Runner"));
         }
         finally
         {

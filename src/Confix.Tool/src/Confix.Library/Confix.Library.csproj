@@ -42,6 +42,27 @@
       <Folder Include="Reporting\" />
     </ItemGroup>
 
+    <!-- The validation runner ships inside the package so embedding hosts get it without the Confix tool. -->
+    <PropertyGroup>
+        <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);PackValidationRunner</TargetsForTfmSpecificContentInPackage>
+        <!-- The runner is started as a process and deliberately kept outside lib/. -->
+        <NoWarn>$(NoWarn);NU5100</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../../Confix.Runner/Confix.Runner.csproj"
+                          ReferenceOutputAssembly="false"
+                          PrivateAssets="all" />
+        <None Include="buildTransitive/Confix.Library.targets" Pack="true" PackagePath="buildTransitive/" />
+    </ItemGroup>
+    <Target Name="PackValidationRunner">
+        <MSBuild Projects="../../../Confix.Runner/Confix.Runner.csproj" Targets="GetTargetPath">
+            <Output TaskParameter="TargetOutputs" ItemName="ValidationRunnerAssembly" />
+        </MSBuild>
+        <ItemGroup>
+            <TfmSpecificPackageFile Include="@(ValidationRunnerAssembly)" PackagePath="runner/" />
+        </ItemGroup>
+    </Target>
+
     <ItemGroup>
         <InternalsVisibleTo Include="Confix.Tool.Tests" />
     </ItemGroup>

@@ -46,6 +46,8 @@ or start hosted services. Registration modules, constructors and validators do e
 runner is process isolation, not a security sandbox.
 
 The validation runner ships with the CLI; it is not copied into every application or options library.
+Applications that embed Confix through the `Confix.Library` package get `Confix.Runner.dll` copied
+into their build and publish output by the package, so no extra packaging is needed.
 The host receives a generated activation catalog. The runner verifies that the application's
 `Confix.Options` and `Confix.Abstractions` versions are compatible with the CLI: an older minor
 of the same major version is accepted, a newer package than the CLI is rejected with an explicit

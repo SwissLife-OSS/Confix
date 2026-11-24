@@ -1,0 +1,13 @@
+<Project>
+
+    <!-- Code-first validation starts Confix.Runner.dll as a child process, so it must sit next to the host. -->
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)../runner/Confix.Runner.dll"
+              Link="Confix.Runner.dll"
+              Visible="false"
+              Pack="false"
+              CopyToOutputDirectory="PreserveNewest"
+              CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>
